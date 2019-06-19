@@ -115,7 +115,7 @@ public class ItemModuleOreScanner extends ItemAbstractPowerModule implements IRi
 //            final List<ItemStack> modules = new ArrayList<>();
 //            if (!collectModules(itemStackIn, modules)) {
 //                if (worldIn.isRemote) {
-//                    Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentTranslation(Constants.MESSAGE_NO_SCAN_MODULES), Constants.CHAT_LINE_ID);
+//                    Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentTranslation(MPSConstants.MESSAGE_NO_SCAN_MODULES), MPSConstants.CHAT_LINE_ID);
 //                }
 //                playerIn.getCooldownTracker().setCooldown(itemStackIn.getItem(), 10);
 //                return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
@@ -123,7 +123,7 @@ public class ItemModuleOreScanner extends ItemAbstractPowerModule implements IRi
 //
 //            if (!tryConsumeEnergy(playerIn, modules, true)) {
 //                if (worldIn.isRemote) {
-//                    Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentTranslation(Constants.MESSAGE_NOT_ENOUGH_ENERGY), Constants.CHAT_LINE_ID);
+//                    Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentTranslation(MPSConstants.MESSAGE_NOT_ENOUGH_ENERGY), MPSConstants.CHAT_LINE_ID);
 //                }
 //                playerIn.getCooldownTracker().setCooldown(itemStackIn.getItem(), 10);
 //                return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);

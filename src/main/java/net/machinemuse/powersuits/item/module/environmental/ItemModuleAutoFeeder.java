@@ -3,7 +3,6 @@ package net.machinemuse.powersuits.item.module.environmental;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.module.*;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;

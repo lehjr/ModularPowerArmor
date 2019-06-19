@@ -1,24 +1,13 @@
 package net.machinemuse.powersuits.basemod;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.powersuits.constants.MPSConfigConstants;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmorBoots;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmorChestplate;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmorHelmet;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmorLeggings;
-import net.machinemuse.powersuits.item.tool.ItemPowerFist;
-import net.machinemuse.powersuits.misc.CosmeticPresetSaveLoad;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum MPSConfig {
+public enum MPSConfig implements IConfig {
     INSTANCE;
     static MPSItems mpsItems = MPSItems.INSTANCE;
 
@@ -119,6 +108,7 @@ public enum MPSConfig {
             BATTERY_MODULE_ULTIMATE_MAX_ENERGY,
             BATTERY_MODULE_ULTIMATE_MAX_TRAMSFER;
 
+
 //    public static ForgeConfigSpec.ConfigValue<Map<? extends String,? extends Boolean>> MODULES_ALLOWED;
 
 
@@ -170,8 +160,47 @@ public enum MPSConfig {
         }
     }
 
+    Map<String, ForgeConfigSpec.IntValue> intValueMap = new HashMap<>();
+    Map<String, ForgeConfigSpec.DoubleValue> doubleValueMap = new HashMap<>();
 
-    static Map<String, ForgeConfigSpec.BooleanValue> testMap = new HashMap();
+    public class ModuleConfig {
+        String translationPrefix;
+        ForgeConfigSpec.Builder builder;
+
+        public ModuleConfig(String regNameIn, ForgeConfigSpec.Builder builderIn) {
+            this(new ResourceLocation(regNameIn), builderIn);
+        }
+
+        public ModuleConfig(ResourceLocation regNameIn, ForgeConfigSpec.Builder builderIn) {
+            this.translationPrefix = Util.makeTranslationKey("item", regNameIn);
+            this.builder = builderIn;
+            builder.push("Module Settings");
+            builder.translation(translationPrefix);
+        }
+
+        public void addInt(String name, String translationKey, String comment, int defaultVal, Integer min, Integer max) {
+            ForgeConfigSpec.IntValue intConfigVal =
+                    builder.comment(comment)
+                            .translation(translationKey)
+                            .defineInRange(name, defaultVal, min != null ? min : 0, max != null ? max : Integer.MAX_VALUE);
+            intValueMap.put(translationKey, intConfigVal);
+        }
+
+        public void addDouble(String name, String translationKey, String comment, double defaultVal, Double min, Double max) {
+            ForgeConfigSpec.DoubleValue doubleValue =
+                    builder.comment(comment)
+                            .translation(translationKey)
+                            .defineInRange(name, defaultVal, min != null ? min : 0, max != null ? max : Double.MAX_VALUE);
+            doubleValueMap.put(translationKey, doubleValue);
+        }
+
+        public void done() {
+            builder.pop();
+        }
+    }
+
+
+
 
     /**
      * Settings that are controlled by the server and synced to client
@@ -278,98 +307,126 @@ public enum MPSConfig {
         }
     }
 
-    public boolean getModuleAllowedorDefault(ResourceLocation regName, boolean defaultVal) {
-        return defaultVal;
+
+    @Override
+    public double getPropertyDoubleOrDefault(String s, double v) {
+        return 0;
     }
 
-    public boolean getModuleAllowedorDefault(String regName, boolean defaultVal) {
-        return getModuleAllowedorDefault(new ResourceLocation(regName), defaultVal);
+    @Override
+    public int getPropertyIntegerOrDefault(String s, int i) {
+        return 0;
     }
 
-    public double getPropertyDoubleOrDefault(String key, double multiplier) {
-        return multiplier;
+    @Override
+    public boolean isModuleAllowed(String s) {
+        return false;
     }
 
-    public int getPropertyIntegerOrDefault(String key, int multiplier) {
-        return multiplier;
+    @Override
+    public boolean isModuleAllowed(ResourceLocation resourceLocation) {
+        return false;
     }
 
 
-    // fixme!!
-    public boolean isModuleAllowed(ResourceLocation regName) {
 
 
 
-        return true;
-    }
 
-    public static NBTTagCompound getPresetNBTFor(@Nonnull ItemStack itemStack, String presetName) {
-        Map<String, NBTTagCompound> map = getCosmeticPresets(itemStack);
-        return map.get(presetName);
-    }
 
-    public static BiMap<String, NBTTagCompound> getCosmeticPresets(@Nonnull ItemStack itemStack) {
-        Item item  = itemStack.getItem();
+
+//    public boolean getModuleAllowedorDefault(ResourceLocation regName, boolean defaultVal) {
+//        return defaultVal;
+//    }
+//
+//    public boolean getModuleAllowedorDefault(String regName, boolean defaultVal) {
+//        return getModuleAllowedorDefault(new ResourceLocation(regName), defaultVal);
+//    }
+//
+//    public double getPropertyDoubleOrDefault(String key, double multiplier) {
+//        return multiplier;
+//    }
+//
+//    public int getPropertyIntegerOrDefault(String key, int multiplier) {
+//        return multiplier;
+//    }
+//
+//
+//    // fixme!!
+//    public boolean isModuleAllowed(ResourceLocation regName) {
+//
+//
+//
+//        return true;
+//    }
+
+//    public static NBTTagCompound getPresetNBTFor(@Nonnull ItemStack itemStack, String presetName) {
+//        Map<String, NBTTagCompound> map = getCosmeticPresets(itemStack);
+//        return map.get(presetName);
+//    }
+//
+//    public static BiMap<String, NBTTagCompound> getCosmeticPresets(@Nonnull ItemStack itemStack) {
+//        Item item  = itemStack.getItem();
+////        if (item instanceof ItemPowerFist)
+////            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerFist : MPSSettings.cosmetics.getCosmeticPresetsPowerFist();
+////        else if (item instanceof ItemPowerArmorHelmet)
+////            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorHelmet : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorHelmet();
+////        else if (item instanceof ItemPowerArmorChestplate)
+////            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorChestplate : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorChestplate();
+////        else if (item instanceof ItemPowerArmorLeggings)
+////            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorLeggings : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorLeggings();
+////        else if (item instanceof ItemPowerArmorBoots)
+////            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorBoots : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorBoots();
+//        return HashBiMap.create();
+//    }
+//
+//    public void updateCosmeticInfo(ResourceLocation location, String name, NBTTagCompound cosmeticInfo) {
+//        Item item = ForgeRegistries.ITEMS.getValue(location);
+//
 //        if (item instanceof ItemPowerFist)
-//            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerFist : MPSSettings.cosmetics.getCosmeticPresetsPowerFist();
+//            cosmeticPresetsPowerFist.put(name, cosmeticInfo);
 //        else if (item instanceof ItemPowerArmorHelmet)
-//            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorHelmet : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorHelmet();
+//            cosmeticPresetsPowerArmorHelmet.put(name, cosmeticInfo);
 //        else if (item instanceof ItemPowerArmorChestplate)
-//            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorChestplate : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorChestplate();
+//            cosmeticPresetsPowerArmorChestplate.put(name, cosmeticInfo);
 //        else if (item instanceof ItemPowerArmorLeggings)
-//            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorLeggings : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorLeggings();
+//            cosmeticPresetsPowerArmorLeggings.put(name, cosmeticInfo);
 //        else if (item instanceof ItemPowerArmorBoots)
-//            return getServerSettings() != null ? getServerSettings().cosmeticPresetsPowerArmorBoots : MPSSettings.cosmetics.getCosmeticPresetsPowerArmorBoots();
-        return HashBiMap.create();
-    }
-
-    public void updateCosmeticInfo(ResourceLocation location, String name, NBTTagCompound cosmeticInfo) {
-        Item item = ForgeRegistries.ITEMS.getValue(location);
-
-        if (item instanceof ItemPowerFist)
-            cosmeticPresetsPowerFist.put(name, cosmeticInfo);
-        else if (item instanceof ItemPowerArmorHelmet)
-            cosmeticPresetsPowerArmorHelmet.put(name, cosmeticInfo);
-        else if (item instanceof ItemPowerArmorChestplate)
-            cosmeticPresetsPowerArmorChestplate.put(name, cosmeticInfo);
-        else if (item instanceof ItemPowerArmorLeggings)
-            cosmeticPresetsPowerArmorLeggings.put(name, cosmeticInfo);
-        else if (item instanceof ItemPowerArmorBoots)
-            cosmeticPresetsPowerArmorBoots.put(name, cosmeticInfo);
-    }
-
-    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerFist = HashBiMap.create();
-    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerFist() {
-        if (cosmeticPresetsPowerFist.isEmpty() && !COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())
-            cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerFist, 0);
-        return cosmeticPresetsPowerFist;
-    }
-
-    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorHelmet = HashBiMap.create();
-    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorHelmet() {
-        if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-            cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorHead, 0);
-        return cosmeticPresetsPowerArmorHelmet;
-    }
-
-    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorChestplate = HashBiMap.create();
-    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorChestplate() {
-        if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-            cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorTorso, 0);
-        return cosmeticPresetsPowerArmorChestplate;
-    }
-
-    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorLeggings = HashBiMap.create();
-    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorLeggings() {
-        if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-            cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorLegs, 0);
-        return cosmeticPresetsPowerArmorLeggings;
-    }
-
-    private BiMap<String, NBTTagCompound>  cosmeticPresetsPowerArmorBoots = HashBiMap.create();
-    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorBoots() {
-        if(cosmeticPresetsPowerArmorBoots.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-            cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorFeet, 0);
-        return cosmeticPresetsPowerArmorBoots;
-    }
+//            cosmeticPresetsPowerArmorBoots.put(name, cosmeticInfo);
+//    }
+//
+//    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerFist = HashBiMap.create();
+//    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerFist() {
+//        if (cosmeticPresetsPowerFist.isEmpty() && !COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())
+//            cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerFist, 0);
+//        return cosmeticPresetsPowerFist;
+//    }
+//
+//    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorHelmet = HashBiMap.create();
+//    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorHelmet() {
+//        if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
+//            cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorHead, 0);
+//        return cosmeticPresetsPowerArmorHelmet;
+//    }
+//
+//    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorChestplate = HashBiMap.create();
+//    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorChestplate() {
+//        if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
+//            cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorTorso, 0);
+//        return cosmeticPresetsPowerArmorChestplate;
+//    }
+//
+//    private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorLeggings = HashBiMap.create();
+//    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorLeggings() {
+//        if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
+//            cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorLegs, 0);
+//        return cosmeticPresetsPowerArmorLeggings;
+//    }
+//
+//    private BiMap<String, NBTTagCompound>  cosmeticPresetsPowerArmorBoots = HashBiMap.create();
+//    public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorBoots() {
+//        if(cosmeticPresetsPowerArmorBoots.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
+//            cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorFeet, 0);
+//        return cosmeticPresetsPowerArmorBoots;
+//    }
 }

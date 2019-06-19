@@ -30,7 +30,7 @@ package net.machinemuse.powersuits.item.module.tool;// package andrew.powersuits
 // import li.cil.oc.client.GuiHandler;
 // import li.cil.oc.common.Tier;
 // //import scala.Enumeration.Value;
-// import com.typesafe.config.Config;
+// import com.typesafe.config.MPSConfig;
 // import java.util.List;
 // import java.util.ArrayList;
 // import java.util.UUID;

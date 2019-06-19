@@ -6,12 +6,7 @@ public class MPSModuleConstants {
      */
     public static final String MODULE_TRADEOFF_PREFIX = "powersuits.tradeoff.";
 
-    // Armor --------------------------------------------------------------------------------------
-    public static final String ARMOR_POINTS = "armorPoints";
-    public static final String ARMOR_VALUE_PHYSICAL = "armorPhysical";
-    public static final String ARMOR_VALUE_ENERGY = "armorEnergy";
-    public static final String ARMOR_ENERGY_CONSUMPTION = "armorEnergyPerDamage";
-    public static final String MODULE_FIELD_STRENGTH = "fieldStrength";
+
 
     // Energy Generation --------------------------------------------------------------------------
     public static final String ENERGY_GENERATED = "energyGenerated";

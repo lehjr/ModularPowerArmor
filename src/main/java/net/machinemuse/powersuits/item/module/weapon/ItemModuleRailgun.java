@@ -1,18 +1,8 @@
 package net.machinemuse.powersuits.item.module.weapon;
 
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IRightClickModule;
 import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
