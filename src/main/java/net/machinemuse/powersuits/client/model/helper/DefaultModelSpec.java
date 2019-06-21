@@ -5,7 +5,7 @@ import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -35,12 +35,12 @@ public class DefaultModelSpec {
             if (stack.getItem() instanceof ItemPowerArmor)
                 return makeModelPrefs(stack, ((ItemPowerArmor) stack.getItem()).getEquipmentSlot());
             if (stack.getItem() instanceof ItemPowerFist)
-                return makeModelPrefs(stack, EntityEquipmentSlot.MAINHAND);
+                return makeModelPrefs(stack, EquipmentSlotType.MAINHAND);
         }
         return new NBTTagCompound();
     }
 
-    public static NBTTagCompound makeModelPrefs(@Nonnull ItemStack stack, EntityEquipmentSlot slot) {
+    public static NBTTagCompound makeModelPrefs(@Nonnull ItemStack stack, EquipmentSlotType slot) {
         if (stack.isEmpty())
             return new NBTTagCompound();
 

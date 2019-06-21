@@ -13,8 +13,8 @@ import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketCosmeticPreset;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -35,11 +35,11 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         mc = Minecraft.getInstance();
     }
 
-    public boolean isValidItem(ClickableItem clickie, EntityEquipmentSlot slot) {
+    public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
         if (clickie != null) {
             if (clickie.getItem().getItem() instanceof ItemPowerArmor)
                 return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, mc.player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
+            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Type.HAND))
                 return true;
         }
         return false;
@@ -52,16 +52,16 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     /**
      * Get's the equipment itemSlot the item is for.
      */
-    public EntityEquipmentSlot getEquipmentSlot() {
+    public EquipmentSlotType getEquipmentSlot() {
         ItemStack selectedItem = getSelectedItem().getItem();
         if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
             return selectedItem.getEquipmentSlot();
-        EntityPlayer player = mc.player;
+        PlayerEntity player = mc.player;
         ItemStack heldItem = player.getHeldItemOffhand();
 
         if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
-            return EntityEquipmentSlot.OFFHAND;
-        return EntityEquipmentSlot.MAINHAND;
+            return EquipmentSlotType.OFFHAND;
+        return EquipmentSlotType.MAINHAND;
     }
 
     public String getName() {

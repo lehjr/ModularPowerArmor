@@ -1,6 +1,6 @@
 //package net.machinemuse.powersuits.item.module.movement;
 //
-//import net.minecraft.inventory.EntityEquipmentSlot;
+//import net.minecraft.inventory.EquipmentSlotType;
 //import net.minecraft.nbt.NBTTagCompound;
 //
 //import java.util.Objects;
@@ -17,9 +17,9 @@
 //    final double amount;
 //    final String attributeName;
 //    final String id;
-//    final EntityEquipmentSlot slot;
+//    final EquipmentSlotType slot;
 //
-//    public AttributeModifier(int operation, UUID uuid, double amount, String attributeName, String id, EntityEquipmentSlot slotIn) {
+//    public AttributeModifier(int operation, UUID uuid, double amount, String attributeName, String id, EquipmentSlotType slotIn) {
 //        this.operation = operation;
 //        this.uuid = uuid;
 //        this.amount = amount;
@@ -34,7 +34,7 @@
 //        this.amount = nbt.getDouble("Amount");
 //        this.attributeName = nbt.getString("AttributeName");
 //        this.id = nbt.getString("Name");
-//        this.slot = EntityEquipmentSlot.fromString(!Objects.equals(nbt.getString("Slot"), "") ? nbt.getString("Slot").toLowerCase() : "legs" );
+//        this.slot = EquipmentSlotType.fromString(!Objects.equals(nbt.getString("Slot"), "") ? nbt.getString("Slot").toLowerCase() : "legs" );
 //    }
 //
 //    public NBTTagCompound toNBT(NBTTagCompound nbt) {

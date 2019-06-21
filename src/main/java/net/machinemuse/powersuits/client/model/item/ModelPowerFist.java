@@ -18,11 +18,11 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,7 +62,7 @@ public class ModelPowerFist implements IBakedModel {
      * Since this is where the quads are actually
      */
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, Random rand) {
+    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable Direction side, Random rand) {
         if (side != null)
             return ImmutableList.of();
 
@@ -174,7 +174,7 @@ public class ModelPowerFist implements IBakedModel {
             // Todo: eliminate
 //            colour = ((IModularItemBase) item).getColorFromItemStack(stackin);
 
-            if (entityIn instanceof EntityPlayer) {
+            if (entityIn instanceof PlayerEntity) {
 //                if (!stackIn.isEmpty() && stackIn == entityIn.getHeldItemMainhand() && entityIn.isHandActive()
 //                        && ModuleManager.INSTANCE.itemHasActiveModule(stackin, MPSModuleConstants.MODULE_PLASMA_CANNON__DATANAME)) {
 //                    isFiring = true;

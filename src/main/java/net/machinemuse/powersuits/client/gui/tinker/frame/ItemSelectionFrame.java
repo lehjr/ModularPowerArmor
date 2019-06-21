@@ -10,7 +10,7 @@ import net.machinemuse.numina.math.geometry.FlyFromPointToPoint2D;
 import net.machinemuse.numina.math.geometry.GradientAndArcCalculator;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -20,11 +20,11 @@ import java.util.List;
 public class ItemSelectionFrame extends ScrollableFrame {
     protected List<ClickableItem> itemButtons;
     protected int selectedItemStack = -1;
-    protected EntityPlayer player;
+    protected PlayerEntity player;
     protected List<MusePoint2D> itemPoints;
     protected int lastItemSlot = -1;
 
-    public ItemSelectionFrame(MusePoint2D topleft, MusePoint2D bottomright, Colour borderColour, Colour insideColour, EntityPlayer player) {
+    public ItemSelectionFrame(MusePoint2D topleft, MusePoint2D bottomright, Colour borderColour, Colour insideColour, PlayerEntity player) {
         super(topleft, bottomright, borderColour, insideColour);
         this.player = player;
         List<Integer> slots = MuseItemUtils.getModularItemSlotsInInventory(player);

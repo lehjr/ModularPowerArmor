@@ -3,8 +3,8 @@ package net.machinemuse.powersuits.network.packets;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.basemod.Numina;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntityMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -48,19 +48,19 @@ public class MusePacketTweakRequestDouble {
     }
 
     public static void handle(MusePacketTweakRequestDouble message, Supplier<NetworkEvent.Context> ctx) {
-        final EntityPlayerMP player = ctx.get().getSender();
+        final PlayerEntityMP player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
 
-        final EntityPlayer actualPlayer;
+        final PlayerEntity actualPlayer;
         int playerID = message.playerID;
 
         Entity entity = player.world.getEntityByID(playerID);
-        if (!(player.world.getEntityByID(playerID) instanceof EntityPlayer ))
+        if (!(player.world.getEntityByID(playerID) instanceof PlayerEntity ))
             return;
         else
-            actualPlayer = (EntityPlayer) player.world.getEntityByID(playerID);
+            actualPlayer = (PlayerEntity) player.world.getEntityByID(playerID);
 
         if (actualPlayer == null)
             return;

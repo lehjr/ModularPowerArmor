@@ -11,7 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -61,7 +61,7 @@ public class BlockLuxCapacitor extends BlockDirectional {
                 .variableOpacity()
                 .lightValue(1));
         setRegistryName(regName);
-        setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.DOWN));
+        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN));
     }
 
     @Override
@@ -139,7 +139,7 @@ public class BlockLuxCapacitor extends BlockDirectional {
 
     @SuppressWarnings("deprecation")
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
     }
 }

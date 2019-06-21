@@ -8,9 +8,9 @@ import net.machinemuse.powersuits.client.gui.tinker.frame.DetailedSummaryFrame;
 import net.machinemuse.powersuits.client.gui.tinker.frame.ItemSelectionFrame;
 import net.machinemuse.powersuits.client.gui.tinker.frame.ModuleSelectionFrame;
 import net.machinemuse.powersuits.client.gui.tinker.frame.ModuleTweakFrame;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * The gui class for the TinkerTable block.
@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author MachineMuse
  */
 public class GuiFieldTinker extends MuseGui {
-    protected final EntityPlayerSP player;
+    protected final PlayerEntitySP player;
     protected ItemSelectionFrame itemSelectFrame;
 
     /**
@@ -26,8 +26,8 @@ public class GuiFieldTinker extends MuseGui {
      *
      * @param player
      */
-    public GuiFieldTinker(EntityPlayer player) {
-        this.player = (EntityPlayerSP) player;
+    public GuiFieldTinker(PlayerEntity player) {
+        this.player = (PlayerEntitySP) player;
 //        this.xSize = 256;
 //        this.ySize = 200;
 //        this.xSize = 400;

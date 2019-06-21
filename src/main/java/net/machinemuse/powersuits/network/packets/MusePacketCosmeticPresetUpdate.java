@@ -52,7 +52,7 @@ public class MusePacketCosmeticPresetUpdate {
 
 //        if (ctx.side == Side.SERVER) {
 //            boolean allowCosmeticPresetCreation;
-//            final EntityPlayerMP player = ctx.getServerHandler().player;
+//            final PlayerEntityMP player = ctx.getServerHandler().player;
 //            // check if player is the server owner
 //            if (FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer()) {
 //                allowCosmeticPresetCreation = player.getName().equals(FMLCommonHandler.instance().getMinecraftServerInstance().getServerOwner());

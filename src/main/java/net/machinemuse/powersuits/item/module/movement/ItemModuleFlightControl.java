@@ -3,9 +3,9 @@ package net.machinemuse.powersuits.item.module.movement;
 import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 
-public class ItemModuleFlightControl extends ItemAbstractPowerModule implements IToggleableModule {
+public class ItemModuleFlightControl extends AbstractPowerModule implements IToggleableModule {
     public ItemModuleFlightControl(String regName) {
         super(regName, EnumModuleTarget.HEADONLY, EnumModuleCategory.CATEGORY_MOVEMENT);
 //        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));

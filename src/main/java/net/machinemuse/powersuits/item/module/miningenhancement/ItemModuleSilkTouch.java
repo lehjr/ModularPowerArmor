@@ -4,9 +4,9 @@ import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IEnchantmentModule;
 import net.machinemuse.numina.module.IMiningEnhancementModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nonnull;
 
 
-public class ItemModuleSilkTouch extends ItemAbstractPowerModule implements IEnchantmentModule, IMiningEnhancementModule {
+public class ItemModuleSilkTouch extends AbstractPowerModule implements IEnchantmentModule, IMiningEnhancementModule {
 //    final ItemStack book;
 
     // TODO: add trade off and/or power consumption and a toggle mechanic... maybe through ticking
@@ -42,7 +42,7 @@ public class ItemModuleSilkTouch extends ItemAbstractPowerModule implements IEnc
      * @return True to prevent harvesting, false to continue as normal
      */
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) {
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
 //        if (!player.world.isRemote) {
 //            if (getEnergyUsage(itemstack) > ElectricItemUtils.getPlayerEnergy(player))
 //                removeEnchantment(itemstack);
@@ -57,9 +57,9 @@ public class ItemModuleSilkTouch extends ItemAbstractPowerModule implements IEnc
     }
 
     @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
+    public int getEnergyUsage() {
         return 0;
-//        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, MPSModuleConstants.SILK_TOUCH_ENERGY_CONSUMPTION);
+//        return (int) moduleCap.applyPropertyModifiers(MPSModuleConstants.SILK_TOUCH_ENERGY_CONSUMPTION);
     }
 
     @Override

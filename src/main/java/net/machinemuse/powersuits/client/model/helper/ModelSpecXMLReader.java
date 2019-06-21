@@ -5,13 +5,11 @@ import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.client.model.obj.MuseOBJModel;
 import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -210,8 +208,8 @@ public enum ModelSpecXMLReader {
         }
     }
 
-    // since the skinned armor can't have more than one texture per EntityEquipmentSlot the TexturePartSpec is named after the itemSlot
-    public static void getTexturePartSpec(TextureSpec textureSpec, Node bindingNode, EntityEquipmentSlot slot, String fileLocation) {
+    // since the skinned armor can't have more than one texture per EquipmentSlotType the TexturePartSpec is named after the itemSlot
+    public static void getTexturePartSpec(TextureSpec textureSpec, Node bindingNode, EquipmentSlotType slot, String fileLocation) {
         Element partSpecElement = (Element) bindingNode;
         Colour colour = partSpecElement.hasAttribute("defaultColor") ?
                 parseColour(partSpecElement.getAttribute("defaultColor")) : Colour.WHITE;
@@ -219,7 +217,7 @@ public enum ModelSpecXMLReader {
         if (colour.a == 0)
             colour = colour.withAlpha(1.0);
 
-        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EntityEquipmentSlot.Type.ARMOR))
+        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EquipmentSlotType.Type.ARMOR))
             textureSpec.put(slot.getName(),
                     new TexturePartSpec(textureSpec,
                             new SpecBinding(null, slot, "all"),
@@ -298,7 +296,7 @@ public enum ModelSpecXMLReader {
                 (((Element) bindingNode).hasAttribute("target")) ?
                         MorphTarget.getMorph(((Element) bindingNode).getAttribute("target")) : null,
                 (((Element) bindingNode).hasAttribute("itemSlot")) ?
-                        EntityEquipmentSlot.fromString(((Element) bindingNode).getAttribute("itemSlot").toLowerCase()) : null,
+                        EquipmentSlotType.fromString(((Element) bindingNode).getAttribute("itemSlot").toLowerCase()) : null,
                 (((Element) bindingNode).hasAttribute("itemState")) ?
                         ((Element) bindingNode).getAttribute("itemState") : "all"
         );

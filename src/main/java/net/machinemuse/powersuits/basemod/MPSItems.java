@@ -11,25 +11,25 @@ import net.machinemuse.powersuits.item.armor.ItemPowerArmorChestplate;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorHelmet;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorLeggings;
 import net.machinemuse.powersuits.item.component.ItemComponent;
-import net.machinemuse.powersuits.item.module.armor.ItemModulePlatingDiamond;
-import net.machinemuse.powersuits.item.module.armor.ItemModulePlatingEnergyShield;
-import net.machinemuse.powersuits.item.module.armor.ItemModulePlatingIron;
-import net.machinemuse.powersuits.item.module.armor.ItemModulePlatingLeather;
-import net.machinemuse.powersuits.item.module.cosmetic.ItemModuleTransparentArmor;
-import net.machinemuse.powersuits.item.module.energy.generation.ItemModuleGeneratorKinetic;
-import net.machinemuse.powersuits.item.module.energy.generation.ItemModuleGeneratorSolarAdvanced;
-import net.machinemuse.powersuits.item.module.energy.generation.ItemModuleGeneratorSolarBasic;
-import net.machinemuse.powersuits.item.module.energy.generation.ItemModuleGeneratorThermal;
-import net.machinemuse.powersuits.item.module.energy.storage.ItemModuleEnergyStorage;
+import net.machinemuse.powersuits.item.module.armor.DiamondPlatingModule;
+import net.machinemuse.powersuits.item.module.armor.EnergyShieldModule;
+import net.machinemuse.powersuits.item.module.armor.IronPlatingModule;
+import net.machinemuse.powersuits.item.module.armor.LeatherPlatingModule;
+import net.machinemuse.powersuits.item.module.cosmetic.TransparentArmorModule;
+import net.machinemuse.powersuits.item.module.energy.generation.KineticGeneratorModule;
+import net.machinemuse.powersuits.item.module.energy.generation.AdvancedSolarGeneratorModule;
+import net.machinemuse.powersuits.item.module.energy.generation.BasicSolarGeneratorModule;
+import net.machinemuse.powersuits.item.module.energy.generation.ThermalGeneratorModule;
+import net.machinemuse.powersuits.item.module.energy.storage.EnergyStorageModule;
 import net.machinemuse.powersuits.item.module.environmental.*;
 import net.machinemuse.powersuits.item.module.miningenhancement.*;
 import net.machinemuse.powersuits.item.module.movement.*;
-import net.machinemuse.powersuits.item.module.special.ItemModuleClock;
-import net.machinemuse.powersuits.item.module.special.ItemModuleCompass;
-import net.machinemuse.powersuits.item.module.special.ItemModuleInvisibility;
-import net.machinemuse.powersuits.item.module.special.ItemModuleMagnet;
+import net.machinemuse.powersuits.item.module.special.ClockModule;
+import net.machinemuse.powersuits.item.module.special.CompassModule;
+import net.machinemuse.powersuits.item.module.special.InvisibilityModule;
+import net.machinemuse.powersuits.item.module.special.MagnetModule;
 import net.machinemuse.powersuits.item.module.tool.*;
-import net.machinemuse.powersuits.item.module.vision.ItemModuleBinoculars;
+import net.machinemuse.powersuits.item.module.vision.BinocularsModule;
 import net.machinemuse.powersuits.item.module.vision.ItemModuleNightVision;
 import net.machinemuse.powersuits.item.module.vision.ItemModuleThaumicGoggles;
 import net.machinemuse.powersuits.item.module.weapon.*;
@@ -182,50 +182,50 @@ public enum MPSItems {
     // Armor --------------------------------------------------------------------------------------
     public static final String MODULE_LEATHER_PLATING__REGNAME = MODID + ":module.armor.plating.leather";
     @ObjectHolder(MODULE_LEATHER_PLATING__REGNAME)
-    public static final ItemModulePlatingLeather moduleLeatherPlating = null;
+    public static final LeatherPlatingModule moduleLeatherPlating = null;
 
     public static final String MODULE_IRON_PLATING__REGNAME =  MODID + ":module.armor.plating.iron";
     @ObjectHolder(MODULE_IRON_PLATING__REGNAME)
-    public static final ItemModulePlatingIron moduleIronPlating = null;
+    public static final IronPlatingModule moduleIronPlating = null;
 
     public static final String MODULE_DIAMOND_PLATING__REGNAME =  MODID + ":module.armor.plating.diamond";
     @ObjectHolder(MODULE_DIAMOND_PLATING__REGNAME)
-    public static final ItemModulePlatingDiamond moduleDiamondPlating = null;
+    public static final DiamondPlatingModule moduleDiamondPlating = null;
 
     public static final String MODULE_ENERGY_SHIELD__REGNAME =  MODID + ":module.armor.energy_shield";
     @ObjectHolder(MODULE_ENERGY_SHIELD__REGNAME)
-    public static final ItemModulePlatingEnergyShield moduleEnergyShield = null;
+    public static final EnergyShieldModule moduleEnergyShield = null;
 
     // Cosmetic -----------------------------------------------------------------------------------
     public static final String MODULE_TRANSPARENT_ARMOR__REGNAME = MODID + ":module.cosmetic.transparent_armor";
     @ObjectHolder(MODULE_TRANSPARENT_ARMOR__REGNAME)
-    public static final ItemModuleTransparentArmor moduleTransparentArmor = null;
+    public static final TransparentArmorModule moduleTransparentArmor = null;
 
     // Energy Storage -----------------------------------------------------------------------------
     public static final String MODULE_BATTERY_BASIC__REGNAME = MODID + ":battery.basic";
     @ObjectHolder(MODULE_BATTERY_BASIC__REGNAME)
-    public static final ItemModuleEnergyStorage moduleBatteryBasic = null;
+    public static final EnergyStorageModule moduleBatteryBasic = null;
 
     public static final String MODULE_BATTERY_ADVANCED__REGNAME = MODID + ":battery.advanced";
     @ObjectHolder(MODULE_BATTERY_ADVANCED__REGNAME)
-    public static final ItemModuleEnergyStorage moduleBatteryAdvanced = null;
+    public static final EnergyStorageModule moduleBatteryAdvanced = null;
 
     public static final String MODULE_BATTERY_ELITE__REGNAME = MODID + ":battery.elite";
     @ObjectHolder(MODULE_BATTERY_ELITE__REGNAME)
-    public static final ItemModuleEnergyStorage moduleBatteryElite = null;
+    public static final EnergyStorageModule moduleBatteryElite = null;
 
     public static final String MODULE_BATTERY_ULTIMATE__REGNAME = MODID + ":battery.ultimate";
     @ObjectHolder(MODULE_BATTERY_ULTIMATE__REGNAME)
-    public static final ItemModuleEnergyStorage moduleBatteryUltimate = null;
+    public static final EnergyStorageModule moduleBatteryUltimate = null;
 
     // Energy Generation -----------------------------------------------------------------------------
     public static final String MODULE_SOLAR_GENERATOR__REGNAME = MODID + ":generator.solar";
     @ObjectHolder(MODULE_SOLAR_GENERATOR__REGNAME)
-    public static final ItemModuleGeneratorSolarBasic solarGenerator = null;
+    public static final BasicSolarGeneratorModule solarGenerator = null;
 
     public static final String MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME = MODID + ":generator.solar.adv";
     @ObjectHolder(MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME)
-    public static final ItemModuleGeneratorSolarAdvanced advSolarGenerator = null;
+    public static final AdvancedSolarGeneratorModule advSolarGenerator = null;
 
     // TODO:
 //    public static final String MODULE_COAL_GEN__REGNAME = MODID + ":coalGenerator";
@@ -233,11 +233,11 @@ public enum MPSItems {
 
     public static final String MODULE_KINETIC_GENERATOR__REGNAME = MODID + ":generator.kinetic";
     @ObjectHolder(MODULE_KINETIC_GENERATOR__REGNAME)
-    public static final ItemModuleGeneratorKinetic kineticGenerator = null;
+    public static final KineticGeneratorModule kineticGenerator = null;
 
     public static final String MODULE_THERMAL_GENERATOR__REGNAME = MODID + ":generator.thermal";
     @ObjectHolder(MODULE_THERMAL_GENERATOR__REGNAME)
-    public static final ItemModuleGeneratorThermal thermalGenerator = null;
+    public static final ThermalGeneratorModule thermalGenerator = null;
 
     // todo
     // Debug --------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ public enum MPSItems {
 
     public static final String MODULE_ADVANCED_COOLING_SYSTEM__REGNAME = MODID + ":cooling_system.advanced";
     @ObjectHolder(MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)
-    public static final ItemModuleAdvancedCoolingSystem advancedCoolingSystem = null;
+    public static final CoolingSystemModule advancedCoolingSystem = null;
 
     public static final String MODULE_AIRTIGHT_SEAL__REGNAME = MODID + ":airtight_seal";
     @ObjectHolder(MODULE_AIRTIGHT_SEAL__REGNAME)
@@ -266,15 +266,15 @@ public enum MPSItems {
 
     public static final String MODULE_AUTO_FEEDER__REGNAME = MODID + ":auto_feeder";
     @ObjectHolder(MODULE_AUTO_FEEDER__REGNAME)
-    public static final ItemModuleAutoFeeder autoFeeder = null;
+    public static final AutoFeederModule autoFeeder = null;
 
     public static final String MODULE_MOB_REPULSOR__REGNAME = MODID + ":mob_repulsor";
     @ObjectHolder(MODULE_MOB_REPULSOR__REGNAME)
-    public static final ItemModuleMobRepulsor mobRepulsor = null;
+    public static final MobRepulsorModule mobRepulsor = null;
 
     public static final String MODULE_WATER_ELECTROLYZER__REGNAME = MODID + ":water_electrolyzer";
     @ObjectHolder(MODULE_WATER_ELECTROLYZER__REGNAME)
-    public static final ItemModuleWaterElectrolyzer waterElectrolyzer = null;
+    public static final WaterElectrolyzerModule waterElectrolyzer = null;
 
     // Movement -----------------------------------------------------------------------------------
     public static final String MODULE_BLINK_DRIVE__REGNAME = MODID + ":blink_drive";
@@ -315,33 +315,33 @@ public enum MPSItems {
 
     public static final String MODULE_SPRINT_ASSIST__REGNAME = MODID + ":sprint_assist";
     @ObjectHolder(MODULE_SPRINT_ASSIST__REGNAME)
-    public static final ItemModuleSprintAssist sprint_assist = null;
+    public static final SprintAssistModule sprint_assist = null;
 
     public static final String MODULE_SWIM_BOOST__REGNAME = MODID + ":swim_assist";
     @ObjectHolder(MODULE_SWIM_BOOST__REGNAME)
-    public static final ItemModuleSwimAssist swim_assist = null;
+    public static final SwimAssistModule swim_assist = null;
 
     // Special ------------------------------------------------------------------------------------
     public static final String MODULE_CLOCK__REGNAME = MODID + ":clock";
     @ObjectHolder(MODULE_CLOCK__REGNAME)
-    public static final ItemModuleClock clock = null;
+    public static final ClockModule clock = null;
 
     public static final String MODULE_COMPASS__REGNAME = MODID + ":compass";
     @ObjectHolder(MODULE_COMPASS__REGNAME)
-    public static final ItemModuleCompass compass = null;
+    public static final CompassModule compass = null;
 
     public static final String MODULE_ACTIVE_CAMOUFLAGE__REGNAME = MODID + ":invisibility";
     @ObjectHolder(MODULE_ACTIVE_CAMOUFLAGE__REGNAME)
-    public static ItemModuleInvisibility invisibility = null;
+    public static InvisibilityModule invisibility = null;
 
     public static final String MODULE_MAGNET__REGNAME = MODID + ":magnet";
     @ObjectHolder(MODULE_MAGNET__REGNAME)
-    public static final ItemModuleMagnet magnet = null;
+    public static final MagnetModule magnet = null;
 
     // Vision -------------------------------------------------------------------------------------
     public static final String BINOCULARS_MODULE__REGNAME = MODID + ":binoculars";
     @ObjectHolder(BINOCULARS_MODULE__REGNAME)
-    public static final ItemModuleBinoculars binoculars = null;
+    public static final BinocularsModule binoculars = null;
 
     public static final String MODULE_NIGHT_VISION__REGNAME = MODID + ":night_vision";
     @ObjectHolder(MODULE_NIGHT_VISION__REGNAME)
@@ -354,7 +354,7 @@ public enum MPSItems {
     // Mining Enhancements ------------------------------------------------------------------------
     public static final String MODULE_AOE_PICK_UPGRADE__REGNAME = MODID + ":aoe_pick_upgrade"; // no icon
     @ObjectHolder(MODULE_AOE_PICK_UPGRADE__REGNAME)
-    public static final ItemModuleAOEPickUpgrade aoePickUpgrade = null;
+    public static final AOEPickUpgradeModule aoePickUpgrade = null;
 
     public static final String MODULE_SILK_TOUCH__REGNAME = MODID + ":silk_touch";
     @ObjectHolder(MODULE_SILK_TOUCH__REGNAME)
@@ -379,7 +379,7 @@ public enum MPSItems {
 
     public static final String MODULE_AQUA_AFFINITY__REGNAME = MODID + ":aqua_affinity";
     @ObjectHolder(MODULE_AQUA_AFFINITY__REGNAME)
-    public static final ItemModuleAquaAffinity aquaAffinity = null;
+    public static final AquaAffinityModule aquaAffinity = null;
 
     public static final String MODULE_AXE__REGNAME = MODID + ":axe";
     @ObjectHolder(MODULE_AXE__REGNAME)
@@ -391,7 +391,7 @@ public enum MPSItems {
 
     public static final String MODULE_DIAMOND_PICK_UPGRADE__REGNAME = MODID + ":diamond_pick_upgrade";
     @ObjectHolder(MODULE_DIAMOND_PICK_UPGRADE__REGNAME)
-    public static final ItemModuleDiamondPickUpgrade diamondPickUpgrade = null;
+    public static final DiamondPickUpgradeModule diamondPickUpgrade = null;
 
     public static final String MODULE_DIMENSIONAL_RIFT__REGNAME = MODID + ":dim_rift_gen";
     @ObjectHolder(MODULE_DIMENSIONAL_RIFT__REGNAME)
@@ -399,11 +399,11 @@ public enum MPSItems {
 
     public static final String MODULE_FIELD_TINKER__REGNAME = MODID + ":field_tinkerer";
     @ObjectHolder(MODULE_FIELD_TINKER__REGNAME)
-    public static ItemModuleFieldTinker fieldTinkerer = null;
+    public static FieldTinkerModule fieldTinkerer = null;
 
     public static final String MODULE_FLINT_AND_STEEL__REGNAME = MODID + ":flint_and_steel";
     @ObjectHolder(MODULE_FLINT_AND_STEEL__REGNAME)
-    public static ItemModuleFlintAndSteel flintAndSteel = null;
+    public static FlintAndSteelModule flintAndSteel = null;
 
     public static final String MODULE_GRAFTER__REGNAME = MODID + ":grafter";
     @ObjectHolder(MODULE_GRAFTER__REGNAME)
@@ -411,15 +411,15 @@ public enum MPSItems {
 
     public static final String MODULE_HOE__REGNAME = MODID + ":hoe";
     @ObjectHolder(MODULE_HOE__REGNAME)
-    public static final ItemModuleHoe hoe = null;
+    public static final HoeModule hoe = null;
 
     public static final String MODULE_LEAF_BLOWER__REGNAME = MODID + ":leaf_blower";
     @ObjectHolder(MODULE_LEAF_BLOWER__REGNAME)
-    public static final ItemModuleLeafBlower leafBlower = null;
+    public static final LeafBlowerModule leafBlower = null;
 
     public static final String MODULE_LUX_CAPACITOR__REGNAME = MODID + ":luxcapacitor_module.json";
     @ObjectHolder(MODULE_LUX_CAPACITOR__REGNAME)
-    public static final ItemModuleLuxCapacitor luxcapacitor_module = null;
+    public static final LuxCapacitorModule luxcapacitor_module = null;
 
     public static final String MODULE_FIELD_TELEPORTER__REGNAME = MODID + ":mffs_field_teleporter";
     @ObjectHolder(MODULE_FIELD_TELEPORTER__REGNAME)
@@ -431,7 +431,7 @@ public enum MPSItems {
 
     public static final String MODULE_PORTABLE_CRAFTING__REGNAME = MODID + ":portable_crafting_table";
     @ObjectHolder(MODULE_PORTABLE_CRAFTING__REGNAME)
-    public static final ItemModuleInPlaceAssembler portableCraftingTable = null;
+    public static final PortableCraftingModule portableCraftingTable = null;
 
     public static final String MODULE_OMNIPROBE__REGNAME = MODID + ":omni_probe";
     @ObjectHolder(MODULE_OMNIPROBE__REGNAME)
@@ -451,7 +451,7 @@ public enum MPSItems {
 
     public static final String MODULE_PICKAXE__REGNAME = MODID + ":pickaxe";
     @ObjectHolder(MODULE_PICKAXE__REGNAME)
-    public static final ItemModulePickaxe pickaxe = null;
+    public static final PickaxeModule pickaxe = null;
 
     public static final String MODULE_REF_STOR_WIRELESS__REGNAME = MODID + ":refined_storage_wireless_grid";//"Refined Storage Wireless Grid";
     @ObjectHolder(MODULE_REF_STOR_WIRELESS__REGNAME)
@@ -463,11 +463,11 @@ public enum MPSItems {
 
     public static final String MODULE_SHEARS__REGNAME = MODID + ":shears";
     @ObjectHolder(MODULE_SHEARS__REGNAME)
-    public static final ItemModuleShears shears = null;
+    public static final ShearsModule shears = null;
 
     public static final String MODULE_SHOVEL__REGNAME = MODID + ":shovel";
     @ObjectHolder(MODULE_SHOVEL__REGNAME)
-    public static final ItemModuleShovel shovel = null;
+    public static final ShovelModule shovel = null;
 
     public static final String MODULE_TREETAP__REGNAME = MODID + ":treetap";
     @ObjectHolder(MODULE_TREETAP__REGNAME)
@@ -476,23 +476,23 @@ public enum MPSItems {
     // Weapons ------------------------------------------------------------------------------------
     public static final String MODULE_BLADE_LAUNCHER__REGNAME = MODID + ":blade_launcher";
     @ObjectHolder(MODULE_BLADE_LAUNCHER__REGNAME)
-    public static final ItemModuleBladeLauncher bladeLauncher = null;
+    public static final BladeLauncherModule bladeLauncher = null;
 
     public static final String MODULE_LIGHTNING__REGNAME = MODID + ":lightning_summoner";
     @ObjectHolder(MODULE_LIGHTNING__REGNAME)
-    public static final ItemModuleLightning lightningSummoner = null;
+    public static final LightningModule lightningSummoner = null;
 
     public static final String MODULE_MELEE_ASSIST__REGNAME = MODID + ":melee_assist";
     @ObjectHolder(MODULE_MELEE_ASSIST__REGNAME)
-    public static final ItemModuleMeleeAssist meleeAssist = null;
+    public static final MeleeAssistModule meleeAssist = null;
 
     public static final String MODULE_PLASMA_CANNON__REGNAME = MODID + ":plasma_cannon";
     @ObjectHolder(MODULE_PLASMA_CANNON__REGNAME)
-    public static final ItemModulePlasmaCannon plasmaCannon = null;
+    public static final PlasmaCannonModule plasmaCannon = null;
 
     public static final String MODULE_RAILGUN__REGNAME = MODID + ":railgun";
     @ObjectHolder(MODULE_RAILGUN__REGNAME)
-    public static final ItemModuleRailgun rainGun = null;
+    public static final RailgunModule rainGun = null;
 
     /**
      * Blocks -------------------------------------------------------------------------------------
@@ -595,46 +595,46 @@ public enum MPSItems {
 
                 // Modules ------------------------------------------------------------------------
                 // Armor
-                new ItemModulePlatingLeather(MODULE_LEATHER_PLATING__REGNAME),
-                new ItemModulePlatingIron(MODULE_IRON_PLATING__REGNAME),
-                new ItemModulePlatingDiamond(MODULE_DIAMOND_PLATING__REGNAME),
-                new ItemModulePlatingEnergyShield(MODULE_ENERGY_SHIELD__REGNAME),
+                new LeatherPlatingModule(MODULE_LEATHER_PLATING__REGNAME),
+                new IronPlatingModule(MODULE_IRON_PLATING__REGNAME),
+                new DiamondPlatingModule(MODULE_DIAMOND_PLATING__REGNAME),
+                new EnergyShieldModule(MODULE_ENERGY_SHIELD__REGNAME),
 
                 // Cosmetic -----------------------------------------------------------------------
-                new ItemModuleTransparentArmor(MODULE_TRANSPARENT_ARMOR__REGNAME),
+                new TransparentArmorModule(MODULE_TRANSPARENT_ARMOR__REGNAME),
 
                 // Energy Storage -----------------------------------------------------------------
-                new ItemModuleEnergyStorage(MPSConfig.BATTERY_MODULE_BASIC_MAX_ENERGY.get(),
+                new EnergyStorageModule(MPSConfig.BATTERY_MODULE_BASIC_MAX_ENERGY.get(),
                         MPSConfig.BATTERY_MODULE_BASIC_MAX_TRAMSFER.get(),
                         MODULE_BATTERY_BASIC__REGNAME),
 
-                new ItemModuleEnergyStorage(MPSConfig.BATTERY_MODULE_ADVANCED_MAX_ENERGY.get(),
+                new EnergyStorageModule(MPSConfig.BATTERY_MODULE_ADVANCED_MAX_ENERGY.get(),
                         MPSConfig.BATTERY_MODULE_ADVANCED_MAX_TRAMSFER.get(),
                         MODULE_BATTERY_ADVANCED__REGNAME),
 
-                new ItemModuleEnergyStorage(MPSConfig.BATTERY_MODULE_ELITE_MAX_ENERGY.get(),
+                new EnergyStorageModule(MPSConfig.BATTERY_MODULE_ELITE_MAX_ENERGY.get(),
                         MPSConfig.BATTERY_MODULE_ELITE_MAX_TRAMSFER.get(),
                         MODULE_BATTERY_ELITE__REGNAME),
 
-                new ItemModuleEnergyStorage(MPSConfig.BATTERY_MODULE_ULTIMATE_MAX_ENERGY.get(),
+                new EnergyStorageModule(MPSConfig.BATTERY_MODULE_ULTIMATE_MAX_ENERGY.get(),
                         MPSConfig.BATTERY_MODULE_ULTIMATE_MAX_TRAMSFER.get(),
                         MODULE_BATTERY_ULTIMATE__REGNAME),
 
                 // Energy Generation --------------------------------------------------------------
-                new ItemModuleGeneratorSolarBasic(MODULE_SOLAR_GENERATOR__REGNAME),
-                new ItemModuleGeneratorSolarAdvanced(MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME),
-                new ItemModuleGeneratorKinetic(MODULE_KINETIC_GENERATOR__REGNAME),
-                new ItemModuleGeneratorThermal(MODULE_THERMAL_GENERATOR__REGNAME),
+                new BasicSolarGeneratorModule(MODULE_SOLAR_GENERATOR__REGNAME),
+                new AdvancedSolarGeneratorModule(MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME),
+                new KineticGeneratorModule(MODULE_KINETIC_GENERATOR__REGNAME),
+                new ThermalGeneratorModule(MODULE_THERMAL_GENERATOR__REGNAME),
 
                 // Environmental ------------------------------------------------------------------
                 new ItemModuleBasicCoolingSystem(MODULE_BASIC_COOLING_SYSTEM__REGNAME),
-                new ItemModuleAdvancedCoolingSystem(MODULE_ADVANCED_COOLING_SYSTEM__REGNAME),
+                new CoolingSystemModule(MODULE_ADVANCED_COOLING_SYSTEM__REGNAME),
                 new ItemModuleAirtightSeal(MODULE_AIRTIGHT_SEAL__REGNAME), // fixme contiditional register
                 new ItemModuleApiaristArmor(MODULE_APIARIST_ARMOR__REGNAME),// fixme contiditional register
                 new ItemModuleHazmat(MODULE_HAZMAT__REGNAME),// fixme contiditional register
-                new ItemModuleAutoFeeder(MODULE_AUTO_FEEDER__REGNAME),
-                new ItemModuleMobRepulsor(MODULE_MOB_REPULSOR__REGNAME),
-                new ItemModuleWaterElectrolyzer(MODULE_WATER_ELECTROLYZER__REGNAME),
+                new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
+                new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
+                new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),
 
                 // Movement -----------------------------------------------------------------------------------
                 new ItemModuleBlinkDrive(MODULE_BLINK_DRIVE__REGNAME),
@@ -646,22 +646,22 @@ public enum MPSItems {
                 new ItemModuleJumpAssist(MODULE_JUMP_ASSIST__REGNAME),
                 new ItemModuleParachute(MODULE_PARACHUTE__REGNAME),
                 new ItemModuleShockAbsorber(MODULE_SHOCK_ABSORBER__REGNAME),
-                new ItemModuleSprintAssist(MODULE_SPRINT_ASSIST__REGNAME),
-                new ItemModuleSwimAssist(MODULE_SWIM_BOOST__REGNAME),
+                new SprintAssistModule(MODULE_SPRINT_ASSIST__REGNAME),
+                new SwimAssistModule(MODULE_SWIM_BOOST__REGNAME),
 
                 // Special ------------------------------------------------------------------------------------
-                new ItemModuleClock(MODULE_CLOCK__REGNAME),
-                new ItemModuleCompass(MODULE_COMPASS__REGNAME),
-                new ItemModuleInvisibility(MODULE_ACTIVE_CAMOUFLAGE__REGNAME),
-                new ItemModuleMagnet(MODULE_MAGNET__REGNAME),
+                new ClockModule(MODULE_CLOCK__REGNAME),
+                new CompassModule(MODULE_COMPASS__REGNAME),
+                new InvisibilityModule(MODULE_ACTIVE_CAMOUFLAGE__REGNAME),
+                new MagnetModule(MODULE_MAGNET__REGNAME),
 
                 // Vision -------------------------------------------------------------------------------------
-                new ItemModuleBinoculars(BINOCULARS_MODULE__REGNAME),
+                new BinocularsModule(BINOCULARS_MODULE__REGNAME),
                 new ItemModuleNightVision(MODULE_NIGHT_VISION__REGNAME),
                 new ItemModuleThaumicGoggles(MODULE_THAUM_GOGGLES__REGNAME), // fixme contiditional register
 
                 // Mining Enhancements ------------------------------------------------------------------------
-                new ItemModuleAOEPickUpgrade(MODULE_AOE_PICK_UPGRADE__REGNAME),
+                new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
                 new ItemModuleSilkTouch(MODULE_SILK_TOUCH__REGNAME),
                 new ItemModuleMAD(MODULE_MAD__REGNAME),// fixme contiditional register
                 new ItemModuleFortune(MODULE_FORTUNE_REGNAME),
@@ -669,40 +669,40 @@ public enum MPSItems {
                 // Tools --------------------------------------------------------------------------
                 new ItemModuleAppEngWirelessFluid(MODULE_APPENG_EC_WIRELESS_FLUID__REGNAME), // fixme contiditional register
                 new ItemModuleAppEngWireless(MODULE_APPENG_WIRELESS__REGNAME), // fixme contiditional register
-                new ItemModuleAquaAffinity(MODULE_AQUA_AFFINITY__REGNAME),
+                new AquaAffinityModule(MODULE_AQUA_AFFINITY__REGNAME),
                 new ItemModuleAxe(MODULE_AXE__REGNAME),
                 new ItemModuleChisel(MODULE_CHISEL__REGNAME), // fixme contiditional register
-                new ItemModuleDiamondPickUpgrade(MODULE_DIAMOND_PICK_UPGRADE__REGNAME),
+                new DiamondPickUpgradeModule(MODULE_DIAMOND_PICK_UPGRADE__REGNAME),
                 new ItemModuleDimensionalRift(MODULE_DIMENSIONAL_RIFT__REGNAME),
-                new ItemModuleFieldTinker(MODULE_FIELD_TINKER__REGNAME),
-                new ItemModuleFlintAndSteel(MODULE_FLINT_AND_STEEL__REGNAME),
+                new FieldTinkerModule(MODULE_FIELD_TINKER__REGNAME),
+                new FlintAndSteelModule(MODULE_FLINT_AND_STEEL__REGNAME),
                 new ItemModuleGrafter(MODULE_GRAFTER__REGNAME), // fixme contiditional register
-                new ItemModuleHoe(MODULE_HOE__REGNAME),
-                new ItemModuleLeafBlower(MODULE_LEAF_BLOWER__REGNAME),
-                new ItemModuleLuxCapacitor(MODULE_LUX_CAPACITOR__REGNAME),
+                new HoeModule(MODULE_HOE__REGNAME),
+                new LeafBlowerModule(MODULE_LEAF_BLOWER__REGNAME),
+                new LuxCapacitorModule(MODULE_LUX_CAPACITOR__REGNAME),
                 new ItemModuleMFFSFieldTeleporter(MODULE_FIELD_TELEPORTER__REGNAME),// fixme contiditional register
 //                new ItemModuleOCTerminal(MODULE_OC_TERMINAL__REGNAME) // TODO???
-                new ItemModuleInPlaceAssembler(MODULE_PORTABLE_CRAFTING__REGNAME),
+                new PortableCraftingModule(MODULE_PORTABLE_CRAFTING__REGNAME),
                 new ItemModuleOmniProbe(MODULE_OMNIPROBE__REGNAME),
 //                new ItemModuleOmniWrench(MODULE_OMNI_WRENCH__REGNAME), // TODO???
                 new ItemModuleOreScanner(MODULE_ORE_SCANNER__REGNAME),
                 new ItemModulePersonalShrinking(MODULE_CM_PSD__REGNAME),
-                new ItemModulePickaxe(MODULE_PICKAXE__REGNAME),
+                new PickaxeModule(MODULE_PICKAXE__REGNAME),
                 new ItemModuleRefinedStorageWireless(MODULE_REF_STOR_WIRELESS__REGNAME),// fixme contiditional register
                 new ItemModuleScoop(MODULE_SCOOP__REGNAME),
-                new ItemModuleShears(MODULE_SHEARS__REGNAME),
-                new ItemModuleShovel(MODULE_SHOVEL__REGNAME),
+                new ShearsModule(MODULE_SHEARS__REGNAME),
+                new ShovelModule(MODULE_SHOVEL__REGNAME),
                 new ItemModuleTreetap(MODULE_TREETAP__REGNAME),// fixme contiditional register
 
                 // Debug --------------------------------------------------------------------------
                 // todo
 
                 // Weapons ------------------------------------------------------------------------
-                new ItemModuleBladeLauncher(MODULE_BLADE_LAUNCHER__REGNAME),
-                new ItemModuleLightning(MODULE_LIGHTNING__REGNAME),
-                new ItemModuleMeleeAssist(MODULE_MELEE_ASSIST__REGNAME),
-                new ItemModulePlasmaCannon(MODULE_PLASMA_CANNON__REGNAME),
-                new ItemModuleRailgun(MODULE_RAILGUN__REGNAME),
+                new BladeLauncherModule(MODULE_BLADE_LAUNCHER__REGNAME),
+                new LightningModule(MODULE_LIGHTNING__REGNAME),
+                new MeleeAssistModule(MODULE_MELEE_ASSIST__REGNAME),
+                new PlasmaCannonModule(MODULE_PLASMA_CANNON__REGNAME),
+                new RailgunModule(MODULE_RAILGUN__REGNAME),
 
                 // ItemBlocks ---------------------------------------------------------------------------------
                 new ItemBlock(tinkerTable,

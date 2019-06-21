@@ -5,7 +5,7 @@
 //import net.machinemuse.numina.utils.math.geometry.MusePoint2D;
 //import net.machinemuse.numina.utils.render.MuseRenderer;
 //import net.machinemuse.powersuits.gui.tinker.clickable.ClickableItem;
-//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.Item;
 //import org.lwjgl.opengl.GL11;
 //
@@ -15,10 +15,10 @@
 //public class ItemInfoFrame extends ScrollableFrame {
 //    public static final double SCALEFACTOR = 1;
 //    protected ItemSelectionFrame target;
-//    protected EntityPlayer player;
+//    protected PlayerEntity player;
 //    protected List<String> info;
 //
-//    public ItemInfoFrame(EntityPlayer player, MusePoint2D topleft,
+//    public ItemInfoFrame(PlayerEntity player, MusePoint2D topleft,
 //                         MusePoint2D bottomright,
 //                         Colour borderColour, Colour insideColour, ItemSelectionFrame target) {
 //        super(topleft.times(1.0 / SCALEFACTOR), bottomright.times(1.0 / SCALEFACTOR), borderColour, insideColour);

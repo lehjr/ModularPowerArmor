@@ -5,7 +5,7 @@
 //import net.machinemuse.powersuits.client.gui.tinker.GuiTinkerTable;
 //import net.machinemuse.powersuits.client.gui.tinker.KeyConfigGui;
 //import net.machinemuse.powersuits.item.tool.ItemPowerFist;
-//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.util.EnumHand;
 //import net.minecraft.util.math.BlockPos;
@@ -28,7 +28,7 @@
 //    INSTANCE;
 //
 //    @Override
-//    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+//    public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
 //        if (ID == 4)
 //            return new PortableCraftingContainer(player.inventory, world, new BlockPos(x, y, z));
 //        if (ID == 6) {
@@ -39,7 +39,7 @@
 //
 //    @OnlyIn(Dist.CLIENT)
 //    @Override
-//    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+//    public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
 //        //        Minecraft.getMinecraft().player.addStat(AchievementList.OPEN_INVENTORY, 1);
 //        switch (ID) {
 //            case 0:
@@ -62,7 +62,7 @@
 //    }
 //
 //    @Nonnull
-//    EnumHand getPlayerHand(EntityPlayer player) {
+//    EnumHand getPlayerHand(PlayerEntity player) {
 //        EnumHand hand;
 //        hand = player.getActiveHand();
 //        if (hand == null) {

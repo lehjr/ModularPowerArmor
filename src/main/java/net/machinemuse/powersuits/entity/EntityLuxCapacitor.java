@@ -4,19 +4,20 @@ import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -24,17 +25,19 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import static net.machinemuse.powersuits.block.BlockLuxCapacitor.COLOR;
 import static net.minecraft.block.BlockDirectional.FACING;
 
-public class EntityLuxCapacitor extends EntityThrowable implements IEntityAdditionalSpawnData {
+public class EntityLuxCapacitor extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public Colour color;
 
-    BlockItemUseContext getUseContext(BlockPos pos, EnumFacing facing, RayTraceResult hitResult) {
+    BlockItemUseContext getUseContext(BlockPos pos, Direction facing, BlockRayTraceResult hitResult) {
+
+
         return new BlockItemUseContext(
                 new ItemUseContext(
-                        (EntityPlayer)this.thrower,
+                        (PlayerEntity)this.getThrower(),
                         new ItemStack(MPSItems.INSTANCE.itemLuxCapacitor),
                         pos,
                         facing,
-                        hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ()));
+                        hitResult.getPos().getX(), hitResult.getPos().getY(), hitResult.getPos().getZ()));
     }
 
     public EntityLuxCapacitor(World world) {
@@ -43,14 +46,17 @@ public class EntityLuxCapacitor extends EntityThrowable implements IEntityAdditi
             color = Colour.WHITE;
     }
 
-    public EntityLuxCapacitor(World world, EntityLivingBase shootingEntity, Colour color) {
+    public EntityLuxCapacitor(World world, LivingEntity shootingEntity, Colour color) {
         super(MPSItems.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
         this.color = color != null ? color : BlockLuxCapacitor.defaultColor;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;
-        this.motionX = direction.x * speed;
-        this.motionY = direction.y * speed;
-        this.motionZ = direction.z * speed;
+        this.setMotion(
+                direction.x * speed,
+                direction.y * speed,
+                direction.z * speed
+        );
+
         double r = 0.4375;
         double xoffset = 0.1;
         double yoffset = 0;
@@ -69,21 +75,22 @@ public class EntityLuxCapacitor extends EntityThrowable implements IEntityAdditi
         if (color == null)
             color = Colour.WHITE;
 
-        if (!this.removed && hitResult.type == RayTraceResult.Type.BLOCK) {
-            EnumFacing dir = hitResult.sideHit.getOpposite();
-            int x = hitResult.getBlockPos().getX() - dir.getXOffset();
-            int y = hitResult.getBlockPos().getY() - dir.getYOffset();
-            int z = hitResult.getBlockPos().getZ() - dir.getZOffset();
+        if (this.isAlive() && hitResult.getType() == RayTraceResult.Type.BLOCK) {
+            BlockRayTraceResult blockRayTrace = (BlockRayTraceResult)hitResult;
+            Direction dir = blockRayTrace.getFace().getOpposite();
+            int x = blockRayTrace.getPos().getX() - dir.getXOffset();
+            int y = blockRayTrace.getPos().getY() - dir.getYOffset();
+            int z = blockRayTrace.getPos().getZ() - dir.getZOffset();
             if (y > 0) {
                 BlockPos blockPos = new BlockPos(x, y, z);
                 if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().isValidPosition(world, blockPos)) {
-                    IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, hitResult.sideHit, hitResult));
+                    BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, blockRayTrace.getFace(), blockRayTrace));
                     world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
                     world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                 } else {
-                    for (EnumFacing facing : EnumFacing.values()) {
+                    for (Direction facing : Direction.values()) {
                         if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(FACING, facing).isValidPosition(world, blockPos)) {
-                            IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, hitResult));
+                            BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, blockRayTrace));
                             world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
                             world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                             break;
@@ -114,6 +121,11 @@ public class EntityLuxCapacitor extends EntityThrowable implements IEntityAdditi
     @Override
     protected float getGravityVelocity() {
         return 0;
+    }
+
+    @Override
+    protected void registerData() {
+
     }
 
     @Override

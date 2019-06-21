@@ -4,7 +4,7 @@ import net.machinemuse.numina.client.gui.clickable.ClickableButton;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Ported to Java by lehjr on 10/19/16.
  */
 public class TabSelectFrame implements IGuiFrame {
-    EntityPlayer p;
+    PlayerEntity p;
     MusePoint2D topleft;
     MusePoint2D bottomright;
     int worldx;
@@ -27,7 +27,7 @@ public class TabSelectFrame implements IGuiFrame {
     Map<ClickableButton, Integer> buttons = new HashMap<>();
     List<String> toolTip = new ArrayList<>();
 
-    public TabSelectFrame(EntityPlayer p, MusePoint2D topleft, MusePoint2D bottomright, int worldx, int worldy, int worldz) {
+    public TabSelectFrame(PlayerEntity p, MusePoint2D topleft, MusePoint2D bottomright, int worldx, int worldy, int worldz) {
         this.p = p;
         this.topleft = topleft;
         this.bottomright = bottomright;

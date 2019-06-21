@@ -4,18 +4,18 @@ import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IPlayerTickModule;
 import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
-import net.minecraft.entity.player.EntityPlayer;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
-public class ItemModuleParachute extends ItemAbstractPowerModule implements IToggleableModule, IPlayerTickModule {
+public class ItemModuleParachute extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
     public ItemModuleParachute(String regName) {
         super(regName, EnumModuleTarget.TORSOONLY, EnumModuleCategory.CATEGORY_MOVEMENT);
 //        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.parachute, 2));
     }
 
     @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack itemStack) {
+    public void onPlayerTickActive(PlayerEntity player, ItemStack itemStack) {
 //        PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
 //        boolean hasGlider = false;
 //        NuminaPlayerUtils.resetFloatKickTicks(player);
@@ -30,6 +30,6 @@ public class ItemModuleParachute extends ItemAbstractPowerModule implements ITog
     }
 
     @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+    public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
     }
 }

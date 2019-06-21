@@ -12,7 +12,7 @@ import net.machinemuse.powersuits.constants.MPSResourceConstants;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,31 +41,31 @@ public enum ModelLuxCapacitorHelper {
                     return getQuads(key.getColour(), key.getFacing());
                 }
 
-                public IBakedModel getBase(@Nullable EnumFacing facing) {
-                    return MuseModelHelper.loadBakedModel(baseModelLocation, TRSRTransformation.from((facing != null) ? facing : EnumFacing.NORTH));
+                public IBakedModel getBase(@Nullable Direction facing) {
+                    return MuseModelHelper.loadBakedModel(baseModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
                 }
 
-                public IBakedModel getLens(@Nullable EnumFacing facing) {
-                    return MuseModelHelper.loadBakedModel(lensModelLocation, TRSRTransformation.from((facing != null) ? facing : EnumFacing.NORTH));
+                public IBakedModel getLens(@Nullable Direction facing) {
+                    return MuseModelHelper.loadBakedModel(lensModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
                 }
 
-                List<BakedQuad> getBaseQuads(@Nullable EnumFacing facing) {
-                    facing = (facing != null) ? facing : EnumFacing.NORTH;
+                List<BakedQuad> getBaseQuads(@Nullable Direction facing) {
+                    facing = (facing != null) ? facing : Direction.NORTH;
 
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(baseModelLocation, transform);
                     return bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockDirectional.FACING, facing), null, new Random());
                 }
 
-                List<BakedQuad> getLensColoredQuads(Colour color, @Nullable EnumFacing facing) {
-                    facing = (facing != null) ? facing : EnumFacing.NORTH;
+                List<BakedQuad> getLensColoredQuads(Colour color, @Nullable Direction facing) {
+                    facing = (facing != null) ? facing : Direction.NORTH;
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(lensModelLocation, transform);
                     List<BakedQuad> quads = bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockDirectional.FACING, facing), null, new Random());
                     return MuseModelHelper.getColoredQuadsWithGlow(quads, color, true);
                 }
 
-                List<BakedQuad> getQuads(Colour color, @Nullable EnumFacing facing) {
+                List<BakedQuad> getQuads(Colour color, @Nullable Direction facing) {
                     List<BakedQuad> frameList = getBaseQuads(facing);
                     List<BakedQuad> lensList = getLensColoredQuads(color, facing);
 

@@ -10,9 +10,9 @@ import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.constants.MPSModuleConstants;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
@@ -21,13 +21,13 @@ import java.util.List;
 
 public class DetailedSummaryFrame extends ScrollableFrame {
     public static final double SCALEFACTOR = 1;
-    protected EntityPlayer player;
+    protected PlayerEntity player;
     protected int slotPoints;
     protected int energy;
     protected double armor;
     protected ItemSelectionFrame itemSelectionFrame;
 
-    public DetailedSummaryFrame(EntityPlayer player,
+    public DetailedSummaryFrame(PlayerEntity player,
                                 MusePoint2D topleft,
                                 MusePoint2D bottomright,
                                 Colour borderColour,
@@ -63,7 +63,7 @@ public class DetailedSummaryFrame extends ScrollableFrame {
             nexty += 10;
 
             // Max Energy
-            String formattedValue = MuseStringUtils.formatNumberFromUnits(energy, ItemAbstractPowerModule.getUnit(NuminaNBTConstants.MAXIMUM_ENERGY));
+            String formattedValue = MuseStringUtils.formatNumberFromUnits(energy, AbstractPowerModule.getUnit(NuminaNBTConstants.MAXIMUM_ENERGY));
             String name = I18n.format("gui.powersuits.energyStorage");
             double valueWidth = MuseRenderer.getStringWidth(formattedValue);
             double allowedNameWidth = border.width() - valueWidth - margin * 2;

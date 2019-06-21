@@ -3,22 +3,22 @@
 //import net.machinemuse.numina.item.IModularItem;
 //import net.machinemuse.numina.module.IRightClickModule;
 //import net.machinemuse.powersuits.client.event.MuseIcon;
-//import net.machinemuse.powersuits.powermodule.ItemAbstractPowerModule;
+//import net.machinemuse.powersuits.powermodule.AbstractPowerModule;
 //import net.machinemuse.powersuits.utils.MuseCommonStrings;
 //import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 //import net.minecraft.entity.EntityLivingBase;
-//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.util.ActionResult;
-//import net.minecraft.util.EnumActionResult;
-//import net.minecraft.util.EnumFacing;
+//import net.minecraft.util.ActionResultType;
+//import net.minecraft.util.Direction;
 //import net.minecraft.util.EnumHand;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.World;
 //
 //import java.util.List;
 //
-//public class SonicWeaponModule extends ItemAbstractPowerModule implements IRightClickModule {
+//public class SonicWeaponModule extends AbstractPowerModule implements IRightClickModule {
 //
 //    public static final String MODULE_SONIC_WEAPON = "Sonic Weapon";
 //
@@ -46,17 +46,17 @@
 //    }
 //
 //    @Override
-//    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+//    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, EnumHand hand) {
 //        return null;
 //    }
 //
 //    @Override
-//    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+//    public ActionResultType onItemUse(ItemStack stack, PlayerEntity playerIn, World worldIn, BlockPos pos, EnumHand hand, Direction facing, float hitX, float hitY, float hitZ) {
 //        return null;
 //    }
 //
 //    @Override
-//    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+//    public ActionResultType onItemUseFirst(ItemStack stack, PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, EnumHand hand) {
 //        return null;
 //    }
 //

@@ -21,7 +21,7 @@ import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybindin
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
@@ -34,7 +34,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     protected Set<ClickableModule> modules;
     protected IClickable selectedClickie;
     protected ClickableKeybinding closestKeybind;
-    protected EntityPlayer player;
+    protected PlayerEntity player;
     protected MusePoint2D ul;
     protected MusePoint2D br;
     protected MuseGui gui;
@@ -43,7 +43,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     protected ClickableButton trashKeybindButton;
     protected long takenTime;
 
-    public KeybindConfigFrame(MuseGui gui, MusePoint2D ul, MusePoint2D br, EntityPlayer player) {
+    public KeybindConfigFrame(MuseGui gui, MusePoint2D ul, MusePoint2D br, PlayerEntity player) {
         modules = new HashSet();
         for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
             modules.addAll(kb.getBoundModules());

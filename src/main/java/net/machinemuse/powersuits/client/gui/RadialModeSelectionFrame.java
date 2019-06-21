@@ -11,7 +11,7 @@ import net.machinemuse.numina.module.IRightClickModule;
 import net.machinemuse.numina.network.NuminaPackets;
 import net.machinemuse.numina.network.packets.MusePacketModeChangeRequest;
 import net.machinemuse.powersuits.basemod.ModuleManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -30,12 +30,12 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     protected int selectedModuleNew = -1;
 
 
-    protected EntityPlayer player;
+    protected PlayerEntity player;
     protected MusePoint2D center;
     protected double radius;
     protected ItemStack stack;
 
-    public RadialModeSelectionFrame(MusePoint2D topleft, MusePoint2D bottomright, EntityPlayer player) {
+    public RadialModeSelectionFrame(MusePoint2D topleft, MusePoint2D bottomright, PlayerEntity player) {
         spawnTime = System.currentTimeMillis();
         this.player = player;
         this.center = bottomright.plus(topleft).times(0.5);

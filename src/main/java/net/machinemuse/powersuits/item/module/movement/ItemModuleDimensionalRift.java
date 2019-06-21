@@ -4,14 +4,14 @@ package net.machinemuse.powersuits.item.module.movement;
 import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IRightClickModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Eximius88 on 2/3/14.
  */
-public class ItemModuleDimensionalRift extends ItemAbstractPowerModule implements IRightClickModule {
+public class ItemModuleDimensionalRift extends AbstractPowerModule implements IRightClickModule {
     final int theOverworld = 0;
     final int theNether = -1;
     final int theEnd = 1;
@@ -38,9 +38,9 @@ public class ItemModuleDimensionalRift extends ItemAbstractPowerModule implement
     }
 
     @Override
-    public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-//        if (!playerIn.isRiding() && !playerIn.isBeingRidden() && playerIn.isNonBoss() && ((playerIn instanceof EntityPlayerMP))) {
-//            EntityPlayerMP player = (EntityPlayerMP) playerIn;
+    public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, EnumHand hand) {
+//        if (!playerIn.isRiding() && !playerIn.isBeingRidden() && playerIn.isNonBoss() && ((playerIn instanceof PlayerEntityMP))) {
+//            PlayerEntityMP player = (PlayerEntityMP) playerIn;
 //            BlockPos coords = playerIn.bedLocation != null ? playerIn.bedLocation : playerIn.world.getSpawnPoint();
 //
 //
@@ -110,7 +110,7 @@ public class ItemModuleDimensionalRift extends ItemAbstractPowerModule implement
 ////
 ////
 ////            if (player.dimension == theOverworld) {
-////                BlockPos coords = (player instanceof EntityPlayer) ? (player).getBedLocation(player.dimension) : null;
+////                BlockPos coords = (player instanceof PlayerEntity) ? (player).getBedLocation(player.dimension) : null;
 ////                if ((coords == null) || ((coords.getX() == 0) && (coords.getY() == 0) && (coords.getZ() == 0))) {
 ////                    coords = worldIn.getSpawnPoint();
 ////                }
@@ -123,20 +123,20 @@ public class ItemModuleDimensionalRift extends ItemAbstractPowerModule implement
 ////            }
 //                ElectricItemUtils.drainPlayerEnergy(player, getEnergyUsage(itemStackIn));
 //                MuseHeatUtils.heatPlayer(player, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.HEAT_GENERATION));
-//                return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+//                return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
 //            }
 //        }
-        return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+        return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return EnumActionResult.PASS;
+    public ActionResultType onItemUse(ItemStack stack, PlayerEntity playerIn, World worldIn, BlockPos pos, EnumHand hand, Direction facing, float hitX, float hitY, float hitZ) {
+        return ActionResultType.PASS;
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        return EnumActionResult.PASS;
+    public ActionResultType onItemUseFirst(ItemStack stack, PlayerEntity player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        return ActionResultType.PASS;
     }
 
     @Override
@@ -144,9 +144,9 @@ public class ItemModuleDimensionalRift extends ItemAbstractPowerModule implement
     }
 
     @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
+    public int getEnergyUsage() {
         return 0;
-//        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, MPSModuleConstants.ENERGY_CONSUMPTION);
+//        return (int) moduleCap.applyPropertyModifiers(MPSModuleConstants.ENERGY_CONSUMPTION);
     }
 
     // Copied from Forge.

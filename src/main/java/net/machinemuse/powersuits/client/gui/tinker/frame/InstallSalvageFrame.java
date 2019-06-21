@@ -11,7 +11,7 @@ import net.machinemuse.numina.module.IPowerModule;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketSalvageModuleRequest;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,9 +25,9 @@ public class InstallSalvageFrame extends ScrollableFrame {
     protected ModuleSelectionFrame targetModule;
     protected ClickableButton installButton;
     protected ClickableButton salvageButton;
-    protected EntityPlayerSP player;
+    protected PlayerEntitySP player;
 
-    public InstallSalvageFrame(EntityPlayerSP player, MusePoint2D topleft,
+    public InstallSalvageFrame(PlayerEntitySP player, MusePoint2D topleft,
                                MusePoint2D bottomright,
                                Colour borderColour, Colour insideColour,
                                ItemSelectionFrame targetItem, ModuleSelectionFrame targetModule) {

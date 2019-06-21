@@ -45,7 +45,7 @@ public class ModularPowersuits {
             return (openContainer) -> {
                 ResourceLocation location = openContainer.getId();
 //                if (location.equals(some resource location here)) {
-//                    EntityPlayerSP player = Minecraft.getInstance().player;
+//                    PlayerEntitySP player = Minecraft.getInstance().player;
 //                        return new Gui with params;
 //                }
                 return null;

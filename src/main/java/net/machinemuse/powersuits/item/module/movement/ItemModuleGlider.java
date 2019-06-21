@@ -4,18 +4,18 @@ import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IPlayerTickModule;
 import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
-import net.minecraft.entity.player.EntityPlayer;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
-public class ItemModuleGlider extends ItemAbstractPowerModule implements IToggleableModule, IPlayerTickModule {
+public class ItemModuleGlider extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
     public ItemModuleGlider(String regName) {
         super(regName, EnumModuleTarget.TORSOONLY, EnumModuleCategory.CATEGORY_MOVEMENT);
 //        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.gliderWing, 2));
     }
 
     @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack itemStack) {
+    public void onPlayerTickActive(PlayerEntity player, ItemStack itemStack) {
 //        Vec3d playerHorzFacing = player.getLookVec();
 //        playerHorzFacing = new Vec3d(playerHorzFacing.x, 0, playerHorzFacing.z);
 //        playerHorzFacing.normalize();
@@ -38,6 +38,6 @@ public class ItemModuleGlider extends ItemAbstractPowerModule implements IToggle
     }
 
     @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+    public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
     }
 }

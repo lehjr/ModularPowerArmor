@@ -1,13 +1,13 @@
 package net.machinemuse.powersuits.item.armor;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 
 /**
  * Power handling base class for armor
  */
-public class ItemElectricArmor extends ItemArmor {
-    public ItemElectricArmor(EntityEquipmentSlot slots, Properties builder) {
+public class ItemElectricArmor extends ArmorItem {
+    public ItemElectricArmor(EquipmentSlotType slots, Properties builder) {
         super(MPSArmorMaterial.EMPTY_ARMOR, slots, builder);
     }
 

@@ -1,51 +1,90 @@
 package net.machinemuse.powersuits.item.module.vision;
 
+import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
+import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
+import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
+import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
+import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
+import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class ItemModuleNightVision extends ItemAbstractPowerModule implements IPlayerTickModule, IToggleableModule {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ItemModuleNightVision extends AbstractPowerModule {
     static final int powerDrain = 50;
-    private static final Potion nightvision = MobEffects.NIGHT_VISION;
+    private static final Effect nightvision = Effects.NIGHT_VISION;
 
     public ItemModuleNightVision(String regName) {
-        super(regName, EnumModuleTarget.HEADONLY, EnumModuleCategory.CATEGORY_VISION);
-//        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.laserHologram, 1));
-//        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-        if (player.world.isRemote)
-            return;
+    public ICapabilityProvider initCapabilities (ItemStack stack, @Nullable CompoundNBT nbt){
+        return new CapProvider(stack);
+    }
 
-        double totalEnergy = ElectricItemUtils.getPlayerEnergy(player);
-        PotionEffect nightVisionEffect = player.isPotionActive(nightvision) ? player.getActivePotionEffect(nightvision) : null;
+    public class CapProvider implements ICapabilityProvider {
+        ItemStack module;
+        IPowerModule moduleCap;
+        IModuleTick ticker;
+        IModuleToggle toggle;
 
-        if (totalEnergy > powerDrain) {
-            if (nightVisionEffect == null || nightVisionEffect.getDuration() < 250 && nightVisionEffect.getAmplifier() == -3) {
-                player.addPotionEffect(new PotionEffect(nightvision, 500, -3, false, false));
-                ElectricItemUtils.drainPlayerEnergy(player, powerDrain);
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_VISION, EnumModuleTarget.HEADONLY, MPSConfig.INSTANCE);
+            this.toggle = new Toggle(module);
+            this.ticker = new Ticker();
+        }
+
+        @Nonnull
+        @Override
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == ModuleTickCapability.TICK)
+                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+        }
+
+        class Ticker extends ModuleTick {
+            @Override
+            public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
+                if (player.world.isRemote)
+                    return;
+
+                double totalEnergy = ElectricItemUtils.getPlayerEnergy(player);
+                EffectInstance nightVisionEffect = player.isPotionActive(nightvision) ? player.getActivePotionEffect(nightvision) : null;
+
+                if (totalEnergy > powerDrain) {
+                    if (nightVisionEffect == null || nightVisionEffect.getDuration() < 250 && nightVisionEffect.getAmplifier() == -3) {
+                        player.addPotionEffect(new EffectInstance(nightvision, 500, -3, false, false));
+                        ElectricItemUtils.drainPlayerEnergy(player, powerDrain);
+                    }
+                } else
+                    onPlayerTickInactive(player, item);
             }
-        } else
-            onPlayerTickInactive(player, item);
-    }
 
-    @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-        PotionEffect nightVisionEffect = null;
-        if (player.isPotionActive(nightvision)) {
-            nightVisionEffect = player.getActivePotionEffect(nightvision);
-            if (nightVisionEffect.getAmplifier() == -3) {
-                player.removePotionEffect(nightvision);
+            @Override
+            public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
+                EffectInstance nightVisionEffect = null;
+                if (player.isPotionActive(nightvision)) {
+                    nightVisionEffect = player.getActivePotionEffect(nightvision);
+                    if (nightVisionEffect.getAmplifier() == -3) {
+                        player.removePotionEffect(nightvision);
+                    }
+                }
             }
         }
     }

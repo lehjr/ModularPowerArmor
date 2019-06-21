@@ -5,9 +5,12 @@ import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 import java.util.Random;
 
-public class EntitySpinningBlade extends EntityThrowable {
+public class EntitySpinningBlade extends ThrowableEntity {
     public static final int SIZE = 24;
     public double damage;
     public Entity shootingEntity;
@@ -31,11 +34,17 @@ public class EntitySpinningBlade extends EntityThrowable {
         super(MPSItems.SPINNING_BLADE_ENTITY_TYPE, world);
     }
 
-    public EntitySpinningBlade(World worldIn, EntityLivingBase shootingEntity) {
+    @Override
+    protected void registerData() {
+
+    }
+
+
+    public EntitySpinningBlade(World worldIn, LivingEntity shootingEntity) {
         super(MPSItems.SPINNING_BLADE_ENTITY_TYPE, shootingEntity, worldIn);
         this.shootingEntity = shootingEntity;
-        if (shootingEntity instanceof EntityPlayer) {
-            this.shootingItem = ((EntityPlayer) shootingEntity).inventory.getCurrentItem();
+        if (shootingEntity instanceof PlayerEntity) {
+            this.shootingItem = ((PlayerEntity) shootingEntity).inventory.getCurrentItem();
 
             // FIXME
 //            if (!this.shootingItem.isEmpty()) {
@@ -74,6 +83,8 @@ public class EntitySpinningBlade extends EntityThrowable {
         return 200;
     }
 
+
+
     @Override
     public void tick() {
         super.tick();
@@ -106,8 +117,8 @@ public class EntitySpinningBlade extends EntityThrowable {
                         entityitem.setPickupDelay(10);
                         world.spawnEntity(entityitem);
                     }
-//                    if (this.shootingEntity instanceof EntityPlayer) {
-//                        ((EntityPlayer) shootingEntity).addStat(StatList.getBlockStats(block), 1);
+//                    if (this.shootingEntity instanceof PlayerEntity) {
+//                        ((PlayerEntity) shootingEntity).addStat(StatList.getBlockStats(block), 1);
 //                    }
                 }
                 world.destroyBlock(hitResult.getBlockPos(), true);// Destroy block and drop item
@@ -125,7 +136,7 @@ public class EntitySpinningBlade extends EntityThrowable {
 
                     Random rand = new Random();
                     for (ItemStack drop : drops) {
-                        EntityItem ent = entity.entityDropItem(drop, 1.0F);
+                        ItemEntity ent = entity.entityDropItem(drop, 1.0F);
                         ent.motionY += rand.nextFloat() * 0.05F;
                         ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                         ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;

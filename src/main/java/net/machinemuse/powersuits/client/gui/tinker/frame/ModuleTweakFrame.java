@@ -12,10 +12,10 @@ import net.machinemuse.numina.nbt.propertymodifier.PropertyModifierLinearAdditiv
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.constants.MPSModuleConstants;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketTweakRequestDouble;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,10 +31,10 @@ public class ModuleTweakFrame extends ScrollableFrame {
     protected List<ClickableTinkerSlider> sliders;
     protected Map<String, Double> propertyStrings;
     protected ClickableTinkerSlider selectedSlider;
-    protected EntityPlayerSP player;
+    protected PlayerEntitySP player;
 
     public ModuleTweakFrame(
-            EntityPlayerSP player,
+            PlayerEntitySP player,
             MusePoint2D topleft,
             MusePoint2D bottomright,
             Colour borderColour,
@@ -80,7 +80,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
             }
             int nexty = (int) (sliders.size() * 20 + border.top() + 23);
             for (Map.Entry<String, Double> property : propertyStrings.entrySet()) {
-                String formattedValue = MuseStringUtils.formatNumberFromUnits(property.getValue(), ItemAbstractPowerModule.getUnit(property.getKey()));
+                String formattedValue = MuseStringUtils.formatNumberFromUnits(property.getValue(), AbstractPowerModule.getUnit(property.getKey()));
                 String name = property.getKey();
                 double valueWidth = MuseRenderer.getStringWidth(formattedValue);
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;

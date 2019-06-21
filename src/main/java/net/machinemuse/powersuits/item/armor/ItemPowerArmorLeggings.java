@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.item.armor;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 
 public class ItemPowerArmorLeggings extends ItemPowerArmor {
     public ItemPowerArmorLeggings(String regName) {
-        super(EntityEquipmentSlot.LEGS);
+        super(EquipmentSlotType.LEGS);
         setRegistryName(regName);
     }
 }

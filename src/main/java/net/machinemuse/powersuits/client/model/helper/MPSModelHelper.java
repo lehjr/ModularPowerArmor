@@ -8,7 +8,7 @@ import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.constants.MPSResourceConstants;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -49,7 +49,7 @@ public class MPSModelHelper {
 //        ModelSpecXMLReader.INSTANCE.parseFile(resource, event);
     }
 
-    public static boolean hasHighPolyModel(ItemStack stack, EntityEquipmentSlot slot) {
+    public static boolean hasHighPolyModel(ItemStack stack, EquipmentSlotType slot) {
         NBTTagCompound renderTag = getMuseRenderTag(stack, slot);
 
         // any tag other than the colours or texSpec tag is a ModelPartSpec tag
@@ -62,7 +62,7 @@ public class MPSModelHelper {
         return false;
     }
 
-    public static NBTTagCompound getMuseRenderTag(@Nonnull ItemStack stack, EntityEquipmentSlot armorSlot) {
+    public static NBTTagCompound getMuseRenderTag(@Nonnull ItemStack stack, EquipmentSlotType armorSlot) {
         NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
         NBTTagCompound renderTag = null;
         if (itemTag.contains(ModelSpecTags.TAG_RENDER, Constants.NBT.TAG_COMPOUND))
@@ -86,7 +86,7 @@ public class MPSModelHelper {
     }
 
     public static NBTTagCompound getMuseRenderTag(@Nonnull ItemStack stack) {
-        EntityEquipmentSlot slot = stack.getEquipmentSlot();
+        EquipmentSlotType slot = stack.getEquipmentSlot();
 
         if (slot != null)
             return getMuseRenderTag(stack, slot);
@@ -95,12 +95,12 @@ public class MPSModelHelper {
             if (stack.getItem() instanceof ItemPowerArmor)
                 return getMuseRenderTag(stack, ((ItemPowerArmor) stack.getItem()).getEquipmentSlot());
             if (stack.getItem() instanceof ItemPowerFist)
-                return getMuseRenderTag(stack, EntityEquipmentSlot.MAINHAND);
+                return getMuseRenderTag(stack, EquipmentSlotType.MAINHAND);
         }
         return new NBTTagCompound();
     }
 
-    public static String getArmorTexture(ItemStack stack, EntityEquipmentSlot slot) {
+    public static String getArmorTexture(ItemStack stack, EquipmentSlotType slot) {
         NBTTagCompound renderTag = getMuseRenderTag(stack, slot);
         try {
             TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(ModelSpecTags.NBT_TEXTURESPEC_TAG));

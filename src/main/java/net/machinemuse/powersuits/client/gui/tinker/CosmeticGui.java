@@ -6,7 +6,7 @@ import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRect;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.client.gui.tinker.frame.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.math.BlockPos;
 
@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
  * Ported to Java by lehjr on 10/19/16.
  */
 public class CosmeticGui extends MuseGui {
-    EntityPlayer player;
+    PlayerEntity player;
     int worldx;
     int worldy;
     int worldz;
@@ -27,7 +27,7 @@ public class CosmeticGui extends MuseGui {
     protected final boolean allowCosmeticPresetCreation;
     protected final boolean usingCosmeticPresets;
 
-    public CosmeticGui(EntityPlayer player) {
+    public CosmeticGui(PlayerEntity player) {
         this.player = player;
         BlockPos pos = player.getPosition();
         this.worldx = pos.getX();

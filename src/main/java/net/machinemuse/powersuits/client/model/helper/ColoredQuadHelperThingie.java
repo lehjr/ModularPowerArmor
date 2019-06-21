@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.model.helper;
 
 import com.google.common.base.Objects;
 import net.machinemuse.numina.math.Colour;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nullable;
 
@@ -11,9 +11,9 @@ import javax.annotation.Nullable;
  */
 public class ColoredQuadHelperThingie {
     private final Colour colour;
-    private final EnumFacing facing;
+    private final Direction facing;
 
-    public ColoredQuadHelperThingie(Colour colour, @Nullable EnumFacing facing) {
+    public ColoredQuadHelperThingie(Colour colour, @Nullable Direction facing) {
         this.colour = colour;
         this.facing = facing;
     }
@@ -23,7 +23,7 @@ public class ColoredQuadHelperThingie {
     }
 
     @Nullable
-    public EnumFacing getFacing() {
+    public Direction getFacing() {
         return facing;
     }
 

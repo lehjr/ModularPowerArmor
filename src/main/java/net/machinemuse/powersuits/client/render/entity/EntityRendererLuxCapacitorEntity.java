@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.lwjgl.opengl.GL11;
@@ -33,7 +33,7 @@ public class EntityRendererLuxCapacitorEntity extends MuseEntityRenderer<EntityL
     public void doRender(EntityLuxCapacitor entity, double x, double y, double z, float entityYaw, float partialTicks) {
         if (luxCapacitorModel != null) {
             blockState = (IExtendedBlockState) ((IExtendedBlockState) MPSItems.INSTANCE.luxCapacitor.getDefaultState().
-                    with(BlockDirectional.FACING, EnumFacing.DOWN)).withProperty(COLOR, entity.color);
+                    with(BlockDirectional.FACING, Direction.DOWN)).withProperty(COLOR, entity.color);
             GL11.glPushMatrix();
             GL11.glTranslated(x, y, z);
             Minecraft.getInstance().textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

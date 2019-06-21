@@ -11,7 +11,7 @@ import net.machinemuse.numina.network.packets.MusePacketToggleRequest;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.opengl.GL11;
 
@@ -56,7 +56,7 @@ public class ClickableKeybinding extends ClickableButton {
     }
 
     public void toggleModules() {
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntitySP player = Minecraft.getInstance().player;
         if (player == null) {
             return;
         }

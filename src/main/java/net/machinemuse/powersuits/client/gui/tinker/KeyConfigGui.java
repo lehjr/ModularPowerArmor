@@ -5,7 +5,7 @@ import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.client.gui.tinker.frame.KeybindConfigFrame;
 import net.machinemuse.powersuits.client.gui.tinker.frame.TabSelectFrame;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class KeyConfigGui extends MuseGui {
@@ -13,9 +13,9 @@ public class KeyConfigGui extends MuseGui {
     protected int worldx;
     protected int worldy;
     protected int worldz;
-    private EntityPlayer player;
+    private PlayerEntity player;
 
-    public KeyConfigGui(EntityPlayer player) {
+    public KeyConfigGui(PlayerEntity player) {
         super();
         KeybindManager.readInKeybinds();
         this.player = player;

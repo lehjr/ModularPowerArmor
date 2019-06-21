@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.gui;
 
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +13,7 @@ public class PortableCraftingContainer extends ContainerWorkbench { // ==> exten
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return true;
     }
 }

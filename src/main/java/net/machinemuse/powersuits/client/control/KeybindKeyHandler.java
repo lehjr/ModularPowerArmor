@@ -9,7 +9,7 @@ import net.machinemuse.powersuits.client.gui.GuiModeSelector;
 import net.machinemuse.powersuits.client.gui.tinker.CosmeticGui;
 import net.machinemuse.powersuits.client.gui.tinker.KeyConfigGui;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,7 +38,7 @@ public class KeybindKeyHandler {
         }
     }
 
-    void updatePlayerValues(EntityPlayerSP clientPlayer) {
+    void updatePlayerValues(PlayerEntitySP clientPlayer) {
         boolean markForSync = false;
         boolean downKeyState = goDownKey.isKeyDown();
         boolean jumpKeyState = mc.gameSettings.keyBindJump.isKeyDown();
@@ -71,7 +71,7 @@ public class KeybindKeyHandler {
 //    public void onKeyInput(InputEvent.KeyInputEvent e) {
 
     public void checkPlayerKeys() {
-        EntityPlayerSP player = mc.player;
+        PlayerEntitySP player = mc.player;
         KeyBinding[] hotbarKeys = mc.gameSettings.keyBindsHotbar;
         updatePlayerValues(player);
 

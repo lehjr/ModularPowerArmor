@@ -4,16 +4,16 @@ import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.numina.module.EnumModuleTarget;
 import net.machinemuse.numina.module.IEnchantmentModule;
 import net.machinemuse.numina.module.IMiningEnhancementModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 
-public class ItemModuleFortune extends ItemAbstractPowerModule implements IEnchantmentModule, IMiningEnhancementModule {
+public class ItemModuleFortune extends AbstractPowerModule implements IEnchantmentModule, IMiningEnhancementModule {
 //    ItemStack book;
 
     public ItemModuleFortune(String regName) {
@@ -32,7 +32,7 @@ public class ItemModuleFortune extends ItemAbstractPowerModule implements IEncha
     @Override
     public int getLevel(@Nonnull ItemStack itemStack) {
         return 0;
-//        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, MPSModuleConstants.FORTUNE_ENCHANTMENT_LEVEL);
+//        return (int) moduleCap.applyPropertyModifiers(MPSModuleConstants.FORTUNE_ENCHANTMENT_LEVEL);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ItemModuleFortune extends ItemAbstractPowerModule implements IEncha
      * @return True to prevent harvesting, false to continue as normal
      */
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) {
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
 //        if (!player.world.isRemote) {
 //            if (getEnergyUsage(itemstack) > ElectricItemUtils.getPlayerEnergy(player))
 //                removeEnchantment(itemstack);
@@ -57,8 +57,8 @@ public class ItemModuleFortune extends ItemAbstractPowerModule implements IEncha
     }
 
     @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
+    public int getEnergyUsage() {
         return 0;
-//        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, MPSModuleConstants.FORTUNE_ENERGY_CONSUMPTION);
+//        return (int) moduleCap.applyPropertyModifiers(MPSModuleConstants.FORTUNE_ENERGY_CONSUMPTION);
     }
 }

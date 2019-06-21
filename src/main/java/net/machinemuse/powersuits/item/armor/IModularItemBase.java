@@ -7,7 +7,7 @@ import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -39,7 +39,7 @@ public interface IModularItemBase {
         return string + '\t' + MuseStringUtils.formatNumberShort(value);
     }
 
-    default double getArmorDouble(EntityPlayer player, ItemStack stack) {
+    default double getArmorDouble(PlayerEntity player, ItemStack stack) {
         return 0;
     }
 }

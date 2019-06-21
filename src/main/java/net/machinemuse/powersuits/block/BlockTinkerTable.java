@@ -7,13 +7,13 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -30,7 +30,7 @@ public class BlockTinkerTable extends BlockHorizontal {
                 .variableOpacity()
                 .lightValue(1));
         setRegistryName(regName);
-        setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
+        setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
@@ -72,14 +72,14 @@ public class BlockTinkerTable extends BlockHorizontal {
 
     @SuppressWarnings( "deprecation" )
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
 //        if (!worldIn.isRemote && !player.isSneaking())
-//            NetworkHooks.openGui((EntityPlayerMP) player,new GuiTinkerTable(player, hitX, hitY, hitZ));
+//            NetworkHooks.openGui((PlayerEntityMP) player,new GuiTinkerTable(player, hitX, hitY, hitZ));
 //
 //            // see also minecraft.addScheduledTask(() -> minecraft.displayGuiScreen(gui));
 //

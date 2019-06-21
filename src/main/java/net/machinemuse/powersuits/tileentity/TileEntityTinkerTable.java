@@ -4,7 +4,7 @@ import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.tileentity.MuseTileEntity;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 /**
  * @author MachineMuse
@@ -12,23 +12,23 @@ import net.minecraft.util.EnumFacing;
  * Ported to Java by lehjr on 10/21/16.
  */
 public class TileEntityTinkerTable extends MuseTileEntity {
-    EnumFacing facing;
+    Direction facing;
 
     public TileEntityTinkerTable() {
         super(MPSItems.tinkerTableTileEntityType);
-        this.facing = EnumFacing.NORTH;
+        this.facing = Direction.NORTH;
     }
 
-    public TileEntityTinkerTable(EnumFacing facing) {
+    public TileEntityTinkerTable(Direction facing) {
         super(MPSItems.tinkerTableTileEntityType);
         this.facing = facing;
     }
 
-    public EnumFacing getFacing() {
-        return (this.facing != null) ? this.facing : EnumFacing.NORTH;
+    public Direction getFacing() {
+        return (this.facing != null) ? this.facing : Direction.NORTH;
     }
 
-    public void setFacing(EnumFacing facing) {
+    public void setFacing(Direction facing) {
         this.facing = facing;
     }
 
@@ -43,7 +43,7 @@ public class TileEntityTinkerTable extends MuseTileEntity {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
         if (nbt.contains("f")) {
-            facing = EnumFacing.values()[nbt.getInt("f")];
+            facing = Direction.values()[nbt.getInt("f")];
         } else {
             MuseLogger.logger.debug("No NBT found! D:");
         }

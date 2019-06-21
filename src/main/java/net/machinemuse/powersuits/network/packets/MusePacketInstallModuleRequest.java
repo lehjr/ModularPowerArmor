@@ -49,7 +49,7 @@ public class MusePacketInstallModuleRequest {
 //        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
 //
 //
-//            EntityPlayerMP player = ctx.getServerHandler().player;
+//            PlayerEntityMP player = ctx.getServerHandler().player;
 //            player.getServerWorld().addScheduledTask(() -> {
 //                int itemSlot = message.itemSlot;
 //                String moduleName = message.moduleName;

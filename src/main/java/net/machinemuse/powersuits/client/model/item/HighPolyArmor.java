@@ -5,8 +5,8 @@ import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HighPolyArmor extends ModelBiped {
     public NBTTagCompound renderSpec = null;
-    public EntityEquipmentSlot visibleSection = EntityEquipmentSlot.HEAD;
+    public EquipmentSlotType visibleSection = EquipmentSlotType.HEAD;
 
     public HighPolyArmor() {
         super(0);
@@ -40,11 +40,11 @@ public class HighPolyArmor extends ModelBiped {
         renderSpec = nbt;
     }
 
-    public EntityEquipmentSlot getVisibleSection() {
+    public EquipmentSlotType getVisibleSection() {
         return this.visibleSection;
     }
 
-    public void setVisibleSection(EntityEquipmentSlot equipmentSlot) {
+    public void setVisibleSection(EquipmentSlotType equipmentSlot) {
         this.visibleSection = equipmentSlot;
     }
 
@@ -116,7 +116,7 @@ public class HighPolyArmor extends ModelBiped {
             }
 
             isSneak = entLive.isSneaking();
-            EntityPlayer entPlayer = (EntityPlayer) entLive;
+            PlayerEntity entPlayer = (PlayerEntity) entLive;
             if ((!stack.isEmpty()) && (entPlayer.getItemInUseCount() > 0)) {
                 EnumAction enumaction = stack.getUseAction();
                 if (enumaction == EnumAction.BLOCK) {

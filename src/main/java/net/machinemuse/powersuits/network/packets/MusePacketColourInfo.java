@@ -4,8 +4,8 @@ import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntityMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -45,20 +45,20 @@ public class MusePacketColourInfo {
     }
 
     public static void handle(MusePacketColourInfo message, Supplier<NetworkEvent.Context> ctx) {
-        final EntityPlayerMP player = ctx.get().getSender();
+        final PlayerEntityMP player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
 
-        final EntityPlayer actualPlayer;
+        final PlayerEntity actualPlayer;
         int playerID = message.playerID;
         int itemSlot = message.itemSlot;
         int[] tagData = message.tagData;
         Entity entity = player.world.getEntityByID(playerID);
-        if (!(player.world.getEntityByID(playerID) instanceof EntityPlayer ))
+        if (!(player.world.getEntityByID(playerID) instanceof PlayerEntity ))
             return;
         else
-            actualPlayer = (EntityPlayer) player.world.getEntityByID(playerID);
+            actualPlayer = (PlayerEntity) player.world.getEntityByID(playerID);
 
         if (actualPlayer == null)
             return;

@@ -24,9 +24,8 @@ public class MPSConfigConstants {
     public static final String CONFIG_MODULES = CONFIG_PREFIX + "module.";
 
     // Modules - Energy Storage
-    public static final String CONFIG_MODULES_ENERGY_STORAGE = CONFIG_MODULES + "energyStorage.";
-    public static final String CONFIG_MODULES_ENERGY_STORAGE_BASIC_BATTERY_MAX_ENERGY = CONFIG_MODULES_ENERGY_STORAGE + "basicBatteryMaxEnergy";
-    public static final String CONFIG_MODULES_ENERGY_STORAGE_BASIC_BATTERY_MAX_TRAMSFER = CONFIG_MODULES_ENERGY_STORAGE + "basicBatteryMaxTransfer";
+
+
     public static final String CONFIG_MODULES_ENERGY_STORAGE_ADVANCED__MAX_ENERGY = CONFIG_MODULES_ENERGY_STORAGE + "advancedBatteryMaxEnergy";
     public static final String CONFIG_MODULES_ENERGY_STORAGE_ADVANCED_MAX_TRAMSFER = CONFIG_MODULES_ENERGY_STORAGE + "advancedBatteryMaxTransfer";
     public static final String CONFIG_MODULES_ENERGY_STORAGE_ELITE__MAX_ENERGY = CONFIG_MODULES_ENERGY_STORAGE + "eltiteBatteryMaxEnergy";

@@ -3,7 +3,9 @@ package net.machinemuse.powersuits.entity;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.init.Particles;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
@@ -13,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityPlasmaBolt extends EntityThrowable implements IEntityAdditionalSpawnData {
+public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public static final int SIZE = 24;
     public double size;
     public double damagingness;
@@ -24,7 +26,7 @@ public class EntityPlasmaBolt extends EntityThrowable implements IEntityAddition
         super(MPSItems.PLASMA_BOLT_ENTITY_TYPE, world);
     }
 
-    public EntityPlasmaBolt(World world, EntityLivingBase shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
+    public EntityPlasmaBolt(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
         super(MPSItems.PLASMA_BOLT_ENTITY_TYPE, world);
         this.shootingEntity = shootingEntity;
         this.size = ((chargeTicks) > 50 ? 50 : chargeTicks);
@@ -46,6 +48,11 @@ public class EntityPlasmaBolt extends EntityThrowable implements IEntityAddition
         this.posY = shootingEntity.posY + shootingEntity.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
         this.posZ = shootingEntity.posZ + direction.z * xoffset - direction.y * horzz * yoffset + horzx * zoffset;
         this.setBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
+    }
+
+    @Override
+    protected void registerData() {
+
     }
 
     @Override

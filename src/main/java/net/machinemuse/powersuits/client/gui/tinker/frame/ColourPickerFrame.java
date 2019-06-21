@@ -20,7 +20,7 @@ import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketColourInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -126,7 +126,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 int[] intArray2 = new int[]{Colour.WHITE.getInt()};
                 renderSpec.putIntArray(ModelSpecTags.TAG_COLOURS, intArray2);
             }
-            EntityPlayerSP player = Minecraft.getInstance().player;
+            PlayerEntitySP player = Minecraft.getInstance().player;
             if (player.world.isRemote) {
                 MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
             }
@@ -140,7 +140,7 @@ public class ColourPickerFrame extends ScrollableFrame {
         }
         NBTTagCompound renderSpec = MPSModelHelper.getMuseRenderTag(this.itemSelector.getSelectedItem().getItem());
         renderSpec.put(ModelSpecTags.TAG_COLOURS, new NBTTagIntArray(intList));
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerEntitySP player = Minecraft.getInstance().player;
         if (player.world.isRemote) {
             MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
         }
@@ -180,7 +180,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 if (colours().length > selectedColour) {
                     colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
 
-                    EntityPlayerSP player = Minecraft.getInstance().player;
+                    PlayerEntitySP player = Minecraft.getInstance().player;
                     if (player.world.isRemote)
                         MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), itemSelector.getSelectedItem().inventorySlot, colours()));
                 }
@@ -297,7 +297,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                         selectedColour = selectedColour - 1;
                     }
 
-                    EntityPlayerSP player = Minecraft.getInstance().player;
+                    PlayerEntitySP player = Minecraft.getInstance().player;
                     if (player.world.isRemote)
                         MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
                 }

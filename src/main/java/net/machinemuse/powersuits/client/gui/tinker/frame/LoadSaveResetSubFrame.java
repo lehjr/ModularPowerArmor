@@ -26,8 +26,8 @@ import net.machinemuse.powersuits.network.packets.MusePacketCosmeticPresetUpdate
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class LoadSaveResetSubFrame implements IGuiFrame {
-    EntityPlayer player;
+    PlayerEntity player;
     public ItemSelectionFrame itemSelector;
     public DrawableMuseRect border;
     protected ClickableButton loadButton;
@@ -59,7 +59,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
 
     GuiTextField presetNameInputBox;
 
-    public LoadSaveResetSubFrame(ColourPickerFrame colourpicker, EntityPlayer player, MuseRect borderRef, Colour insideColour, Colour borderColour, ItemSelectionFrame itemSelector, boolean usingCosmeticPresetsIn, boolean allowCosmeticPresetCreationIn, PartManipContainer partframe, CosmeticPresetContainer cosmeticFrame) {
+    public LoadSaveResetSubFrame(ColourPickerFrame colourpicker, PlayerEntity player, MuseRect borderRef, Colour insideColour, Colour borderColour, ItemSelectionFrame itemSelector, boolean usingCosmeticPresetsIn, boolean allowCosmeticPresetCreationIn, PartManipContainer partframe, CosmeticPresetContainer cosmeticFrame) {
         this.player = player;
         this.border = new DrawableMuseRect(borderRef, insideColour, borderColour);
         this.originalTop = border.top();
@@ -189,18 +189,18 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     /**
      * Get's the equipment itemSlot the item is for.
      */
-    public EntityEquipmentSlot getEquipmentSlot() {
+    public EquipmentSlotType getEquipmentSlot() {
         ItemStack selectedItem = getSelectedItem().getItem();
         if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
             return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
 
         Minecraft mc = Minecraft.getInstance();
-        EntityPlayer player = mc.player;
+        PlayerEntity player = mc.player;
         ItemStack heldItem = player.getHeldItemOffhand();
 
         if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
-            return EntityEquipmentSlot.OFFHAND;
-        return EntityEquipmentSlot.MAINHAND;
+            return EquipmentSlotType.OFFHAND;
+        return EquipmentSlotType.MAINHAND;
     }
 
     void checkAndFixItem(ClickableItem clickie) {
@@ -249,11 +249,11 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
         return MPSConfig.INSTANCE.getPresetNBTFor(itemStack, "Default");
     }
 
-    public boolean isValidItem(ClickableItem clickie, EntityEquipmentSlot slot) {
+    public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
         if (clickie != null) {
             if (clickie.getItem().getItem() instanceof ItemPowerArmor)
                 return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, Minecraft.getInstance().player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
+            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Type.HAND))
                 return true;
         }
         return false;

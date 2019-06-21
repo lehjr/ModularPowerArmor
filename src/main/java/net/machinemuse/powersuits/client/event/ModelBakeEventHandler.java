@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
@@ -58,10 +58,10 @@ public enum ModelBakeEventHandler {
                         modelState,
                         true, DefaultVertexFormats.ITEM)));
 
-        for (EnumFacing facing : EnumFacing.values()) {
+        for (Direction facing : Direction.values()) {
             modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
 
-            if (facing.equals(EnumFacing.DOWN) || facing.equals(EnumFacing.UP))
+            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
                 continue;
 
             modelRegistry.put(

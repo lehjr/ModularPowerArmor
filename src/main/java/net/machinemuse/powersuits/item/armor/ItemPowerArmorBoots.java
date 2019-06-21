@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.item.armor;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 
 public class ItemPowerArmorBoots extends ItemPowerArmor {
     public ItemPowerArmorBoots(String regName) {
-        super(EntityEquipmentSlot.FEET);
+        super(EquipmentSlotType.FEET);
         setRegistryName(regName);
     }
 }

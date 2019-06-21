@@ -8,8 +8,8 @@ import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntityMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -57,22 +57,22 @@ public class MusePacketCosmeticInfo {
     }
 
     public static void handle(MusePacketCosmeticInfo message, Supplier<NetworkEvent.Context> ctx) {
-        final EntityPlayerMP player = ctx.get().getSender();
+        final PlayerEntityMP player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
 
         player.getServerWorld().addScheduledTask(() -> {
-            final EntityPlayer actualPlayer;
+            final PlayerEntity actualPlayer;
             int playerID = message.playerID;
             int itemSlot = message.itemSlot;
             String tagName = message.tagName;
             NBTTagCompound tagData = message.tagData;
             Entity entity = player.world.getEntityByID(playerID);
-            if (!(player.world.getEntityByID(playerID) instanceof EntityPlayer ))
+            if (!(player.world.getEntityByID(playerID) instanceof PlayerEntity ))
                 return;
             else
-                actualPlayer = (EntityPlayer) player.world.getEntityByID(playerID);
+                actualPlayer = (PlayerEntity) player.world.getEntityByID(playerID);
 
             if (actualPlayer == null)
                 return;

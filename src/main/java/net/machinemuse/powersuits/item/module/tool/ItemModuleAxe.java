@@ -1,48 +1,95 @@
 package net.machinemuse.powersuits.item.module.tool;
 
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IBlockBreakingModule;
-import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.powersuits.item.module.ItemAbstractPowerModule;
-import net.minecraft.init.Items;
+import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreaking;
+import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCapability;
+import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
+import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancement;
+import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
+import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.energy.ElectricItemUtils;
+import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.item.module.AbstractPowerModule;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
-public class ItemModuleAxe extends ItemAbstractPowerModule implements IBlockBreakingModule, IToggleableModule {
+public class ItemModuleAxe extends AbstractPowerModule {
     private static final ItemStack emulatedTool = new ItemStack(Items.IRON_AXE);
 
     public ItemModuleAxe(String regName) {
-        super(regName, EnumModuleTarget.TOOLONLY, EnumModuleCategory.CATEGORY_TOOL);
-//        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 1));
-//        addBasePropertyDouble(MPSModuleConstants.AXE_ENERGY_CONSUMPTION, 500, "RF");
-//        addBasePropertyDouble(MPSModuleConstants.AXE_HARVEST_SPEED, 8, "x");
-//        addTradeoffPropertyDouble(MPSModuleConstants.OVERCLOCK, MPSModuleConstants.AXE_ENERGY_CONSUMPTION, 9500);
-//        addTradeoffPropertyDouble(MPSModuleConstants.OVERCLOCK, MPSModuleConstants.AXE_HARVEST_SPEED, 22);
+        super(regName);
     }
 
-//    @Override
-//    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
-//        return 0;
-////        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, MPSModuleConstants.AXE_ENERGY_CONSUMPTION);
-//    }
+    @Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+        return new CapProvider(stack);
+    }
 
-//    @Override
-//    public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving, int playerEnergy) {
-//        if (this.canHarvestBlock(itemStack, state, (EntityPlayer) entityLiving, pos, playerEnergy)) {
-//            ElectricItemUtils.drainPlayerEnergy((EntityPlayer) entityLiving, getEnergyUsage(itemStack));
-//            return true;
-//        }
-//        return false;
-//    }
+    public class CapProvider implements ICapabilityProvider {
+        ItemStack module;
+        IPowerModule moduleCap;
+        IBlockBreakingModule blockBreaking;
 
-//    @Override
-//    public void handleBreakSpeed(BreakSpeed event) {
-//        event.setNewSpeed((float) (event.getNewSpeed() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(event.getEntityPlayer().inventory.getCurrentItem(), MPSModuleConstants.AXE_HARVEST_SPEED)));
-//    }
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
 
-//    @Override
-//    public ItemStack getEmulatedTool() {
-//        return emulatedTool;
-//    }
+            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.ENERGY_CONSUMPTION, 9500);
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.HARVEST_SPEED, 22);
+
+            this.blockBreaking = new BlockBreaker();
+        }
+
+        @Nonnull
+        @Override
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == BlockBreakingCapability.BLOCK_BREAKING)
+                return BlockBreakingCapability.BLOCK_BREAKING.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+        }
+
+        class BlockBreaker extends BlockBreaking {
+            @Override
+            public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
+                if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
+                    ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, getEnergyUsage());
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public ItemStack getEmulatedTool() {
+                return emulatedTool;
+            }
+
+            @Override
+            public int getEnergyUsage() {
+                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+            }
+
+            @Override
+            public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
+                event.setNewSpeed((float) (event.getNewSpeed() * moduleCap.applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
+            }
+        }
+    }
 }

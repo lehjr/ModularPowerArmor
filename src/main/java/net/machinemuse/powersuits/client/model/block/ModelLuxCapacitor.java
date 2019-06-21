@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -53,11 +53,11 @@ public class ModelLuxCapacitor implements IBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, Random rand) {
+    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable Direction side, Random rand) {
         if (side != null)
             return Collections.emptyList();
 
-        EnumFacing facing = EnumFacing.NORTH; // both NORTH and items use TRSRTransformation.Identity because I finally rotated the model
+        Direction facing = Direction.NORTH; // both NORTH and items use TRSRTransformation.Identity because I finally rotated the model
         colour = BlockLuxCapacitor.defaultColor;
 
         if (state != null) {
@@ -133,7 +133,7 @@ public class ModelLuxCapacitor implements IBakedModel {
         return Pair.of(this, transform.getMatrixVec());
     }
 
-    public static ModelResourceLocation getModelResourceLocation(EnumFacing facing) {
+    public static ModelResourceLocation getModelResourceLocation(Direction facing) {
         return new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName());
     }
 

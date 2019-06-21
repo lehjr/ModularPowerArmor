@@ -17,8 +17,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -53,18 +53,18 @@ public class PlayerModelViewFrame implements IGuiFrame {
         this.border = new DrawableMuseRect(topleft, bottomright, borderColour, insideColour);
     }
 
-    EntityEquipmentSlot getEquipmentSlot() {
+    EquipmentSlotType getEquipmentSlot() {
         ItemStack selectedItem = getSelectedItem().getItem();
         if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor)
             return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
 
         Minecraft mc = Minecraft.getInstance();
-        EntityPlayer player = mc.player;
+        PlayerEntity player = mc.player;
         ItemStack heldItem = player.getHeldItemOffhand();
 
         if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
-            return EntityEquipmentSlot.OFFHAND;
-        return EntityEquipmentSlot.MAINHAND;
+            return EquipmentSlotType.OFFHAND;
+        return EquipmentSlotType.MAINHAND;
     }
 
     ClickableItem getSelectedItem() {

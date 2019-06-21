@@ -15,9 +15,9 @@ import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.machinemuse.powersuits.constants.MPSModuleConstants;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,30 +66,30 @@ public class RenderEventHandler {
 
     @SubscribeEvent
     public void onPreRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (!event.getEntityPlayer().abilities.isFlying && !event.getEntityPlayer().onGround && this.playerHasFlightOn(event.getEntityPlayer())) {
-            event.getEntityPlayer().abilities.isFlying = true;
+        if (!event.getPlayerEntity().abilities.isFlying && !event.getPlayerEntity().onGround && this.playerHasFlightOn(event.getPlayerEntity())) {
+            event.getPlayerEntity().abilities.isFlying = true;
             RenderEventHandler.ownFly = true;
         }
     }
 
-    private boolean playerHasFlightOn(EntityPlayer player) {
-        return !ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETPACK__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_GLIDER__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.FEET), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETBOOTS__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME));
+    private boolean playerHasFlightOn(PlayerEntity player) {
+        return !ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETPACK__REGNAME)) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_GLIDER__REGNAME)) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.FEET), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETBOOTS__REGNAME)) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.HEAD), new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME));
     }
 
     @SubscribeEvent
     public void onPostRenderPlayer(RenderPlayerEvent.Post event) {
         if (RenderEventHandler.ownFly) {
             RenderEventHandler.ownFly = false;
-            event.getEntityPlayer().abilities.isFlying = false;
+            event.getPlayerEntity().abilities.isFlying = false;
         }
     }
 
     @SubscribeEvent
     public void onFOVUpdate(FOVUpdateEvent e) {
-        ItemStack helmet = e.getEntity().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+        ItemStack helmet = e.getEntity().getItemStackFromSlot(EquipmentSlotType.HEAD);
         if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, new ResourceLocation(MPSItems.INSTANCE.BINOCULARS_MODULE__REGNAME))) {
             e.setNewfov(e.getNewfov() / (float) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helmet, MPSModuleConstants.FOV));
         }
@@ -99,7 +99,7 @@ public class RenderEventHandler {
     public void drawKeybindToggles() {
         if (config.HUD_DISPLAY_HUD.get()) {
             Minecraft mc = Minecraft.getInstance();
-            EntityPlayerSP player = mc.player;
+            PlayerEntitySP player = mc.player;
             frame.setLeft(config.HUD_KEYBIND_HUD_X.get());
             frame.setTop(config.HUD_KEYBIND_HUD_Y.get());
             frame.setBottom(frame.top() + 16);

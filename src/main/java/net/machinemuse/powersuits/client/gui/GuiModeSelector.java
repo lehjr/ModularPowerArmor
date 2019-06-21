@@ -2,13 +2,13 @@ package net.machinemuse.powersuits.client.gui;
 
 import net.machinemuse.numina.client.gui.MuseGui;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class GuiModeSelector extends MuseGui {
-    EntityPlayer player;
+    PlayerEntity player;
     RadialModeSelectionFrame radialSelect;
 
-    public GuiModeSelector(EntityPlayer player) {
+    public GuiModeSelector(PlayerEntity player) {
         this.player = player;
         this.xSize = Math.min(mc.mainWindow.getScaledWidth() - 50, 500);
         this.ySize = Math.min(mc.mainWindow.getScaledHeight() - 50, 300);

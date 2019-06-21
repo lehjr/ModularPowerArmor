@@ -5,9 +5,9 @@ import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.client.gui.tinker.frame.*;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerEntitySP;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 
 /**
@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author MachineMuse
  */
 public class GuiTinkerTable extends MuseGui {
-    protected final EntityPlayerSP player;
+    protected final PlayerEntitySP player;
     protected ItemSelectionFrame itemSelectFrame;
     protected int worldx;
     protected int worldy;
@@ -30,8 +30,8 @@ public class GuiTinkerTable extends MuseGui {
      * @param hitY
      * @param hitZ
      */
-    public GuiTinkerTable(EntityPlayer player, float hitX, float hitY, float hitZ) {
-        this.player = (EntityPlayerSP) player;
+    public GuiTinkerTable(PlayerEntity player, float hitX, float hitY, float hitZ) {
+        this.player = (PlayerEntitySP) player;
 //        this.xSize = 256;
 //        this.ySize = 200;
 //        this.xSize = 400;
@@ -41,8 +41,8 @@ public class GuiTinkerTable extends MuseGui {
         this.ySize = Math.min(mc.mainWindow.getScaledHeight() - 50, 300);
     }
 
-    public GuiTinkerTable(EntityPlayer player, int x, int y, int z) {
-        this.player = (EntityPlayerSP) player;
+    public GuiTinkerTable(PlayerEntity player, int x, int y, int z) {
+        this.player = (PlayerEntitySP) player;
 //        this.xSize = 256;
 //        this.ySize = 200;
 //        this.xSize = 400;
