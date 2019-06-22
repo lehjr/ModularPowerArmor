@@ -7,7 +7,7 @@ import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.entity.EntitySpinningBlade;
+import net.machinemuse.powersuits.entity.SpinningBladeEntity;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -80,10 +80,10 @@ public class BladeLauncherModule extends AbstractPowerModule {
             @Override
             public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 if (!worldIn.isRemote) {
-                    int energyConsumption = getEnergyUsage(module);
+                    int energyConsumption = getEnergyUsage();
                     if (ElectricItemUtils.getPlayerEnergy((PlayerEntity) entityLiving) > energyConsumption) {
                         ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, energyConsumption);
-                        EntitySpinningBlade blade = new EntitySpinningBlade(worldIn, entityLiving);
+                        SpinningBladeEntity blade = new SpinningBladeEntity(worldIn, entityLiving);
                         worldIn.addEntity(blade);
                     }
                 }

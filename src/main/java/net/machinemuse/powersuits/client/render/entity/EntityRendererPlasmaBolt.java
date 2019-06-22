@@ -5,8 +5,8 @@ import net.machinemuse.numina.client.render.RenderState;
 import net.machinemuse.numina.client.render.entity.MuseEntityRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.DrawableMuseCircle;
-import net.machinemuse.powersuits.entity.EntityPlasmaBolt;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -16,14 +16,14 @@ import java.nio.DoubleBuffer;
 import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
 import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
 
-public class EntityRendererPlasmaBolt extends MuseEntityRenderer<EntityPlasmaBolt> {
+public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntity> {
     public static DoubleBuffer unrotatebuffer;
     protected static DrawableMuseCircle circle1;
     protected static DrawableMuseCircle circle2;
     protected static DrawableMuseCircle circle3;
     protected static DrawableMuseCircle circle4;
 
-    public EntityRendererPlasmaBolt(RenderManager renderManager) {
+    public EntityRendererPlasmaBolt(EntityRendererManager renderManager) {
         super(renderManager);
         Colour c1 = new Colour(.3, .3, 1, 0.3);
         circle1 = new DrawableMuseCircle(c1, c1);
@@ -92,7 +92,7 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<EntityPlasmaBol
      * f1). But JAD is pre 1.5 so doesn't do that.
      */
     @Override
-    public void doRender(EntityPlasmaBolt entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         double size = (entity.size) / 10.0;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);

@@ -5,8 +5,7 @@ import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.tileentity.MuseTileEntity;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraft.nbt.CompoundNBT;
 
 public class TileEntityLuxCapacitor extends MuseTileEntity {
     private Colour color;
@@ -26,10 +25,8 @@ public class TileEntityLuxCapacitor extends MuseTileEntity {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound nbt) {
+    public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
-        if (color == null)
-            color = ((IExtendedBlockState) this.getWorld().getBlockState(this.getPos())).getValue(BlockLuxCapacitor.COLOR);
         if (color == null)
             color = BlockLuxCapacitor.defaultColor;
         nbt.putInt("c", color.getInt());
@@ -37,7 +34,7 @@ public class TileEntityLuxCapacitor extends MuseTileEntity {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
+    public void read(CompoundNBT nbt) {
         super.read(nbt);
         if (nbt.contains("c")) {
             color = new Colour(nbt.getInt("c"));

@@ -1,6 +1,5 @@
 package net.machinemuse.powersuits.item.module.energy.generation;
 
-
 import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;

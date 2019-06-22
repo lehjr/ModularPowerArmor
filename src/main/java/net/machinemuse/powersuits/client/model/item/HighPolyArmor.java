@@ -1,16 +1,16 @@
 package net.machinemuse.powersuits.client.model.item;
 
 import net.machinemuse.powersuits.client.render.item.armor.RenderPart;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.item.UseAction;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.HandSide;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,8 +23,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * FIXME: IMPORTANT!!!!: Note that SmartMoving will mess up the rendering here and the armor's yaw will not change with the player's yaw but will be fine with it not installed.
  */
 @OnlyIn(Dist.CLIENT)
-public class HighPolyArmor extends ModelBiped {
-    public NBTTagCompound renderSpec = null;
+public class HighPolyArmor extends BipedModel {
+    public CompoundNBT renderSpec = null;
     public EquipmentSlotType visibleSection = EquipmentSlotType.HEAD;
 
     public HighPolyArmor() {
@@ -32,11 +32,11 @@ public class HighPolyArmor extends ModelBiped {
         init();
     }
 
-    public NBTTagCompound getRenderSpec() {
+    public CompoundNBT getRenderSpec() {
         return this.renderSpec;
     }
 
-    public void setRenderSpec(NBTTagCompound nbt) {
+    public void setRenderSpec(CompoundNBT nbt) {
         renderSpec = nbt;
     }
 
@@ -53,15 +53,15 @@ public class HighPolyArmor extends ModelBiped {
      */
 
     @Override
-    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         prep(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        this.bipedBody.rotateAngleY = entityIn.rotationYaw;
-        setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+        this.field_78115_e.rotateAngleY = entityIn.rotationYaw;
+        setRotationAngles(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
         super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         post(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
-    public void clearAndAddChildWithInitialOffsets(ModelRenderer mr, float xo, float yo, float zo) {
+    public void clearAndAddChildWithInitialOffsets(RendererModel mr, float xo, float yo, float zo) {
         mr.cubeList.clear();
         RenderPart rp = new RenderPart(this, mr);
         mr.addChild(rp);
@@ -69,8 +69,8 @@ public class HighPolyArmor extends ModelBiped {
     }
 
     public void init() {
-        clearAndAddChildWithInitialOffsets(bipedHead, 0.0F, 0.0F, 0.0F);
-        clearAndAddChildWithInitialOffsets(bipedBody, 0.0F, 0.0F, 0.0F);
+        clearAndAddChildWithInitialOffsets(field_78116_c, 0.0F, 0.0F, 0.0F);
+        clearAndAddChildWithInitialOffsets(field_78115_e, 0.0F, 0.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedRightArm, 5, 2.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedLeftArm, -5, 2.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedRightLeg, 2, 12.0F, 0.0F);
@@ -78,7 +78,7 @@ public class HighPolyArmor extends ModelBiped {
         bipedHeadwear.cubeList.clear();
     }
 
-    public void setInitialOffsets(ModelRenderer r, float x, float y, float z) {
+    public void setInitialOffsets(RendererModel r, float x, float y, float z) {
         r.offsetX = x;
         r.offsetY = y;
         r.offsetZ = z;
@@ -86,17 +86,17 @@ public class HighPolyArmor extends ModelBiped {
 
     public void prep(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         try {
-            EntityLivingBase entLive = (EntityLivingBase) entityIn;
+            LivingEntity entLive = (LivingEntity) entityIn;
             ItemStack stack = entLive.getActiveItemStack();
 
             // set pose for main hand, whichever hand that is
             if (entLive.getHeldItemMainhand().isEmpty()) {
-                if (getMainHand(entLive) == EnumHandSide.RIGHT)
+                if (getMainHand(entLive) == HandSide.RIGHT)
                     this.rightArmPose = ArmPose.EMPTY;
                 else
                     this.leftArmPose = ArmPose.EMPTY;
             } else {
-                if (getMainHand(entLive) == EnumHandSide.RIGHT)
+                if (getMainHand(entLive) == HandSide.RIGHT)
                     this.rightArmPose = ArmPose.ITEM;
                 else
                     this.leftArmPose = ArmPose.ITEM;
@@ -104,12 +104,12 @@ public class HighPolyArmor extends ModelBiped {
 
             // the "offhand" is the other hand
             if (entLive.getHeldItemOffhand().isEmpty()) {
-                if (getMainHand(entLive) == EnumHandSide.RIGHT)
+                if (getMainHand(entLive) == HandSide.RIGHT)
                     this.rightArmPose = ArmPose.EMPTY;
                 else
                     this.leftArmPose = ArmPose.EMPTY;
             } else {
-                if (getMainHand(entLive) == EnumHandSide.RIGHT)
+                if (getMainHand(entLive) == HandSide.RIGHT)
                     this.rightArmPose = ArmPose.ITEM;
                 else
                     this.leftArmPose = ArmPose.ITEM;
@@ -118,14 +118,14 @@ public class HighPolyArmor extends ModelBiped {
             isSneak = entLive.isSneaking();
             PlayerEntity entPlayer = (PlayerEntity) entLive;
             if ((!stack.isEmpty()) && (entPlayer.getItemInUseCount() > 0)) {
-                EnumAction enumaction = stack.getUseAction();
-                if (enumaction == EnumAction.BLOCK) {
-                    if (getMainHand(entLive) == EnumHandSide.LEFT)
+                UseAction UseAction = stack.getUseAction();
+                if (UseAction == UseAction.BLOCK) {
+                    if (getMainHand(entLive) == HandSide.LEFT)
                         this.leftArmPose = ArmPose.BLOCK;
                     else
                         this.rightArmPose = ArmPose.BLOCK;
-                } else if (enumaction == EnumAction.BOW) {
-                    if (getMainHand(entLive) == EnumHandSide.LEFT)
+                } else if (UseAction == UseAction.BOW) {
+                    if (getMainHand(entLive) == HandSide.LEFT)
                         this.leftArmPose = ArmPose.BOW_AND_ARROW;
                     else
                         this.rightArmPose = ArmPose.BOW_AND_ARROW;
@@ -134,15 +134,15 @@ public class HighPolyArmor extends ModelBiped {
         } catch (Exception ignored) {
         }
 
-        bipedHead.isHidden = false;
-        bipedBody.isHidden = false;
+        field_78116_c.isHidden = false;
+        field_78115_e.isHidden = false;
         bipedRightArm.isHidden = false;
         bipedLeftArm.isHidden = false;
         bipedRightLeg.isHidden = false;
         bipedLeftLeg.isHidden = false;
 
-        bipedHead.showModel = true;
-        bipedBody.showModel = true;
+        field_78116_c.showModel = true;
+        field_78115_e.showModel = true;
         bipedRightArm.showModel = true;
         bipedLeftArm.showModel = true;
         bipedRightLeg.showModel = true;
@@ -155,8 +155,15 @@ public class HighPolyArmor extends ModelBiped {
 //        isSneak = false;
     }
 
+    
+
     @Override
-    protected EnumHandSide getMainHand(Entity entityIn) {
-        return super.getMainHand(entityIn);
+    protected HandSide func_217147_a(LivingEntity p_217147_1_) {
+        return super.func_217147_a(p_217147_1_);
+    }
+//
+//    @Override
+    protected HandSide getMainHand(Entity entityIn) {
+        return  super.func_217147_a((LivingEntity) entityIn);
     }
 }

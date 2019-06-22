@@ -9,7 +9,7 @@ import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.constants.MPSResourceConstants;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
@@ -54,14 +54,14 @@ public enum ModelLuxCapacitorHelper {
 
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(baseModelLocation, transform);
-                    return bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockDirectional.FACING, facing), null, new Random());
+                    return bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
                 }
 
                 List<BakedQuad> getLensColoredQuads(Colour color, @Nullable Direction facing) {
                     facing = (facing != null) ? facing : Direction.NORTH;
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(lensModelLocation, transform);
-                    List<BakedQuad> quads = bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockDirectional.FACING, facing), null, new Random());
+                    List<BakedQuad> quads = bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
                     return MuseModelHelper.getColoredQuadsWithGlow(quads, color, true);
                 }
 

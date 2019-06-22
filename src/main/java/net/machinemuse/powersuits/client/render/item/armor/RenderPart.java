@@ -1,24 +1,24 @@
 package net.machinemuse.powersuits.client.render.item.armor;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.render.RenderState;
 import net.machinemuse.numina.client.render.modelspec.ModelPartSpec;
 import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.client.render.modelspec.PartSpecBase;
-import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.nbt.NBTTagAccessor;
 import net.machinemuse.powersuits.client.model.item.ArmorModelInstance;
 import net.machinemuse.powersuits.client.model.item.HighPolyArmor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.model.ModelBase;
-import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -33,26 +33,26 @@ import java.util.List;
  * Ported to Java by lehjr on 11/6/16.
  */
 @OnlyIn(Dist.CLIENT)
-public class RenderPart extends ModelRenderer {
-    ModelRenderer parent;
+public class RenderPart extends RendererModel {
+    RendererModel parent;
 
-    public RenderPart(ModelBase base, ModelRenderer parent) {
+    public RenderPart(Model base, RendererModel parent) {
         super(base);
         this.parent = parent;
     }
 
     @Override
     public void render(float scale) {
-        NBTTagCompound renderSpec = ((HighPolyArmor) (ArmorModelInstance.getInstance())).getRenderSpec();
+        CompoundNBT renderSpec = ((HighPolyArmor) (ArmorModelInstance.getInstance())).getRenderSpec();
         if (renderSpec == null)
             return;
 
-        int[] colours = renderSpec.getIntArray(ModelSpecTags.TAG_COLOURS);
+        int[] colours = renderSpec.getIntArray(NuminaConstants.TAG_COLOURS);
         if (colours.length == 0)
             colours = new int[]{Colour.WHITE.getInt()};
 
         int partColor;
-        for (NBTTagCompound nbt : NBTTagAccessor.getValues(renderSpec)) {
+        for (CompoundNBT nbt : NBTTagAccessor.getValues(renderSpec)) {
             PartSpecBase part = ModelRegistry.getInstance().getPart(nbt);
             if (part != null && part instanceof ModelPartSpec) {
                 if (part.getBinding().getSlot() == ((HighPolyArmor) (ArmorModelInstance.getInstance())).getVisibleSection()
@@ -72,7 +72,7 @@ public class RenderPart extends ModelRenderer {
                         GlStateManager.pushMatrix();
                         GlStateManager.scalef(scale, scale, scale);
                         applyTransform();
-                        Minecraft.getInstance().textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                        Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
                         Tessellator tess = Tessellator.getInstance();
                         BufferBuilder buffer = tess.getBuffer();
                         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);

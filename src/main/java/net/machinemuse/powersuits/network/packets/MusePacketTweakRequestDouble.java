@@ -4,7 +4,7 @@ import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.basemod.Numina;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -48,7 +48,7 @@ public class MusePacketTweakRequestDouble {
     }
 
     public static void handle(MusePacketTweakRequestDouble message, Supplier<NetworkEvent.Context> ctx) {
-        final PlayerEntityMP player = ctx.get().getSender();
+        final ServerPlayerEntity player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
@@ -65,7 +65,7 @@ public class MusePacketTweakRequestDouble {
         if (actualPlayer == null)
             return;
 
-        player.getServerWorld().addScheduledTask(() -> {
+        ctx.get().enqueueWork(() -> {
             int itemSlot = message.itemSlot;
             String moduleName = message.moduleName;
             String tweakName = message.tweakName;
@@ -75,11 +75,11 @@ public class MusePacketTweakRequestDouble {
                 ItemStack stack = player.inventory.getStackInSlot(itemSlot);
 
                 MuseLogger.logger.error("this has not been implemented yet");
-//                NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
+//                CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
 //
 //                if (itemTag != null && ModuleManager.INSTANCE.tagHasModule(itemTag, moduleName)) {
 //                    MuseNBTUtils.removeMuseValuesTag(stack);
-//                    NBTTagCompound moduleTag = itemTag.getCompoundTag(moduleName);
+//                    CompoundNBT moduleTag = itemTag.getCompoundTag(moduleName);
 //                    moduleTag.setDouble(tweakName, tweakValue);
 //                }
             }

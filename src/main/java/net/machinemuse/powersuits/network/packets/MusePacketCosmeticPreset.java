@@ -1,12 +1,13 @@
 package net.machinemuse.powersuits.network.packets;
 
-import net.machinemuse.numina.constants.ModelSpecTags;
+import net.machinemuse.numina.basemod.NuminaConstants;
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -37,7 +38,7 @@ public class MusePacketCosmeticPreset {
     }
 
     public static void handle(MusePacketCosmeticPreset message, Supplier<NetworkEvent.Context> ctx) {
-        final PlayerEntityMP player = ctx.get().getSender();
+        final ServerPlayerEntity player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
@@ -53,15 +54,15 @@ public class MusePacketCosmeticPreset {
         if (actualPlayer == null)
             return;
 
-        player.getServerWorld().addScheduledTask(() -> {
+        ctx.get().enqueueWork(() -> {
 
             String presetName = message.presetName;
             ItemStack stack = actualPlayer.inventory.getStackInSlot(itemSlot);
-
-            if (ModuleManager.INSTANCE.isIModularItem(stack)) {
-                NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-                itemTag.remove(ModelSpecTags.TAG_RENDER);
-                itemTag.putString(ModelSpecTags.TAG_COSMETIC_PRESET, presetName);
+            if (stack.getCapability(ModularItemCapability.MODULAR_ITEM).isPresent() ||
+                    stack.getCapability(ModeChangingCapability.MODE_CHANGING).isPresent()) {
+                CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
+                itemTag.remove(NuminaConstants.TAG_RENDER);
+                itemTag.putString(NuminaConstants.TAG_COSMETIC_PRESET, presetName);
             }
         });
     }

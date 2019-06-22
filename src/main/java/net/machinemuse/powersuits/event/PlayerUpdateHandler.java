@@ -21,6 +21,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Claire Semple on 9/8/2014.
@@ -41,15 +42,15 @@ public class PlayerUpdateHandler {
 //            // FIXME: is this really nescessary... apparently it is
 //            for (ItemStack stack : modularItemsEquipped) {
 //                // Temporary Advanced Rocketry hack Not the best way but meh.
-//                NBTTagList tagList = stack.getEnchantmentTagList();
+//                ListNBT tagList = stack.getEnchantmentTagList();
 //                if (tagList != null && !tagList.isEmpty()) {
 //                    if (tagList.tagCount() == 1) {
 //                        if (!(tagList.getCompoundTagAt(0).getShort("id") == 128))
 //                            stack.getTagCompound().removeTag("ench");
 //                    } else {
-//                        NBTTagCompound ar = null;
+//                        CompoundNBT ar = null;
 //                        for (int i = 0; i < tagList.tagCount(); i++) {
-//                            NBTTagCompound nbtTag = tagList.getCompoundTagAt(i);
+//                            CompoundNBT nbtTag = tagList.getCompoundTagAt(i);
 //                            if ((nbtTag.getShort("id") == 128)) {
 //                                ar = nbtTag;
 //                            }
@@ -64,25 +65,33 @@ public class PlayerUpdateHandler {
 
 //            Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
 
+            AtomicInteger modularItemsEquipped = new AtomicInteger();
+
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
                 if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR)
-                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(i->i.tick(player));
+                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(i->
+                            {
+                                i.tick(player);
+                                modularItemsEquipped.addAndGet(1);
+                            });
                 else
-                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(i->i.tick(player));
+                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(i->
+                    {
+                        i.tick(player);
+                        modularItemsEquipped.addAndGet(1);
+                    });
             }
 
 //            System.out.println("player fall distance before: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
 //
-            player.fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.motionY, -1000.0, 0.0));
+            player.fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
 //
 //            System.out.println("player fall distance after: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
 
-
-
             // Sound update
             if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
-                if (modularItemsEquipped.size() > 0) {
-                    double velsq2 = MuseMathUtils.sumsq(player.motionX, player.motionY, player.motionZ) - 0.5;
+                if (modularItemsEquipped.get() > 0) {
+                    double velsq2 = MuseMathUtils.sumsq(player.getMotion().x, player.getMotion().y, player.getMotion().z) - 0.5;
                     if (player.isAirBorne && velsq2 > 0) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GLIDER, SoundCategory.PLAYERS, (float) (velsq2 / 3), 1.0f, true);
                     } else {

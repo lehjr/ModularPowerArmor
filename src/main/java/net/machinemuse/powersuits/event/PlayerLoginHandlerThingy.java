@@ -1,13 +1,7 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.powersuits.common.config.MPSSettings;
-import net.machinemuse.powersuits.control.KeybindManager;
-import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MPSPacketConfig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /**
@@ -19,17 +13,20 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 public final class PlayerLoginHandlerThingy {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        EntityPlayer player = event.player;
-        boolean isUsingBuiltInServer = FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
+        PlayerEntity player = event.getPlayer();
 
-        // dedidated server or multiplayer game
-        if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
-            // sync config settings between client and server
-            MPSPackets.sendTo(new MPSPacketConfig(), (EntityPlayerMP) player);
-        } else {
-            MPSSettings.loadCustomInstallCosts();
-        }
-        if (player.world.isRemote)
-            KeybindManager.readInKeybinds();
+
+
+//        boolean isUsingBuiltInServer = FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
+//
+//        // dedidated server or multiplayer game
+//        if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
+//            // sync config settings between client and server
+//            MPSPackets.sendTo(new MPSPacketConfig(), (EntityPlayerMP) player);
+//        } else {
+//            MPSSettings.loadCustomInstallCosts();
+//        }
+//        if (player.world.isRemote)
+//            KeybindManager.readInKeybinds();
     }
 }

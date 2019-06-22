@@ -2,12 +2,12 @@ package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.basemod.Numina;
+import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.gui.GuiIcons;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.RenderState;
 import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.MuseMathUtils;
@@ -20,11 +20,11 @@ import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketCosmeticInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class PartSpecManipSubFrame {
     public MuseRelativeRect border;
     public List<PartSpecBase> partSpecs;
     public boolean open;
-    Minecraft mc;
+    Minecraft minecraft;
 
     public PartSpecManipSubFrame(SpecBase model, ColourPickerFrame colourframe, ItemSelectionFrame itemSelector, MuseRelativeRect border) {
         this.model = model;
@@ -54,7 +54,7 @@ public class PartSpecManipSubFrame {
         this.border = border;
         this.partSpecs = this.getPartSpecs();
         this.open = true;
-        mc = Minecraft.getInstance();
+        minecraft = Minecraft.getInstance();
     }
 
     /**
@@ -76,8 +76,8 @@ public class PartSpecManipSubFrame {
     public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
         if (clickie != null) {
             if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, mc.player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Type.HAND))
+                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, minecraft.player);
+            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
                 return true;
         }
         return false;
@@ -95,7 +95,7 @@ public class PartSpecManipSubFrame {
         if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
             return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
 
-        PlayerEntity player = mc.player;
+        PlayerEntity player = minecraft.player;
         ItemStack heldItem = player.getHeldItemOffhand();
 
         if (!heldItem.isEmpty() && ItemStack.areItemsEqual(selectedItem, heldItem))
@@ -103,46 +103,46 @@ public class PartSpecManipSubFrame {
         return EquipmentSlotType.MAINHAND;
     }
 
-    public NBTTagCompound getRenderTag() {
+    public CompoundNBT getRenderTag() {
         return MPSModelHelper.getMuseRenderTag(this.getSelectedItem().getItem(), this.getEquipmentSlot());
     }
 
-    public NBTTagCompound getItemTag() {
+    public CompoundNBT getItemTag() {
         return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getItem());
     }
 
     @Nullable
-    public NBTTagCompound getOrDontGetSpecTag(PartSpecBase partSpec) {
+    public CompoundNBT getOrDontGetSpecTag(PartSpecBase partSpec) {
         // there can be many ModelPartSpecs
         if (partSpec instanceof ModelPartSpec) {
             String name = ModelRegistry.getInstance().makeName(partSpec);
             return this.getRenderTag().contains(name) ? this.getRenderTag().getCompound(name) : null;
         }
         // Only one TexturePartSpec is allowed at a time, so figure out if this one is enabled
-        if (partSpec instanceof TexturePartSpec && this.getRenderTag().contains(ModelSpecTags.NBT_TEXTURESPEC_TAG)) {
-            NBTTagCompound texSpecTag = this.getRenderTag().getCompound(ModelSpecTags.NBT_TEXTURESPEC_TAG);
-            if (partSpec.spec.getOwnName().equals(texSpecTag.getString(ModelSpecTags.TAG_MODEL))) {
-                return getRenderTag().getCompound(ModelSpecTags.NBT_TEXTURESPEC_TAG);
+        if (partSpec instanceof TexturePartSpec && this.getRenderTag().contains(NuminaConstants.NBT_TEXTURESPEC_TAG)) {
+            CompoundNBT texSpecTag = this.getRenderTag().getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG);
+            if (partSpec.spec.getOwnName().equals(texSpecTag.getString(NuminaConstants.TAG_MODEL))) {
+                return getRenderTag().getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG);
             }
         }
         // if no match found
         return null;
     }
 
-    public NBTTagCompound getSpecTag(PartSpecBase partSpec) {
-        NBTTagCompound nbt = getOrDontGetSpecTag(partSpec);
-        return nbt != null ? nbt : new NBTTagCompound();
+    public CompoundNBT getSpecTag(PartSpecBase partSpec) {
+        CompoundNBT nbt = getOrDontGetSpecTag(partSpec);
+        return nbt != null ? nbt : new CompoundNBT();
     }
 
-    public NBTTagCompound getOrMakeSpecTag(PartSpecBase partSpec) {
+    public CompoundNBT getOrMakeSpecTag(PartSpecBase partSpec) {
         String name;
-        NBTTagCompound nbt = getSpecTag(partSpec);
+        CompoundNBT nbt = getSpecTag(partSpec);
         if (nbt.isEmpty()) {
             if (partSpec instanceof ModelPartSpec) {
                 name = ModelRegistry.getInstance().makeName(partSpec);
                 ((ModelPartSpec) partSpec).multiSet(nbt, null, null);
             } else {
-                name = ModelSpecTags.NBT_TEXTURESPEC_TAG;
+                name = NuminaConstants.NBT_TEXTURESPEC_TAG;
                 partSpec.multiSet(nbt, null);
             }
             this.getRenderTag().put(name, nbt);
@@ -172,8 +172,8 @@ public class PartSpecManipSubFrame {
     public void decrAbove(int index) {
         for (PartSpecBase spec : partSpecs) {
             String tagname = ModelRegistry.getInstance().makeName(spec);
-            PlayerEntitySP player = mc.player;
-            NBTTagCompound tagdata = getOrDontGetSpecTag(spec);
+            ClientPlayerEntity player = minecraft.player;
+            CompoundNBT tagdata = getOrDontGetSpecTag(spec);
 
             if (tagdata != null) {
                 int oldindex = spec.getColourIndex(tagdata);
@@ -187,7 +187,7 @@ public class PartSpecManipSubFrame {
     }
 
     public void drawSpecPartial(double x, double y, PartSpecBase partSpec, double ymino, double ymaxo) {
-        NBTTagCompound tag = this.getSpecTag(partSpec);
+        CompoundNBT tag = this.getSpecTag(partSpec);
         int selcomp = tag.isEmpty() ? 0 : (partSpec instanceof ModelPartSpec && ((ModelPartSpec) partSpec).getGlow(tag) ? 2 : 1);
         int selcolour = partSpec.getColourIndex(tag);
         new GuiIcons.TransparentArmor(x, y, null, null, ymino, null, ymaxo);
@@ -238,8 +238,8 @@ public class PartSpecManipSubFrame {
     }
 
     public boolean tryMouseClick(double x, double y) {
-        PlayerEntitySP player = mc.player;
-        NBTTagCompound tagdata;
+        ClientPlayerEntity player = minecraft.player;
+        CompoundNBT tagdata;
         String tagname;
 
         // player clicked outside the area
@@ -263,11 +263,11 @@ public class PartSpecManipSubFrame {
                 // removes the associated tag from the render tag making the part not isEnabled
                 case 0: {
                     if (spec instanceof TexturePartSpec)
-                        tagname = ModelSpecTags.NBT_TEXTURESPEC_TAG;
+                        tagname = NuminaConstants.NBT_TEXTURESPEC_TAG;
                     else
                         tagname = ModelRegistry.getInstance().makeName(spec);
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, new NBTTagCompound()));
+                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
                     this.updateItems();
                     return true;
                 }
@@ -275,7 +275,7 @@ public class PartSpecManipSubFrame {
                 // set part to isEnabled
                 case 1: {
                     if (spec instanceof TexturePartSpec)
-                        tagname = ModelSpecTags.NBT_TEXTURESPEC_TAG;
+                        tagname = NuminaConstants.NBT_TEXTURESPEC_TAG;
                     else
                         tagname = ModelRegistry.getInstance().makeName(spec);
                     tagdata = this.getOrMakeSpecTag(spec);
@@ -311,7 +311,7 @@ public class PartSpecManipSubFrame {
             PartSpecBase spec = partSpecs.get(Math.max(Math.min(lineNumber, partSpecs.size() - 1), 0));
 
             if (spec instanceof TexturePartSpec)
-                tagname = ModelSpecTags.NBT_TEXTURESPEC_TAG;
+                tagname = NuminaConstants.NBT_TEXTURESPEC_TAG;
             else
                 tagname = ModelRegistry.getInstance().makeName(spec);
 

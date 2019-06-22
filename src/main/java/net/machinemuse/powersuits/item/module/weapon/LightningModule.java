@@ -78,7 +78,7 @@ public class LightningModule extends AbstractPowerModule {
                 if (hand == Hand.MAIN_HAND) {
                     try {
                         double range = 64;
-                        int energyConsumption = getEnergyUsage(itemStackIn);
+                        int energyConsumption = getEnergyUsage();
                         if (energyConsumption < ElectricItemUtils.getPlayerEnergy(playerIn)) {
                             ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
                             MuseHeatUtils.heatPlayer(playerIn, moduleCap.applyPropertyModifiers(MPSConstants.HEAT_EMISSION));

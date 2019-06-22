@@ -1,13 +1,14 @@
 package net.machinemuse.powersuits.network.packets;
 
-import net.machinemuse.numina.constants.ModelSpecTags;
+import net.machinemuse.numina.basemod.NuminaConstants;
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -45,7 +46,7 @@ public class MusePacketColourInfo {
     }
 
     public static void handle(MusePacketColourInfo message, Supplier<NetworkEvent.Context> ctx) {
-        final PlayerEntityMP player = ctx.get().getSender();
+        final ServerPlayerEntity player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
@@ -63,17 +64,18 @@ public class MusePacketColourInfo {
         if (actualPlayer == null)
             return;
 
-        player.getServerWorld().addScheduledTask(() -> {
+        ctx.get().enqueueWork(() -> {
             ItemStack stack = actualPlayer.inventory.getStackInSlot(itemSlot);
-            if (ModuleManager.INSTANCE.isIModularItem(stack)) {
-                NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-                NBTTagCompound renderTag = itemTag.getCompound(ModelSpecTags.TAG_RENDER);
+            if (stack.getCapability(ModularItemCapability.MODULAR_ITEM).isPresent() ||
+                    stack.getCapability(ModeChangingCapability.MODE_CHANGING).isPresent()) {
+                CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
+                CompoundNBT renderTag = itemTag.getCompound(NuminaConstants.TAG_RENDER);
                 if (renderTag == null) {
-                    renderTag = new NBTTagCompound();
-                    itemTag.put(ModelSpecTags.TAG_RENDER, renderTag);
+                    renderTag = new CompoundNBT();
+                    itemTag.put(NuminaConstants.TAG_RENDER, renderTag);
                 }
                 if (renderTag != null)
-                    renderTag.putIntArray(ModelSpecTags.TAG_COLOURS, tagData);
+                    renderTag.putIntArray(NuminaConstants.TAG_COLOURS, tagData);
             }
         });
     }

@@ -1,17 +1,18 @@
 package net.machinemuse.powersuits.network.packets;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.capabilities.inventory.IModeChangingItem;
-import net.machinemuse.numina.capabilities.inventory.IModularItem;
-import net.machinemuse.numina.constants.ModelSpecTags;
+import net.machinemuse.numina.basemod.NuminaConstants;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.network.MuseByteBufferUtils;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerEntityMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -29,12 +30,12 @@ public class MusePacketCosmeticInfo {
     protected static int playerID;
     protected static int itemSlot;
     protected String tagName;
-    protected NBTTagCompound tagData;
+    protected CompoundNBT tagData;
 
     public MusePacketCosmeticInfo() {
     }
 
-    public MusePacketCosmeticInfo(int playerID, int itemSlot, String tagName, NBTTagCompound tagData) {
+    public MusePacketCosmeticInfo(int playerID, int itemSlot, String tagName, CompoundNBT tagData) {
         this.playerID = playerID;
         this.itemSlot = itemSlot;
         this.tagName = tagName;
@@ -57,17 +58,17 @@ public class MusePacketCosmeticInfo {
     }
 
     public static void handle(MusePacketCosmeticInfo message, Supplier<NetworkEvent.Context> ctx) {
-        final PlayerEntityMP player = ctx.get().getSender();
+        final ServerPlayerEntity player = ctx.get().getSender();
 
         if (player == null || player.getServer() == null)
             return;
 
-        player.getServerWorld().addScheduledTask(() -> {
+        ctx.get().enqueueWork(() -> {
             final PlayerEntity actualPlayer;
             int playerID = message.playerID;
             int itemSlot = message.itemSlot;
             String tagName = message.tagName;
-            NBTTagCompound tagData = message.tagData;
+            CompoundNBT tagData = message.tagData;
             Entity entity = player.world.getEntityByID(playerID);
             if (!(player.world.getEntityByID(playerID) instanceof PlayerEntity ))
                 return;
@@ -79,24 +80,24 @@ public class MusePacketCosmeticInfo {
 
             ItemStack itemStack = actualPlayer.inventory.getStackInSlot(itemSlot);
 
-            LazyOptional<IModularItem> modularItemCap = ModuleManager.INSTANCE.getModularItemCapability(itemStack);
-            LazyOptional<IModeChangingItem> modeChangingItemCap = ModuleManager.INSTANCE.getModeChangingModularItemCapability(itemStack);
+            LazyOptional<IModularItem> modularItemCap = itemStack.getCapability(ModularItemCapability.MODULAR_ITEM);
+            LazyOptional<IModeChangingItem> modeChangingItemCap = itemStack.getCapability(ModeChangingCapability.MODE_CHANGING);
 
             if (tagName != null && (modularItemCap.isPresent()|| modeChangingItemCap.isPresent())) {
-                NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(itemStack);
-                itemTag.remove(ModelSpecTags.TAG_COSMETIC_PRESET);
+                CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(itemStack);
+                itemTag.remove(NuminaConstants.TAG_COSMETIC_PRESET);
 
-                if (Objects.equals(tagName, ModelSpecTags.TAG_RENDER)) {
-                    itemTag.remove(ModelSpecTags.TAG_RENDER);
+                if (Objects.equals(tagName, NuminaConstants.TAG_RENDER)) {
+                    itemTag.remove(NuminaConstants.TAG_RENDER);
                     if (!tagData.isEmpty())
-                        itemTag.put(ModelSpecTags.TAG_RENDER, tagData);
+                        itemTag.put(NuminaConstants.TAG_RENDER, tagData);
                 } else {
-                    NBTTagCompound renderTag;
-                    if (!itemTag.contains(ModelSpecTags.TAG_RENDER)) {
-                        renderTag = new NBTTagCompound();
-                        itemTag.put(ModelSpecTags.TAG_RENDER, renderTag);
+                    CompoundNBT renderTag;
+                    if (!itemTag.contains(NuminaConstants.TAG_RENDER)) {
+                        renderTag = new CompoundNBT();
+                        itemTag.put(NuminaConstants.TAG_RENDER, renderTag);
                     } else {
-                        renderTag = itemTag.getCompound(ModelSpecTags.TAG_RENDER);
+                        renderTag = itemTag.getCompound(NuminaConstants.TAG_RENDER);
                     }
                     if (tagData.isEmpty()) {
                         MuseLogger.logger.debug("Removing tag " + tagName);

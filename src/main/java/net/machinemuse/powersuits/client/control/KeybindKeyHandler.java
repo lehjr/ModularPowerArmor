@@ -1,19 +1,18 @@
 package net.machinemuse.powersuits.client.control;
 
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
 import net.machinemuse.numina.capabilities.player.CapabilityPlayerKeyStates;
 import net.machinemuse.numina.capabilities.player.IPlayerKeyStates;
 import net.machinemuse.numina.network.NuminaPackets;
 import net.machinemuse.numina.network.packets.MusePacketPlayerUpdate;
-import net.machinemuse.powersuits.basemod.ModuleManager;
-import net.machinemuse.powersuits.client.gui.GuiModeSelector;
-import net.machinemuse.powersuits.client.gui.tinker.CosmeticGui;
-import net.machinemuse.powersuits.client.gui.tinker.KeyConfigGui;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
@@ -21,7 +20,7 @@ import static java.util.Optional.empty;
 
 @OnlyIn(Dist.CLIENT)
 public class KeybindKeyHandler {
-    Minecraft mc;
+    Minecraft minecraft;
 
     public static final String mps = "Modular ModularPowersuits";
     public static final KeyBinding openKeybindGUI = new KeyBinding("Open MPS Keybind GUI", GLFW.GLFW_KEY_UNKNOWN, mps);
@@ -32,16 +31,16 @@ public class KeybindKeyHandler {
     public static final KeyBinding[] keybindArray = new KeyBinding[]{openKeybindGUI, goDownKey, cycleToolBackward, cycleToolForward, openCosmeticGUI};
 
     public KeybindKeyHandler() {
-        mc = Minecraft.getInstance();
+        minecraft = Minecraft.getInstance();
         for (KeyBinding key : keybindArray) {
             ClientRegistry.registerKeyBinding(key);
         }
     }
 
-    void updatePlayerValues(PlayerEntitySP clientPlayer) {
+    void updatePlayerValues(ClientPlayerEntity clientPlayer) {
         boolean markForSync = false;
         boolean downKeyState = goDownKey.isKeyDown();
-        boolean jumpKeyState = mc.gameSettings.keyBindJump.isKeyDown();
+        boolean jumpKeyState = minecraft.gameSettings.keyBindJump.isKeyDown();
 
         LazyOptional<IPlayerKeyStates> playerCap = clientPlayer.getCapability(CapabilityPlayerKeyStates.PLAYER_KEYSTATES, null);
         if (playerCap.isPresent()) {
@@ -67,32 +66,34 @@ public class KeybindKeyHandler {
         }
     }
 
-//    @SubscribeEvent
-//    public void onKeyInput(InputEvent.KeyInputEvent e) {
-
-    public void checkPlayerKeys() {
-        PlayerEntitySP player = mc.player;
-        KeyBinding[] hotbarKeys = mc.gameSettings.keyBindsHotbar;
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent e) {
+//
+//    public void checkPlayerKeys() {
+        ClientPlayerEntity player = minecraft.player;
+        KeyBinding[] hotbarKeys = minecraft.gameSettings.keyBindsHotbar;
         updatePlayerValues(player);
 
-        if (openKeybindGUI.isKeyDown() && mc.isGameFocused())
-            mc.displayGuiScreen(new KeyConfigGui(player));
+//        if (openKeybindGUI.isKeyDown() && minecraft.isGameFocused())
+//            minecraft.displayGuiScreen(new KeyConfigGui(player));
 
-        if (openCosmeticGUI.isKeyDown() && mc.isGameFocused())
-            mc.displayGuiScreen(new CosmeticGui(player));
-
-        if (hotbarKeys[player.inventory.currentItem].isKeyDown() && mc.isGameFocused())
-            mc.displayGuiScreen(new GuiModeSelector(player));
+//        if (openCosmeticGUI.isKeyDown() && minecraft.isGameFocused())
+//            minecraft.displayGuiScreen(new CosmeticGui(player));
+//
+//        if (hotbarKeys[player.inventory.currentItem].isKeyDown() && minecraft.isGameFocused())
+//            minecraft.displayGuiScreen(new GuiModeSelector(player));
 
         /* cycleToolBackward/cycleToolForward */
         if (cycleToolBackward.isKeyDown()) {
-            mc.playerController.tick();
-            ModuleManager.INSTANCE.cycleMode(player.inventory.getStackInSlot(player.inventory.currentItem),player, 1);
+            minecraft.playerController.tick();
+            player.inventory.getStackInSlot(player.inventory.currentItem).getCapability(ModeChangingCapability.MODE_CHANGING)
+                    .ifPresent(iModeChangingItem -> iModeChangingItem.cycleMode(player, 1));
         }
 
         if (cycleToolForward.isKeyDown()) {
-            mc.playerController.tick();
-            ModuleManager.INSTANCE.cycleMode(player.inventory.getStackInSlot(player.inventory.currentItem),player, -1);
+            minecraft.playerController.tick();
+            player.inventory.getStackInSlot(player.inventory.currentItem).getCapability(ModeChangingCapability.MODE_CHANGING)
+                    .ifPresent(iModeChangingItem -> iModeChangingItem.cycleMode(player, -1));
         }
     }
 }

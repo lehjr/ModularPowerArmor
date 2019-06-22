@@ -3,7 +3,7 @@ package net.machinemuse.powersuits.network.packets;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.basemod.Numina;
 import net.machinemuse.numina.network.MuseByteBufferUtils;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -14,18 +14,18 @@ public class MusePacketCosmeticPresetUpdate {
 //    protected static int playerID;
     String registryName;
     String name;
-    NBTTagCompound cosmeticSettings;
+    CompoundNBT cosmeticSettings;
 
     public MusePacketCosmeticPresetUpdate() {
 
     }
 
-    public MusePacketCosmeticPresetUpdate(ResourceLocation registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {
+    public MusePacketCosmeticPresetUpdate(ResourceLocation registryNameIn, String nameIn, CompoundNBT cosmeticSettingsIn) {
 //        this.playerID = playerID; // either sender or destination
         this(registryNameIn.toString(), nameIn, cosmeticSettingsIn);
     }
 
-    public MusePacketCosmeticPresetUpdate(String registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {
+    public MusePacketCosmeticPresetUpdate(String registryNameIn, String nameIn, CompoundNBT cosmeticSettingsIn) {
 //        this.playerID = playerID; // either sender or destination
         this.registryName = registryNameIn;
         this.name = nameIn;
@@ -52,7 +52,7 @@ public class MusePacketCosmeticPresetUpdate {
 
 //        if (ctx.side == Side.SERVER) {
 //            boolean allowCosmeticPresetCreation;
-//            final PlayerEntityMP player = ctx.getServerHandler().player;
+//            final ServerPlayerEntity player = ctx.getServerHandler().player;
 //            // check if player is the server owner
 //            if (FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer()) {
 //                allowCosmeticPresetCreation = player.getName().equals(FMLCommonHandler.instance().getMinecraftServerInstance().getServerOwner());
@@ -63,10 +63,10 @@ public class MusePacketCosmeticPresetUpdate {
 //                allowCosmeticPresetCreation = opLevel == 4;
 //            }
 //            if(allowCosmeticPresetCreation) {
-//                player.getServerWorld().addScheduledTask(() -> {
+//                ctx.get().enqueueWork(() -> {
 //                    ResourceLocation registryName = message.registryName;
 //                    String name = message.name;
-//                    NBTTagCompound cosmeticSettings = message.cosmeticSettings;
+//                    CompoundNBT cosmeticSettings = message.cosmeticSettings;
 //                    MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
 //                    if (settings != null) {
 //                        settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
@@ -84,7 +84,7 @@ public class MusePacketCosmeticPresetUpdate {
 //            Minecraft.getInstance().addScheduledTask(() -> {
 //                ResourceLocation registryName = message.registryName;
 //                String name = message.name;
-//                NBTTagCompound cosmeticSettings = message.cosmeticSettings;
+//                CompoundNBT cosmeticSettings = message.cosmeticSettings;
 //                MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
 //                settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
 //            });

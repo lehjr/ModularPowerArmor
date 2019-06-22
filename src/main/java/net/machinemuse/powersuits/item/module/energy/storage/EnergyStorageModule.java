@@ -21,7 +21,7 @@ public class EnergyStorageModule extends AbstractPowerModule {
     protected final int maxEnergy;
     protected final int maxTransfer;
 
-    public EnergyStorageModule(int maxEnergy, int maxTransfer, String regName) {
+    public EnergyStorageModule(String regName, int maxEnergy, int maxTransfer) {
         super(regName);
         this.maxEnergy = maxEnergy;
         this.maxTransfer = maxTransfer;

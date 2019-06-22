@@ -49,8 +49,8 @@ public class MusePacketSalvageModuleRequest {
 
 
 //        if (ctx.side == Side.SERVER) {
-//            final PlayerEntityMP player = ctx.getServerHandler().player;
-//            player.getServerWorld().addScheduledTask(() -> {
+//            final ServerPlayerEntity player = ctx.getServerHandler().player;
+//            ctx.get().enqueueWork(() -> {
 //                int itemSlot= message.itemSlot;
 //                String moduleName = message.moduleName;
 //                if (moduleName != null) {

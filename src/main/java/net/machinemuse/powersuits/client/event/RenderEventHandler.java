@@ -1,5 +1,7 @@
 package net.machinemuse.powersuits.client.event;
 
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
@@ -7,15 +9,14 @@ import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.DrawableMuseRect;
 import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSItems;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
-import net.machinemuse.powersuits.constants.MPSModuleConstants;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -26,9 +27,15 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class RenderEventHandler {
-
     private static final MPSConfig config = MPSConfig.INSTANCE;
     private static boolean ownFly;
+    public static final ResourceLocation binoculars = new ResourceLocation(MPSItems.INSTANCE.BINOCULARS_MODULE__REGNAME);
+    public static final ResourceLocation jetpack =  new ResourceLocation(MPSItems.INSTANCE.MODULE_JETPACK__REGNAME);
+    public static final ResourceLocation glider = new ResourceLocation(MPSItems.INSTANCE.MODULE_GLIDER__REGNAME);
+    public static final ResourceLocation jetBoots = new ResourceLocation(MPSItems.INSTANCE.MODULE_JETBOOTS__REGNAME);
+    public static final ResourceLocation flightControl= new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME);
+
+
     private final DrawableMuseRect frame = new DrawableMuseRect(config.HUD_KEYBIND_HUD_X.get(), config.HUD_KEYBIND_HUD_Y.get(), config.HUD_KEYBIND_HUD_X.get() + (double) 16, config.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
     public RenderEventHandler() {
@@ -60,46 +67,59 @@ public class RenderEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void renderLast(RenderWorldLastEvent event) {
-        Minecraft mc = Minecraft.getInstance();
-        MainWindow screen = mc.mainWindow;
+        Minecraft minecraft = Minecraft.getInstance();
+        MainWindow screen = minecraft.mainWindow;
     }
 
     @SubscribeEvent
     public void onPreRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (!event.getPlayerEntity().abilities.isFlying && !event.getPlayerEntity().onGround && this.playerHasFlightOn(event.getPlayerEntity())) {
-            event.getPlayerEntity().abilities.isFlying = true;
+        if (!event.getEntityPlayer().abilities.isFlying && !event.getEntityPlayer().onGround && this.playerHasFlightOn(event.getEntityPlayer())) {
+            event.getEntityPlayer().abilities.isFlying = true;
             RenderEventHandler.ownFly = true;
         }
     }
 
+
+
     private boolean playerHasFlightOn(PlayerEntity player) {
-        return !ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETPACK__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.CHEST), new ResourceLocation(MPSItems.INSTANCE.MODULE_GLIDER__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.FEET), new ResourceLocation(MPSItems.INSTANCE.MODULE_JETBOOTS__REGNAME)) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EquipmentSlotType.HEAD), new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME));
+        return
+
+        player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(ModularItemCapability.MODULAR_ITEM)
+                .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(flightControl).isEmpty()).orElse(false) ||
+
+                player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(ModularItemCapability.MODULAR_ITEM)
+                        .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(jetpack).isEmpty() ||
+                                !iModularItem.itemGetActiveModuleOrEmpty(glider).isEmpty()).orElse(false) ||
+
+                player.getItemStackFromSlot(EquipmentSlotType.FEET).getCapability(ModularItemCapability.MODULAR_ITEM)
+                        .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(jetBoots).isEmpty()).orElse(false);
     }
 
     @SubscribeEvent
     public void onPostRenderPlayer(RenderPlayerEvent.Post event) {
         if (RenderEventHandler.ownFly) {
             RenderEventHandler.ownFly = false;
-            event.getPlayerEntity().abilities.isFlying = false;
+            event.getEntityPlayer().abilities.isFlying = false;
         }
     }
 
     @SubscribeEvent
     public void onFOVUpdate(FOVUpdateEvent e) {
         ItemStack helmet = e.getEntity().getItemStackFromSlot(EquipmentSlotType.HEAD);
-        if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, new ResourceLocation(MPSItems.INSTANCE.BINOCULARS_MODULE__REGNAME))) {
-            e.setNewfov(e.getNewfov() / (float) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helmet, MPSModuleConstants.FOV));
-        }
+        helmet.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(h-> {
+                    ItemStack binnoculars = h.itemGetActiveModuleOrEmpty(binoculars);
+                    if (!binnoculars.isEmpty())
+                        e.setNewfov((float) (e.getNewfov() / binnoculars.getCapability(PowerModuleCapability.POWER_MODULE)
+                                                        .map(m->m.applyPropertyModifiers(MPSConstants.FOV)).orElse(1D)));
+                }
+        );
     }
 
     @OnlyIn(Dist.CLIENT)
     public void drawKeybindToggles() {
         if (config.HUD_DISPLAY_HUD.get()) {
-            Minecraft mc = Minecraft.getInstance();
-            PlayerEntitySP player = mc.player;
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPlayerEntity player = minecraft.player;
             frame.setLeft(config.HUD_KEYBIND_HUD_X.get());
             frame.setTop(config.HUD_KEYBIND_HUD_Y.get());
             frame.setBottom(frame.top() + 16);
@@ -114,8 +134,8 @@ public class RenderEventHandler {
                         MuseTextureUtils.pushTexture(MuseTextureUtils.TEXTURE_QUILT);
                         boolean active = false;
                         for (ItemStack stack : MuseItemUtils.getModularItemsEquipped(player)) {
-                            if (!module.getModule().isEmpty())
-                                active = ModuleManager.INSTANCE.itemHasActiveModule(stack, module.getModule().getItem().getRegistryName());
+//                            if (!module.getModule().isEmpty())
+//                                active = ModuleManager.INSTANCE.itemHasActiveModule(stack, module.getModule().getItem().getRegistryName());
                         }
                         MuseRenderer.drawModuleAt(x, frame.top(), module.getModule(), active);
                         MuseTextureUtils.popTexture();

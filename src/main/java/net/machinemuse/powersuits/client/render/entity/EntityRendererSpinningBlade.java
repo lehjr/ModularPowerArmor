@@ -3,35 +3,34 @@ package net.machinemuse.powersuits.client.render.entity;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
 import net.machinemuse.numina.client.render.entity.MuseEntityRenderer;
 import net.machinemuse.powersuits.basemod.ModularPowersuits;
-import net.machinemuse.powersuits.entity.EntitySpinningBlade;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.machinemuse.powersuits.entity.SpinningBladeEntity;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class EntityRendererSpinningBlade extends MuseEntityRenderer<EntitySpinningBlade> {
-    public EntityRendererSpinningBlade(RenderManager renderManager) {
+public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBladeEntity> {
+    public EntityRendererSpinningBlade(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
     public static final ResourceLocation textureLocation = new ResourceLocation(ModularPowersuits.MODID, "modules/spinningblade.png");
 
-
     @Override
-    protected ResourceLocation getEntityTexture(EntitySpinningBlade entity) {
+    protected ResourceLocation getEntityTexture(SpinningBladeEntity entity) {
         return textureLocation;
     }
 
     @Override
-    public void doRender(EntitySpinningBlade entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(SpinningBladeEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);
         MuseTextureUtils.pushTexture(getEntityTexture(entity));
         GL11.glTranslated(x, y, z);
-        double motionscale = Math.sqrt(entity.motionZ * entity.motionZ + entity.motionX * entity.motionX);
+        double motionscale = Math.sqrt(entity.getMotion().z * entity.getMotion().z +entity.getMotion().x * entity.getMotion().x);
         GL11.glRotatef(90, 1, 0, 0);
-        GL11.glRotatef(-entity.rotationPitch, (float) (entity.motionZ /
-                motionscale), 0.0f, (float) (-entity.motionX / motionscale));
+        GL11.glRotatef(-entity.rotationPitch, (float) (entity.getMotion().z /
+                motionscale), 0.0f, (float) (- entity.getMotion().x / motionscale));
         int time = (int) System.currentTimeMillis() % 360;
         GL11.glRotatef(time / 2, 0, 0, 1);
         double scale = 0.5;

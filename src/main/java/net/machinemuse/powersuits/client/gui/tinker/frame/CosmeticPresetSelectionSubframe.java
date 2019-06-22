@@ -16,14 +16,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     public MuseRelativeRect border;
     public boolean open;
     public ItemSelectionFrame itemSelector;
     String name;
-    Minecraft mc;
+    Minecraft minecraft;
 
     public CosmeticPresetSelectionSubframe(String name, MusePoint2D musePoint2D, ItemSelectionFrame itemSelector, MuseRelativeRect border) {
         super(new ClickableLabel(name, musePoint2D), border);
@@ -32,14 +32,14 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         this.border = border;
         this.open = true;
         this.setMode(0);
-        mc = Minecraft.getInstance();
+        minecraft = Minecraft.getInstance();
     }
 
     public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
         if (clickie != null) {
             if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, mc.player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Type.HAND))
+                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, minecraft.player);
+            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
                 return true;
         }
         return false;
@@ -56,7 +56,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         ItemStack selectedItem = getSelectedItem().getItem();
         if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
             return selectedItem.getEquipmentSlot();
-        PlayerEntity player = mc.player;
+        PlayerEntity player = minecraft.player;
         ItemStack heldItem = player.getHeldItemOffhand();
 
         if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
@@ -68,7 +68,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         return name;
     }
 
-    public NBTTagCompound getItemTag() {
+    public CompoundNBT getItemTag() {
         return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getItem());
     }
 
@@ -82,7 +82,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         // change the render tag to this ... keep in mind that the render tag for these are just a key to read from the config file
         if(super.hitbox(x, y) && this.getSelectedItem() != null) {
             if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                MPSPackets.sendToServer(new MusePacketCosmeticPreset(mc.player.getEntityId(), this.getSelectedItem().inventorySlot, this.name));
+                MPSPackets.sendToServer(new MusePacketCosmeticPreset(minecraft.player.getEntityId(), this.getSelectedItem().inventorySlot, this.name));
             }
             return true;
         }

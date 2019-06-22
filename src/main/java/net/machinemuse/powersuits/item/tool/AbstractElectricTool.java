@@ -3,12 +3,12 @@ package net.machinemuse.powersuits.item.tool;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.ToolItem;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbstractElectricTool extends ItemTool {
+public class AbstractElectricTool extends ToolItem {
     private final Set<Block> effectiveBlocks = new HashSet<>();
 
     public AbstractElectricTool() {

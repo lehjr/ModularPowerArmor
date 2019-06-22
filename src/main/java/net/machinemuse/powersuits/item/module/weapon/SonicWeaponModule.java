@@ -6,7 +6,7 @@
 //import net.machinemuse.powersuits.powermodule.AbstractPowerModule;
 //import net.machinemuse.powersuits.utils.MuseCommonStrings;
 //import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-//import net.minecraft.entity.EntityLivingBase;
+//import net.minecraft.entity.LivingEntity;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.util.ActionResult;
@@ -61,7 +61,7 @@
 //    }
 //
 //    @Override
-//    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+//    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
 //    }
 //
 //    @Override

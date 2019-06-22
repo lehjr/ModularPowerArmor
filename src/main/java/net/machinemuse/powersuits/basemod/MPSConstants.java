@@ -1,6 +1,31 @@
 package net.machinemuse.powersuits.basemod;
 
 public class MPSConstants {
+    public static final String CONFIG_PREFIX = "config." + ModularPowersuits.MODID + ".";
+
+    // HUD ----------------------------------------------------------------------------------------
+    public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
+    public static final String CONFIG_HUD_TOGGLE_MODULE_SPAM = CONFIG_PREFIX_HUD + "enableModuleSpam";
+    public static final String CONFIG_HUD_DISPLAY_HUD = CONFIG_PREFIX_HUD + "DisplayHUD";
+    public static final String CONFIG_HUD_KEYBIND_HUD_X = CONFIG_PREFIX_HUD + "Xposition";
+    public static final String CONFIG_HUD_KEYBIND_HUD_Y = CONFIG_PREFIX_HUD + "Yposition";
+    public static final String CONFIG_HUD_USE_GRAPHICAL_METERS = CONFIG_PREFIX_HUD + "useGraphicalMeters";
+    public static final String CONFIG_HUD_USE_24_HOUR_CLOCK = CONFIG_PREFIX_HUD + "use24HrClock";
+
+    // Cosmetics ----------------------------------------------------------------------------------
+    public static final String CONFIG_PREFIX_COSMETIC = CONFIG_PREFIX + "cosmetic.";
+    public static final String CONFIG_COSMETIC_USE_LEGACY_COSMETIC_SYSTEM = CONFIG_PREFIX_COSMETIC + "useLegacyCosmeticSystem";
+    public static final String CONFIG_COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS = CONFIG_PREFIX_COSMETIC + "allowHighPollyArmorModuels";
+    public static final String CONFIG_COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN = CONFIG_PREFIX_COSMETIC + "allowPowerFistCustomization";
+
+    // General ------------------------------------------------------------------------------------
+    public static final String CONFIG_PREFIX_GENERAL = CONFIG_PREFIX + "general.";
+    public static final String CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS = CONFIG_PREFIX_GENERAL + "allowConflictingKeybinds";
+    public static final String CONFIG_GENERAL_MAX_FLYING_SPEED = CONFIG_PREFIX_GENERAL + "maxFlyingSpeed";
+
+
+
+    public static final String IS_MODULE_ALLOWED ="isModuleAllowed";
 
     // Armor --------------------------------------------------------------------------------------
     public static final String ARMOR_POINTS = "armorPoints";
@@ -26,11 +51,18 @@ public class MPSConstants {
     // Environmental ------------------------------------------------------------------------------
     public static final String EATING_EFFICIENCY = "autoFeederEfficiency";
     public static final String EFFICIENCY = "efficiency";
+    public static final String FLUID_TANK_SIZE = "fluidTankSize";
+
 
     // Mining Enhancement -------------------------------------------------------------------------
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";
     public static final String DIAMETER ="diameter";
     public static final String HARVEST_SPEED = "harvSpeed";
+    public static final String FORTUNE_ENERGY_CONSUMPTION = "fortuneEnCon";
+    public static final String ENCHANTMENT_LEVEL ="enchLevel";
+    public static final String FORTUNE_ENCHANTMENT_LEVEL ="fortuneLevel";
+    public static final String SILK_TOUCH_ENERGY_CONSUMPTION = "silkTouchEnCon";
+
 
     // Movement ----------------------------------------------------------------------------------
     public static final String THRUST = "thrust";
@@ -39,13 +71,18 @@ public class MPSConstants {
     public static final String BLINK_DRIVE_RANGE = "blinkDriveRange";
     public static final String SPRINT_ENERGY_CONSUMPTION = "sprintEnergyCon";
     public static final String SPRINT_SPEED_MULTIPLIER = "sprintSpeedMult";
-    public static final String SPRINT_FOOD_COMPENSATION = "sprintExComp";
+    public static final String FOOD_COMPENSATION = "sprintExComp";
     public static final String WALKING_ENERGY_CONSUMPTION = "walkingEnergyCon";
     public static final String WALKING_SPEED_MULTIPLIER = "walkingSpeedMult";
     public static final String WALKING_ASSISTANCE = "walkingAssist";
     public static final String SPRINT_ASSIST = "sprintAssist";
     public static final String COMPENSATION = "compensation";
-
+    public static final String MULTIPLIER = "muultiplier";
+    public static final String JETPACK_THRUST = "jetpackThrust";
+    public static final String JETBOOTS_THRUST = "jetbootsThrust";
+    public static final String VERTICALITY = "vertically";
+    public static final String FLIGHT_VERTICALITY = "yLookRatio";
+    public static final String HEAT_GENERATION = "heatGen";
 
 
     // Tool ---------------------------------------------------------------------------------------

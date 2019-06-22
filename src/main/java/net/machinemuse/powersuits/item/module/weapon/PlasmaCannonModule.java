@@ -9,7 +9,7 @@ import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.entity.EntityPlasmaBolt;
+import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -85,7 +85,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
             public void onPlayerStoppedUsing(ItemStack itemStack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 int chargeTicks = (int) MuseMathUtils.clampDouble(itemStack.getUseDuration() - timeLeft, 10, 50);
                 if (!worldIn.isRemote) {
-                    double energyConsumption = getEnergyUsage(itemStack)* chargeTicks;
+                    double energyConsumption = getEnergyUsage()* chargeTicks;
                     if (entityLiving instanceof PlayerEntity) {
                         PlayerEntity player = (PlayerEntity) entityLiving;
                         MuseHeatUtils.heatPlayer(player, energyConsumption / 5000);
@@ -94,7 +94,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
                             double explosiveness = moduleCap.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_EXPLOSIVENESS);
                             double damagingness = moduleCap.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
 
-                            EntityPlasmaBolt plasmaBolt = new EntityPlasmaBolt(worldIn, player, explosiveness, damagingness, chargeTicks);
+                            PlasmaBoltEntity plasmaBolt = new PlasmaBoltEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
                             worldIn.addEntity(plasmaBolt);
                         }
                     }

@@ -1,32 +1,34 @@
 package net.machinemuse.powersuits.entity;
 
 import net.machinemuse.powersuits.basemod.MPSItems;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAdditionalSpawnData {
+public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public static final int SIZE = 24;
     public double size;
     public double damagingness;
     public double explosiveness;
     public Entity shootingEntity;
 
-    public EntityPlasmaBolt(World world) {
-        super(MPSItems.PLASMA_BOLT_ENTITY_TYPE, world);
+    public PlasmaBoltEntity(EntityType<? extends PlasmaBoltEntity> entityType, World world) {
+        super(entityType, world);
     }
 
-    public EntityPlasmaBolt(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
+    public PlasmaBoltEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
         super(MPSItems.PLASMA_BOLT_ENTITY_TYPE, world);
         this.shootingEntity = shootingEntity;
         this.size = ((chargeTicks) > 50 ? 50 : chargeTicks);
@@ -34,9 +36,11 @@ public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAddition
         this.damagingness = damagingnessIn;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double scale = 1.0;
-        this.motionX = direction.x * scale;
-        this.motionY = direction.y * scale;
-        this.motionZ = direction.z * scale;
+        this.setMotion(
+                direction.x * scale,
+                direction.y * scale,
+                direction.z * scale
+        );
         double r = this.size / 50.0;
         double xoffset = 1.3f + r - direction.y * shootingEntity.getEyeHeight();
         double yoffset = -.2;
@@ -64,7 +68,7 @@ public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAddition
         if (this.isInWater()) {
             this.remove();
             for (int var3 = 0; var3 < this.size; ++var3) {
-                this.world.addParticle(Particles.FLAME,
+                this.world.addParticle(ParticleTypes.FLAME,
                         this.posX + Math.random() * 1, this.posY + Math.random() * 1, this.posZ + Math.random()
                                 * 0.1,
                         0.0D, 0.0D, 0.0D);
@@ -86,12 +90,12 @@ public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAddition
     }
 //
 //    @Override
-//    public void read(NBTTagCompound var1) {
+//    public void read(CompoundNBT var1) {
 //        this.setDead();
 //    }
 //
 //    @Override
-//    public void write(NBTTagCompound var1) {
+//    public void write(CompoundNBT var1) {
 //    }
 
 
@@ -110,10 +114,11 @@ public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAddition
     @Override
     protected void onImpact(RayTraceResult result) {
         double damage = this.size / 50.0 * this.damagingness;
-        switch (result.type) {
+        switch (result.getType()) {
             case ENTITY:
-                if (result.entity != null && result.entity != shootingEntity) {
-                    result.entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
+                EntityRayTraceResult rayTraceResult = (EntityRayTraceResult) result;
+                if (rayTraceResult.getEntity() != null && rayTraceResult.getEntity() != shootingEntity) {
+                    rayTraceResult.getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
                 }
                 break;
             case BLOCK:
@@ -123,10 +128,12 @@ public class EntityPlasmaBolt extends ThrowableEntity implements IEntityAddition
         }
         if (!this.world.isRemote) { // Dist.SERVER
             boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
-            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.size / 50.0f * 3 * this.explosiveness), flag);
+
+            // FIXME: this is probably all wrone
+            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
         }
         for (int var3 = 0; var3 < 8; ++var3) {
-            this.world.addParticle(Particles.FLAME,
+            this.world.addParticle(ParticleTypes.FLAME,
                     this.posX + Math.random() * 0.1, this.posY + Math.random() * 0.1, this.posZ + Math.random() * 0.1,
                     0.0D, 0.0D, 0.0D);
         }

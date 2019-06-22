@@ -2,6 +2,7 @@ package net.machinemuse.powersuits.client.model.helper;
 
 import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.basemod.MuseLogger;
+import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.client.model.obj.MuseOBJModel;
 import net.machinemuse.numina.client.render.modelspec.*;
@@ -10,6 +11,7 @@ import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -142,7 +144,7 @@ public enum ModelSpecXMLReader {
      * Biggest difference between the ModelSpec for Armor vs PowerFist is that the armor models don't need item camera transforms
      */
     public static void parseModelSpec(Node specNode, TextureStitchEvent event, EnumSpecType specType, String specName, boolean isDefault) {
-        NodeList models = specNode.getOwnerDocument().getElementsByTagName(ModelSpecTags.TAG_MODEL);
+        NodeList models = specNode.getOwnerDocument().getElementsByTagName(NuminaConstants.TAG_MODEL);
         java.util.List<String> textures = new ArrayList<>();
         IModelState modelState = null;
 
@@ -185,7 +187,7 @@ public enum ModelSpecXMLReader {
                             for (int k = 0; k < bindingNodeList.getLength(); k++) {
                                 Node bindingNode = bindingNodeList.item(k);
                                 SpecBinding binding = getBinding(bindingNode);
-                                NodeList partNodeList = ((Element) bindingNode).getElementsByTagName(ModelSpecTags.TAG_PART);
+                                NodeList partNodeList = ((Element) bindingNode).getElementsByTagName(NuminaConstants.TAG_PART);
                                 for (int j = 0; j < partNodeList.getLength(); j++) {
                                     getModelPartSpec(modelspec, partNodeList.item(j), binding);
                                 }
@@ -203,8 +205,8 @@ public enum ModelSpecXMLReader {
 
         // Register textures
         if (event != null) {
-            for (String texture : textures)
-                event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(),new ResourceLocation(texture));
+//            for (String texture : textures)
+//                event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(),new ResourceLocation(texture));
         }
     }
 
@@ -217,7 +219,7 @@ public enum ModelSpecXMLReader {
         if (colour.a == 0)
             colour = colour.withAlpha(1.0);
 
-        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EquipmentSlotType.Type.ARMOR))
+        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EquipmentSlotType.Group.ARMOR))
             textureSpec.put(slot.getName(),
                     new TexturePartSpec(textureSpec,
                             new SpecBinding(null, slot, "all"),

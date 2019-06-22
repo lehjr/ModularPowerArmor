@@ -1,23 +1,21 @@
-package net.machinemuse.powersuits.item.module.tool;
+package net.machinemuse.powersuits.item.module.movement;
 
+import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.math.Colour;
+import net.machinemuse.numina.player.NuminaPlayerUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -26,8 +24,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class LuxCapacitorModule extends AbstractPowerModule {
-    public LuxCapacitorModule(String regName) {
+public class BlinkDriveModule extends AbstractPowerModule {
+    public BlinkDriveModule(String regName) {
         super(regName);
     }
 
@@ -44,13 +42,12 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
 
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RED, MPSConstants.RED_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.GREEN, MPSConstants.GREEN_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.BLUE, MPSConstants.BLUE_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.ALPHA, MPSConstants.OPACITY, 1, "%");
+            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 10000, "RF");
+            this.moduleCap.addBasePropertyDouble(MPSConstants.BLINK_DRIVE_RANGE, 5, "m");
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RANGE, MPSConstants.ENERGY_CONSUMPTION, 30000);
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RANGE, MPSConstants.BLINK_DRIVE_RANGE, 59);
 
             this.rightClick = new RightClickie();
         }
@@ -66,21 +63,21 @@ public class LuxCapacitorModule extends AbstractPowerModule {
         class RightClickie extends RightClickModule {
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                playerIn.setActiveHand(hand);
-                if (!worldIn.isRemote) {
-                    double energyConsumption = getEnergyUsage();
-                    MuseHeatUtils.heatPlayer(playerIn, energyConsumption / 500);
-                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
-                        ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
+                int range = (int) moduleCap.applyPropertyModifiers(MPSConstants.BLINK_DRIVE_RANGE);
+                int energyConsumption = getEnergyUsage();
+                if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
+                    NuminaPlayerUtils.resetFloatKickTicks(playerIn);
+                    int amountDrained = ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
 
-                        double red = moduleCap.applyPropertyModifiers(MPSConstants.RED_HUE);
-                        double green = moduleCap.applyPropertyModifiers(MPSConstants.GREEN_HUE);
-                        double blue = moduleCap.applyPropertyModifiers(MPSConstants.BLUE_HUE);
-                        double alpha = moduleCap.applyPropertyModifiers(MPSConstants.OPACITY);
+                    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
+                    MuseLogger.logDebug("Range: " + range);
+                    RayTraceResult hitRayTrace = rayTrace(playerIn.world, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
 
-                        LuxCapacitorEntity luxCapacitor = new LuxCapacitorEntity(worldIn, playerIn, new Colour(red, green, blue, alpha));
-                        worldIn.addEntity(luxCapacitor);
-                    }
+                    MuseLogger.logDebug("Hit:" + hitRayTrace);
+                    NuminaPlayerUtils.teleportEntity(playerIn, hitRayTrace);
+                    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
+
+                    MuseLogger.logDebug("blink drive anount drained: " + amountDrained);
                     return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
                 }
                 return ActionResult.newResult(ActionResultType.PASS, itemStackIn);

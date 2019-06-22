@@ -49,8 +49,8 @@ public class MusePacketInstallModuleRequest {
 //        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
 //
 //
-//            PlayerEntityMP player = ctx.getServerHandler().player;
-//            player.getServerWorld().addScheduledTask(() -> {
+//            ServerPlayerEntity player = ctx.getServerHandler().player;
+//            ctx.get().enqueueWork(() -> {
 //                int itemSlot = message.itemSlot;
 //                String moduleName = message.moduleName;
 //                ItemStack stack = player.inventory.getStackInSlot(itemSlot);

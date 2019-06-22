@@ -1,5 +1,8 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.client.gui.IClickable;
 import net.machinemuse.numina.client.gui.MuseGui;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
@@ -12,9 +15,7 @@ import net.machinemuse.numina.control.KeyBindingHelper;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.GradientAndArcCalculator;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
-import net.machinemuse.numina.module.IToggleableModule;
 import net.machinemuse.powersuits.basemod.MPSConfig;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.client.control.KeybindKeyHandler;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
@@ -22,7 +23,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
 
@@ -99,21 +102,32 @@ public class KeybindConfigFrame implements IGuiFrame {
         }
     }
 
-    /*
-
-     */
-
-//
-
     public void refreshModules() {
-        List<ItemStack> installedModules = ModuleManager.INSTANCE.getPlayerInstalledModules(player);
+            NonNullList<ItemStack> installedModules = NonNullList.create();
+
+            for (EquipmentSlotType slot: EquipmentSlotType.values()) {
+                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(
+                            iModularItem -> {
+                                installedModules.addAll(iModularItem.getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
+                            }
+                    );
+                } else {
+                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(
+                            modeChangingItem -> {
+                                installedModules.addAll(modeChangingItem.getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
+                            }
+                    );
+                }
+            }
+
         List<MusePoint2D> points = GradientAndArcCalculator.pointsInLine(
                 installedModules.size(),
                 new MusePoint2D(ul.getX() + 10, ul.getY() + 10),
                 new MusePoint2D(ul.getX() + 10, br.getY() - 10));
         Iterator<MusePoint2D> pointIterator = points.iterator();
         for (ItemStack module : installedModules) {
-            if (module.getItem() instanceof IToggleableModule && !alreadyAdded(module)) {
+            if (!alreadyAdded(module)) {
                 ClickableModule clickie = new ClickableModule(module, pointIterator.next());
                 modules.add(clickie);
             }
@@ -279,9 +293,8 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     public static boolean doAdditionalInfo() {
-        return InputMappings.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
+        return false; //InputMappings.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
     }
-
 
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
 
@@ -318,7 +331,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     private void addKeybind(InputMappings.Input key, boolean free) {
         String name;
         try {
-            name = key.getName();
+            name = key.getTranslationKey();
         } catch (Exception e) {
             name = "???";
         }

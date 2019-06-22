@@ -1,7 +1,9 @@
-package net.machinemuse.powersuits.item.module.armor;
+package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
+import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
+import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -15,8 +17,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class LeatherPlatingModule extends AbstractPowerModule {
-    public LeatherPlatingModule(String regName) {
+public class ShockAbsorberModule extends AbstractPowerModule {
+    public ShockAbsorberModule(String regName) {
         super(regName);
     }
 
@@ -29,17 +31,28 @@ public class LeatherPlatingModule extends AbstractPowerModule {
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
         IPowerModule moduleCap;
+        IModuleToggle moduleToggle;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ARMOR, EnumModuleTarget.ARMORONLY, MPSConfig.INSTANCE);
-            moduleCap.addBasePropertyDouble(MPSConstants.ARMOR_VALUE_PHYSICAL, 3, NuminaConstants.MODULE_TRADEOFF_PREFIX + MPSConstants.ARMOR_POINTS);
-            moduleCap.addBasePropertyDouble(MPSConstants.MAXIMUM_HEAT, 75);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.FEETONLY, MPSConfig.INSTANCE);
+
+
+
+
+            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF/m");
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 100);
+            this.moduleCap.addBasePropertyDouble(MPSConstants.MULTIPLIER, 0, "%");
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.MULTIPLIER, 10);
+
+            this.moduleToggle = new Toggle(module);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == ToggleCapability.TOGGLEABLE_MODULE)
+                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
             return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
         }
     }

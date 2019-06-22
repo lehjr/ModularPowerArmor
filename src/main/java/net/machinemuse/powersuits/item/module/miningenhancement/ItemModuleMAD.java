@@ -24,8 +24,8 @@
 //
 //    public ItemModuleMAD(String regName) {
 //        super(regName, EnumModuleTarget.TOOLONLY, EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT);
-////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 1));
-////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(Iteminecraftomponent.solenoid, 1));
+////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(Iteminecraftomponent.controlCircuit, 1));
 ////        ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("mekanism", "atomicdisassembler")), 1));
 ////        if (ModCompatibility.isMekanismLoaded()) {
 ////            emulatedTool = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("mekanism", "atomicdisassembler")), 1);
@@ -47,10 +47,10 @@
 //    @Override
 //    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
 ////        // set mode for the device
-////        NBTTagCompound nbt = emulatedTool.getTagCompound();
+////        CompoundNBT nbt = emulatedTool.getTagCompound();
 ////        if (nbt == null) {
-////            nbt = new NBTTagCompound();
-////            NBTTagCompound nbt2 = new NBTTagCompound();
+////            nbt = new CompoundNBT();
+////            CompoundNBT nbt2 = new CompoundNBT();
 ////            nbt2.setInteger("mode", 3);
 ////            nbt.setTag("mekData", nbt2);
 ////            emulatedTool.setTagCompound(nbt);
@@ -61,7 +61,7 @@
 ////
 //////        {id:"mekanism:atomicdisassembler",Count:1b,tag:{mekData:{mode:3,energyStored:1000000.0d}},Damage:0s}
 ////
-//////        NBTTagCompound nbt2 = new NBTTagCompound();
+//////        CompoundNBT nbt2 = new CompoundNBT();
 ////
 ////
 ////// Fixme: todo in 1.13 when emulated tools are actually stored

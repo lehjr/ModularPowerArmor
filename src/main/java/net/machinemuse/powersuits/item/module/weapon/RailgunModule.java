@@ -95,7 +95,7 @@ public class RailgunModule extends AbstractPowerModule {
             if (hand == Hand.MAIN_HAND) {
                 double range = 64;
                 double timer = MuseNBTUtils.getModularItemDoubleOrZero(itemStackIn, MPSConstants.TIMER);
-                double energyConsumption = getEnergyUsage(itemStackIn);
+                double energyConsumption = getEnergyUsage();
                 if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption && timer == 0) {
                     ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
                     MuseNBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPSConstants.TIMER, 10);

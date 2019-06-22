@@ -7,11 +7,9 @@ import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketSalvageModuleRequest;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,9 +23,9 @@ public class InstallSalvageFrame extends ScrollableFrame {
     protected ModuleSelectionFrame targetModule;
     protected ClickableButton installButton;
     protected ClickableButton salvageButton;
-    protected PlayerEntitySP player;
+    protected ClientPlayerEntity player;
 
-    public InstallSalvageFrame(PlayerEntitySP player, MusePoint2D topleft,
+    public InstallSalvageFrame(ClientPlayerEntity player, MusePoint2D topleft,
                                MusePoint2D bottomright,
                                Colour borderColour, Colour insideColour,
                                ItemSelectionFrame targetItem, ModuleSelectionFrame targetModule) {
@@ -65,11 +63,11 @@ public class InstallSalvageFrame extends ScrollableFrame {
             ItemStack module = targetModule.getSelectedModule().getModule();
             NonNullList<ItemStack> itemsToCheck = NonNullList.create(); // ModuleManager.INSTANCE.getInstallCost(module.getDataName());
             double yoffset;
-            if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
-                yoffset = border.top() + 4;
-            } else {
+//            if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
+//                yoffset = border.top() + 4;
+//            } else {
                 yoffset = border.bottom() - 20;
-            }
+//            }
             if (yoffset + 16 > y && yoffset < y) {
                 double xoffset = -8.0 * itemsToCheck.size()
                         + (border.left() + border.right()) / 2;
@@ -101,11 +99,11 @@ public class InstallSalvageFrame extends ScrollableFrame {
         ItemStack module = targetModule.getSelectedModule().getModule();
         NonNullList<ItemStack> itemsToDraw = NonNullList.create();//ModuleManager.INSTANCE.getInstallCost(module.getDataName()); // FIXME!!
         double yoffset;
-        if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
-            yoffset = border.top() + 4;
-        } else {
+//        if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
+//            yoffset = border.top() + 4;
+//        } else {
             yoffset = border.bottom() - 20;
-        }
+//        }
         double xoffset = -8.0 * itemsToDraw.size()
                 + (border.left() + border.right()) / 2;
         int i = 0;
@@ -120,16 +118,16 @@ public class InstallSalvageFrame extends ScrollableFrame {
     private void drawButtons(int mouseX, int mouseY, float partialTicks) {
         ItemStack stack = targetItem.getSelectedItem().getItem();
         ItemStack module = targetModule.getSelectedModule().getModule();
-        if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
-            int installedModulesOfType = ModuleManager.INSTANCE.getNumberInstalledModulesOfType(stack, ((IPowerModule)module.getItem()).getCategory());
-            installButton.setEnabled(true); // fixme!!!!
-//                    player.abilities.isCreativeMode ||
-//                    (MuseItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)
-//                            && installedModulesOfType < MPSConfig.INSTANCE.getMaxModulesOfType(module.getCategory())));
-            installButton.render(mouseX, mouseY, partialTicks);
-        } else {
-            salvageButton.render(mouseX, mouseY, partialTicks);
-        }
+//        if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
+//            int installedModulesOfType = ModuleManager.INSTANCE.getNumberInstalledModulesOfType(stack, ((IPowerModule)module.getItem()).getCategory());
+//            installButton.setEnabled(true); // fixme!!!!
+////                    player.abilities.isCreativeMode ||
+////                    (MuseItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)
+////                            && installedModulesOfType < MPSConfig.INSTANCE.getMaxModulesOfType(module.getCategory())));
+//            installButton.render(mouseX, mouseY, partialTicks);
+//        } else {
+//            salvageButton.render(mouseX, mouseY, partialTicks);
+//        }
     }
 
     @Override
@@ -140,15 +138,15 @@ public class InstallSalvageFrame extends ScrollableFrame {
             ItemStack stack = selItem.getItem();
             ItemStack module = selModule.getModule();
 
-            if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
-                if (installButton.hitBox(x, y)) {
-                    doInstall();
-                }
-            } else {
-                if (salvageButton.hitBox(x, y)) {
-                    doSalvage();
-                }
-            }
+//            if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
+//                if (installButton.hitBox(x, y)) {
+//                    doInstall();
+//                }
+//            } else {
+//                if (salvageButton.hitBox(x, y)) {
+//                    doSalvage();
+//                }
+//            }
         }
     }
 

@@ -8,7 +8,7 @@ import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -31,12 +31,12 @@ import java.util.zip.GZIPOutputStream;
 public class CosmeticPresetSaveLoad {
     static final String EXTENSION = "dat";
 
-    public static Map<String, NBTTagCompound> loadPresetsForItem(@Nonnull ItemStack itemStack) {
+    public static Map<String, CompoundNBT> loadPresetsForItem(@Nonnull ItemStack itemStack) {
         return loadPresetsForItem(itemStack.getItem(), 0);
     }
 
-    public static BiMap<String, NBTTagCompound> loadPresetsForItem(Item item, int count) {
-        Map<String, NBTTagCompound> retmap = new HashMap<>();
+    public static BiMap<String, CompoundNBT> loadPresetsForItem(Item item, int count) {
+        Map<String, CompoundNBT> retmap = new HashMap<>();
         if (item == null || count > 4) {
             return HashBiMap.create(retmap);
         }
@@ -53,7 +53,7 @@ public class CosmeticPresetSaveLoad {
                     public FileVisitResult visitFile(Path selectedPath, BasicFileAttributes attrs) throws IOException {
                         if (selectedPath.getFileName().toString().endsWith("." + EXTENSION)) {
                             String name = selectedPath.getFileName().toString().replaceFirst("[.][^.]+$", "");
-                            NBTTagCompound nbt = CompressedStreamTools.readCompressed(Files.newInputStream(selectedPath));
+                            CompoundNBT nbt = CompressedStreamTools.readCompressed(Files.newInputStream(selectedPath));
 
                             if (nbt != null && name != null && !name.isEmpty()) {
 //                            if (retmap.containsKey("id"))
@@ -134,7 +134,7 @@ public class CosmeticPresetSaveLoad {
     /**
      * "adapted" from 1.7.10
      */
-    public static byte[] compressGZip(NBTTagCompound nbt) {
+    public static byte[] compressGZip(CompoundNBT nbt) {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         try {
             DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
@@ -158,11 +158,11 @@ public class CosmeticPresetSaveLoad {
             return false;
 
         // get the render tag for the item
-        NBTTagCompound nbt = MPSModelHelper.getMuseRenderTag(itemStack).copy();
+        CompoundNBT nbt = MPSModelHelper.getMuseRenderTag(itemStack).copy();
         return savePreset(itemStack.getItem().getRegistryName(), presetName, nbt);
     }
 
-    public static boolean savePreset(ResourceLocation registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {
+    public static boolean savePreset(ResourceLocation registryNameIn, String nameIn, CompoundNBT cosmeticSettingsIn) {
         // byte array
         byte [] byteArray = compressGZip(cosmeticSettingsIn);
 

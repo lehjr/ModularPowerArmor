@@ -1,7 +1,7 @@
 //package net.machinemuse.powersuits.item.module.movement;
 //
 //import net.minecraft.inventory.EquipmentSlotType;
-//import net.minecraft.nbt.NBTTagCompound;
+//import net.minecraft.nbt.CompoundNBT;
 //
 //import java.util.Objects;
 //
@@ -28,7 +28,7 @@
 //        this.slot = slotIn;
 //    }
 //
-//    public AttributeModifier(NBTTagCompound nbt) {
+//    public AttributeModifier(CompoundNBT nbt) {
 //        this.operation = nbt.getInteger("Operation");
 //        this.uuid = new UUID(nbt);
 //        this.amount = nbt.getDouble("Amount");
@@ -37,7 +37,7 @@
 //        this.slot = EquipmentSlotType.fromString(!Objects.equals(nbt.getString("Slot"), "") ? nbt.getString("Slot").toLowerCase() : "legs" );
 //    }
 //
-//    public NBTTagCompound toNBT(NBTTagCompound nbt) {
+//    public CompoundNBT toNBT(CompoundNBT nbt) {
 //        nbt.setInteger("Operation", operation);
 //        uuid.toNBT(nbt);
 //        nbt.setDouble("Amount", amount);
@@ -47,7 +47,7 @@
 //        return nbt;
 //    }
 //
-//    public NBTTagCompound toNBT() {
-//        return toNBT(new NBTTagCompound());
+//    public CompoundNBT toNBT() {
+//        return toNBT(new CompoundNBT());
 //    }
 //}

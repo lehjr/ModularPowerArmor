@@ -1,5 +1,7 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
@@ -9,8 +11,6 @@ import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRect;
 import net.machinemuse.numina.math.geometry.MuseRelativeRect;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -95,42 +95,43 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         this.lastPosition = null;
         ClickableItem selectedItem = target.getSelectedItem();
         if (selectedItem != null) {
-            moduleButtons = new LinkedList<>();
-            categories = new LinkedHashMap<>();
-
-//            NonNullList<ItemStack> workingModules = ModuleManager.INSTANCE.getValidModulesForItem(selectedItem.getItem());
-
-            NonNullList<ItemStack> workingModules = ModuleManager.INSTANCE.getItemInstalledModules(selectedItem.getItem());
-
-
-            // Prune the list of disallowed modules, if not installed on this item.
-            for (ItemStack module : workingModules) {
-
-                // Fixme: move isAllowed to local module manager
-                if (!ModuleManager.INSTANCE.isModuleAllowed(module) && !ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module)) {
-                    workingModules.remove(module);
-                }
-            }
-
-            if (workingModules.size() > 0) {
-                this.selectedModule = -1;
-                for (ItemStack module : workingModules) {
-                    ModuleSelectionSubFrame frame = getOrCreateCategory(ModuleManager.INSTANCE.getModuleCategory(module).orElse(EnumModuleCategory.CATEGORY_NONE).getName());
-                    ClickableModule moduleClickable = frame.addModule(module);
-                    // Indicate installed modules
-                    if (!ModuleManager.INSTANCE.isModuleAllowed(module)) {
-                        // If a disallowed module made it to the list, indicate
-                        // it as disallowed
-                        moduleClickable.setAllowed(false);
-                    } else if (ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module)) {
-                        moduleClickable.setInstalled(true);
-                    }
-                    if (moduleClickable.getModule().equals(this.prevSelection)) {
-                        this.selectedModule = moduleButtons.size();
-                    }
-                    moduleButtons.add(moduleClickable);
-                }
-            }
+//            moduleButtons = new LinkedList<>();
+//            categories = new LinkedHashMap<>();
+//
+////            NonNullList<ItemStack> workingModules = ModuleManager.INSTANCE.getValidModulesForItem(selectedItem.getItem());
+//
+//            NonNullList<ItemStack> workingModules = ModuleManager.INSTANCE.getItemInstalledModules(selectedItem.getItem());
+//
+//
+//            // Prune the list of disallowed modules, if not installed on this item.
+//            for (ItemStack module : workingModules) {
+//
+//                // Fixme: move isAllowed to local module manager
+//                if (!ModuleManager.INSTANCE.isModuleAllowed(module) && !ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module)) {
+//                    workingModules.remove(module);
+//                }
+//            }
+//
+//            if (workingModules.size() > 0) {
+//                this.selectedModule = -1;
+//                for (ItemStack module : workingModules) {
+//                    ModuleSelectionSubFrame frame = getOrCreateCategory(module.getCapability(PowerModuleCapability.POWER_MODULE)
+//                                    .map(m->m.getCategory()).orElse(EnumModuleCategory.CATEGORY_NONE).getName());
+//                    ClickableModule moduleClickable = frame.addModule(module);
+//                    // Indicate installed modules
+//                    if (!ModuleManager.INSTANCE.isModuleAllowed(module)) {
+//                        // If a disallowed module made it to the list, indicate
+//                        // it as disallowed
+//                        moduleClickable.setAllowed(false);
+//                    } else if (ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module)) {
+//                        moduleClickable.setInstalled(true);
+//                    }
+//                    if (moduleClickable.getModule().equals(this.prevSelection)) {
+//                        this.selectedModule = moduleButtons.size();
+//                    }
+//                    moduleButtons.add(moduleClickable);
+//                }
+//            }
             for (ModuleSelectionSubFrame frame : categories.values()) {
                 frame.refreshButtonPositions();
             }

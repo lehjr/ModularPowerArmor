@@ -1,6 +1,5 @@
 package net.machinemuse.powersuits.client.model.block;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.math.Colour;
@@ -8,25 +7,25 @@ import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.client.model.helper.ColoredQuadHelperThingie;
 import net.machinemuse.powersuits.client.model.helper.ModelLuxCapacitorHelper;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.SimpleModelState;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.Collections;
@@ -35,16 +34,13 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import static net.minecraft.block.BlockDirectional.FACING;
-
 @OnlyIn(Dist.CLIENT)
-public class ModelLuxCapacitor implements IBakedModel {
+public class ModelLuxCapacitor implements IDynamicBakedModel {
     final IModelState modelState;
-    public IBakedModel wrapper;
+    public IDynamicBakedModel wrapper;
     Colour colour;
     private LuxCapacitorItemOverrideList overrides;
     TextureAtlasSprite particleTexture = null;
-
 
     public ModelLuxCapacitor() {
         this.overrides = new LuxCapacitorItemOverrideList();
@@ -52,8 +48,9 @@ public class ModelLuxCapacitor implements IBakedModel {
         this.modelState = getModelState();
     }
 
+    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable Direction side, Random rand) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         if (side != null)
             return Collections.emptyList();
 
@@ -61,10 +58,13 @@ public class ModelLuxCapacitor implements IBakedModel {
         colour = BlockLuxCapacitor.defaultColor;
 
         if (state != null) {
-            facing = state.get(FACING);
-            if (state instanceof IExtendedBlockState)
-                if (((IExtendedBlockState) state).getUnlistedProperties().containsKey(BlockLuxCapacitor.COLOR))
-                    colour = ((IExtendedBlockState) state).getValue(BlockLuxCapacitor.COLOR);
+            facing = state.get(BlockLuxCapacitor.FACING);
+
+            // FIXME: move color to IModelData
+
+//            if (state instanceof IExtendedBlockState)
+//                if (((IExtendedBlockState) state).getUnlistedProperties().containsKey(BlockLuxCapacitor.COLOR))
+//                    colour = ((IExtendedBlockState) state).getValue(BlockLuxCapacitor.COLOR);
         }
         if (colour == null)
             colour = BlockLuxCapacitor.defaultColor;
@@ -73,7 +73,7 @@ public class ModelLuxCapacitor implements IBakedModel {
         try {
 
             List<BakedQuad> quads = ModelLuxCapacitorHelper.INSTANCE.luxCapColoredQuadMap.get(helperThingie);
-            if(quads.size() > 0 && this.particleTexture == null)
+            if (quads.size() > 0 && this.particleTexture == null)
                 this.particleTexture = quads.get(0).getSprite();
             return quads;
 
@@ -100,28 +100,12 @@ public class ModelLuxCapacitor implements IBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return particleTexture != null ? particleTexture : MissingTextureSprite.getSprite();
-    }
-
-    @SuppressWarnings( "deprecation" )
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return null;
+        return particleTexture != null ? particleTexture : MissingTextureSprite.func_217790_a();
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return this.overrides;
-    }
-
-    @Override
-    public IBakedModel getBakedModel() {
-        return this;
-    }
-
-    @Override
-    public boolean isAmbientOcclusion(IBlockState state) {
-        return false;
+        return overrides;
     }
 
     @Override
@@ -165,17 +149,9 @@ public class ModelLuxCapacitor implements IBakedModel {
     }
 
     private class LuxCapacitorItemOverrideList extends ItemOverrideList {
-        private LuxCapacitorItemOverrideList() {
-            super(
-                    ModelLoaderRegistry.getMissingModel(),
-                    ModelLoader.defaultModelGetter(),
-                    MuseModelHelper.defaultTextureGetter(),
-                    ImmutableList.of());
-        }
-
         @Nullable
-        @Override // used to be handleItemState
-        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack itemStack, @Nullable World world, @Nullable EntityLivingBase entityLivingBase) {
+        @Override
+        public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
             return ModelLuxCapacitor.this.wrapper;
         }
     }

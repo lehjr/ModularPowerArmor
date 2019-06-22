@@ -5,9 +5,7 @@ import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.control.KeyBindingHelper;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.basemod.MPSConfig;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
@@ -16,7 +14,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public enum KeybindManager {
@@ -42,7 +39,7 @@ public enum KeybindManager {
         if (keybind.getKey().getKeyCode() < 0) {
             return "Mouse" + (keybind.getKey().getKeyCode() + 100);
         } else {
-            return keybind.getKey().getName();
+            return keybind.getKey().getTranslationKey();
         }
     }
 
@@ -54,7 +51,26 @@ public enum KeybindManager {
                 file.createNewFile();
             }
             writer = new BufferedWriter(new FileWriter(file));
-            List<ItemStack> modulesToWrite = ModuleManager.INSTANCE.getPlayerInstalledModules(Minecraft.getInstance().player);
+
+//            PlayerEntity player = Minecraft.getInstance().player;
+//            NonNullList modulesToWrite = NonNullList.create();
+//
+//            for (EquipmentSlotType slot: EquipmentSlotType.values()) {
+//                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+//                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(
+//                            iModularItem -> {
+//                                modulesToWrite.addAll(iModularItem.getInstalledModules());
+//                            }
+//                    );
+//                } else {
+//                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(
+//                            modeChangingItem -> {
+//                                modulesToWrite.addAll(modeChangingItem.getInstalledModules());
+//                            }
+//                    );
+//                }
+//            }
+
             for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
                 writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
                 for (ClickableModule module : keybinding.getBoundModules()) {
@@ -99,7 +115,7 @@ public enum KeybindManager {
                         }
 
                         workingKeybinding = new ClickableKeybinding(
-                                new KeyBinding(KeyBindingHelper.getInputByCode(id).getName(), id, KeybindKeyHandler.mps), position, free, displayOnHUD);
+                                new KeyBinding(KeyBindingHelper.getInputByCode(id).getTranslationKey(), id, KeybindKeyHandler.mps), position, free, displayOnHUD);
                         workingKeybinding.toggleval = toggleval;
                         INSTANCE.keybindings.add(workingKeybinding);
                     } else {

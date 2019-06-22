@@ -1,15 +1,15 @@
 package net.machinemuse.powersuits.item.armor;
 
 import net.machinemuse.numina.basemod.MuseLogger;
+import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.client.render.modelspec.TexturePartSpec;
-import net.machinemuse.numina.constants.ModelSpecTags;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -20,12 +20,12 @@ import net.minecraft.nbt.NBTTagCompound;
 public interface IModularItemBase {
     default Colour getColorFromItemStack(ItemStack stack) {
         try {
-            NBTTagCompound renderTag = MPSModelHelper.getMuseRenderTag(stack);
-            if (renderTag.contains(ModelSpecTags.NBT_TEXTURESPEC_TAG)) {
-                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(ModelSpecTags.NBT_TEXTURESPEC_TAG));
-                NBTTagCompound specTag = renderTag.getCompound(ModelSpecTags.NBT_TEXTURESPEC_TAG);
+            CompoundNBT renderTag = MPSModelHelper.getMuseRenderTag(stack);
+            if (renderTag.contains(NuminaConstants.NBT_TEXTURESPEC_TAG)) {
+                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG));
+                CompoundNBT specTag = renderTag.getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG);
                 int index = partSpec.getColourIndex(specTag);
-                int[] colours = renderTag.getIntArray(ModelSpecTags.TAG_COLOURS);
+                int[] colours = renderTag.getIntArray(NuminaConstants.TAG_COLOURS);
                 if (colours.length > index)
                     return new Colour(colours[index]);
             }

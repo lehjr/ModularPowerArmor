@@ -3,7 +3,7 @@ package net.machinemuse.powersuits.client.gui.hud;
 import net.machinemuse.numina.math.Colour;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.init.Fluids;
+import net.minecraft.fluid.Fluids;
 
 
 /**

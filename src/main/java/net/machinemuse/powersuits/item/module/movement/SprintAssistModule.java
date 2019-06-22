@@ -54,8 +54,8 @@ public class SprintAssistModule extends AbstractPowerModule {
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 20);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_FOOD_COMPENSATION, 0, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.SPRINT_FOOD_COMPENSATION, 1);
+            this.moduleCap.addBasePropertyDouble(MPSConstants.FOOD_COMPENSATION, 0, "%");
+            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.FOOD_COMPENSATION, 1);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.WALKING_ASSISTANCE, MPSConstants.WALKING_ENERGY_CONSUMPTION, 100);
@@ -90,7 +90,7 @@ public class SprintAssistModule extends AbstractPowerModule {
                         double sprintCost = moduleCap.applyPropertyModifiers(MPSConstants.SPRINT_ENERGY_CONSUMPTION);
                         if (sprintCost < totalEnergy) {
                             double sprintMultiplier = moduleCap.applyPropertyModifiers(MPSConstants.SPRINT_SPEED_MULTIPLIER);
-                            double exhaustionComp = moduleCap.applyPropertyModifiers(MPSConstants.SPRINT_FOOD_COMPENSATION);
+                            double exhaustionComp = moduleCap.applyPropertyModifiers(MPSConstants.FOOD_COMPENSATION);
                             ElectricItemUtils.drainPlayerEnergy(player, (int) (sprintCost * horzMovement * 5));
                             MovementManager.setMovementModifier(itemStack, sprintMultiplier, player);
                             player.getFoodStats().addExhaustion((float) (-0.01 * exhaustion * exhaustionComp));

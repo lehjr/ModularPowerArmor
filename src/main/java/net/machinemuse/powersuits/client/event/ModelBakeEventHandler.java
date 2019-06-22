@@ -43,42 +43,42 @@ public enum ModelBakeEventHandler {
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
-        modelRegistry = event.getModelRegistry();
-        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(ModularPowersuits.MODID,
-                "models/block/powerarmor_workbench.obj"));
-
-        // New Lux Capacitor Inventory Model
-        modelRegistry.put(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());
-
-        // new Tinker Table Inventory Model
-        modelRegistry.put(
-                new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
-                new TinkerTableModel(tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
-                        MuseModelHelper.defaultTextureGetter(),
-                        modelState,
-                        true, DefaultVertexFormats.ITEM)));
-
-        for (Direction facing : Direction.values()) {
-            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
-
-            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
-                continue;
-
-            modelRegistry.put(
-                new ModelResourceLocation(
-                        MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName()),
-                        tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
-                            MuseModelHelper.defaultTextureGetter(), TRSRTransformation.from(facing), true, DefaultVertexFormats.ITEM));
-        }
-
-//        for (ResourceLocation location : modelRegistry.keySet()) {
-////            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
+//        modelRegistry = event.getModelRegistry();
+//        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(ModularPowersuits.MODID,
+//                "models/block/powerarmor_workbench.obj"));
 //
+//        // New Lux Capacitor Inventory Model
+//        modelRegistry.put(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());
 //
-//            if (location.getNamespace().equals(ModularPowersuits.MODID)) {
-//                Numina.LOGGER.info("MPS model location: " + location.toString());
-//            }
+//        // new Tinker Table Inventory Model
+//        modelRegistry.put(
+//                new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
+//                new TinkerTableModel(tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
+//                        MuseModelHelper.defaultTextureGetter(),
+//                        modelState,
+//                        true, DefaultVertexFormats.ITEM)));
+//
+//        for (Direction facing : Direction.values()) {
+//            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
+//
+//            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
+//                continue;
+//
+//            modelRegistry.put(
+//                new ModelResourceLocation(
+//                        MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName()),
+//                        tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
+//                            MuseModelHelper.defaultTextureGetter(), TRSRTransformation.from(facing), true, DefaultVertexFormats.ITEM));
 //        }
+//
+////        for (ResourceLocation location : modelRegistry.keySet()) {
+//////            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
+////
+////
+////            if (location.getNamespace().equals(ModularPowersuits.MODID)) {
+////                Numina.LOGGER.info("MPS model location: " + location.toString());
+////            }
+////        }
 
 
 

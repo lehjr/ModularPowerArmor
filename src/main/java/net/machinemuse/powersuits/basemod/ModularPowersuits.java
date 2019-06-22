@@ -4,6 +4,9 @@ import net.machinemuse.powersuits.proxy.ClientProxy;
 import net.machinemuse.powersuits.proxy.CommonProxy;
 import net.machinemuse.powersuits.proxy.ServerProxy;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -41,26 +44,29 @@ public class ModularPowersuits {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, MPSItems.INSTANCE::registerBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, MPSItems.INSTANCE::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, MPSItems.INSTANCE::registerTileEntities);
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> {
-            return (openContainer) -> {
-                ResourceLocation location = openContainer.getId();
-//                if (location.equals(some resource location here)) {
-//                    PlayerEntitySP player = Minecraft.getInstance().player;
-//                        return new Gui with params;
-//                }
-                return null;
-            };
-        });
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, MPSItems.INSTANCE::registerEntities);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, MPSItems.INSTANCE::registerContainerTypes);
+
+//        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> {
+//            return (openContainer) -> {
+//                ResourceLocation location = openContainer.getId();
+////                if (location.equals(some resource location here)) {
+////                    ClientPlayerEntity player = Minecraft.getInstance().player;
+////                        return new Gui with params;
+////                }
+//                return null;
+//            };
+//        });
     }
 
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
-        proxy.setup(event);
+//        proxy.setup(event);
     }
 
     // client preInit
     private void setupClient(final FMLClientSetupEvent event) {
-        proxy.setupClient(event);
+//        proxy.setupClient(event);
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class

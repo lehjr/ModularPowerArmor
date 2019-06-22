@@ -1,22 +1,25 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.basemod.MuseLogger;
+
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.player.NuminaPlayerUtils;
+import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,8 +27,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemModuleBlinkDrive extends AbstractPowerModule {
-    public ItemModuleBlinkDrive(String regName) {
+/**
+ * Created by Eximius88 on 2/3/14.
+ */
+public class DimensionalRiftModule extends AbstractPowerModule {
+    public DimensionalRiftModule(String regName) {
         super(regName);
     }
 
@@ -43,12 +49,6 @@ public class ItemModuleBlinkDrive extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 10000, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.BLINK_DRIVE_RANGE, 5, "m");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RANGE, MPSConstants.ENERGY_CONSUMPTION, 30000);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RANGE, MPSConstants.BLINK_DRIVE_RANGE, 59);
-
             this.rightClick = new RightClickie();
         }
 
@@ -63,22 +63,21 @@ public class ItemModuleBlinkDrive extends AbstractPowerModule {
         class RightClickie extends RightClickModule {
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                int range = (int) moduleCap.applyPropertyModifiers(MPSConstants.BLINK_DRIVE_RANGE);
-                int energyConsumption = getEnergyUsage();
-                if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
-                    NuminaPlayerUtils.resetFloatKickTicks(playerIn);
-                    int amountDrained = ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
+                if (!playerIn.isPassenger() && !playerIn.isBeingRidden() && playerIn.isNonBoss() && !playerIn.world.isRemote()) {
+                    BlockPos coords = playerIn.getBedPosition().isPresent() ? playerIn.getBedPosition().get() : playerIn.world.getSpawnPoint();
 
-                    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
-                    MuseLogger.logDebug("Range: " + range);
-                    RayTraceResult hitRayTrace = rayTrace(playerIn.world, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
+                    while (!worldIn.isAirBlock(coords) && !worldIn.isAirBlock(coords.up())) {
+                        coords = coords.up();
+                    }
 
-                    MuseLogger.logDebug("Hit:" + hitRayTrace);
-                    NuminaPlayerUtils.teleportEntity(playerIn, hitRayTrace);
-                    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
-
-                    MuseLogger.logDebug("blink drive anount drained: " + amountDrained);
-                    return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
+                    playerIn.changeDimension(DimensionType.OVERWORLD);
+                    int energyConsumption = (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                    int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
+                    if (playerEnergy >= energyConsumption) {
+                        ElectricItemUtils.drainPlayerEnergy(playerIn, getEnergyUsage());
+                        MuseHeatUtils.heatPlayer(playerIn, moduleCap.applyPropertyModifiers(MPSConstants.HEAT_GENERATION));
+                        return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
+                    }
                 }
                 return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
             }

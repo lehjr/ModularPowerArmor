@@ -32,15 +32,15 @@ public class MPSModuleConstants {
     public static final String WATERBREATHING_ENERGY_CONSUMPTION = "joltEnergy";
     public static final String BLINK_DRIVE_ENERGY_CONSUMPTION = "blinkDriveEnergyCon";
 
-    public static final String FLIGHT_VERTICALITY = "yLookRatio";
+
     public static final String JETBOOTS_ENERGY_CONSUMPTION = "jetBootsEnergyCon";
-    public static final String JETBOOTS_THRUST = "jetbootsThrust";
+
     public static final String JETPACK_ENERGY_CONSUMPTION = "jetpackEnergyCon";
-    public static final String JETPACK_THRUST = "jetpackThrust";
+
     public static final String JUMP_ENERGY_CONSUMPTION = "jumpEnergyCon";
     public static final String JUMP_MULTIPLIER = "jumpBoost";
     public static final String JUMP_FOOD_COMPENSATION = "jumpExhaustComp";
-    public static final String SHOCK_ABSORB_MULTIPLIER = "distanceRed";
+
     public static final String SHOCK_ABSORB_ENERGY_CONSUMPTION = "impactEnergyCon";
 
 
@@ -56,7 +56,7 @@ public class MPSModuleConstants {
     public static final String CHISEL_ENERGY_CONSUMPTION = "chiselEnergyCon";
     public static final String IGNITION_ENERGY_CONSUMPTION = "ignitEnergyCon";
     public static final String GRAFTER_ENERGY_CONSUMPTION = "grafterEnergyCon";
-    public static final String GRAFTER_HEAT_GENERATION = "grafterHeatGen";
+
     public static final String HOE_ENERGY_CONSUMPTION = "hoeEnergyCon";
     public static final String HOE_SEARCH_RADIUS = "hoeSearchRad";
     public static final String LEAF_BLOWER_RADIUS = "radius";
@@ -88,11 +88,8 @@ public class MPSModuleConstants {
 
 
 
-    public static final String VERTICALITY = "vertically";
 
-    public static final String FORTUNE_ENERGY_CONSUMPTION = "fortuneEnCon";
-    public static final String ENCHANTMENT_LEVEL ="enchLevel";
-    public static final String FORTUNE_ENCHANTMENT_LEVEL ="fortuneLevel";
-    public static final String SILK_TOUCH_ENERGY_CONSUMPTION = "silkTouchEnCon";
+
+
 
 }

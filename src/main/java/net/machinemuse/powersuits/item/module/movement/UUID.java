@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -17,12 +17,12 @@ public class UUID {
         this.most = most;
     }
 
-    public UUID(NBTTagCompound nbt) {
+    public UUID(CompoundNBT nbt) {
         this.least = nbt.getLong("UUIDLeast");
         this.most = nbt.getLong("UUIDMost");
     }
 
-    public NBTTagCompound toNBT(NBTTagCompound nbt) {
+    public CompoundNBT toNBT(CompoundNBT nbt) {
         nbt.putLong("UUIDLeast", least);
         nbt.putLong("UUIDMost", most);
         return nbt;

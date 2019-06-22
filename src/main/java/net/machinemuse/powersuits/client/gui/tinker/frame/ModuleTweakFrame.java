@@ -1,5 +1,8 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
+import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableTinkerSlider;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
@@ -8,17 +11,17 @@ import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.nbt.propertymodifier.IPropertyModifier;
+import net.machinemuse.numina.nbt.propertymodifier.IPropertyModifierDouble;
 import net.machinemuse.numina.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
 import net.machinemuse.numina.string.MuseStringUtils;
-import net.machinemuse.powersuits.basemod.ModuleManager;
 import net.machinemuse.powersuits.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketTweakRequestDouble;
-import net.minecraft.client.entity.PlayerEntitySP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
@@ -31,10 +34,10 @@ public class ModuleTweakFrame extends ScrollableFrame {
     protected List<ClickableTinkerSlider> sliders;
     protected Map<String, Double> propertyStrings;
     protected ClickableTinkerSlider selectedSlider;
-    protected PlayerEntitySP player;
+    protected ClientPlayerEntity player;
 
     public ModuleTweakFrame(
-            PlayerEntitySP player,
+            ClientPlayerEntity player,
             MusePoint2D topleft,
             MusePoint2D bottomright,
             Colour borderColour,
@@ -53,7 +56,10 @@ public class ModuleTweakFrame extends ScrollableFrame {
         if (itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
             ItemStack stack = itemTarget.getSelectedItem().getItem();
             ItemStack module = moduleTarget.getSelectedModule().getModule();
-            if (ModuleManager.INSTANCE.itemHasModule(itemTarget.getSelectedItem().getItem(), moduleTarget.getSelectedModule().getModule().getItem().getRegistryName())) {
+            if (itemTarget.getSelectedItem().getItem().getCapability(ModularItemCapability.MODULAR_ITEM)
+                    .map(m->m.isModuleInstalled(moduleTarget.getSelectedModule().getModule().getItem().getRegistryName()))
+                .orElse(itemTarget.getSelectedItem().getItem().getCapability(ModeChangingCapability.MODE_CHANGING)
+                        .map(m->m.isModuleInstalled(moduleTarget.getSelectedModule().getModule().getItem().getRegistryName())).orElse(false))) {
                 loadTweaks(stack, module);
             } else {
                 sliders = null;
@@ -80,7 +86,10 @@ public class ModuleTweakFrame extends ScrollableFrame {
             }
             int nexty = (int) (sliders.size() * 20 + border.top() + 23);
             for (Map.Entry<String, Double> property : propertyStrings.entrySet()) {
-                String formattedValue = MuseStringUtils.formatNumberFromUnits(property.getValue(), AbstractPowerModule.getUnit(property.getKey()));
+
+
+
+                String formattedValue = "";// FIXME MuseStringUtils.formatNumberFromUnits(property.getValue(), AbstractPowerModule.getUnit(property.getKey()));
                 String name = property.getKey();
                 double valueWidth = MuseRenderer.getStringWidth(formattedValue);
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;
@@ -99,14 +108,18 @@ public class ModuleTweakFrame extends ScrollableFrame {
     }
 
     private void loadTweaks(ItemStack stack, ItemStack module) {
-//        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-        NBTTagCompound moduleTag = MuseNBTUtils.getMuseModuleTag(module);
+//        CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
+        CompoundNBT moduleTag = MuseNBTUtils.getMuseModuleTag(module);
 
         propertyStrings = new HashMap();
         Set<String> tweaks = new HashSet<String>();
 
-        Map<String, List<IPropertyModifier>> propertyModifiers = ModuleManager.INSTANCE.getPropertyModifiers(module);
-        for (Map.Entry<String, List<IPropertyModifier>> property : propertyModifiers.entrySet()) {
+        Map<String, List<IPropertyModifierDouble>> propertyModifiers = module.getCapability(PowerModuleCapability.POWER_MODULE)
+                .map(m->m.getPropertyModifiers()).orElse(new HashMap<>());
+
+        // FIXME: needs something for the INT base values
+
+        for (Map.Entry<String, List<IPropertyModifierDouble>> property : propertyModifiers.entrySet()) {
             double currValue = 0;
             for (IPropertyModifier modifier : property.getValue()) {
                 currValue = (double) modifier.applyModifier(moduleTag, currValue);

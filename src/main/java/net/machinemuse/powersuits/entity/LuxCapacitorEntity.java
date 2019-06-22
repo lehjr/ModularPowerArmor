@@ -5,48 +5,28 @@ import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-import static net.machinemuse.powersuits.block.BlockLuxCapacitor.COLOR;
-import static net.minecraft.block.BlockDirectional.FACING;
-
-public class EntityLuxCapacitor extends ThrowableEntity implements IEntityAdditionalSpawnData {
+public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public Colour color;
 
-    BlockItemUseContext getUseContext(BlockPos pos, Direction facing, BlockRayTraceResult hitResult) {
-
-
-        return new BlockItemUseContext(
-                new ItemUseContext(
-                        (PlayerEntity)this.getThrower(),
-                        new ItemStack(MPSItems.INSTANCE.itemLuxCapacitor),
-                        pos,
-                        facing,
-                        hitResult.getPos().getX(), hitResult.getPos().getY(), hitResult.getPos().getZ()));
-    }
-
-    public EntityLuxCapacitor(World world) {
-        super(MPSItems.LUX_CAPACITOR_ENTITY_TYPE, world);
+    public LuxCapacitorEntity(EntityType<? extends LuxCapacitorEntity> entityType, World world) {
+        super(entityType, world);
         if (color == null)
             color = Colour.WHITE;
     }
 
-    public EntityLuxCapacitor(World world, LivingEntity shootingEntity, Colour color) {
+    public LuxCapacitorEntity(World world, LivingEntity shootingEntity, Colour color) {
         super(MPSItems.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
         this.color = color != null ? color : BlockLuxCapacitor.defaultColor;
         Vec3d direction = shootingEntity.getLookVec().normalize();
@@ -70,6 +50,14 @@ public class EntityLuxCapacitor extends ThrowableEntity implements IEntityAdditi
         this.setBoundingBox(new AxisAlignedBB(posX - r, posY - 0.0625, posZ - r, posX + r, posY + 0.0625, posZ + r));
     }
 
+    BlockItemUseContext getUseContext(BlockPos pos, Direction facing, BlockRayTraceResult hitResult) {
+        return new BlockItemUseContext(
+                new ItemUseContext(
+                        (PlayerEntity)this.getThrower(),
+                        this.getThrower().getActiveHand(),
+                        hitResult));
+    }
+
     @Override
     protected void onImpact(RayTraceResult hitResult) {
         if (color == null)
@@ -85,13 +73,13 @@ public class EntityLuxCapacitor extends ThrowableEntity implements IEntityAdditi
                 BlockPos blockPos = new BlockPos(x, y, z);
                 if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().isValidPosition(world, blockPos)) {
                     BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, blockRayTrace.getFace(), blockRayTrace));
-                    world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
+                    world.setBlockState(blockPos, blockState);
                     world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                 } else {
                     for (Direction facing : Direction.values()) {
-                        if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(FACING, facing).isValidPosition(world, blockPos)) {
+                        if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockLuxCapacitor.FACING, facing).isValidPosition(world, blockPos)) {
                             BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, blockRayTrace));
-                            world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
+                            world.setBlockState(blockPos, blockState);
                             world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                             break;
                         }

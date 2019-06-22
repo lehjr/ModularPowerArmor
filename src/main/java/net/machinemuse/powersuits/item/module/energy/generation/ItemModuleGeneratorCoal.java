@@ -29,7 +29,7 @@
 //    public ItemModuleGeneratorCoal(String regName) {
 //        super(regName, EnumModuleTarget.TORSOONLY, EnumModuleCategory.CATEGORY_ENERGY_GENERATION);
 ////        ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Blocks.FURNACE));
-////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+////        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(Iteminecraftomponent.controlCircuit, 1));
 ////
 ////        addBasePropertyDouble(MPSModuleConstants.MAX_COAL_STORAGE, 128);
 ////        addBasePropertyDouble(MPSModuleConstants.HEAT_GENERATION, 2.5);
