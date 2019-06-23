@@ -540,18 +540,18 @@ public enum MPSItems {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event ){
-//        event.getRegistry().registerAll(
-//                EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
-//                        .size(0.25F, 0.25F)
-//                        .build(MODID + ":luxcapacitor_entity"),
-//
-//                EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
-////                       .size(0.25F, 0.25F)
-//                        .build(MODID +":spinning_blade"),
-//
-//                EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
-//                        .build(MODID +":plasma_bolt")
-//        );
+        event.getRegistry().registerAll(
+                EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
+                        .size(0.25F, 0.25F)
+                        .build(MODID + ":luxcapacitor_entity").setRegistryName(MODID + ":luxcapacitor_entity"),
+
+                EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
+//                       .size(0.25F, 0.25F)
+                        .build(MODID +":spinning_blade").setRegistryName(MODID +":spinning_blade"),
+
+                EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
+                        .build(MODID +":plasma_bolt").setRegistryName(MODID +":plasma_bolt")
+        );
     }
 
     @SubscribeEvent

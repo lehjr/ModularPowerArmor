@@ -220,7 +220,10 @@ public class MuseIcon {
 
     private static TextureAtlasSprite register(TextureStitchEvent.Pre event, String location) {
         ResourceLocation res = new ResourceLocation(MPSResourceConstants.RESOURCE_DOMAIN, location);
-//        event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(), res);
+
+
+
+//        event.getMap().upload().registerSprite(Minecraft.getInstance().getResourceManager(), res);
         return event.getMap().getSprite(res);
     }
 }

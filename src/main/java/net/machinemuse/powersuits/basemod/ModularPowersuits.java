@@ -1,5 +1,17 @@
 package net.machinemuse.powersuits.basemod;
 
+import net.machinemuse.numina.basemod.MuseLogger;
+import net.machinemuse.numina.client.model.obj.MuseOBJLoader;
+import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
+import net.machinemuse.powersuits.client.event.MuseIcon;
+import net.machinemuse.powersuits.client.event.RenderEventHandler;
+import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
+import net.machinemuse.powersuits.client.render.entity.EntityRendererLuxCapacitorEntity;
+import net.machinemuse.powersuits.client.render.entity.EntityRendererPlasmaBolt;
+import net.machinemuse.powersuits.client.render.entity.EntityRendererSpinningBlade;
+import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
+import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
+import net.machinemuse.powersuits.entity.SpinningBladeEntity;
 import net.machinemuse.powersuits.proxy.ClientProxy;
 import net.machinemuse.powersuits.proxy.CommonProxy;
 import net.machinemuse.powersuits.proxy.ServerProxy;
@@ -10,11 +22,15 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -27,7 +43,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class ModularPowersuits {
     public static final String MODID = "powersuits";
 
-    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+//    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     public ModularPowersuits() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, MPSConfig.INSTANCE.SERVER_SPEC, MPSConfig.INSTANCE.serverFile.getAbsolutePath());
@@ -66,6 +82,22 @@ public class ModularPowersuits {
 
     // client preInit
     private void setupClient(final FMLClientSetupEvent event) {
+        MinecraftForge.EVENT_BUS.register(ModelBakeEventHandler.INSTANCE);
+//        OBJLoader.INSTANCE.addDomain(ModularPowersuits.MODID.toLowerCase());
+
+        MuseOBJLoader.INSTANCE.addDomain(ModularPowersuits.MODID.toLowerCase());
+//
+////        MinecraftForge.EVENT_BUS.register(ModelRegisterEventHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
+
+//
+//
+        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
+        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
+        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
+
+
+
 //        proxy.setupClient(event);
     }
 

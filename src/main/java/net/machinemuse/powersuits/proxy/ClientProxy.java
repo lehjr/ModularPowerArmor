@@ -10,7 +10,6 @@ import net.machinemuse.powersuits.client.render.entity.EntityRendererSpinningBla
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.machinemuse.powersuits.entity.SpinningBladeEntity;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -18,21 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientProxy extends CommonProxy {
     @Override
     public void setupClient(FMLClientSetupEvent event) {
-//        MinecraftForge.EVENT_BUS.register(ModelBakeEventHandler.INSTANCE);
-//        OBJLoader.INSTANCE.addDomain(ModularPowersuits.MODID.toLowerCase());
 
-
-//        ModelLoaderRegistry.registerLoader(MuseOBJLoader.INSTANCE);
-//        MuseOBJLoader.INSTANCE.addDomain(ModularPowersuits.MODID.toLowerCase());
-//
-////        MinecraftForge.EVENT_BUS.register(ModelRegisterEventHandler.INSTANCE);
-//        MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
-//        MinecraftForge.EVENT_BUS.register(ModelBakeEventHandler.INSTANCE);
-//
-//
-//        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
-//        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
-//        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
 
     }
 }

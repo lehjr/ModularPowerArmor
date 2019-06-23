@@ -55,7 +55,7 @@ public class HighPolyArmor extends BipedModel {
     @Override
     public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         prep(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        this.field_78115_e.rotateAngleY = entityIn.rotationYaw;
+        this.bipedBody.rotateAngleY = entityIn.rotationYaw;
         setRotationAngles(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
         super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         post(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
@@ -69,8 +69,8 @@ public class HighPolyArmor extends BipedModel {
     }
 
     public void init() {
-        clearAndAddChildWithInitialOffsets(field_78116_c, 0.0F, 0.0F, 0.0F);
-        clearAndAddChildWithInitialOffsets(field_78115_e, 0.0F, 0.0F, 0.0F);
+        clearAndAddChildWithInitialOffsets(bipedHead, 0.0F, 0.0F, 0.0F);
+        clearAndAddChildWithInitialOffsets(bipedBody, 0.0F, 0.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedRightArm, 5, 2.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedLeftArm, -5, 2.0F, 0.0F);
         clearAndAddChildWithInitialOffsets(bipedRightLeg, 2, 12.0F, 0.0F);
@@ -134,15 +134,15 @@ public class HighPolyArmor extends BipedModel {
         } catch (Exception ignored) {
         }
 
-        field_78116_c.isHidden = false;
-        field_78115_e.isHidden = false;
+        bipedHead.isHidden = false;
+        bipedBody.isHidden = false;
         bipedRightArm.isHidden = false;
         bipedLeftArm.isHidden = false;
         bipedRightLeg.isHidden = false;
         bipedLeftLeg.isHidden = false;
 
-        field_78116_c.showModel = true;
-        field_78115_e.showModel = true;
+        bipedHead.showModel = true;
+        bipedBody.showModel = true;
         bipedRightArm.showModel = true;
         bipedLeftArm.showModel = true;
         bipedRightLeg.showModel = true;

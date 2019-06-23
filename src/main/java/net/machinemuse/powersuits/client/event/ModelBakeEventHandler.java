@@ -2,6 +2,7 @@ package net.machinemuse.powersuits.client.event;
 
 
 import com.google.common.collect.ImmutableMap;
+import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.basemod.ModularPowersuits;
@@ -10,9 +11,11 @@ import net.machinemuse.powersuits.client.model.block.TinkerTableModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
@@ -21,6 +24,7 @@ import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 
@@ -35,7 +39,7 @@ public enum ModelBakeEventHandler {
 
 
 
-    private static Map<ModelResourceLocation, IBakedModel> modelRegistry;
+    private static Map<ResourceLocation, IBakedModel> modelRegistry;
 
 
     //    ModelResourceLocation tinkerTableLocation = new ModelResourceLocation(new ResourceLocation(ModularPowersuits.MODID, BlockTinkerTable.name).toString());
@@ -43,20 +47,21 @@ public enum ModelBakeEventHandler {
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
-//        modelRegistry = event.getModelRegistry();
-//        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(ModularPowersuits.MODID,
-//                "models/block/powerarmor_workbench.obj"));
+
+
+        modelRegistry = event.getModelRegistry();
+        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(ModularPowersuits.MODID,
+                "models/block/powerarmor_workbench.obj"));
 //
-//        // New Lux Capacitor Inventory Model
+        // New Lux Capacitor Inventory Model
 //        modelRegistry.put(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());
 //
-//        // new Tinker Table Inventory Model
-//        modelRegistry.put(
-//                new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
-//                new TinkerTableModel(tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
-//                        MuseModelHelper.defaultTextureGetter(),
-//                        modelState,
-//                        true, DefaultVertexFormats.ITEM)));
+        // new Tinker Table Inventory Model
+        modelRegistry.put(
+                new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
+                new TinkerTableModel(tinkertableUnbaked.bake(event.getModelLoader(),
+                        MuseModelHelper.defaultTextureGetter(),
+                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 //
 //        for (Direction facing : Direction.values()) {
 //            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
@@ -71,14 +76,14 @@ public enum ModelBakeEventHandler {
 //                            MuseModelHelper.defaultTextureGetter(), TRSRTransformation.from(facing), true, DefaultVertexFormats.ITEM));
 //        }
 //
-////        for (ResourceLocation location : modelRegistry.keySet()) {
-//////            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
-////
-////
-////            if (location.getNamespace().equals(ModularPowersuits.MODID)) {
-////                Numina.LOGGER.info("MPS model location: " + location.toString());
-////            }
-////        }
+        for (ResourceLocation location : modelRegistry.keySet()) {
+//            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
+
+
+            if (location.getNamespace().equals(ModularPowersuits.MODID)) {
+                MuseLogger.logger.info("MPS model location: " + location.toString());
+            }
+        }
 
 
 
