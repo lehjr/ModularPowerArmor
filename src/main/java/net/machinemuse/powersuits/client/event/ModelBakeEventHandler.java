@@ -4,6 +4,7 @@ package net.machinemuse.powersuits.client.event;
 import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSItems;
 import net.machinemuse.powersuits.basemod.ModularPowersuits;
 import net.machinemuse.powersuits.client.model.block.ModelLuxCapacitor;
@@ -31,59 +32,99 @@ import java.util.Map;
 public enum ModelBakeEventHandler {
     INSTANCE;
 
-    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSItems.INSTANCE.powerFist.getRegistryName().toString(), "inventory");
+    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSItems.powerFistRegName, "inventory");
     public static IBakedModel powerFistIconModel;
-
-    final IModelState modelState = getModelState();
-
-
 
 
     private static Map<ResourceLocation, IBakedModel> modelRegistry;
 
 
-    //    ModelResourceLocation tinkerTableLocation = new ModelResourceLocation(new ResourceLocation(ModularPowersuits.MODID, BlockTinkerTable.name).toString());
-
-
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
-
-
         modelRegistry = event.getModelRegistry();
-        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(ModularPowersuits.MODID,
-                "models/block/powerarmor_workbench.obj"));
-//
+
         // New Lux Capacitor Inventory Model
+        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
+                "models/block/powerarmor_workbench.obj"));
+
+        // new Tinker Table Inventory Model
+        IModel luxCapacitorUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
+        "models/block/luxcapacitor.obj"));
+
+//
+
 //        modelRegistry.put(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());
 //
-        // new Tinker Table Inventory Model
+
+//       if (new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory") == null)
+//           MuseLogger.logger.info("resource location is null ");
+//
+//       else
+//           MuseLogger.logger.info("resource location is NOT null ");
+
+
         modelRegistry.put(
                 new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
-                new TinkerTableModel(tinkertableUnbaked.bake(event.getModelLoader(),
+                new TinkerTableModel(tinkertableUnbaked.bake(
+                        event.getModelLoader(),
                         MuseModelHelper.defaultTextureGetter(),
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
+
+
+        modelRegistry.put(
+                new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "inventory"),
+                new ModelLuxCapacitor(luxCapacitorUnbaked.bake(
+                        event.getModelLoader(),
+                        MuseModelHelper.defaultTextureGetter(),
+                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
+
+
+
+
+//        if (new TinkerTableModel(tinkertableUnbaked.bake(event.getModelLoader(),
+//                MuseModelHelper.defaultTextureGetter(),
+//                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)) == null)
+//            MuseLogger.logger.info("model is null ");
 //
-//        for (Direction facing : Direction.values()) {
+//        else
+//            MuseLogger.logger.info("model is NOT null ");
+
+
+//
+        for (Direction facing : Direction.values()) {
 //            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
-//
-//            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
-//                continue;
-//
-//            modelRegistry.put(
-//                new ModelResourceLocation(
-//                        MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName()),
-//                        tinkertableUnbaked.bake(ModelLoader.defaultModelGetter(),
-//                            MuseModelHelper.defaultTextureGetter(), TRSRTransformation.from(facing), true, DefaultVertexFormats.ITEM));
-//        }
-//
-        for (ResourceLocation location : modelRegistry.keySet()) {
-//            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
+
+            modelRegistry.put(
+                    new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName()),
+                    new ModelLuxCapacitor(luxCapacitorUnbaked.bake(
+                            event.getModelLoader(),
+                            MuseModelHelper.defaultTextureGetter(),
+                            TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
 
 
-            if (location.getNamespace().equals(ModularPowersuits.MODID)) {
-                MuseLogger.logger.info("MPS model location: " + location.toString());
-            }
+            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
+                continue;
+
+            MuseLogger.logger.info("MPS model location: " + new ModelResourceLocation(
+                    MPSItems.INSTANCE.tinkerTableRegName, "facing=" + facing.getName()).toString());
+
+            modelRegistry.put(new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "facing=" + facing.getName()),
+
+                    new TinkerTableModel(tinkertableUnbaked.bake(
+                            event.getModelLoader(),
+                            MuseModelHelper.defaultTextureGetter(),
+                            TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
+
         }
+//
+//        for (ResourceLocation location : modelRegistry.keySet()) {
+////            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
+//
+//
+//            if (location.getNamespace().equals(MPSConstants.MODID)) {
+//                MuseLogger.logger.info("MPS model location: " + location.toString());
+//            }
+//        }
 
 
 

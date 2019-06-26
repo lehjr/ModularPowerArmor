@@ -66,7 +66,7 @@ public class MovementManager {
         // reduce player speed according to Kinetic Energy Generator setting
         AtomicDouble movementResistance = new AtomicDouble(0);
         itemStack.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-            iModularItem.itemGetActiveModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
+            iModularItem.getOnlineModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
                     .ifPresent(kin->{
                         movementResistance.set(kin.applyPropertyModifiers(MPSConstants.MOVEMENT_RESISTANCE));
                     });
@@ -106,7 +106,7 @@ public class MovementManager {
             flightVerticality =
 
                     helm.getCapability(ModularItemCapability.MODULAR_ITEM).map(iModularItem ->
-                            iModularItem.itemGetActiveModuleOrEmpty(RenderEventHandler.flightControl)
+                            iModularItem.getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
                                     .getCapability(PowerModuleCapability.POWER_MODULE)
                                     .map(pm->pm.applyPropertyModifiers(MPSConstants.FLIGHT_VERTICALITY)).orElse(0D)
                     ).orElse(0D);
@@ -222,7 +222,7 @@ public class MovementManager {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             player.getItemStackFromSlot(EquipmentSlotType.LEGS).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-                iModularItem.itemGetActiveModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
+                iModularItem.getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
                     double jumpAssist = jumper.applyPropertyModifiers(MPSConstants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
@@ -253,7 +253,7 @@ public class MovementManager {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
             boots.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-                ItemStack shockAbsorbers = iModularItem.itemGetActiveModuleOrEmpty(shockAbsorbersReg);
+                ItemStack shockAbsorbers = iModularItem.getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPSConstants.MULTIPLIER);
                     if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {

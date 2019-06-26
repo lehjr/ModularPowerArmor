@@ -41,46 +41,51 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
     Colour colour;
     private LuxCapacitorItemOverrideList overrides;
     TextureAtlasSprite particleTexture = null;
+    IBakedModel bakedModel;
 
-    public ModelLuxCapacitor() {
+
+    public ModelLuxCapacitor(IBakedModel bakedModel) {
         this.overrides = new LuxCapacitorItemOverrideList();
         this.wrapper = this;
         this.modelState = getModelState();
+        this.bakedModel = bakedModel;
     }
 
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        if (side != null)
-            return Collections.emptyList();
+        return bakedModel.getQuads(state, side, rand, extraData);
 
-        Direction facing = Direction.NORTH; // both NORTH and items use TRSRTransformation.Identity because I finally rotated the model
-        colour = BlockLuxCapacitor.defaultColor;
-
-        if (state != null) {
-            facing = state.get(BlockLuxCapacitor.FACING);
-
-            // FIXME: move color to IModelData
-
-//            if (state instanceof IExtendedBlockState)
-//                if (((IExtendedBlockState) state).getUnlistedProperties().containsKey(BlockLuxCapacitor.COLOR))
-//                    colour = ((IExtendedBlockState) state).getValue(BlockLuxCapacitor.COLOR);
-        }
-        if (colour == null)
-            colour = BlockLuxCapacitor.defaultColor;
-        ColoredQuadHelperThingie helperThingie = new ColoredQuadHelperThingie(colour, facing);
-
-        try {
-
-            List<BakedQuad> quads = ModelLuxCapacitorHelper.INSTANCE.luxCapColoredQuadMap.get(helperThingie);
-            if (quads.size() > 0 && this.particleTexture == null)
-                this.particleTexture = quads.get(0).getSprite();
-            return quads;
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+//        if (side != null)
+//            return Collections.emptyList();
+//
+//        Direction facing = Direction.NORTH; // both NORTH and items use TRSRTransformation.Identity because I finally rotated the model
+//        colour = BlockLuxCapacitor.defaultColor;
+//
+//        if (state != null) {
+//            facing = state.get(BlockLuxCapacitor.FACING);
+//
+//            // FIXME: move color to IModelData
+//
+////            if (state instanceof IExtendedBlockState)
+////                if (((IExtendedBlockState) state).getUnlistedProperties().containsKey(BlockLuxCapacitor.COLOR))
+////                    colour = ((IExtendedBlockState) state).getValue(BlockLuxCapacitor.COLOR);
+//        }
+//        if (colour == null)
+//            colour = BlockLuxCapacitor.defaultColor;
+//        ColoredQuadHelperThingie helperThingie = new ColoredQuadHelperThingie(colour, facing);
+//
+//        try {
+//
+//            List<BakedQuad> quads = ModelLuxCapacitorHelper.INSTANCE.luxCapColoredQuadMap.get(helperThingie);
+//            if (quads.size() > 0 && this.particleTexture == null)
+//                this.particleTexture = quads.get(0).getSprite();
+//            return quads;
+//
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//            return Collections.emptyList();
+//        }
     }
 
     @Override

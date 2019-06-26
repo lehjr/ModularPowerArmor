@@ -1,6 +1,8 @@
 package net.machinemuse.powersuits.client.event;
 
 
+import net.machinemuse.numina.basemod.MuseLogger;
+import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.powersuits.constants.MPSResourceConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -121,6 +123,8 @@ public class MuseIcon {
     }
 
     public static void registerIcons(TextureStitchEvent.Pre event) {
+        MuseLogger.logger.info("doing something here also: .... ");
+
 //        /* Armor -------------------------------------------------------------------------------------- */
 //        apiaristArmor = register(event, "modules/silkwisp");
 //        basicPlating = register(event, "modules/basicplating2");
@@ -149,6 +153,7 @@ public class MuseIcon {
 //        solarGenerator = register(event, "modules/solarhelmet");
 //        thermalGenerator = register(event, "modules/heatgenerator");
 //        ultimateBattery = register(event, "modules/crystalcapacitor");
+//
 //
 //        /* Misc --------------------------------------------------------------------------------------- */
 //        airtightSeal = register(event, "modules/glasspane");
@@ -219,7 +224,11 @@ public class MuseIcon {
     }
 
     private static TextureAtlasSprite register(TextureStitchEvent.Pre event, String location) {
+
+
         ResourceLocation res = new ResourceLocation(MPSResourceConstants.RESOURCE_DOMAIN, location);
+//        MuseModelHelper.registerSprite(res);
+
 
 
 

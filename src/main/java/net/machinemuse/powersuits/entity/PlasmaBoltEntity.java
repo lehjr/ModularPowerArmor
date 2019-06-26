@@ -14,6 +14,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -127,7 +128,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
                 break;
         }
         if (!this.world.isRemote) { // Dist.SERVER
-            boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
+            boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 
             // FIXME: this is probably all wrone
             this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);

@@ -26,21 +26,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class RenderEventHandler {
+public enum RenderEventHandler {
+    INSTANCE;
     private static final MPSConfig config = MPSConfig.INSTANCE;
-    private static boolean ownFly;
+    private static boolean ownFly = false;
     public static final ResourceLocation binoculars = new ResourceLocation(MPSItems.INSTANCE.BINOCULARS_MODULE__REGNAME);
     public static final ResourceLocation jetpack =  new ResourceLocation(MPSItems.INSTANCE.MODULE_JETPACK__REGNAME);
     public static final ResourceLocation glider = new ResourceLocation(MPSItems.INSTANCE.MODULE_GLIDER__REGNAME);
     public static final ResourceLocation jetBoots = new ResourceLocation(MPSItems.INSTANCE.MODULE_JETBOOTS__REGNAME);
     public static final ResourceLocation flightControl= new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME);
 
+    private final DrawableMuseRect frame = new DrawableMuseRect(MPSConfig.INSTANCE.HUD_KEYBIND_HUD_X.get(), MPSConfig.INSTANCE.HUD_KEYBIND_HUD_Y.get(), MPSConfig.INSTANCE.HUD_KEYBIND_HUD_X.get() + (double) 16, MPSConfig.INSTANCE.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
-    private final DrawableMuseRect frame = new DrawableMuseRect(config.HUD_KEYBIND_HUD_X.get(), config.HUD_KEYBIND_HUD_Y.get(), config.HUD_KEYBIND_HUD_X.get() + (double) 16, config.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
-
-    public RenderEventHandler() {
-        this.ownFly = false;
-    }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
@@ -85,14 +82,14 @@ public class RenderEventHandler {
         return
 
         player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(ModularItemCapability.MODULAR_ITEM)
-                .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(flightControl).isEmpty()).orElse(false) ||
+                .map(iModularItem -> !iModularItem.getOnlineModuleOrEmpty(flightControl).isEmpty()).orElse(false) ||
 
                 player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(ModularItemCapability.MODULAR_ITEM)
-                        .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(jetpack).isEmpty() ||
-                                !iModularItem.itemGetActiveModuleOrEmpty(glider).isEmpty()).orElse(false) ||
+                        .map(iModularItem -> !iModularItem.getOnlineModuleOrEmpty(jetpack).isEmpty() ||
+                                !iModularItem.getOnlineModuleOrEmpty(glider).isEmpty()).orElse(false) ||
 
                 player.getItemStackFromSlot(EquipmentSlotType.FEET).getCapability(ModularItemCapability.MODULAR_ITEM)
-                        .map(iModularItem -> !iModularItem.itemGetActiveModuleOrEmpty(jetBoots).isEmpty()).orElse(false);
+                        .map(iModularItem -> !iModularItem.getOnlineModuleOrEmpty(jetBoots).isEmpty()).orElse(false);
     }
 
     @SubscribeEvent
@@ -107,7 +104,7 @@ public class RenderEventHandler {
     public void onFOVUpdate(FOVUpdateEvent e) {
         ItemStack helmet = e.getEntity().getItemStackFromSlot(EquipmentSlotType.HEAD);
         helmet.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(h-> {
-                    ItemStack binnoculars = h.itemGetActiveModuleOrEmpty(binoculars);
+                    ItemStack binnoculars = h.getOnlineModuleOrEmpty(binoculars);
                     if (!binnoculars.isEmpty())
                         e.setNewfov((float) (e.getNewfov() / binnoculars.getCapability(PowerModuleCapability.POWER_MODULE)
                                                         .map(m->m.applyPropertyModifiers(MPSConstants.FOV)).orElse(1D)));

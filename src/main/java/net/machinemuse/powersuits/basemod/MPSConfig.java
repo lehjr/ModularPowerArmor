@@ -49,7 +49,7 @@ public enum MPSConfig implements IConfig {
     }
 
     static File setupConfigFile(String fileName) {
-        Path configFile = Paths.get("config/machinemuse").resolve(ModularPowersuits.MODID).resolve(fileName);
+        Path configFile = Paths.get("config/machinemuse").resolve(MPSConstants.MODID).resolve(fileName);
         File cfgFile = configFile.toFile();
         try {
             if (!cfgFile.getParentFile().exists())
@@ -143,7 +143,12 @@ public enum MPSConfig implements IConfig {
             COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN;
 
     public static ForgeConfigSpec.DoubleValue
-            GENERAL_MAX_FLYING_SPEED;
+            GENERAL_MAX_FLYING_SPEED,
+            GENERAL_BASE_MAX_HEAT_POWERFIST,
+            GENERAL_BASE_MAX_HEAT_HELMET,
+            GENERAL_BASE_MAX_HEAT_CHEST,
+            GENERAL_BASE_MAX_HEAT_LEGS,
+            GENERAL_BASE_MAX_HEAT_FEET;
 
     static Map<String, ForgeConfigSpec.IntValue> intValueMap = new HashMap<>();
     static Map<String, ForgeConfigSpec.DoubleValue> doubleValueMap = new HashMap<>();
@@ -229,6 +234,26 @@ public enum MPSConfig implements IConfig {
                     .translation(MPSConstants.CONFIG_GENERAL_MAX_FLYING_SPEED)
                     .defineInRange("maximumFlyingSpeedmps", 25.0, 0, Double.MAX_VALUE);
             builder.pop();
+
+            GENERAL_BASE_MAX_HEAT_POWERFIST = builder.comment("PowerFist Base Heat Cap")
+                    .translation(MPSConstants.CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST)
+                    .defineInRange("baseMaxHeatPowerFist", 5.0, 0, 5000);
+
+            GENERAL_BASE_MAX_HEAT_HELMET = builder.comment("Power Armor Helmet Heat Cap")
+                    .translation(MPSConstants.CONFIG_GENERAL_BASE_MAX_MODULES_HELMET)
+                    .defineInRange("baseMaxHeatHelmet", 5.0, 0, 5000);
+
+            GENERAL_BASE_MAX_HEAT_CHEST = builder.comment("Power Armor Chestplate Heat Cap")
+                    .translation(MPSConstants.CONFIG_GENERAL_BASE_MAX_MODULES_CHESTPLATE)
+                    .defineInRange("baseMaxHeatChest", 20.0, 0, 5000);
+
+            GENERAL_BASE_MAX_HEAT_LEGS = builder.comment("Power Armor Leggings Heat Cap")
+                    .translation(MPSConstants.CONFIG_GENERAL_BASE_MAX_MODULES_LEGGINGS)
+                    .defineInRange("baseMaxHeatLegs", 15.0, 0, 5000);
+
+            GENERAL_BASE_MAX_HEAT_FEET = builder.comment("Power Armor Boots Heat Cap")
+                    .translation(MPSConstants.CONFIG_GENERAL_BASE_MAX_MODULES_FEET)
+                    .defineInRange("baseMaxHeatFeet", 5.0, 0, 5000);
 
             /**
              * Modules ------------------------------------------------------------------------------------------------

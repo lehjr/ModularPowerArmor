@@ -70,13 +70,12 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
             return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
         }
 
-
         class BlockBreaker extends BlockBreaking {
             @Override
             public boolean canHarvestBlock(@Nonnull ItemStack modeChangingStack, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
                 AtomicBoolean canHarvest = new AtomicBoolean(false);
                 modeChangingStack.getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(powerFist -> {
-                    ItemStack pickaxeModule = powerFist.itemGetActiveModuleOrEmpty(pickaxe);
+                    ItemStack pickaxeModule = powerFist.getOnlineModuleOrEmpty(pickaxe);
 
                     if (!pickaxeModule.isEmpty()) {
                         int energyUsage = pickaxeModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(m -> m.getEnergyUsage()).orElse(0);
@@ -92,7 +91,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                 if (this.canHarvestBlock(modeChangingStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
                     AtomicInteger energyUsage = new AtomicInteger(0);
                     modeChangingStack.getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(powerFist -> {
-                        ItemStack pickaxeModule = powerFist.itemGetActiveModuleOrEmpty(pickaxe);
+                        ItemStack pickaxeModule = powerFist.getOnlineModuleOrEmpty(pickaxe);
 
                         if (!pickaxeModule.isEmpty()) {
                             energyUsage.set(pickaxeModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(m -> m.getEnergyUsage()).orElse(0));
@@ -117,7 +116,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                 AtomicDouble newSpeed = new AtomicDouble(event.getNewSpeed());
 
                 modeChangingStack.getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(powerFist -> {
-                    ItemStack pickaxeModule = powerFist.itemGetActiveModuleOrEmpty(pickaxe);
+                    ItemStack pickaxeModule = powerFist.getOnlineModuleOrEmpty(pickaxe);
 
                     if (!pickaxeModule.isEmpty()) {
                         newSpeed.set(newSpeed.get() *

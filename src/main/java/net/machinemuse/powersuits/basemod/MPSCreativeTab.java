@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 public class MPSCreativeTab extends ItemGroup {
     public MPSCreativeTab() {
-        super(ModularPowersuits.MODID);
+        super(MPSConstants.MODID);
     }
 
     @OnlyIn(Dist.CLIENT)

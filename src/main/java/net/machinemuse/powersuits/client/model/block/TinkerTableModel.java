@@ -1,11 +1,9 @@
 package net.machinemuse.powersuits.client.model.block;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.util.Pair;
 import net.machinemuse.numina.client.model.helper.ModelTransformCalibration;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -18,9 +16,11 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,24 +35,20 @@ public class TinkerTableModel implements IDynamicBakedModel {
         transformCalibration = new ModelTransformCalibration(0, 2.5f, 0, 75, -135, 0, 0.375f);
     }
 
-
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
         return bakedModel.getQuads(state, side, rand, extraData);
     }
 
+    @Override
+    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+        TRSRTransformation transform = getModelState().apply(Optional.of(cameraTransformType)).orElse(TRSRTransformation.identity());
+        if (transform != TRSRTransformation.identity())
+            return Pair.of(this, transform.getMatrixVec());
 
-
-//    @Override
-//    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-//        TRSRTransformation transform = getModelState().apply(Optional.of(cameraTransformType)).orElse(TRSRTransformation.identity());
-//        if (transform != TRSRTransformation.identity())
-//            return Pair.of(this, transform.getMatrixVec());
-//
-//        return Pair.of(this, transform.getMatrixVec());
-//    }
-
+        return Pair.of(this, transform.getMatrixVec());
+    }
 
 
     public IModelState getModelState() {

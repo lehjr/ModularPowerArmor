@@ -1,12 +1,13 @@
 package net.machinemuse.powersuits.constants;
 
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.ModularPowersuits;
 import net.minecraft.util.ResourceLocation;
 
 public class MPSResourceConstants {
-    public static final String RESOURCE_PREFIX = ModularPowersuits.MODID + ":";
+    public static final String RESOURCE_PREFIX = MPSConstants.MODID + ":";
     public static final String TEXTURE_PREFIX = RESOURCE_PREFIX + "textures/";
-    public static final String RESOURCE_DOMAIN = ModularPowersuits.MODID.toLowerCase();
+    public static final String RESOURCE_DOMAIN = MPSConstants.MODID.toLowerCase();
 
 
     public static final ResourceLocation GLASS_TEXTURE = new ResourceLocation(TEXTURE_PREFIX + "gui/glass.png");

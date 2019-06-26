@@ -40,7 +40,7 @@
 //    @OnlyIn(Dist.CLIENT)
 //    @Override
 //    public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
-//        //        Minecraft.getMinecraft().player.addStat(AchievementList.OPEN_INVENTORY, 1);
+//        //        Minecraft.getInstance().player.addStat(AchievementList.OPEN_INVENTORY, 1);
 //        switch (ID) {
 //            case 0:
 //                return new GuiTinkerTable(player, x, y, z);

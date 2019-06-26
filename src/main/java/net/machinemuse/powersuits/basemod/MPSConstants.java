@@ -1,7 +1,9 @@
 package net.machinemuse.powersuits.basemod;
 
 public class MPSConstants {
-    public static final String CONFIG_PREFIX = "config." + ModularPowersuits.MODID + ".";
+    public static final String MODID = "powersuits";
+
+    public static final String CONFIG_PREFIX = "config." + MODID + ".";
 
     // HUD ----------------------------------------------------------------------------------------
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
@@ -22,7 +24,11 @@ public class MPSConstants {
     public static final String CONFIG_PREFIX_GENERAL = CONFIG_PREFIX + "general.";
     public static final String CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS = CONFIG_PREFIX_GENERAL + "allowConflictingKeybinds";
     public static final String CONFIG_GENERAL_MAX_FLYING_SPEED = CONFIG_PREFIX_GENERAL + "maxFlyingSpeed";
-
+    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_HELMET = CONFIG_PREFIX_GENERAL + "maxModulesHelmet";
+    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_CHESTPLATE = CONFIG_PREFIX_GENERAL + "maxModulesChestplate";
+    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_LEGGINGS = CONFIG_PREFIX_GENERAL +  "maxModulesLeggings";
+    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_FEET = CONFIG_PREFIX_GENERAL +  "maxModulesFeet";
+    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxModulesPowerFist";
 
 
     public static final String IS_MODULE_ALLOWED ="isModuleAllowed";

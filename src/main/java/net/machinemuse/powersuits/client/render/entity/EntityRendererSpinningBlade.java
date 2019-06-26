@@ -2,26 +2,35 @@ package net.machinemuse.powersuits.client.render.entity;
 
 import net.machinemuse.numina.client.render.MuseTextureUtils;
 import net.machinemuse.numina.client.render.entity.MuseEntityRenderer;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.ModularPowersuits;
 import net.machinemuse.powersuits.entity.SpinningBladeEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+
 public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBladeEntity> {
     public EntityRendererSpinningBlade(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
-    public static final ResourceLocation textureLocation = new ResourceLocation(ModularPowersuits.MODID, "modules/spinningblade.png");
+    public static final ResourceLocation textureLocation = new ResourceLocation(MPSConstants.MODID, "modules/spinningblade.png");
 
+    @Nullable
     @Override
+    protected ResourceLocation func_110775_a(SpinningBladeEntity spinningBladeEntity) {
+        return getEntityTexture(spinningBladeEntity);
+    }
+
+//    @Override
     protected ResourceLocation getEntityTexture(SpinningBladeEntity entity) {
         return textureLocation;
     }
 
     @Override
-    public void doRender(SpinningBladeEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void /* doRender */ func_76986_a(SpinningBladeEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);

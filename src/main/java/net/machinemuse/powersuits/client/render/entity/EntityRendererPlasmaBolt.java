@@ -8,9 +8,11 @@ import net.machinemuse.numina.math.geometry.DrawableMuseCircle;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.annotation.Nullable;
 import java.nio.DoubleBuffer;
 
 import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
@@ -32,6 +34,12 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntit
         c1 = new Colour(.3, .3, 1, 1);
         circle3 = new DrawableMuseCircle(c1, c1);
         circle4 = new DrawableMuseCircle(c1, new Colour(1, 1, 1, 1));
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation /* getEntityTexture */ func_110775_a(PlasmaBoltEntity plasmaBoltEntity) {
+        return null;
     }
 
     public static void doRender(double size) {
@@ -83,6 +91,7 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntit
         }
     }
 
+
     /**
      * Actually renders the given argument. This is a synthetic bridge method,
      * always casting down its argument and then handing it off to a worker
@@ -91,8 +100,9 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntit
      * void doRender(T entity, double d, double d1, double d2, float f, float
      * f1). But JAD is pre 1.5 so doesn't do that.
      */
+
     @Override
-    public void doRender(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void /* doRender */ func_76986_a(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         double size = (entity.size) / 10.0;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);

@@ -48,16 +48,19 @@ public class HighPolyArmor extends BipedModel {
         this.visibleSection = equipmentSlot;
     }
 
+    public HighPolyArmor(float p_i1149_1_, float p_i1149_2_, int p_i1149_3_, int p_i1149_4_) {
+        super(p_i1149_1_, p_i1149_2_, p_i1149_3_, p_i1149_4_);
+    }
+
     /**
      * Sets the models various rotation angles then renders the model.
      */
-
     @Override
-    public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void func_78088_a /*render */(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         prep(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         this.bipedBody.rotateAngleY = entityIn.rotationYaw;
-        setRotationAngles(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
-        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        func_212844_a_/*setRotationAngles*/(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
+        super.func_78088_a /*render */(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         post(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     }
 

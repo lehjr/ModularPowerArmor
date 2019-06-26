@@ -48,7 +48,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
 
-import static net.machinemuse.powersuits.basemod.ModularPowersuits.MODID;
+import static net.machinemuse.powersuits.basemod.MPSConstants.MODID;
 
 @Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
 public enum MPSItems {
@@ -559,7 +559,7 @@ public enum MPSItems {
         // see example: https://github.com/Yamahari/ILikeWood/blob/26767c4f60966edd2ba47a84ab28a4f4c0038039/src/main/java/yamahari/ilikewood/Main.java
 
 //        event.getRegistry().registerAll(
-//                new ContainerType<>(WoodenWorkbenchContainer::new).setRegistryName("wooden_workbench_container"),
+//                new ContainerType<>(PortableWorkbenchContainer::new).setRegistryName("portableWorkBenchType"),
 //                new ContainerType<>((p_221504_0_, p_221504_1_) -> new WoodenLecternContainer(p_221504_0_)).setRegistryName("wooden_lectern_container")
 //        );
     }
