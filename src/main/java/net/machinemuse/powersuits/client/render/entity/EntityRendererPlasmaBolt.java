@@ -38,7 +38,7 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntit
 
     @Nullable
     @Override
-    protected ResourceLocation /* getEntityTexture */ func_110775_a(PlasmaBoltEntity plasmaBoltEntity) {
+    protected ResourceLocation getEntityTexture(PlasmaBoltEntity plasmaBoltEntity) {
         return null;
     }
 
@@ -102,7 +102,7 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntit
      */
 
     @Override
-    public void /* doRender */ func_76986_a(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         double size = (entity.size) / 10.0;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);

@@ -1,68 +1,48 @@
-//package net.machinemuse.powersuits.client.gui.tinker;
-//
-//import net.machinemuse.numina.client.gui.MuseGui;
-//import net.machinemuse.numina.client.render.MuseRenderer;
-//import net.machinemuse.numina.math.Colour;
-//import net.machinemuse.numina.math.geometry.MusePoint2D;
-//import net.machinemuse.powersuits.client.gui.tinker.frame.*;
-//import net.minecraft.client.entity.player.ClientPlayerEntity;
-//import net.minecraft.client.resources.I18n;
-//import net.minecraft.entity.player.PlayerEntity;
-//
-//
-///**
-// * The gui class for the TinkerTable block.
-// *
-// * @author MachineMuse
-// */
-//public class GuiTinkerTable extends MuseGui {
-//    protected final ClientPlayerEntity player;
-//    protected ItemSelectionFrame itemSelectFrame;
-//    protected int worldx;
-//    protected int worldy;
-//    protected int worldz;
-//
-//    /**
-//     * Constructor. Takes a player as an argument.
-//     *
-//     * @param player
-//     * @param hitX
-//     * @param hitY
-//     * @param hitZ
-//     */
-//    public GuiTinkerTable(PlayerEntity player, float hitX, float hitY, float hitZ) {
-//        this.player = (ClientPlayerEntity) player;
-////        this.xSize = 256;
-////        this.ySize = 200;
-////        this.xSize = 400;
-////        this.ySize = 244;
-//
-//        this.xSize = Math.min(minecraft.mainWindow.getScaledWidth() - 50, 500);
-//        this.ySize = Math.min(minecraft.mainWindow.getScaledHeight() - 50, 300);
-//    }
-//
-//    public GuiTinkerTable(PlayerEntity player, int x, int y, int z) {
-//        this.player = (ClientPlayerEntity) player;
-////        this.xSize = 256;
-////        this.ySize = 200;
-////        this.xSize = 400;
-////        this.ySize = 244;
-//
-//        this.xSize = Math.min(minecraft.mainWindow.getScaledWidth() - 50, 500);
-//        this.ySize = Math.min(minecraft.mainWindow.getScaledHeight() - 50, 300);
-//
-//        this.worldx = x;
-//        this.worldy = y;
-//        this.worldz = z;
-//    }
-//
-//    /**
-//     * Add the buttons (and other controls) to the screen.
-//     */
-//    @Override
-//    public void initGui() {
-//        super.initGui();
-//        itemSelectFrame = new ItemSelectionFrame(new MusePoint2D(absX(-0.95F), absY(-0.95F)), new MusePoint2D(absX(-0.78F), absY(0.95F)),
+package net.machinemuse.powersuits.client.gui.tinker;
+
+import net.machinemuse.powersuits.client.gui.MuseGUI2;
+import net.machinemuse.powersuits.client.gui.tinker.frame.ItemSelectionFrame;
+import net.machinemuse.powersuits.containers.TinkerTableContainer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
+
+/**
+ * The gui class for the TinkerTable block.
+ *
+ * @author MachineMuse
+ */
+public class GuiTinkerTable extends MuseGUI2<TinkerTableContainer> {
+    protected final PlayerEntity player;
+    protected ItemSelectionFrame itemSelectFrame;
+
+    public GuiTinkerTable(TinkerTableContainer container, PlayerInventory playerInventory, ITextComponent title) {
+        super(container, playerInventory, title);
+        this.player = playerInventory.player;
+        this.xSize = Math.min(minecraft.mainWindow.getScaledWidth() - 50, 500);
+        this.ySize = Math.min(minecraft.mainWindow.getScaledHeight() - 50, 300);
+    }
+
+    @Override
+    public void resize(Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+        super.resize(p_resize_1_, p_resize_2_, p_resize_3_);
+    }
+
+    /**
+     * Add the buttons (and other controls) to the screen.
+     */
+    @Override
+    public void init() {
+        super.init();
+        /**
+         * each frame will need it need its own container and container type
+         *
+         */
+
+
+
+//        itemSelectFrame = new ItemSelectionFrame(container, new MusePoint2D(absX(-0.95F), absY(-0.95F)), new MusePoint2D(absX(-0.78F), absY(0.95F)),
 //                Colour.LIGHTBLUE.withAlpha(0.8F), Colour.DARKBLUE.withAlpha(0.8F), player);
 //        frames.add(itemSelectFrame);
 //
@@ -72,7 +52,7 @@
 //                Colour.LIGHTBLUE.withAlpha(0.8), Colour.DARKBLUE.withAlpha(0.8), itemSelectFrame);
 //        frames.add(statsFrame);
 //
-//        ModuleSelectionFrame moduleSelectFrame = new ModuleSelectionFrame(new MusePoint2D(absX(-0.75F), absY(-0.95f)), new MusePoint2D(absX(-0.05F),
+//        ModuleSelectionFrame moduleSelectFrame = new ModuleSelectionFrame(container, new MusePoint2D(absX(-0.75F), absY(-0.95f)), new MusePoint2D(absX(-0.05F),
 //                absY(0.55f)), Colour.LIGHTBLUE.withAlpha(0.8), Colour.DARKBLUE.withAlpha(0.8), itemSelectFrame);
 //        frames.add(moduleSelectFrame);
 //
@@ -91,16 +71,16 @@
 //
 //        TabSelectFrame tabFrame = new TabSelectFrame(player, new MusePoint2D(absX(-0.95F), absY(-1.05f)), new MusePoint2D(absX(0.95F), absY(-0.95f)), worldx, worldy, worldz);
 //        frames.add(tabFrame);
-//    }
-//
-//    @Override
-//    public void render(int x, int y, float z) {
-//        super.render(x, y, z);
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
 //        if (itemSelectFrame.hasNoItems()) {
 //            double centerx = absX(0);
 //            double centery = absY(0);
 //            MuseRenderer.drawCenteredString(I18n.format("gui.powersuits.noModulesFound.line1"), centerx, centery - 5);
 //            MuseRenderer.drawCenteredString(I18n.format("gui.powersuits.noModulesFound.line2"), centerx, centery + 5);
 //        }
-//    }
-//}
+    }
+}

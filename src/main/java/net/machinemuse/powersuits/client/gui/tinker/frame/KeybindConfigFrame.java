@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
-import net.machinemuse.numina.client.gui.IClickable;
 import net.machinemuse.numina.client.gui.MuseGui;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.IClickable;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
@@ -18,6 +18,7 @@ import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.client.control.KeybindKeyHandler;
 import net.machinemuse.powersuits.client.control.KeybindManager;
+import net.machinemuse.powersuits.client.gui.MuseGUI2;
 import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
@@ -27,7 +28,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.glfw.GLFW;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -40,13 +41,13 @@ public class KeybindConfigFrame implements IGuiFrame {
     protected PlayerEntity player;
     protected MusePoint2D ul;
     protected MusePoint2D br;
-    protected MuseGui gui;
+    protected MuseGUI2 gui;
     protected boolean selecting;
     protected ClickableButton newKeybindButton;
     protected ClickableButton trashKeybindButton;
     protected long takenTime;
 
-    public KeybindConfigFrame(MuseGui gui, MusePoint2D ul, MusePoint2D br, PlayerEntity player) {
+    public KeybindConfigFrame(MuseGUI2 gui, MusePoint2D ul, MusePoint2D br, PlayerEntity player) {
         modules = new HashSet();
         for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
             modules.addAll(kb.getBoundModules());
@@ -61,19 +62,19 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         if (button == 0) {
             if (selectedClickie == null) {
                 for (ClickableModule module : modules) {
                     if (module.hitBox(x, y)) {
                         selectedClickie = module;
-                        return;
+                        return true;
                     }
                 }
                 for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                     if (keybind.hitBox(x, y)) {
                         selectedClickie = keybind;
-                        return;
+                        return true;
                     }
                 }
             }
@@ -84,7 +85,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                 if (keybind.hitBox(x, y)) {
                     keybind.toggleHUDState();
-                    return;
+                    return true;
                 }
             }
         } else if (button > 2) {
@@ -100,26 +101,32 @@ public class KeybindConfigFrame implements IGuiFrame {
             }
             selecting = false;
         }
+        return false;
     }
 
     public void refreshModules() {
-            NonNullList<ItemStack> installedModules = NonNullList.create();
+        NonNullList<ItemStack> installedModules = NonNullList.create();
 
-            for (EquipmentSlotType slot: EquipmentSlotType.values()) {
-                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(
-                            iModularItem -> {
-                                installedModules.addAll(iModularItem.getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
-                            }
-                    );
-                } else {
-                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(
-                            modeChangingItem -> {
-                                installedModules.addAll(modeChangingItem.getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
-                            }
-                    );
-                }
+        for (EquipmentSlotType slot: EquipmentSlotType.values()) {
+            switch (slot.getSlotType()) {
+                case HAND:
+                    player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
+                            iModeChanging -> {
+                                if (iModeChanging instanceof IModeChangingItem)
+                                    installedModules.addAll(((IModularItem) iModeChanging).getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
+                            });
+                    break;
+
+                case ARMOR:
+                    if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+                        player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
+                                iModularItem -> {
+                                    if (iModularItem instanceof IModularItem)
+                                        installedModules.addAll(((IModularItem) iModularItem).getInstalledModulesOfType(ToggleCapability.TOGGLEABLE_MODULE));
+                                });
+                    }
             }
+        }
 
         List<MusePoint2D> points = GradientAndArcCalculator.pointsInLine(
                 installedModules.size(),
@@ -128,8 +135,8 @@ public class KeybindConfigFrame implements IGuiFrame {
         Iterator<MusePoint2D> pointIterator = points.iterator();
         for (ItemStack module : installedModules) {
             if (!alreadyAdded(module)) {
-                ClickableModule clickie = new ClickableModule(module, pointIterator.next());
-                modules.add(clickie);
+//                ClickableModule clickie = new ClickableModule(module, pointIterator.next());
+//                modules.add(clickie);
             }
         }
     }
@@ -139,7 +146,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             return false;
 
         for (ClickableModule clickie : modules) {
-            if (clickie.getModule().getItem().getRegistryName().equals(module.getItem().getRegistryName())) {
+            if (ItemStack.areItemsEqual(clickie.getStack(),module)) {
                 return true;
             }
         }
@@ -147,7 +154,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
+    public boolean mouseReleased(double x, double y, int button) {
         if (button == 0) {
             if (selectedClickie != null && closestKeybind != null && selectedClickie instanceof ClickableModule) {
                 closestKeybind.bindModule((ClickableModule) selectedClickie);
@@ -160,7 +167,12 @@ public class KeybindConfigFrame implements IGuiFrame {
             }
             selectedClickie = null;
         }
+        return false;
+    }
 
+    @Override
+    public boolean onMouseScrolled(double v, double v1, double v2) {
+        return false;
     }
 
     @Override
@@ -286,7 +298,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                 if (doAdditionalInfo()) {
                     return module.getToolTip();
                 }
-                return Collections.singletonList(module.getLocalizedName(module.getModule()));
+                return Collections.singletonList(module.getLocalizedName());
             }
         }
         return null;

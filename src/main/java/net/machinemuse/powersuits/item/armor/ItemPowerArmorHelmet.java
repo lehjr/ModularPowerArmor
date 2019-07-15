@@ -1,12 +1,11 @@
 package net.machinemuse.powersuits.item.armor;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.machinemuse.numina.capabilities.heat.CapabilityHeat;
+import net.machinemuse.numina.capabilities.heat.HeatCapability;
 import net.machinemuse.numina.capabilities.heat.IHeatStorage;
 import net.machinemuse.numina.capabilities.heat.MuseHeatItemWrapper;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItem;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.powersuits.basemod.MPSConfig;
@@ -21,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
 import javax.annotation.Nonnull;
@@ -58,11 +58,11 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModularItemCapability.MODULAR_ITEM)
-                return ModularItemCapability.MODULAR_ITEM.orEmpty(cap, LazyOptional.of(()->modularItemCap));
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
             if (cap == CapabilityEnergy.ENERGY)
                 return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
-            return CapabilityHeat.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
+            return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
         }
 
         class ModularArmorCap extends ModularItem {

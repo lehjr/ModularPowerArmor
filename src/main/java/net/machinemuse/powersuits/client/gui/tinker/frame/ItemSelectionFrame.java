@@ -1,16 +1,17 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.sound.Musique;
-import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.FlyFromPointToPoint2D;
 import net.machinemuse.numina.math.geometry.GradientAndArcCalculator;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
+import net.machinemuse.powersuits.containers.TinkerTableContainer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -18,17 +19,36 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ItemSelectionFrame extends ScrollableFrame {
-    protected List<ClickableItem> itemButtons;
+    protected List<ClickableModularItem> itemButtons = new ArrayList<>();
+    TinkerTableContainer container;
     protected int selectedItemStack = -1;
     protected PlayerEntity player;
-    protected List<MusePoint2D> itemPoints;
     protected int lastItemSlot = -1;
+    protected List<MusePoint2D> itemPoints;
+    int totalItems;
 
-    public ItemSelectionFrame(MusePoint2D topleft, MusePoint2D bottomright, Colour borderColour, Colour insideColour, PlayerEntity player) {
+
+    /**
+     * FIXME: although this is a scrollable frame, there is no scrolling code here ... there should be minimum borders for ClickableItems and they should not overlap
+     *
+     *
+     * @param container
+     * @param topleft
+     * @param bottomright
+     * @param borderColour
+     * @param insideColour
+     * @param player
+     */
+    public ItemSelectionFrame(TinkerTableContainer container, MusePoint2D topleft, MusePoint2D bottomright, Colour borderColour, Colour insideColour, PlayerEntity player) {
         super(topleft, bottomright, borderColour, insideColour);
         this.player = player;
-        List<Integer> slots = MuseItemUtils.getModularItemSlotsInInventory(player);
-        loadPoints(slots.size());
+        this.container = container;
+
+        for (ClickableModularItem slot : container.getModularItemToSlotMap().keySet()) {
+                itemButtons.add(slot);
+        }
+        totalItems = itemButtons.size();
+        loadPoints(totalItems);
         loadItems();
     }
 
@@ -58,21 +78,15 @@ public class ItemSelectionFrame extends ScrollableFrame {
     private void loadItems() {
         if (player != null) {
             itemButtons = new ArrayList<>();
-            double centerx = (border.left() + border.right()) / 2;
-            double centery = (border.top() + border.bottom()) / 2;
-//            List<Integer> slots = MuseItemUtils.getModularItemSlotsEquiped(player);
-            List<Integer> slots = MuseItemUtils.getModularItemSlotsInInventory(player);
-            if (slots.size() > itemPoints.size()) {
-                loadPoints(slots.size());
-            }
-            if (slots.size() > 0) {
-                Iterator<MusePoint2D> pointiterator = itemPoints.iterator();
 
-                for (int slot : slots) {
-                    ClickableItem clickie = new ClickableItem(
-                            player.inventory.getStackInSlot(slot),
-                            pointiterator.next(), slot);
-                    itemButtons.add(clickie);
+            if (totalItems > 0) {
+                Iterator<MusePoint2D> pointiterator = itemPoints.iterator();
+                for (Slot slot : container.inventorySlots) {
+                    if (slot instanceof ClickableModularItem) {
+                        MusePoint2D point = pointiterator.next();
+                        ((ClickableModularItem) slot).move(point.getX(), point.getY());
+                        itemButtons.add((ClickableModularItem) slot);
+                    }
                 }
             }
         }
@@ -85,17 +99,13 @@ public class ItemSelectionFrame extends ScrollableFrame {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        drawBackground(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
         drawItems(mouseX, mouseY, partialTicks);
         drawSelection(mouseX, mouseY, partialTicks);
     }
 
-    private void drawBackground(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-    }
-
     private void drawItems(int mouseX, int mouseY, float partialTicks) {
-        for (ClickableItem item : itemButtons) {
+        for (ClickableModularItem item : itemButtons) {
             item.render(mouseX, mouseY, partialTicks);
         }
     }
@@ -113,7 +123,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
         return itemButtons.size() == 0;
     }
 
-    public ClickableItem getPreviousSelectedItem() {
+    public ClickableModularItem getPreviousSelectedItem() {
         if (itemButtons.size() > lastItemSlot && lastItemSlot != -1) {
             return itemButtons.get(lastItemSlot);
         } else {
@@ -121,7 +131,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
         }
     }
 
-    public ClickableItem getSelectedItem() {
+    public ClickableModularItem getSelectedItem() {
         if (itemButtons.size() > selectedItemStack && selectedItemStack != -1) {
             return itemButtons.get(selectedItemStack);
         } else {
@@ -130,36 +140,28 @@ public class ItemSelectionFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         int i = 0;
-        for (ClickableItem item : itemButtons) {
+        for (ClickableModularItem item : itemButtons) {
             if (item.hitBox(x, y)) {
                 lastItemSlot = selectedItemStack;
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
                 selectedItemStack = i;
-                break;
+                return true;
             } else {
                 i++;
             }
         }
+        return false;
     }
 
     @Override
     public List<ITextComponent> getToolTip(int x, int y) {
-        int itemHover = -1;
-        int i = 0;
-        for (ClickableItem item : itemButtons) {
+        for (ClickableModularItem item : itemButtons) {
             if (item.hitBox(x, y)) {
-                itemHover = i;
-                break;
-            } else {
-                i++;
+                return item.getToolTip();
             }
         }
-        if (itemHover > -1) {
-            return itemButtons.get(itemHover).getToolTip();
-        } else {
             return null;
-        }
     }
 }

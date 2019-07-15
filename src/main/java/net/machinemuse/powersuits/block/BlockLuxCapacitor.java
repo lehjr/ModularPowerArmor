@@ -7,19 +7,36 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockLuxCapacitor extends DirectionalBlock {
+    public static final ModelProperty<Integer> COLOUR_PROP = new ModelProperty<>();
     public static final Colour defaultColor = new Colour(0.4D, 0.2D, 0.9D);
 
     protected static final VoxelShape LUXCAPACITOR_EAST_AABB = Block.makeCuboidShape(12, 1, 1, 16, 15, 15);
@@ -34,7 +51,7 @@ public class BlockLuxCapacitor extends DirectionalBlock {
                 .hardnessAndResistance(0.05F, 10.0F)
                 .sound(SoundType.METAL)
                 .variableOpacity()
-                .lightValue(1));
+                .lightValue(15));
         setRegistryName(regName);
         setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN));
     }
@@ -55,10 +72,10 @@ public class BlockLuxCapacitor extends DirectionalBlock {
         return state;
     }
 
-    //    @Override
-//    public int getItemsToDropCount(IBlockState state, int fortune, World worldIn, BlockPos pos, Random random) {
-//        return 0;
-//    }
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        return NonNullList.create();
+    }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -95,23 +112,9 @@ public class BlockLuxCapacitor extends DirectionalBlock {
         return true;
     }
 
-    //    @Nullable
-//    @Override
-//    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
-//        if (state instanceof IExtendedBlockState)
-//            return new TileEntityLuxCapacitor(((IExtendedBlockState) state).getValue(COLOR));
-//        return new TileEntityLuxCapacitor();
-//    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TileEntityLuxCapacitor();
     }
-
-//    @SuppressWarnings("deprecation")
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, Direction face) {
-//        return BlockFaceShape.UNDEFINED;
-//    }
 }

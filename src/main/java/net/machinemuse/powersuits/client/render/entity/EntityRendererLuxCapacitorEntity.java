@@ -18,15 +18,14 @@ public class EntityRendererLuxCapacitorEntity extends MuseEntityRenderer<LuxCapa
 
     @Nullable
     @Override
-    protected ResourceLocation func_110775_a(LuxCapacitorEntity luxCapacitorEntity) {
+    protected ResourceLocation getEntityTexture(LuxCapacitorEntity luxCapacitorEntity) {
         return null;
     }
 
-
     @Override
-    public void /* doRender */ func_76986_a(LuxCapacitorEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(LuxCapacitorEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
 //        if (luxCapacitorModel != null) {
-//                blockState = (IExtendedBlockState) ((IExtendedBlockState) MPSItems.INSTANCE.luxCapacitor.getDefaultState().
+//                blockState = (IExtendedBlockState) ((IExtendedBlockState) MPSObjects.INSTANCE.luxCapacitor.getDefaultState().
 //                        with(DirectionalBlock.FACING, Direction.DOWN)).withProperty(COLOR, entity.color);
 //                GL11.glPushMatrix();
 //                GL11.glTranslated(x, y, z);

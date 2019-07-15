@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.item.module.energy.generation;
 
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
@@ -8,7 +8,8 @@ import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,12 +20,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class KineticGeneratorModule extends AbstractPowerModule {
-    static final ResourceLocation sprintAssist = new ResourceLocation(MPSItems.INSTANCE.MODULE_SPRINT_ASSIST__REGNAME);
+    static final ResourceLocation sprintAssist = new ResourceLocation(MPSRegistryNames.MODULE_SPRINT_ASSIST__REGNAME);
 
     public KineticGeneratorModule(String regName) {
         super(regName);
@@ -74,11 +76,11 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
                 // really hate running this check on every tick but needed for player speed adjustments
                 if (ElectricItemUtils.getPlayerEnergy(player) < ElectricItemUtils.getMaxPlayerEnergy(player)) {
-                    // only fires if the sprint assist module isn't installed and active
-                    if (!itemStackIn.getCapability(ModularItemCapability.MODULAR_ITEM)
-                            .map(i-> i.isModuleOnline(sprintAssist)).orElse(false)) {
+                    itemStackIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h->{
+                        if(h instanceof IModularItem && !((IModularItem) h).isModuleOnline(sprintAssist));
+                        // only fires if the sprint assist module isn't installed and active
                         MovementManager.setMovementModifier(itemStackIn, 0, player);
-                    }
+                    });
 
                     // server side
                     if (!player.world.isRemote &&
@@ -94,11 +96,11 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack itemStackIn) {
-                // only fire if sprint assist module not installed.
-                if (!itemStackIn.getCapability(ModularItemCapability.MODULAR_ITEM)
-                        .map(i-> i.isModuleInstalled(sprintAssist)).orElse(false)) {
-                    MovementManager.setMovementModifier(itemStackIn, 0, player);
-                }
+                itemStackIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h->{
+                    if (h instanceof IModularItem && !((IModularItem) h).isModuleOnline(sprintAssist))
+                        // only fire if sprint assist module not installed.
+                        MovementManager.setMovementModifier(itemStackIn, 0, player);
+                });
             }
         }
     }

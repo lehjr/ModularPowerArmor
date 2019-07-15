@@ -14,7 +14,6 @@ import net.machinemuse.numina.math.geometry.DrawableMuseRect;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRelativeRect;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
-import net.machinemuse.powersuits.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MusePacketColourInfo;
@@ -95,7 +94,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 this.border.right(), (prev != null ? prev.bottom() : this.border.top()) + 18);
         ClickableSlider slider =
                 new ClickableSlider(new MusePoint2D(newborder.centerx(), newborder.centery()), newborder.width() - 15, id,
-                        I18n.format(MPSModuleConstants.MODULE_TRADEOFF_PREFIX + id));
+                        I18n.format(NuminaConstants.MODULE_TRADEOFF_PREFIX + id));
         ScrollableSlider scrollableSlider = new ScrollableSlider(slider, newborder);
         scrollableSlider.setBelow((prev != null) ? prev : null);
         rectangles[index] = scrollableSlider;
@@ -111,11 +110,11 @@ public class ColourPickerFrame extends ScrollableFrame {
             return null;
         }
 
-        CompoundNBT renderSpec = MPSModelHelper.getMuseRenderTag(this.itemSelector.getSelectedItem().getItem());
+        CompoundNBT renderSpec = MPSModelHelper.getMuseRenderTag(this.itemSelector.getSelectedItem().getStack());
         if (renderSpec.contains(NuminaConstants.TAG_COLOURS) && renderSpec.get(NuminaConstants.TAG_COLOURS) instanceof IntArrayNBT) {
             return (IntArrayNBT) renderSpec.get(NuminaConstants.TAG_COLOURS);
         } else {
-            Item item = this.itemSelector.getSelectedItem().getItem().getItem();
+            Item item = this.itemSelector.getSelectedItem().getStack().getItem();
             if (item instanceof ItemPowerArmor) {
                 ItemPowerArmor itemPowerArmor = (ItemPowerArmor) item;
                 // fixme!!!!
@@ -127,7 +126,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             }
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (player.world.isRemote) {
-                MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
+                MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(this.itemSelector.getSelectedItem().slotNumber, this.colours()));
             }
             return (IntArrayNBT) renderSpec.get(NuminaConstants.TAG_COLOURS);
         }
@@ -137,11 +136,11 @@ public class ColourPickerFrame extends ScrollableFrame {
         if (this.itemSelector.getSelectedItem() == null) {
             return null;
         }
-        CompoundNBT renderSpec = MPSModelHelper.getMuseRenderTag(this.itemSelector.getSelectedItem().getItem());
+        CompoundNBT renderSpec = MPSModelHelper.getMuseRenderTag(this.itemSelector.getSelectedItem().getStack());
         renderSpec.put(NuminaConstants.TAG_COLOURS, new IntArrayNBT(intList));
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player.world.isRemote) {
-            MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
+            MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(this.itemSelector.getSelectedItem().slotNumber, this.colours()));
         }
         return (IntArrayNBT) renderSpec.get(NuminaConstants.TAG_COLOURS);
     }
@@ -160,9 +159,10 @@ public class ColourPickerFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
+    public boolean mouseReleased(double x, double y, int button) {
         if (this.isEnabled())
             this.selectedSlider = null;
+        return false;
     }
 
     public DrawableMuseRect getBorder(){
@@ -180,7 +180,7 @@ public class ColourPickerFrame extends ScrollableFrame {
 
                     ClientPlayerEntity player = Minecraft.getInstance().player;
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), itemSelector.getSelectedItem().inventorySlot, colours()));
+                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(itemSelector.getSelectedItem().slotNumber, colours()));
                 }
                 // this just sets up the sliders on selecting an item
             } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
@@ -225,7 +225,7 @@ public class ColourPickerFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         if (this.isEnabled()) {
             y = y + currentscrollpixels;
 
@@ -251,6 +251,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 clipboard.setContents(selection, selection);
             }
         }
+        return false;
     }
 
     public int[] getIntArray(IntArrayNBT e) {
@@ -297,7 +298,7 @@ public class ColourPickerFrame extends ScrollableFrame {
 
                     ClientPlayerEntity player = Minecraft.getInstance().player;
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketColourInfo(player.getEntityId(), itemSelector.getSelectedItem().inventorySlot, IntArrayNBT.getIntArray()));
+                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(itemSelector.getSelectedItem().slotNumber, IntArrayNBT.getIntArray()));
                 }
                 return true;
             }

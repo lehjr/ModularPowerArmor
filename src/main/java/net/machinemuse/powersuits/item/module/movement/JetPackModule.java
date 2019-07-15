@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.item.module.movement;
 
 import net.machinemuse.numina.basemod.NuminaConfig;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
@@ -14,7 +14,8 @@ import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -28,12 +29,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class JetPackModule extends AbstractPowerModule {
-    ResourceLocation flightControl = new ResourceLocation(MPSItems.INSTANCE.MODULE_FLIGHT_CONTROL__REGNAME);
+    ResourceLocation flightControl = new ResourceLocation(MPSRegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
 
     public JetPackModule(String regName) {
         super(regName);
@@ -82,8 +84,8 @@ public class JetPackModule extends AbstractPowerModule {
 
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
                 ItemStack helmet = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                boolean hasFlightControl = helmet.getCapability(ModularItemCapability.MODULAR_ITEM).map(m->m.isModuleOnline(flightControl)).orElse(false);
-
+                boolean hasFlightControl = helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(m->
+                        m instanceof IModularItem && ((IModularItem) m).isModuleOnline(flightControl)).orElse(false);
                 double jetEnergy = 0;
                 double thrust = 0;
                 jetEnergy += moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);

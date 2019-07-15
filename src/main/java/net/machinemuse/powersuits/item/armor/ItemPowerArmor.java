@@ -1,8 +1,10 @@
 package net.machinemuse.powersuits.item.armor;
 
 import com.google.common.collect.Multimap;
-import net.machinemuse.powersuits.basemod.MPSItems;
-import net.machinemuse.powersuits.constants.MPSResourceConstants;
+import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.event.RegisterStuff;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +23,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
     float toughness = 0;
 
     public ItemPowerArmor(EquipmentSlotType slots) {
-        super(slots, new Item.Properties().group(MPSItems.INSTANCE.creativeTab).maxStackSize(1).defaultMaxDamage(0));
+        super(slots, new Item.Properties().group(RegisterStuff.INSTANCE.creativeTab).maxStackSize(1).defaultMaxDamage(0));
     }
 
     @Override
@@ -68,9 +70,9 @@ public class ItemPowerArmor extends ItemElectricArmor {
     @Override
     public String getArmorTexture(ItemStack armor, Entity entity, EquipmentSlotType slot, String type) {
         if (type == "overlay")  // this is to allow a tint to be applied tot the armor
-            return MPSResourceConstants.BLANK_ARMOR_MODEL_PATH;
+            return MPSConstants.BLANK_ARMOR_MODEL_PATH;
 
-        return slot == EquipmentSlotType.LEGS ? MPSResourceConstants.SEBK_AMROR_PANTS : MPSResourceConstants.SEBK_AMROR;
+        return slot == EquipmentSlotType.LEGS ? MPSConstants.SEBK_AMROR_PANTS : MPSConstants.SEBK_AMROR;
     }
 
 

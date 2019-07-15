@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
-import net.machinemuse.powersuits.basemod.ModularPowersuits;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.model.block.ModelLuxCapacitor;
 import net.machinemuse.powersuits.client.model.block.TinkerTableModel;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -16,23 +16,20 @@ import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 
 public enum ModelBakeEventHandler {
     INSTANCE;
 
-    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSItems.powerFistRegName, "inventory");
+    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSRegistryNames.ITEM__POWER_FIST__REGNAME, "inventory");
     public static IBakedModel powerFistIconModel;
 
 
@@ -48,23 +45,14 @@ public enum ModelBakeEventHandler {
                 "models/block/powerarmor_workbench.obj"));
 
         // new Tinker Table Inventory Model
-        IModel luxCapacitorUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
-        "models/block/luxcapacitor.obj"));
+        IModel luxCapacitorBaseUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
+        "models/block/luxcapacitor/luxcapacitor_base.obj"));
 
-//
-
-//        modelRegistry.put(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());
-//
-
-//       if (new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory") == null)
-//           MuseLogger.logger.info("resource location is null ");
-//
-//       else
-//           MuseLogger.logger.info("resource location is NOT null ");
-
+        IModel luxcapacitorLenseUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
+        "models/block/luxcapacitor/luxcapacitor_lens.obj"));
 
         modelRegistry.put(
-                new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "inventory"),
+                new ModelResourceLocation(MPSRegistryNames.TINKER_TABLE_REG_NAME, "inventory"),
                 new TinkerTableModel(tinkertableUnbaked.bake(
                         event.getModelLoader(),
                         MuseModelHelper.defaultTextureGetter(),
@@ -72,11 +60,15 @@ public enum ModelBakeEventHandler {
 
 
         modelRegistry.put(
-                new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "inventory"),
-                new ModelLuxCapacitor(luxCapacitorUnbaked.bake(
+                new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "inventory"),
+                new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                         event.getModelLoader(),
                         MuseModelHelper.defaultTextureGetter(),
-                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
+                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM),
+                        luxcapacitorLenseUnbaked.bake(
+                                event.getModelLoader(),
+                                MuseModelHelper.defaultTextureGetter(),
+                                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
 
 
@@ -95,20 +87,24 @@ public enum ModelBakeEventHandler {
 //            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
 
             modelRegistry.put(
-                    new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName()),
-                    new ModelLuxCapacitor(luxCapacitorUnbaked.bake(
+                    new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "facing=" + facing.getName()),
+                    new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                             event.getModelLoader(),
                             MuseModelHelper.defaultTextureGetter(),
-                            TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
+                            TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM),
+                            luxcapacitorLenseUnbaked.bake(
+                                    event.getModelLoader(),
+                                    MuseModelHelper.defaultTextureGetter(),
+                                    TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
 
 
             if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
                 continue;
 
             MuseLogger.logger.info("MPS model location: " + new ModelResourceLocation(
-                    MPSItems.INSTANCE.tinkerTableRegName, "facing=" + facing.getName()).toString());
+                    MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()).toString());
 
-            modelRegistry.put(new ModelResourceLocation(MPSItems.INSTANCE.tinkerTableRegName, "facing=" + facing.getName()),
+            modelRegistry.put(new ModelResourceLocation(MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()),
 
                     new TinkerTableModel(tinkertableUnbaked.bake(
                             event.getModelLoader(),

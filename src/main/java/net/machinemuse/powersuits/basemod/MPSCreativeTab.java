@@ -18,7 +18,7 @@ public class MPSCreativeTab extends ItemGroup {
     @OnlyIn(Dist.CLIENT)
     @Override
     public ItemStack createIcon() {
-        Item item = MPSItems.INSTANCE.powerArmorHead;
+        Item item = MPSObjects.INSTANCE.powerArmorHead;
         if (item == null)
             item = Items.DEBUG_STICK;
 

@@ -2,8 +2,7 @@ package net.machinemuse.powersuits.client.event;
 
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.client.model.helper.MuseModelHelper;
-import net.machinemuse.powersuits.constants.MPSResourceConstants;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
@@ -224,15 +223,10 @@ public class MuseIcon {
     }
 
     private static TextureAtlasSprite register(TextureStitchEvent.Pre event, String location) {
-
-
-        ResourceLocation res = new ResourceLocation(MPSResourceConstants.RESOURCE_DOMAIN, location);
-//        MuseModelHelper.registerSprite(res);
-
-
-
-
-//        event.getMap().upload().registerSprite(Minecraft.getInstance().getResourceManager(), res);
+        ResourceLocation res = new ResourceLocation(MPSConstants.RESOURCE_DOMAIN, location);
+        if (event.getMap() == Minecraft.getInstance().getTextureMap()) {
+            event.addSprite(res);
+        }
         return event.getMap().getSprite(res);
     }
 }

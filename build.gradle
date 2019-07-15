@@ -60,12 +60,43 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    flatDir {
+        dirs 'localRepo'
+    }
+}
+
 dependencies {
 	minecraft([
             group  : "${project.forgegroup}",
             name   : "forge",
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
+
+    // TODO: figure out how to shadow in dev/deobf version of Numina
+    compile group: 'org.apache.commons', name: 'commons-text', version: '1.6'
+    
+//    compile fg.deobf("net.machinemuse:Numina-${minecraft_version}:${numina_version}")
+//    runtimeOnly fg.deobf("net.machinemuse:Numina-${minecraft_version}:${numina_version}")
+    
+    
+    //    // compile against the JEI API but do not include it at runtime
+//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+//    // at runtime, use the full JEI jar
+//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
+
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 

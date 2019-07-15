@@ -1,14 +1,12 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.basemod.Numina;
 import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.gui.GuiIcons;
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.RenderState;
 import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.numina.math.geometry.MuseRect;
@@ -73,42 +71,46 @@ public class PartSpecManipSubFrame {
         return specsArray;
     }
 
-    public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
-        if (clickie != null) {
-            if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, minecraft.player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
-                return true;
-        }
+    // FIXME
+    public boolean isValidItem(ClickableModularItem clickie, EquipmentSlotType slot) {
+//        if (clickie != null) {
+//            if (clickie.getItemStack().getItem() instanceof ItemPowerArmor)
+//                return clickie.getItemStack().getItem().canEquip(clickie.getItemStack(), slot, minecraft.player);
+//            else if (clickie.getItemStack().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
+//                return true;
+//        }
         return false;
     }
 
-    public ClickableItem getSelectedItem() {
+    public ClickableModularItem getSelectedItem() {
         return this.itemSelector.getSelectedItem();
     }
 
     /**
      * Get's the equipment itemSlot the item is for.
      */
-    public EquipmentSlotType getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
-        if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
-            return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
+//    public EquipmentSlotType getEquipmentSlot() {
+//        ItemStack selectedItem = getSelectedItem().getItemStack();
+//        if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
+//            return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
+//
+//        PlayerEntity player = minecraft.player;
+//        ItemStack heldItem = player.getHeldItemOffhand();
+//
+//        if (!heldItem.isEmpty() && ItemStack.areItemsEqual(selectedItem, heldItem))
+//            return EquipmentSlotType.OFFHAND;
+//        return EquipmentSlotType.MAINHAND;
+//    }
 
-        PlayerEntity player = minecraft.player;
-        ItemStack heldItem = player.getHeldItemOffhand();
-
-        if (!heldItem.isEmpty() && ItemStack.areItemsEqual(selectedItem, heldItem))
-            return EquipmentSlotType.OFFHAND;
-        return EquipmentSlotType.MAINHAND;
-    }
-
+    // FIXME: capabilities
     public CompoundNBT getRenderTag() {
-        return MPSModelHelper.getMuseRenderTag(this.getSelectedItem().getItem(), this.getEquipmentSlot());
+        return new CompoundNBT();
+//        return MPSModelHelper.getMuseRenderTag(this.getSelectedItem().getItemStack(), this.getEquipmentSlot());
     }
 
     public CompoundNBT getItemTag() {
-        return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getItem());
+        return new CompoundNBT();
+//        return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getItemStack());
     }
 
     @Nullable
@@ -179,8 +181,10 @@ public class PartSpecManipSubFrame {
                 int oldindex = spec.getColourIndex(tagdata);
                 if (oldindex >= index && oldindex > 0) {
                     spec.setColourIndex(tagdata, oldindex - 1);
-                    if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), getSelectedItem().inventorySlot, tagname, tagdata));
+//                    if (player.world.isRemote)
+//                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(getSelectedItem().inventorySlot, tagname, tagdata));
+//
+
                 }
             }
         }
@@ -266,8 +270,11 @@ public class PartSpecManipSubFrame {
                         tagname = NuminaConstants.NBT_TEXTURESPEC_TAG;
                     else
                         tagname = ModelRegistry.getInstance().makeName(spec);
-                    if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
+//                    if (player.world.isRemote)
+//                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
+//
+//
+
                     this.updateItems();
                     return true;
                 }
@@ -281,8 +288,10 @@ public class PartSpecManipSubFrame {
                     tagdata = this.getOrMakeSpecTag(spec);
                     if (spec instanceof ModelPartSpec)
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
-                    if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, tagdata));
+//                    if (player.world.isRemote)
+//                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+//
+//
                     this.updateItems();
                     return true;
                 }
@@ -293,8 +302,10 @@ public class PartSpecManipSubFrame {
                         tagname = ModelRegistry.getInstance().makeName(spec);
                         tagdata = this.getOrMakeSpecTag(spec);
                         ((ModelPartSpec) spec).setGlow(tagdata, true);
-                        if (player.world.isRemote)
-                            MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, tagdata));
+//                        if (player.world.isRemote)
+//                            MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+//
+
                         this.updateItems();
                         return true;
                     }
@@ -317,9 +328,9 @@ public class PartSpecManipSubFrame {
 
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
-            if (player.world.isRemote) {
-                MPSPackets.sendToServer(new MusePacketCosmeticInfo(player.getEntityId(), this.getSelectedItem().inventorySlot, tagname, tagdata));
-            }
+//            if (player.world.isRemote) {
+//                MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+//            }
             return true;
         }
         return false;

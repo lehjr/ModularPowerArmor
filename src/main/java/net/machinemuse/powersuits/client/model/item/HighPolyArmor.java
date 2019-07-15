@@ -56,11 +56,11 @@ public class HighPolyArmor extends BipedModel {
      * Sets the models various rotation angles then renders the model.
      */
     @Override
-    public void func_78088_a /*render */(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         prep(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         this.bipedBody.rotateAngleY = entityIn.rotationYaw;
-        func_212844_a_/*setRotationAngles*/(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
-        super.func_78088_a /*render */(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        setRotationAngles(entityIn, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, limbSwing);
+        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         post(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     }
 

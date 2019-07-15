@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.client.model.block;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.client.model.helper.ColoredQuadHelperThingie;
-import net.machinemuse.powersuits.client.model.helper.ModelLuxCapacitorHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
@@ -28,11 +28,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 @OnlyIn(Dist.CLIENT)
 public class ModelLuxCapacitor implements IDynamicBakedModel {
@@ -41,20 +39,31 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
     Colour colour;
     private LuxCapacitorItemOverrideList overrides;
     TextureAtlasSprite particleTexture = null;
-    IBakedModel bakedModel;
+    IBakedModel baseModel;
+    IBakedModel lensModel;
 
 
-    public ModelLuxCapacitor(IBakedModel bakedModel) {
+    public ModelLuxCapacitor(IBakedModel baseModel, IBakedModel lensModel) {
         this.overrides = new LuxCapacitorItemOverrideList();
         this.wrapper = this;
         this.modelState = getModelState();
-        this.bakedModel = bakedModel;
+        this.baseModel = baseModel;
+        this.lensModel = lensModel;
     }
 
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        return bakedModel.getQuads(state, side, rand, extraData);
+        ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+        builder.addAll(baseModel.getQuads(state, side, rand, extraData));
+
+        colour = extraData.hasProperty(BlockLuxCapacitor.COLOUR_PROP) ? new Colour(extraData.getData(BlockLuxCapacitor.COLOUR_PROP)) : BlockLuxCapacitor.defaultColor;
+
+        builder.addAll(MuseModelHelper.getColoredQuadsWithGlow(lensModel.getQuads(state, side, rand, extraData), colour, true));
+        return builder.build();
+
+
+//        return baseModel.getQuads(state, side, rand, extraData);
 
 //        if (side != null)
 //            return Collections.emptyList();
@@ -123,10 +132,10 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
     }
 
     public static ModelResourceLocation getModelResourceLocation(Direction facing) {
-        return new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "facing=" + facing.getName());
+        return new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "facing=" + facing.getName());
     }
 
-    public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(MPSItems.INSTANCE.luxCapaRegName, "inventory");
+    public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "inventory");
 
     public static final IModelState getModelState() {
         ImmutableMap.Builder<IModelPart, TRSRTransformation> builder = ImmutableMap.builder();

@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.tileentity;
 
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.tileentity.MuseTileEntity;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
@@ -15,12 +15,12 @@ public class TinkerTableTileEntity extends MuseTileEntity {
     Direction facing;
 
     public TinkerTableTileEntity() {
-        super(MPSItems.tinkerTableTileEntityType);
+        super(MPSObjects.tinkerTableTileEntityType);
         this.facing = Direction.NORTH;
     }
 
     public TinkerTableTileEntity(Direction facing) {
-        super(MPSItems.tinkerTableTileEntityType);
+        super(MPSObjects.tinkerTableTileEntityType);
         this.facing = facing;
     }
 

@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.MuseMathUtils;
@@ -51,40 +51,53 @@ public class PlayerModelViewFrame implements IGuiFrame {
         this.border = new DrawableMuseRect(topleft, bottomright, borderColour, insideColour);
     }
 
-    EquipmentSlotType getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
-        if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor)
-            return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
+    // FIXME: capabilities
+//    EquipmentSlotType getEquipmentSlot() {
+//        ItemStack selectedItem = getSelectedItem().getItem();
+//        if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor)
+//            return ((ItemPowerArmor) selectedItem.getItem()).getEquipmentSlot();
+//
+//        Minecraft minecraft = Minecraft.getInstance();
+//        PlayerEntity player = minecraft.player;
+//        ItemStack heldItem = player.getHeldItemOffhand();
+//
+//        if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
+//            return EquipmentSlotType.OFFHAND;
+//        return EquipmentSlotType.MAINHAND;
+//    }
 
-        Minecraft minecraft = Minecraft.getInstance();
-        PlayerEntity player = minecraft.player;
-        ItemStack heldItem = player.getHeldItemOffhand();
-
-        if (!heldItem.isEmpty() && ItemStack.areItemStacksEqual(selectedItem, heldItem))
-            return EquipmentSlotType.OFFHAND;
-        return EquipmentSlotType.MAINHAND;
-    }
-
-    ClickableItem getSelectedItem() {
+    ClickableModularItem getSelectedItem() {
         return itemSelector.getSelectedItem();
     }
 
+    // FIXME
     CompoundNBT getRenderTag() {
-        return MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
+        return new CompoundNBT(); //MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         if (border.containsPoint(x, y)) {
             dragging = button;
             anchorx = x;
             anchory = y;
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
-        dragging = -1;
+    public boolean mouseReleased(double x, double y, int button) {
+        if (border.containsPoint(x, y)) {
+            dragging = -1;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onMouseScrolled(double v, double v1, double v2) {
+        return false;
     }
 
     @Override
@@ -131,13 +144,17 @@ public class PlayerModelViewFrame implements IGuiFrame {
         border.draw();
         if (itemSelector.getSelectedItem() == null)
             return;
-        if (getSelectedItem().getItem().getItem() instanceof ItemPowerArmor) {
-            ArmorModelInstance.getInstance().setRenderSpec(MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot()));
-            ArmorModelInstance.getInstance().setVisibleSection(this.getEquipmentSlot());
-        } else if (getSelectedItem().getItem().getItem() instanceof ItemPowerFist) {
-            MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
-        } else
-            return;
+
+        // FIXME --- capabilities
+
+        //
+//        if (getSelectedItem().getItem().getItem() instanceof ItemPowerArmor) {
+//            ArmorModelInstance.getInstance().setRenderSpec(MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot()));
+//            ArmorModelInstance.getInstance().setVisibleSection(this.getEquipmentSlot());
+//        } else if (getSelectedItem().getItem().getItem() instanceof ItemPowerFist) {
+//            MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
+//        } else
+//            return;
 
         // set color to normal state
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);

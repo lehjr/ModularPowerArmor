@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.event;
 
 import net.machinemuse.numina.basemod.NuminaConfig;
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.item.MuseItemUtils;
@@ -19,6 +19,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,23 +69,33 @@ public class PlayerUpdateHandler {
             AtomicInteger modularItemsEquipped = new AtomicInteger();
 
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR)
-                    player.getItemStackFromSlot(slot).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(i->
-                            {
-                                i.tick(player);
+                switch (slot.getSlotType()) {
+                    case HAND:
+                        player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(i-> {
+                            if (i instanceof IModeChangingItem) {
+                                ((IModeChangingItem) i).tick(player);
+                                modularItemsEquipped.addAndGet(1);
+                            }
+                        });
+                        break;
+
+                    case ARMOR:
+                            player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(i-> {
+                                if (i instanceof IModularItem)
+                                ((IModularItem) i).tick(player);
                                 modularItemsEquipped.addAndGet(1);
                             });
-                else
-                    player.getItemStackFromSlot(slot).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(i->
-                    {
-                        i.tick(player);
-                        modularItemsEquipped.addAndGet(1);
-                    });
+                }
             }
+
+
+
+
+
 
 //            System.out.println("player fall distance before: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
 //
-            player.fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
+                player.fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
 //
 //            System.out.println("player fall distance after: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
 

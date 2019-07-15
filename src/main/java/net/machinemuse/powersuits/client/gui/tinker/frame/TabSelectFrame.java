@@ -41,20 +41,28 @@ public class TabSelectFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         for (ClickableButton b : buttons.keySet()) {
             if (b.isEnabled() && b.hitBox(x, y)) {
+                // fixme: insert openGUI code... add an index value to simulate old behaviour?
 //                p.displayGui();//.openGui(ModularPowersuits.getInstance(), buttons.get(b), p.world, worldx, worldy, worldz);
             }
         }
+        return false;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
+    public boolean mouseReleased(double v, double v1, int i) {
+        return false;
     }
 
     @Override
     public void update(double mousex, double mousey) {
+    }
+
+    @Override
+    public boolean onMouseScrolled(double v, double v1, double v2) {
+        return false;
     }
 
     @Override

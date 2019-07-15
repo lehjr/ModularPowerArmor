@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.entity;
 
-import net.machinemuse.powersuits.basemod.MPSItems;
-import net.minecraft.client.particle.Particle;
+import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -30,7 +29,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
     }
 
     public PlasmaBoltEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
-        super(MPSItems.PLASMA_BOLT_ENTITY_TYPE, world);
+        super(MPSObjects.PLASMA_BOLT_ENTITY_TYPE, world);
         this.shootingEntity = shootingEntity;
         this.size = ((chargeTicks) > 50 ? 50 : chargeTicks);
         this.explosiveness = explosivenessIn;

@@ -2,10 +2,8 @@ package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.render.MuseRenderer;
-import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRect;
 import net.machinemuse.numina.math.geometry.MuseRelativeRect;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +19,18 @@ public class ModuleSelectionSubFrame {
         this.moduleButtons = new ArrayList<>();
     }
 
-    public ClickableModule addModule(ItemStack module) {
-        ClickableModule clickie = new ClickableModule(module, new MusePoint2D(0, 0));
+    public ClickableModule addModule(ClickableModule clickie) {
         this.moduleButtons.add(clickie);
         // refreshButtonPositions();
         return clickie;
     }
 
-    public void drawPartial(int min, int max) {
+    public void drawPartial(int min, int max, float partialTicks) {
         refreshButtonPositions();
         double top = border.top();
         MuseRenderer.drawString(this.category, border.left(), top);
         for (ClickableModule clickie : moduleButtons) {
-            clickie.drawPartial(border.left(), min, border.right(), max);
+            clickie.render(min, max, partialTicks);
         }
     }
 

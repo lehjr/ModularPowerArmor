@@ -1,5 +1,6 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.client.render.modelspec.SpecBase;
@@ -26,7 +27,7 @@ public class PartManipContainer extends ScrollableFrame {
     public ColourPickerFrame colourSelect;
     public MusePoint2D topleft;
     public MusePoint2D bottomright;
-    public Integer lastItemSlot;
+    public ClickableModularItem lastItemSlot;
     public int lastColour;
     public int lastColourIndex;
     public List<PartSpecManipSubFrame> modelframes;
@@ -55,12 +56,7 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Nonnull
     public ItemStack getItem() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getItem() : ItemStack.EMPTY;
-    }
-
-    @Nullable
-    public Integer getItemSlot() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().inventorySlot : null;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getStack() : ItemStack.EMPTY;
     }
 
     public int getColour() {
@@ -96,22 +92,24 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         if (enabled) {
             if (button == 0) {
                 for (PartSpecManipSubFrame frame : modelframes) {
-                    frame.tryMouseClick(x, y + currentscrollpixels);
+                    if (frame.tryMouseClick(x, y + currentscrollpixels))
+                        return true;
                 }
             }
         }
+        return false;
     }
 
     @Override
     public void update(double mousex, double mousey) {
         super.update(mousex, mousey);
         if (enabled) {
-            if (!Objects.equals(lastItemSlot, getItemSlot())) {
-                lastItemSlot = getItemSlot();
+            if (!Objects.equals(lastItemSlot, itemSelect.getSelectedItem())) {
+                lastItemSlot = itemSelect.getSelectedItem();
                 colourSelect.refreshColours(); // this does nothing
 
                 double x = 0;

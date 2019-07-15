@@ -7,8 +7,8 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.basemod.MPSItems;
-import net.machinemuse.powersuits.constants.MPSResourceConstants;
+import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -26,8 +26,8 @@ import java.util.Random;
 public enum ModelLuxCapacitorHelper {
     INSTANCE;
 
-    private static final ResourceLocation baseModelLocation = new ResourceLocation(MPSResourceConstants.RESOURCE_PREFIX + "models/block/luxcapacitor/luxcapacitor_base.obj");
-    private static final ResourceLocation lensModelLocation = new ResourceLocation(MPSResourceConstants.RESOURCE_PREFIX + "models/block/luxcapacitor/luxcapacitor_lens.obj");
+    private static final ResourceLocation baseModelLocation = new ResourceLocation(MPSConstants.RESOURCE_PREFIX + "models/block/luxcapacitor/luxcapacitor_base.obj");
+    private static final ResourceLocation lensModelLocation = new ResourceLocation(MPSConstants.RESOURCE_PREFIX + "models/block/luxcapacitor/luxcapacitor_lens.obj");
 
     /*
      * Guava chache for the list of baked quads.
@@ -54,14 +54,14 @@ public enum ModelLuxCapacitorHelper {
 
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(baseModelLocation, transform);
-                    return bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
+                    return bakedModel.getQuads(MPSObjects.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
                 }
 
                 List<BakedQuad> getLensColoredQuads(Colour color, @Nullable Direction facing) {
                     facing = (facing != null) ? facing : Direction.NORTH;
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = MuseModelHelper.loadBakedModel(lensModelLocation, transform);
-                    List<BakedQuad> quads = bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
+                    List<BakedQuad> quads = bakedModel.getQuads(MPSObjects.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
                     return MuseModelHelper.getColoredQuadsWithGlow(quads, color, true);
                 }
 

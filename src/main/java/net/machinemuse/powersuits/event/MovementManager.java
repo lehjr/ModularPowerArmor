@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.event;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import net.machinemuse.numina.basemod.NuminaConfig;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
@@ -12,10 +12,10 @@ import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.event.RenderEventHandler;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +30,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,16 +61,17 @@ public class MovementManager {
         return -0.5 * DEFAULT_GRAVITY * ticks * ticks;
     }
 
-    static final ResourceLocation kineticGen = new ResourceLocation(MPSItems.MODULE_KINETIC_GENERATOR__REGNAME);
+    static final ResourceLocation kineticGen = new ResourceLocation(MPSRegistryNames.MODULE_KINETIC_GENERATOR__REGNAME);
     // moved here so it is still accessible if sprint assist module isn't installed.
     public static void setMovementModifier(ItemStack itemStack, double multiplier, PlayerEntity player) {
         // reduce player speed according to Kinetic Energy Generator setting
         AtomicDouble movementResistance = new AtomicDouble(0);
-        itemStack.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-            iModularItem.getOnlineModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
-                    .ifPresent(kin->{
-                        movementResistance.set(kin.applyPropertyModifiers(MPSConstants.MOVEMENT_RESISTANCE));
-                    });
+        itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
+            if (iModularItem instanceof IModularItem)
+                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
+                        .ifPresent(kin->{
+                            movementResistance.set(kin.applyPropertyModifiers(MPSConstants.MOVEMENT_RESISTANCE));
+                        });
         });
         multiplier -= movementResistance.get();
 
@@ -103,13 +105,15 @@ public class MovementManager {
             double strafeZ = -desiredDirection.x;
             double flightVerticality = 0;
             ItemStack helm = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-            flightVerticality =
-
-                    helm.getCapability(ModularItemCapability.MODULAR_ITEM).map(iModularItem ->
-                            iModularItem.getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
-                                    .getCapability(PowerModuleCapability.POWER_MODULE)
-                                    .map(pm->pm.applyPropertyModifiers(MPSConstants.FLIGHT_VERTICALITY)).orElse(0D)
-                    ).orElse(0D);
+            flightVerticality = helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iModularItem -> {
+                if (iModularItem instanceof IModularItem)
+                    return ((IModularItem) iModularItem)
+                            .getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
+                            .getCapability(PowerModuleCapability.POWER_MODULE)
+                            .map(pm->pm.applyPropertyModifiers(MPSConstants.FLIGHT_VERTICALITY)).orElse(0D);
+                else
+                    return 0D;
+            }).orElse(0D);
 
             desiredDirection = new Vec3d(
                     (desiredDirection.x * Math.signum(playerInput.moveForward) + strafeX * Math.signum(playerInput.moveStrafe)),
@@ -169,7 +173,7 @@ public class MovementManager {
                     thrust * desiredDirection.x,
                     thrust * desiredDirection.y,
                     thrust * desiredDirection.z
-                    ));
+            ));
             thrustUsed += thrust;
 
         } else {
@@ -216,13 +220,16 @@ public class MovementManager {
     }
 
 
-    static final ResourceLocation jumpAssist = new ResourceLocation(MPSItems.MODULE_JUMP_ASSIST__REGNAME);
+    static final ResourceLocation jumpAssist = new ResourceLocation(MPSRegistryNames.MODULE_JUMP_ASSIST__REGNAME);
     @SubscribeEvent
     public void handleLivingJumpEvent(LivingJumpEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            player.getItemStackFromSlot(EquipmentSlotType.LEGS).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-                iModularItem.getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
+            player.getItemStackFromSlot(EquipmentSlotType.LEGS).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
+                if (!(iModularItem instanceof IModularItem))
+                    return;
+
+                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
                     double jumpAssist = jumper.applyPropertyModifiers(MPSConstants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
@@ -245,15 +252,18 @@ public class MovementManager {
         }
     }
 
-    private static final ResourceLocation shockAbsorbersReg = new ResourceLocation(MPSItems.MODULE_SHOCK_ABSORBER__REGNAME);
+    private static final ResourceLocation shockAbsorbersReg = new ResourceLocation(MPSRegistryNames.MODULE_SHOCK_ABSORBER__REGNAME);
 
     @SubscribeEvent
     public void handleFallEvent(LivingFallEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity && event.getDistance() > 3.0) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
-            boots.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem -> {
-                ItemStack shockAbsorbers = iModularItem.getOnlineModuleOrEmpty(shockAbsorbersReg);
+            boots.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
+                if (!(iModularItem instanceof IModularItem))
+                    return;
+
+                ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPSConstants.MULTIPLIER);
                     if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {

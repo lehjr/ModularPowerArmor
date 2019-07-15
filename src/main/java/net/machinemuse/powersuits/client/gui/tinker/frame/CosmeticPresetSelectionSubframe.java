@@ -1,9 +1,8 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableLabel;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableLabel;
-import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRect;
 import net.machinemuse.numina.math.geometry.MuseRelativeRect;
@@ -35,17 +34,17 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         minecraft = Minecraft.getInstance();
     }
 
-    public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
+    public boolean isValidItem(ClickableModularItem clickie, EquipmentSlotType slot) {
         if (clickie != null) {
-            if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().canEquip(clickie.getItem(), slot, minecraft.player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
+            if (clickie.getStack().getItem() instanceof ItemPowerArmor)
+                return clickie.getStack().getItem().canEquip(clickie.getStack(), slot, minecraft.player);
+            else if (clickie.getStack().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EquipmentSlotType.Group.HAND))
                 return true;
         }
         return false;
     }
 
-    public ClickableItem getSelectedItem() {
+    public ClickableModularItem getSelectedItem() {
         return this.itemSelector.getSelectedItem();
     }
 
@@ -53,7 +52,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
      * Get's the equipment itemSlot the item is for.
      */
     public EquipmentSlotType getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
+        ItemStack selectedItem = getSelectedItem().getStack();
         if (!selectedItem.isEmpty() && selectedItem.getItem() instanceof ItemPowerArmor)
             return selectedItem.getEquipmentSlot();
         PlayerEntity player = minecraft.player;
@@ -69,7 +68,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     }
 
     public CompoundNBT getItemTag() {
-        return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getItem());
+        return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
     }
 
 
@@ -82,7 +81,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         // change the render tag to this ... keep in mind that the render tag for these are just a key to read from the config file
         if(super.hitbox(x, y) && this.getSelectedItem() != null) {
             if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                MPSPackets.sendToServer(new MusePacketCosmeticPreset(minecraft.player.getEntityId(), this.getSelectedItem().inventorySlot, this.name));
+                MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticPreset(this.getSelectedItem().slotNumber, this.name));
             }
             return true;
         }

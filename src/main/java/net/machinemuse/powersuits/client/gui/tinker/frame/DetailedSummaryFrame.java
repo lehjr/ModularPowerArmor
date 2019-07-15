@@ -1,9 +1,7 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
@@ -13,13 +11,11 @@ import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -31,7 +27,9 @@ public class DetailedSummaryFrame extends ScrollableFrame {
     protected double armor;
     protected ItemSelectionFrame itemSelectionFrame;
 
-    public DetailedSummaryFrame(PlayerEntity player,
+    public DetailedSummaryFrame(
+
+                                PlayerEntity player,
                                 MusePoint2D topleft,
                                 MusePoint2D bottomright,
                                 Colour borderColour,
@@ -44,20 +42,20 @@ public class DetailedSummaryFrame extends ScrollableFrame {
 
     @Override
     public void update(double mousex, double mousey) {
-        energy = 0;
+        energy = ElectricItemUtils.getPlayerEnergy(player);
         armor = 0;
-
 
         for (ItemStack stack : MuseItemUtils.getModularItemsEquipped(player)) {
             energy += ElectricItemUtils.getItemEnergy(stack);
             AtomicDouble atomicArmor = new AtomicDouble(0);
-            stack.getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(iModularItem ->
-            {
-                for (ItemStack module: iModularItem.getInstalledModules()) {
-                    module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(iPowerModule -> {
-                        atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_PHYSICAL));
-                        atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_ENERGY));
-                    });
+            stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
+                if (iModularItem instanceof IModularItem) {
+                    for (ItemStack module: ((IModularItem) iModularItem).getInstalledModules()) {
+                        module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(iPowerModule -> {
+                            atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_PHYSICAL));
+                            atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_ENERGY));
+                        });
+                    }
                 }
             });
 
@@ -102,14 +100,6 @@ public class DetailedSummaryFrame extends ScrollableFrame {
 
             GL11.glPopMatrix();
         }
-    }
-
-    @Override
-    public void onMouseDown(double x, double y, int button) {
-    }
-
-    @Override
-    public void onMouseUp(double x, double y, int button) {
     }
 
     @Override

@@ -1,20 +1,30 @@
 package net.machinemuse.powersuits.block;
 
+import net.machinemuse.powersuits.containers.MPSCraftingContainer;
+import net.machinemuse.powersuits.containers.PortableCraftingContainer;
+import net.machinemuse.powersuits.containers.TinkerTableContainer;
 import net.machinemuse.powersuits.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +38,34 @@ public class BlockTinkerTable extends HorizontalBlock {
         setRegistryName(regName);
         setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
     }
+
+
+
+    private static final ITextComponent title = new TranslationTextComponent("container.crafting", new Object[0]);
+
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity entity, Hand hand, BlockRayTraceResult rayTraceResult) {
+        entity.openContainer(state.getContainer(world, pos));
+
+//        NetworkHooks.openGui((ServerPlayerEntity) entity,
+//                new InterActionObject(hand), (buffer) -> buffer.writeInt(hand.ordinal())));
+
+
+//        entity.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+        return true;
+    }
+
+    public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, playerEntity) -> {
+            return new MPSCraftingContainer(id, playerInventory);
+
+//            return new TinkerTableContainer(id, playerInventory);
+        }, title);
+    }
+
+
+
+
+
 
     @Override
     public int getHarvestLevel(BlockState state) {
@@ -67,11 +105,11 @@ public class BlockTinkerTable extends HorizontalBlock {
 //    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
 //        return BlockFaceShape.UNDEFINED;
 //    }
-
-    @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-    }
+//
+//    @Override
+//    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+//        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+//    }
 
     @Nullable
     @Override

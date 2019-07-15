@@ -4,7 +4,7 @@ package net.machinemuse.powersuits.client.event;
 public class EventRegisterRenderers {
 //    @SubscribeEvent
 //    public void registerRenderers(ModelRegistryEvent event) {
-//        MPSItems mpsItems = MPSItems.INSTANCE;
+//        MPSObjects mpsItems = MPSObjects.INSTANCE;
 //
 //        // PowerFist
 //        regRenderer(mpsItems.powerFist);
@@ -16,10 +16,10 @@ public class EventRegisterRenderers {
 //        regRenderer(mpsItems.powerArmorFeet);
 //
 //        // Tinker Table
-//        regRenderer(Item.getItemFromBlock(MPSItems.INSTANCE.tinkerTable));
+//        regRenderer(Item.getItemFromBlock(MPSObjects.INSTANCE.tinkerTable));
 //
 //        // Lux Capacitor
-//        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(MPSItems.INSTANCE.luxCapacitor), 0, ModelLuxCapacitor.modelResourceLocation);
+//        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(MPSObjects.INSTANCE.luxCapacitor), 0, ModelLuxCapacitor.modelResourceLocation);
 //
 //        // Components
 //        Item components = mpsItems.components;
@@ -42,12 +42,12 @@ public class EventRegisterRenderers {
 //
 //
 //
-//        ModelResourceLocation liquid_nitrogen_location = new ModelResourceLocation(MPSItems.INSTANCE.blockLiquidNitrogen.getRegistryName(), "normal");
-//        Item fluid = Item.getItemFromBlock(MPSItems.INSTANCE.blockLiquidNitrogen);
+//        ModelResourceLocation liquid_nitrogen_location = new ModelResourceLocation(MPSObjects.INSTANCE.blockLiquidNitrogen.getRegistryName(), "normal");
+//        Item fluid = Item.getItemFromBlock(MPSObjects.INSTANCE.blockLiquidNitrogen);
 //
 //        ModelBakery.registerItemVariants(fluid);
 //        ModelLoader.setCustomMeshDefinition(fluid, stack -> liquid_nitrogen_location);
-//        ModelLoader.setCustomStateMapper(MPSItems.INSTANCE.blockLiquidNitrogen, new StateMapperBase() {
+//        ModelLoader.setCustomStateMapper(MPSObjects.INSTANCE.blockLiquidNitrogen, new StateMapperBase() {
 //            @Override
 //            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
 //                return liquid_nitrogen_location;
@@ -65,7 +65,7 @@ public class EventRegisterRenderers {
 ////    // no need to pass the locations here, since they'll be loaded by the block model logic.
 ////            ModelBakery.registerItemVariants(fluid);
 ////            ModelLoader.setCustomMeshDefinition(fluid, stack -> fluidLocation);
-////            ModelLoader.setCustomStateMapper(MPSItems.INSANCE., new StateMapperBase() {
+////            ModelLoader.setCustomStateMapper(MPSObjects.INSANCE., new StateMapperBase() {
 ////        @Override
 ////        protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
 ////            return fluidLocation;

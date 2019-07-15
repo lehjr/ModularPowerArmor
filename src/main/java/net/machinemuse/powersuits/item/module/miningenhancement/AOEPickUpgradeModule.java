@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.item.module.miningenhancement;
 
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
 import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCapability;
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancement;
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
@@ -15,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,28 +108,28 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
                 posList.forEach(blockPos-> {
                     BlockState state = player.world.getBlockState(blockPos);
                     Block block = state.getBlock();
-
-                    for (ItemStack blockBreakingModule : itemStack.getCapability(ModeChangingCapability.MODE_CHANGING)
-                            .map(m->m.getInstalledModulesOfType(BlockBreakingCapability.BLOCK_BREAKING)).orElse(NonNullList.create())) {
-                        int playerEnergy = ElectricItemUtils.getPlayerEnergy(player);
-
-                        if (blockBreakingModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(b->b
-                                .canHarvestBlock(itemStack, state, player, blockPos, playerEnergy - energyUsage)).orElse(false)) {
-                            if (posIn == blockPos) // center block
-                                harvested.set(true);
-                            block.onPlayerDestroy(player.world, blockPos, state);
-                            block.harvestBlock(player.world, player, blockPos, state, player.world.getTileEntity(blockPos), player.getHeldItemMainhand());
+                    int playerEnergy = ElectricItemUtils.getPlayerEnergy(player);
+                    itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
+                        if (modeChanging instanceof IModeChangingItem) {
+                            for (ItemStack blockBreakingModule : ((IModeChangingItem) modeChanging).getInstalledModulesOfType(BlockBreakingCapability.BLOCK_BREAKING)) {
+                                if (blockBreakingModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(b -> b
+                                        .canHarvestBlock(itemStack, state, player, blockPos, playerEnergy - energyUsage)).orElse(false)) {
+                                    if (posIn == blockPos) // center block
+                                        harvested.set(true);
+                                    block.onPlayerDestroy(player.world, blockPos, state);
+                                    block.harvestBlock(player.world, player, blockPos, state, player.world.getTileEntity(blockPos), player.getHeldItemMainhand());
 //                                player.world.playEvent(null, 2001, blockPos, Block.getStateId(state));
 //                                player.world.removeBlock(blockPos, false);
 //                                block.breakBlock(player.world, blockPos, state);
 //                                block.dropBlockAsItem(player.world, blockPos, state, 0);
-
-                            ElectricItemUtils.drainPlayerEnergy(player,
-                                    blockBreakingModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING)
-                                            .map(m->m.getEnergyUsage()).orElse(0) + energyUsage);
-                            break;
+                                    ElectricItemUtils.drainPlayerEnergy(player,
+                                            blockBreakingModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING)
+                                                    .map(m -> m.getEnergyUsage()).orElse(0) + energyUsage);
+                                    break;
+                                }
+                            }
                         }
-                    }
+                    });
                 });
                 return harvested.get();
             }

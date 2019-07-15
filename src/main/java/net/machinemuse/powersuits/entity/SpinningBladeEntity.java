@@ -1,15 +1,14 @@
 package net.machinemuse.powersuits.entity;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
@@ -36,17 +36,17 @@ public class SpinningBladeEntity extends ThrowableEntity {
     }
 
     public SpinningBladeEntity(World worldIn, LivingEntity shootingEntity) {
-        super(MPSItems.SPINNING_BLADE_ENTITY_TYPE, shootingEntity, worldIn);
+        super(MPSObjects.SPINNING_BLADE_ENTITY_TYPE, shootingEntity, worldIn);
         this.shootingEntity = shootingEntity;
         if (shootingEntity instanceof PlayerEntity) {
             AtomicDouble atomicDamage = new AtomicDouble(0);
 
             this.shootingItem = ((PlayerEntity) shootingEntity).inventory.getCurrentItem();
-            this.shootingItem.getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(iModeChangingItem ->
-                    iModeChangingItem.getActiveModule().getCapability(PowerModuleCapability.POWER_MODULE)
-                            .ifPresent(m-> atomicDamage.getAndAdd(m.applyPropertyModifiers(MPSConstants.BLADE_DAMAGE)))
-            );
-
+            this.shootingItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModeChangingItem -> {
+                if (iModeChangingItem instanceof IModeChangingItem)
+                    ((IModeChangingItem) iModeChangingItem).getActiveModule().getCapability(PowerModuleCapability.POWER_MODULE)
+                            .ifPresent(m-> atomicDamage.getAndAdd(m.applyPropertyModifiers(MPSConstants.BLADE_DAMAGE)));
+            });
             damage = atomicDamage.get();
         }
         Vec3d direction = shootingEntity.getLookVec().normalize();

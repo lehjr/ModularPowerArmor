@@ -17,7 +17,7 @@ import java.util.Map;
 
 public enum MPSConfig implements IConfig {
     INSTANCE;
-    static MPSItems mpsi = MPSItems.INSTANCE;
+    static MPSObjects mpsi = MPSObjects.INSTANCE;
 
     public static final ClientConfig CLIENT_CONFIG;
     public static final ForgeConfigSpec CLIENT_SPEC;
@@ -263,20 +263,20 @@ public enum MPSConfig implements IConfig {
             builder.push("Armor Moudles");
 
             // Leather Plating
-            ModuleConfig leatherPlating = new ModuleConfig(mpsi.MODULE_LEATHER_PLATING__REGNAME, true, builder);
+            ModuleConfig leatherPlating = new ModuleConfig(MPSRegistryNames.MODULE_LEATHER_PLATING__REGNAME, true, builder);
             leatherPlating.done();
 
             // Iron Plating
-            ModuleConfig ironPlating = new ModuleConfig(mpsi.MODULE_IRON_PLATING__REGNAME, true, builder);
+            ModuleConfig ironPlating = new ModuleConfig(MPSRegistryNames.MODULE_IRON_PLATING__REGNAME, true, builder);
             leatherPlating.setIsModuleAllowed(true);
             ironPlating.done();
 
             // Diamond Plating
-            ModuleConfig diamondPlating = new ModuleConfig(mpsi.MODULE_DIAMOND_PLATING__REGNAME, true, builder);
+            ModuleConfig diamondPlating = new ModuleConfig(MPSRegistryNames.MODULE_DIAMOND_PLATING__REGNAME, true, builder);
             diamondPlating.done();
 
             // Energy Shield
-            ModuleConfig energyShield = new ModuleConfig(mpsi.MODULE_ENERGY_SHIELD__REGNAME, true, builder);
+            ModuleConfig energyShield = new ModuleConfig(MPSRegistryNames.MODULE_ENERGY_SHIELD__REGNAME, true, builder);
             energyShield.done();
 
             builder.pop();
@@ -375,20 +375,8 @@ public enum MPSConfig implements IConfig {
 
     @Override
     public boolean isModuleAllowed(String s) {
-        return false;
+        return true;
     }
-
-    @Override
-    public boolean isModuleAllowed(ResourceLocation resourceLocation) {
-        return false;
-    }
-
-
-
-
-
-
-
 
 //    public boolean getModuleAllowedorDefault(ResourceLocation regName, boolean defaultVal) {
 //        return defaultVal;
@@ -453,35 +441,35 @@ public enum MPSConfig implements IConfig {
 //    private BiMap<String, CompoundNBT> cosmeticPresetsPowerFist = HashBiMap.create();
 //    public BiMap<String, CompoundNBT> getCosmeticPresetsPowerFist() {
 //        if (cosmeticPresetsPowerFist.isEmpty() && !COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())
-//            cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerFist, 0);
+//            cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(MPSObjects.INSTANCE.powerFist, 0);
 //        return cosmeticPresetsPowerFist;
 //    }
 //
 //    private BiMap<String, CompoundNBT> cosmeticPresetsPowerArmorHelmet = HashBiMap.create();
 //    public BiMap<String, CompoundNBT> getCosmeticPresetsPowerArmorHelmet() {
 //        if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-//            cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorHead, 0);
+//            cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(MPSObjects.INSTANCE.powerArmorHead, 0);
 //        return cosmeticPresetsPowerArmorHelmet;
 //    }
 //
 //    private BiMap<String, CompoundNBT> cosmeticPresetsPowerArmorChestplate = HashBiMap.create();
 //    public BiMap<String, CompoundNBT> getCosmeticPresetsPowerArmorChestplate() {
 //        if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-//            cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorTorso, 0);
+//            cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(MPSObjects.INSTANCE.powerArmorTorso, 0);
 //        return cosmeticPresetsPowerArmorChestplate;
 //    }
 //
 //    private BiMap<String, CompoundNBT> cosmeticPresetsPowerArmorLeggings = HashBiMap.create();
 //    public BiMap<String, CompoundNBT> getCosmeticPresetsPowerArmorLeggings() {
 //        if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-//            cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorLegs, 0);
+//            cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(MPSObjects.INSTANCE.powerArmorLegs, 0);
 //        return cosmeticPresetsPowerArmorLeggings;
 //    }
 //
 //    private BiMap<String, CompoundNBT>  cosmeticPresetsPowerArmorBoots = HashBiMap.create();
 //    public BiMap<String, CompoundNBT> getCosmeticPresetsPowerArmorBoots() {
 //        if(cosmeticPresetsPowerArmorBoots.isEmpty() && !COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get())
-//            cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.INSTANCE.powerArmorFeet, 0);
+//            cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(MPSObjects.INSTANCE.powerArmorFeet, 0);
 //        return cosmeticPresetsPowerArmorBoots;
 //    }
 }

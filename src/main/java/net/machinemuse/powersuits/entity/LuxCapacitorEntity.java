@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.entity;
 
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
 import net.minecraft.block.BlockState;
@@ -27,7 +27,7 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
     }
 
     public LuxCapacitorEntity(World world, LivingEntity shootingEntity, Colour color) {
-        super(MPSItems.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
+        super(MPSObjects.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
         this.color = color != null ? color : BlockLuxCapacitor.defaultColor;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;
@@ -71,14 +71,14 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
             int z = blockRayTrace.getPos().getZ() - dir.getZOffset();
             if (y > 0) {
                 BlockPos blockPos = new BlockPos(x, y, z);
-                if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().isValidPosition(world, blockPos)) {
-                    BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, blockRayTrace.getFace(), blockRayTrace));
+                if (MPSObjects.INSTANCE.luxCapacitor.getDefaultState().isValidPosition(world, blockPos)) {
+                    BlockState blockState = MPSObjects.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, blockRayTrace.getFace(), blockRayTrace));
                     world.setBlockState(blockPos, blockState);
                     world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                 } else {
                     for (Direction facing : Direction.values()) {
-                        if (MPSItems.INSTANCE.luxCapacitor.getDefaultState().with(BlockLuxCapacitor.FACING, facing).isValidPosition(world, blockPos)) {
-                            BlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, blockRayTrace));
+                        if (MPSObjects.INSTANCE.luxCapacitor.getDefaultState().with(BlockLuxCapacitor.FACING, facing).isValidPosition(world, blockPos)) {
+                            BlockState blockState = MPSObjects.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, blockRayTrace));
                             world.setBlockState(blockPos, blockState);
                             world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                             break;

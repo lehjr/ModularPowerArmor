@@ -1,17 +1,18 @@
 package net.machinemuse.powersuits.client.event;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
+import net.machinemuse.numina.client.gui.hud.meters.*;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.control.KeybindManager;
-import net.machinemuse.powersuits.client.gui.hud.*;
 import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
 import net.machinemuse.powersuits.item.module.environmental.AutoFeederModule;
 import net.minecraft.client.MainWindow;
@@ -28,6 +29,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,12 +48,12 @@ public class ClientTickHandler {
     protected WaterMeter water = null;
     protected FluidMeter fluidMeter = null;
     protected PlasmaChargeMeter plasma = null;
-    MPSItems mpsi = MPSItems.INSTANCE;
+    MPSObjects mpsi = MPSObjects.INSTANCE;
     static final ItemStack food = new ItemStack(Items.COOKED_BEEF);
-    static final ResourceLocation autoFeederReg = new ResourceLocation(MPSItems.MODULE_AUTO_FEEDER__REGNAME);
-    static final ResourceLocation clockReg = new ResourceLocation(MPSItems.MODULE_CLOCK__REGNAME);
-    static final ResourceLocation compassReg = new ResourceLocation(MPSItems.MODULE_COMPASS__REGNAME);
-    static final ResourceLocation plasmaCannon = new ResourceLocation(MPSItems.MODULE_PLASMA_CANNON__REGNAME);
+    static final ResourceLocation autoFeederReg = new ResourceLocation(MPSRegistryNames.MODULE_AUTO_FEEDER__REGNAME);
+    static final ResourceLocation clockReg = new ResourceLocation(MPSRegistryNames.MODULE_CLOCK__REGNAME);
+    static final ResourceLocation compassReg = new ResourceLocation(MPSRegistryNames.MODULE_COMPASS__REGNAME);
+    static final ResourceLocation plasmaCannon = new ResourceLocation(MPSRegistryNames.MODULE_PLASMA_CANNON__REGNAME);
 
     @SubscribeEvent
     public void onPreClientTick(TickEvent.ClientTickEvent event) {
@@ -89,9 +91,12 @@ public class ClientTickHandler {
                 AtomicInteger index = new AtomicInteger(0);
 
                 // Helmet modules with overlay
-                player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(ModularItemCapability.MODULAR_ITEM).ifPresent(h -> {
+                player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+                    if (!(h instanceof IModularItem))
+                        return;
+
                     // AutoFeeder
-                    ItemStack autoFeeder = h.getOnlineModuleOrEmpty(autoFeederReg);
+                    ItemStack autoFeeder = ((IModularItem) h).getOnlineModuleOrEmpty(autoFeederReg);
                     if (!autoFeeder.isEmpty()) {
                         int foodLevel = (int) ((AutoFeederModule) autoFeeder.getItem()).getFoodLevel(autoFeeder);
                         String num = MuseStringUtils.formatNumberShort(foodLevel);
@@ -101,7 +106,7 @@ public class ClientTickHandler {
                     }
 
                     // Clock
-                    ItemStack clock = h.getOnlineModuleOrEmpty(clockReg);
+                    ItemStack clock = ((IModularItem) h).getOnlineModuleOrEmpty(clockReg);
                     if (!clock.isEmpty()) {
                         String ampm;
                         long time = player.world.getGameTime();
@@ -139,7 +144,7 @@ public class ClientTickHandler {
                     }
 
                     // Compass
-                    ItemStack compass = h.getOnlineModuleOrEmpty(compassReg);
+                    ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(compassReg);
                     if (!compass.isEmpty()) {
 
                         MuseRenderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), compass);
@@ -185,8 +190,11 @@ public class ClientTickHandler {
                 AtomicDouble currentPlasma = new AtomicDouble(0);
                 AtomicDouble maxPlasma = new AtomicDouble(0);
                 if (player.isHandActive())
-                    player.getHeldItem(player.getActiveHand()).getCapability(ModeChangingCapability.MODE_CHANGING).ifPresent(modechanging -> {
-                        ItemStack module = modechanging.getActiveModule();
+                    player.getHeldItem(player.getActiveHand()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modechanging -> {
+                        if (!(modechanging instanceof IModeChangingItem))
+                            return;
+
+                        ItemStack module = ((IModeChangingItem) modechanging).getActiveModule();
                         int actualCount = 0;
 
                         if (!module.isEmpty()) {
@@ -246,9 +254,11 @@ public class ClientTickHandler {
                         numMeters--;
                     }
 
-                    heat.draw(left, top + (totalMeters - numMeters) * 8, MuseMathUtils.clampDouble(currHeat, 0, maxHeat) / maxHeat);
-                    MuseRenderer.drawRightAlignedString(currHeatStr, stringX, top + (totalMeters - numMeters) * 8);
-                    numMeters--;
+                    if (heat != null) {
+                        heat.draw(left, top + (totalMeters - numMeters) * 8, MuseMathUtils.clampDouble(currHeat, 0, maxHeat) / maxHeat);
+                        MuseRenderer.drawRightAlignedString(currHeatStr, stringX, top + (totalMeters - numMeters) * 8);
+                        numMeters--;
+                    }
 
                     if (fluidMeter != null) {
                         fluidMeter.draw(left, top + (totalMeters - numMeters) * 8, currFluid.get() / maxFluid.get());

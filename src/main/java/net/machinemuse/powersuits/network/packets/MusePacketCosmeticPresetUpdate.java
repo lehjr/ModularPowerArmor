@@ -11,7 +11,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class MusePacketCosmeticPresetUpdate {
-//    protected static int playerID;
     String registryName;
     String name;
     CompoundNBT cosmeticSettings;
@@ -20,20 +19,13 @@ public class MusePacketCosmeticPresetUpdate {
 
     }
 
-    public MusePacketCosmeticPresetUpdate(ResourceLocation registryNameIn, String nameIn, CompoundNBT cosmeticSettingsIn) {
-//        this.playerID = playerID; // either sender or destination
-        this(registryNameIn.toString(), nameIn, cosmeticSettingsIn);
-    }
-
     public MusePacketCosmeticPresetUpdate(String registryNameIn, String nameIn, CompoundNBT cosmeticSettingsIn) {
-//        this.playerID = playerID; // either sender or destination
         this.registryName = registryNameIn;
         this.name = nameIn;
         this.cosmeticSettings = cosmeticSettingsIn;
     }
 
     public static void encode(MusePacketCosmeticPresetUpdate msg, PacketBuffer packetBuffer) {
-//        packetBuffer.writeInt(msg.playerID);
         packetBuffer.writeString(msg.registryName);
         packetBuffer.writeString(msg.name);
         MuseByteBufferUtils.writeCompressedNBT(packetBuffer, msg.cosmeticSettings);
@@ -41,7 +33,6 @@ public class MusePacketCosmeticPresetUpdate {
 
     public static MusePacketCosmeticPresetUpdate decode(PacketBuffer packetBuffer) {
         return new MusePacketCosmeticPresetUpdate(
-//                packetBuffer.readInt(),
                 packetBuffer.readString(500),
         packetBuffer.readString(500),
         MuseByteBufferUtils.readCompressedNBT(packetBuffer));
@@ -49,6 +40,8 @@ public class MusePacketCosmeticPresetUpdate {
 
     public static void handle(MusePacketCosmeticPresetUpdate message, Supplier<NetworkEvent.Context> ctx) {
         MuseLogger.logger.error("this has not been implemented yet");
+        // FIXME !!!
+
 
 //        if (ctx.side == Side.SERVER) {
 //            boolean allowCosmeticPresetCreation;

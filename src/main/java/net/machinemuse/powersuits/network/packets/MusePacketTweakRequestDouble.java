@@ -22,8 +22,7 @@ public class MusePacketTweakRequestDouble {
 
     }
 
-    public MusePacketTweakRequestDouble(int playerID, int itemSlot, String moduleName, String tweakName, double tweakValue) {
-        this.playerID = playerID;
+    public MusePacketTweakRequestDouble(int itemSlot, String moduleName, String tweakName, double tweakValue) {
         this.itemSlot = itemSlot;
         this.moduleName = moduleName;
         this.tweakName = tweakName;
@@ -40,7 +39,6 @@ public class MusePacketTweakRequestDouble {
 
     public static MusePacketTweakRequestDouble decode(PacketBuffer packetBuffer) {
         return new MusePacketTweakRequestDouble(
-                packetBuffer.readInt(),
                 packetBuffer.readInt(),
                 packetBuffer.readString(500),
                 packetBuffer.readString(500),

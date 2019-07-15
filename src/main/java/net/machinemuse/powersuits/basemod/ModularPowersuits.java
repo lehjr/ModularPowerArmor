@@ -2,16 +2,23 @@ package net.machinemuse.powersuits.basemod;
 
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.obj.MuseOBJLoader;
+import net.machinemuse.powersuits.client.control.KeybindKeyHandler;
 import net.machinemuse.powersuits.client.event.ClientTickHandler;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.machinemuse.powersuits.client.event.RenderEventHandler;
+import net.machinemuse.powersuits.client.gui.GuiModeSelector;
+import net.machinemuse.powersuits.client.gui.MPSCraftingGUI;
+import net.machinemuse.powersuits.client.gui.tinker.GuiTinkerTable;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererLuxCapacitorEntity;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererPlasmaBolt;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererSpinningBlade;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.machinemuse.powersuits.entity.SpinningBladeEntity;
+import net.machinemuse.powersuits.event.RegisterStuff;
+import net.machinemuse.powersuits.network.MPSPackets;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -19,7 +26,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -46,30 +52,19 @@ public class ModularPowersuits {
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modEventBus.addGenericListener(Block.class, MPSItems.INSTANCE::registerBlocks);
-        modEventBus.addGenericListener(Item.class, MPSItems.INSTANCE::registerItems);
-        modEventBus.addGenericListener(TileEntityType.class, MPSItems.INSTANCE::registerTileEntities);
-        modEventBus.addGenericListener(EntityType.class, MPSItems.INSTANCE::registerEntities);
-        modEventBus.addGenericListener(ContainerType.class, MPSItems.INSTANCE::registerContainerTypes);
+        modEventBus.addGenericListener(Block.class, RegisterStuff.INSTANCE::registerBlocks);
+        modEventBus.addGenericListener(Item.class, RegisterStuff.INSTANCE::registerItems);
+        modEventBus.addGenericListener(TileEntityType.class, RegisterStuff.INSTANCE::registerTileEntities);
+        modEventBus.addGenericListener(EntityType.class, RegisterStuff.INSTANCE::registerEntities);
+        modEventBus.addGenericListener(ContainerType.class, RegisterStuff.INSTANCE::registerContainerTypes);
 
         modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
         modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
-
-//        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> {
-////            return (openContainer) -> {
-////                ResourceLocation location = openContainer.getId();
-//////                if (location.equals(some resource location here)) {
-//////                    ClientPlayerEntity player = Minecraft.getInstance().player;
-//////                        return new Gui with params;
-//////                }
-////                return null;
-////            };
-//        });
     }
 
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
-//        proxy.setup(event);
+        MPSPackets.registerMPSPackets();
     }
 
     // client preInit
@@ -77,23 +72,19 @@ public class ModularPowersuits {
         MuseLogger.logger.info("doing something here: .... ");
 
         MuseOBJLoader.INSTANCE.addDomain(MPSConstants.MODID.toLowerCase());
-
-//        OBJLoader.INSTANCE.addDomain(MPSConstants.MODID.toLowerCase());
-
-//        MuseOBJLoader.INSTANCE.addDomain(MPSConstants.MODID.toLowerCase());
-//
 ////        MinecraftForge.EVENT_BUS.register(ModelRegisterEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(RenderEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
-//
-//
+        MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
+
         RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
         RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
 
+        ScreenManager.registerFactory(MPSObjects.INSTANCE.MODE_CHANGING_CONTAINER_CONTAINER_TYPE, GuiModeSelector::new);
+        ScreenManager.registerFactory(MPSObjects.TINKER_TABLE_CONTAINER_CONTAINER_TYPE, GuiTinkerTable::new);
+        ScreenManager.registerFactory(MPSObjects.MPS_CRAFTING_CONTAINER_TYPE, MPSCraftingGUI::new);
 
-
-//        proxy.setupClient(event);
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class

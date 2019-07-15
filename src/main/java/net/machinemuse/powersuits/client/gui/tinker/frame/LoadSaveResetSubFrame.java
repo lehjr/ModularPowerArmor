@@ -7,13 +7,18 @@ import java.util.List;
 
 public class LoadSaveResetSubFrame implements IGuiFrame {
     @Override
-    public void onMouseDown(double v, double v1, int i) {
-
+    public boolean mouseClicked(double v, double v1, int i) {
+        return false;
     }
 
     @Override
-    public void onMouseUp(double v, double v1, int i) {
+    public boolean mouseReleased(double v, double v1, int i) {
+        return false;
+    }
 
+    @Override
+    public boolean onMouseScrolled(double v, double v1, double v2) {
+        return false;
     }
 
     @Override

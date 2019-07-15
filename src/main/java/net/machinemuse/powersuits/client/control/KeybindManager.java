@@ -74,7 +74,7 @@ public enum KeybindManager {
             for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
                 writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
                 for (ClickableModule module : keybinding.getBoundModules()) {
-                    writer.write(module.getModule().getItem().getRegistryName().toString() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
+                    writer.write(module.getStack().getItem().getRegistryName().toString() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
                 }
             }
         } catch (Exception e) {
@@ -127,8 +127,8 @@ public enum KeybindManager {
                     MusePoint2D position = new MusePoint2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
                     ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(exploded[0])));
                     if (!module.isEmpty()) {
-                        ClickableModule cmodule = new ClickableModule(module, position);
-                        workingKeybinding.bindModule(cmodule);
+//                        ClickableModule cmodule = new ClickableModule(module, position);
+//                        workingKeybinding.bindModule(cmodule);
                     }
                 }
             }

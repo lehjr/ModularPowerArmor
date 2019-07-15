@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.client.gui.tinker.clickable;
 
-import net.machinemuse.numina.client.gui.IClickable;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.IClickable;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
@@ -63,7 +63,7 @@ public class ClickableKeybinding extends ClickableButton {
 
         for (ClickableModule module : boundModules) {
             String valstring = (toggleval) ? " on" : " off";
-            NuminaPackets.sendToServer(new MusePacketToggleRequest(player.getEntityId(), module.getModule().getItem().getRegistryName(), toggleval));
+            NuminaPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketToggleRequest(module.getStack().getItem().getRegistryName(), toggleval));
         }
         toggleval = !toggleval;
     }

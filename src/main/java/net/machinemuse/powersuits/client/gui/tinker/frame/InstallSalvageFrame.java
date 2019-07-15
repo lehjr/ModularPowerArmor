@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
@@ -12,6 +12,7 @@ import net.machinemuse.powersuits.network.packets.MusePacketSalvageModuleRequest
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -23,9 +24,9 @@ public class InstallSalvageFrame extends ScrollableFrame {
     protected ModuleSelectionFrame targetModule;
     protected ClickableButton installButton;
     protected ClickableButton salvageButton;
-    protected ClientPlayerEntity player;
+    protected PlayerEntity player;
 
-    public InstallSalvageFrame(ClientPlayerEntity player, MusePoint2D topleft,
+    public InstallSalvageFrame(PlayerEntity player, MusePoint2D topleft,
                                MusePoint2D bottomright,
                                Colour borderColour, Colour insideColour,
                                ItemSelectionFrame targetItem, ModuleSelectionFrame targetModule) {
@@ -57,10 +58,9 @@ public class InstallSalvageFrame extends ScrollableFrame {
 
     @Override
     public List<ITextComponent> getToolTip(int x, int y) {
-        if (targetItem.getSelectedItem() != null
-                && targetModule.getSelectedModule() != null) {
-            ItemStack stack = targetItem.getSelectedItem().getItem();
-            ItemStack module = targetModule.getSelectedModule().getModule();
+        if (targetItem.getSelectedItem() != null && targetModule.getSelectedModule() != null) {
+            ClickableModularItem selectedItem = targetItem.getSelectedItem();
+            ClickableModule selectedModule = targetModule.getSelectedModule();
             NonNullList<ItemStack> itemsToCheck = NonNullList.create(); // ModuleManager.INSTANCE.getInstallCost(module.getDataName());
             double yoffset;
 //            if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
@@ -95,8 +95,8 @@ public class InstallSalvageFrame extends ScrollableFrame {
     }
 
     private void drawItems(int mouseX, int mouseY, float partialTicks) {
-        ItemStack stack = targetItem.getSelectedItem().getItem();
-        ItemStack module = targetModule.getSelectedModule().getModule();
+        ClickableModularItem selectedItem = targetItem.getSelectedItem();
+        ClickableModule selectedModule = targetModule.getSelectedModule();
         NonNullList<ItemStack> itemsToDraw = NonNullList.create();//ModuleManager.INSTANCE.getInstallCost(module.getDataName()); // FIXME!!
         double yoffset;
 //        if (!ModuleManager.INSTANCE.itemHasModule(stack, module)) {
@@ -116,8 +116,8 @@ public class InstallSalvageFrame extends ScrollableFrame {
     }
 
     private void drawButtons(int mouseX, int mouseY, float partialTicks) {
-        ItemStack stack = targetItem.getSelectedItem().getItem();
-        ItemStack module = targetModule.getSelectedModule().getModule();
+        ClickableModularItem selectedItem = targetItem.getSelectedItem();
+        ClickableModule selectedModule = targetModule.getSelectedModule();
 //        if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
 //            int installedModulesOfType = ModuleManager.INSTANCE.getNumberInstalledModulesOfType(stack, ((IPowerModule)module.getItem()).getCategory());
 //            installButton.setEnabled(true); // fixme!!!!
@@ -131,12 +131,13 @@ public class InstallSalvageFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
-        ClickableItem selItem = targetItem.getSelectedItem();
-        ClickableModule selModule = targetModule.getSelectedModule();
-        if (selItem != null && selModule != null) {
-            ItemStack stack = selItem.getItem();
-            ItemStack module = selModule.getModule();
+    public boolean mouseClicked(double x, double y, int button) {
+        ClickableModularItem selectedItem = targetItem.getSelectedItem();
+        ClickableModule selectedModule = targetModule.getSelectedModule();
+        if (selectedItem != null && selectedModule != null) {
+
+
+
 
 //            if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getItem().getRegistryName())) {
 //                if (installButton.hitBox(x, y)) {
@@ -148,16 +149,17 @@ public class InstallSalvageFrame extends ScrollableFrame {
 //                }
 //            }
         }
+        return false;
     }
 
     private void doSalvage() {
-        ItemStack module = targetModule.getSelectedModule().getModule();
+        ClickableModule module = targetModule.getSelectedModule();
 
-        if (!module.isEmpty())
-            MPSPackets.sendToServer(new MusePacketSalvageModuleRequest(
-                    player.getEntityId(),
-                    targetItem.getSelectedItem().inventorySlot,
-                    module.getItem().getRegistryName().toString()));
+//        if (!module.isEmpty())
+//            MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketSalvageModuleRequest(
+//                    player.getEntityId(),
+//                    targetItem.getSelectedItem().inventorySlot,
+//                    module.getItem().getRegistryName().toString()));
     }
 
     /**
@@ -165,7 +167,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
      * requires communicating with the server.
      */
     private void doInstall() { // FIXME: no more install costs
-        ItemStack module = targetModule.getSelectedModule().getModule();
+//        ItemStack module = targetModule.getSelectedModule().getModule();
 //        if (!module.isEmpty())
 //        if (player.abilities.isCreativeMode || MuseItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)) {
 //            Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, 1);

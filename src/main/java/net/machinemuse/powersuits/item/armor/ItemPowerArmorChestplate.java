@@ -1,17 +1,17 @@
 package net.machinemuse.powersuits.item.armor;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.machinemuse.numina.capabilities.heat.CapabilityHeat;
+import net.machinemuse.numina.capabilities.heat.HeatCapability;
 import net.machinemuse.numina.capabilities.heat.IHeatStorage;
 import net.machinemuse.numina.capabilities.heat.MuseHeatItemWrapper;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItem;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +26,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemPowerArmorChestplate extends ItemPowerArmor {
-    static final ResourceLocation fluidTank = new ResourceLocation(MPSItems.MODULE_FLUID_TANK__REGNAME);
+    static final ResourceLocation fluidTank = new ResourceLocation(MPSRegistryNames.MODULE_FLUID_TANK__REGNAME);
 
     public ItemPowerArmorChestplate(String regName) {
         super(EquipmentSlotType.CHEST);
@@ -67,13 +68,13 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModularItemCapability.MODULAR_ITEM)
-                return ModularItemCapability.MODULAR_ITEM.orEmpty(cap, LazyOptional.of(()->modularItemCap));
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
             if (cap == CapabilityEnergy.ENERGY)
                 return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
                 return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, LazyOptional.of(()->fluidHandler));
-            return CapabilityHeat.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
+            return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
         }
 
         class ModularArmorCap extends ModularItem {

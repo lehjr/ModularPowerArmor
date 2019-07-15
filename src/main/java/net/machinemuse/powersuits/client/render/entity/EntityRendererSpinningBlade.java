@@ -20,17 +20,12 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBlad
 
     @Nullable
     @Override
-    protected ResourceLocation func_110775_a(SpinningBladeEntity spinningBladeEntity) {
-        return getEntityTexture(spinningBladeEntity);
-    }
-
-//    @Override
     protected ResourceLocation getEntityTexture(SpinningBladeEntity entity) {
         return textureLocation;
     }
 
     @Override
-    public void /* doRender */ func_76986_a(SpinningBladeEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(SpinningBladeEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);

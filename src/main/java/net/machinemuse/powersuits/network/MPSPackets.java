@@ -53,5 +53,12 @@ public class MPSPackets extends NuminaPackets {
                 MusePacketTweakRequestDouble::encode,
                 MusePacketTweakRequestDouble::decode,
                 MusePacketTweakRequestDouble::handle);
+
+        CHANNEL_INSTANCE.registerMessage(
+                12,
+                ModeChangingRequest.class,
+                ModeChangingRequest::encode,
+                ModeChangingRequest::decode,
+                ModeChangingRequest::handle);
     }
 }

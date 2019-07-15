@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
-import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingCapability;
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.basemod.NuminaConstants;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
-import net.machinemuse.numina.client.gui.clickable.ClickableItem;
+import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableTinkerSlider;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
@@ -14,14 +14,11 @@ import net.machinemuse.numina.nbt.propertymodifier.IPropertyModifier;
 import net.machinemuse.numina.nbt.propertymodifier.IPropertyModifierDouble;
 import net.machinemuse.numina.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
 import net.machinemuse.numina.string.MuseStringUtils;
-import net.machinemuse.powersuits.constants.MPSModuleConstants;
-import net.machinemuse.powersuits.item.module.AbstractPowerModule;
-import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketTweakRequestDouble;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
@@ -54,12 +51,11 @@ public class ModuleTweakFrame extends ScrollableFrame {
     public void update(double mousex, double mousey) {
         mousex /= SCALERATIO;
         if (itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
-            ItemStack stack = itemTarget.getSelectedItem().getItem();
-            ItemStack module = moduleTarget.getSelectedModule().getModule();
-            if (itemTarget.getSelectedItem().getItem().getCapability(ModularItemCapability.MODULAR_ITEM)
-                    .map(m->m.isModuleInstalled(moduleTarget.getSelectedModule().getModule().getItem().getRegistryName()))
-                .orElse(itemTarget.getSelectedItem().getItem().getCapability(ModeChangingCapability.MODE_CHANGING)
-                        .map(m->m.isModuleInstalled(moduleTarget.getSelectedModule().getModule().getItem().getRegistryName())).orElse(false))) {
+            ItemStack stack = itemTarget.getSelectedItem().getStack();
+            ItemStack module = moduleTarget.getSelectedModule().getStack();
+            if (itemTarget.getSelectedItem().getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                    .map(m-> m instanceof IModularItem && ((IModularItem) m)
+                            .isModuleInstalled(moduleTarget.getSelectedModule().getStack().getItem().getRegistryName())).orElse(false)) {
                 loadTweaks(stack, module);
             } else {
                 sliders = null;
@@ -95,7 +91,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = MuseStringUtils.wrapStringToVisualLength(
-                        I18n.format(MPSModuleConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
+                        I18n.format(NuminaConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
                 for (int i = 0; i < namesList.size(); i++) {
                     MuseRenderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
                 }
@@ -139,7 +135,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                     center,
                     border.right() - border.left() - 8,
                     moduleTag,
-                    tweak, I18n.format(MPSModuleConstants.MODULE_TRADEOFF_PREFIX + tweak));
+                    tweak, I18n.format(NuminaConstants.MODULE_TRADEOFF_PREFIX + tweak));
             sliders.add(slider);
             if (selectedSlider != null && slider.hitBox(center.getX(), center.getY())) {
                 selectedSlider = slider;
@@ -148,7 +144,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean mouseClicked(double x, double y, int button) {
         x /= SCALERATIO;
         y /= SCALERATIO;
         if (button == 0) {
@@ -156,23 +152,32 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 for (ClickableTinkerSlider slider : sliders) {
                     if (slider.hitBox(x, y)) {
                         selectedSlider = slider;
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
+    public boolean mouseReleased(double x, double y, int button) {
+        boolean handled = false;
         if (selectedSlider != null && itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
-            ClickableItem item = itemTarget.getSelectedItem();
-            ItemStack module = moduleTarget.getSelectedModule().getModule();
-            if (!module.isEmpty())
-                MPSPackets.sendToServer(
-                        new MusePacketTweakRequestDouble(player.getEntityId(), item.inventorySlot, module.getItem().getRegistryName().toString(), selectedSlider.id(), selectedSlider.getValue()));
+            ClickableModularItem item = itemTarget.getSelectedItem();
+            ItemStack module = moduleTarget.getSelectedModule().getStack();
+            if (!module.isEmpty()) {
+//                MPSPackets.CHANNEL_INSTANCE.sendToServer(
+//                        new MusePacketTweakRequestDouble(item.inventorySlot, module.getItem().getRegistryName().toString(), selectedSlider.id(), selectedSlider.getValue()));
+//
+//        // FIXME!!
+                handled = true;
+            }
         }
         if (button == 0) {
             selectedSlider = null;
+            handled = true;
         }
+        return handled;
     }
 }

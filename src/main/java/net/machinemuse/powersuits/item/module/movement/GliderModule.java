@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItemCapability;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
@@ -12,7 +12,8 @@ import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSItems;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,12 +24,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class GliderModule extends AbstractPowerModule {
-    static final ResourceLocation parachute = new ResourceLocation(MPSItems.INSTANCE.MODULE_PARACHUTE__REGNAME);
+    static final ResourceLocation parachute = new ResourceLocation(MPSRegistryNames.MODULE_PARACHUTE__REGNAME);
 
     public GliderModule(String regName) {
         super(regName);
@@ -78,15 +80,14 @@ public class GliderModule extends AbstractPowerModule {
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
 
                 NuminaPlayerUtils.resetFloatKickTicks(player);
-                boolean hasParachute = chestPlate.getCapability(ModularItemCapability.MODULAR_ITEM).map(m->m.isModuleOnline(parachute)).orElse(false);
-
+                boolean hasParachute = chestPlate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                        .map(m-> m instanceof IModularItem && ((IModularItem) m).isModuleOnline(parachute)).orElse(false);
                 if (playerInput.sneakKey && player.getMotion().y < 0 && (!hasParachute || playerInput.moveForward > 0)) {
                     if (player.getMotion().y < -0.1) {
-                        float vol = (float) (player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z);
+                        // FIXME: volume parameter missing
+//                        float vol = (float) (player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z);
                         double motionYchange = Math.min(0.08, -0.1 - player.getMotion().y);
-
                         Vec3d motion = player.getMotion();
-
                         player.setMotion(motion.add(
                                 playerHorzFacing.x * motionYchange,
                                 motionYchange,

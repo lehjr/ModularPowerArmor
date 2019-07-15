@@ -1,7 +1,22 @@
 package net.machinemuse.powersuits.basemod;
 
+import net.minecraft.util.ResourceLocation;
+
 public class MPSConstants {
     public static final String MODID = "powersuits";
+
+    public static final String RESOURCE_PREFIX = MPSConstants.MODID + ":";
+    public static final String TEXTURE_PREFIX = RESOURCE_PREFIX + "textures/";
+    public static final String RESOURCE_DOMAIN = MODID.toLowerCase();
+
+    public static final String BLANK_ARMOR_MODEL_PATH = TEXTURE_PREFIX + "item/armor/blankarmor.png";
+
+    // temporary locations until model spec system up and running
+    public static final String SEBK_AMROR_PANTS = TEXTURE_PREFIX + "item/armor/sebkarmorpants.png";
+    public static final String SEBK_AMROR = TEXTURE_PREFIX + "item/armor/sebkarmor.png";
+    public static final String CITIZEN_JOE_ARMOR_PANTS = TEXTURE_PREFIX + "item/armor/joearmorpants.png";
+    public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
+
 
     public static final String CONFIG_PREFIX = "config." + MODID + ".";
 

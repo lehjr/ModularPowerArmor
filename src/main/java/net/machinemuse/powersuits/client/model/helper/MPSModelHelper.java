@@ -4,15 +4,13 @@ import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.client.render.modelspec.TexturePartSpec;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
-import net.machinemuse.powersuits.constants.MPSResourceConstants;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,7 +104,7 @@ public class MPSModelHelper {
             TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG));
             return partSpec.getTextureLocation();
         } catch (Exception ignored) {
-            return MPSResourceConstants.BLANK_ARMOR_MODEL_PATH;
+            return MPSConstants.BLANK_ARMOR_MODEL_PATH;
         }
     }
 }
