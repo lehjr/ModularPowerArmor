@@ -111,6 +111,7 @@ public class MuseIcon {
 //    public static TextureAtlasSprite plasmaCannon;
 //    public static TextureAtlasSprite railgun;
 //    public static TextureAtlasSprite sonicWeapon;
+
     /* Things other than module icons ------------------------------------------------------------- */
     public static TextureAtlasSprite luxCapacitorTexture;
     public static TextureAtlasSprite powerFistTexture;
@@ -123,7 +124,6 @@ public class MuseIcon {
 
     public static void registerIcons(TextureStitchEvent.Pre event) {
         MuseLogger.logger.info("doing something here also: .... ");
-
 //        /* Armor -------------------------------------------------------------------------------------- */
 //        apiaristArmor = register(event, "modules/silkwisp");
 //        basicPlating = register(event, "modules/basicplating2");
@@ -216,6 +216,7 @@ public class MuseIcon {
 //        railgun = register(event, "modules/electricweapon");
 //        sonicWeapon = register(event, "modules/soundweapon");
 //
+
         /* Things other than module icons ------------------------------------------------------------- */
         luxCapacitorTexture = register(event, "models/luxcapacitor");
         powerFistTexture = register(event, "models/powerfist");

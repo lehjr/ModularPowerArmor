@@ -12,8 +12,6 @@ import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
-import net.machinemuse.powersuits.client.control.KeybindManager;
-import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
 import net.machinemuse.powersuits.item.module.environmental.AutoFeederModule;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -58,9 +56,9 @@ public class ClientTickHandler {
     @SubscribeEvent
     public void onPreClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
-                kb.doToggleTick();
-            }
+//            for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
+//                kb.doToggleTick();
+//            }
         }
     }
 

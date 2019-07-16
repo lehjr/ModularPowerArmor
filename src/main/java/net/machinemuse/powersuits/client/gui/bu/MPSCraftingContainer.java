@@ -8,7 +8,7 @@
 //import net.minecraft.inventory.CraftingInventory;
 //import net.minecraft.inventory.IInventory;
 //import net.minecraft.inventory.container.CraftingResultSlot;
-//import net.minecraft.inventory.container.RecipeBookContainer;
+//import net.minecraft.inventory.container.MPSRecipeBookContainer;
 //import net.minecraft.inventory.container.Slot;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.item.crafting.ICraftingRecipe;
@@ -25,7 +25,7 @@
 //
 //import static net.machinemuse.powersuits.basemod.MPSObjects.MPS_CRAFTING_CONTAINER_TYPE;
 //
-//public class MPSCraftingContainer extends RecipeBookContainer<CraftingInventory> {
+//public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInventory> {
 //    private final CraftingInventory craftingInventory = new CraftingInventory(this, 3, 3);
 //    private final CraftResultInventory craftResultInventory = new CraftResultInventory();
 //    private final IWorldPosCallable posCallable;

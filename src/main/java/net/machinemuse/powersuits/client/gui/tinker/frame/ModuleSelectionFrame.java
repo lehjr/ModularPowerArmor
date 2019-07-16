@@ -238,12 +238,12 @@ public class ModuleSelectionFrame extends ScrollableFrame {
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double dWheel) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
         if (border.left() < mouseX && border.right() > mouseX && border.top() < mouseY && border.bottom() > mouseY) {
             // prevent negative total scroll values
             currentscrollpixels  = (int) MuseMathUtils.clampDouble(currentscrollpixels+= dWheel * 8, 0, Double.MAX_VALUE);
             return true;
         }
-        return super.onMouseScrolled(mouseX, mouseY, dWheel);
+        return super.mouseScrolled(mouseX, mouseY, dWheel);
     }
 }

@@ -88,7 +88,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     }
 
     @Override
-    public boolean onMouseScrolled(double v, double v1, double v2) {
+    public boolean mouseScrolled(double v, double v1, double v2) {
         return false;
     }
 

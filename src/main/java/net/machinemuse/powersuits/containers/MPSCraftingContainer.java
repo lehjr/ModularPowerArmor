@@ -10,7 +10,6 @@ import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -26,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.Optional;
 
-public class MPSCraftingContainer extends RecipeBookContainer<CraftingInventory> {
+public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftingInventory;
     private final CraftResultInventory resultInventory;
     private final IWorldPosCallable worldPosCallable;
@@ -106,14 +105,25 @@ public class MPSCraftingContainer extends RecipeBookContainer<CraftingInventory>
         System.out.println("clear");
         this.craftingInventory.clear();
         this.resultInventory.clear();
+
+        // FIXME : ServerRecipePlacer checks WorkbenchContainer instance...
+        // FIXME: instance checks in ClientRecipeBook and ServerRecipePlacer
+
+
+
     }
 
     @Override
-    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
-        System.out.println("matches");
-
+    public boolean matches(IRecipe recipeIn) {
         return recipeIn.matches(this.craftingInventory, this.player.world);
     }
+
+    //    @Override
+//    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
+//        System.out.println("matches");
+//
+//        return recipeIn.matches(this.craftingInventory, this.player.world);
+//    }
 
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
@@ -206,4 +216,5 @@ public class MPSCraftingContainer extends RecipeBookContainer<CraftingInventory>
         // needed since this isn't an an actual instance of WorkbenchContainer
         return Lists.newArrayList(new RecipeBookCategories[]{RecipeBookCategories.SEARCH, RecipeBookCategories.EQUIPMENT, RecipeBookCategories.BUILDING_BLOCKS, RecipeBookCategories.MISC, RecipeBookCategories.REDSTONE});
     }
+
 }

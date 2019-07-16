@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import net.machinemuse.numina.math.Colour;
+import net.machinemuse.numina.math.geometry.DrawableMuseRelativeRect;
+import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.*;
@@ -35,21 +38,62 @@ import java.util.Locale;
 
 @OnlyIn(Dist.CLIENT)
 public class MPSRecipeBookGui extends RecipeBookGui {
+    /** The outer green rectangle */
+    protected DrawableMuseRelativeRect outerFrame = new DrawableMuseRelativeRect(0, 0, 0, 0,
+            true,
+            new Colour(0.0F, 0.2F, 0.0F, 0.8F),
+            new Colour(0.1F, 0.9F, 0.1F, 0.8F));
+
+
+    /** The inner blue rectangle */
+    protected DrawableMuseRelativeRect innerFrame = new DrawableMuseRelativeRect(0, 0, 0, 0,
+            true,
+            Colour.DARKBLUE.withAlpha(0.8),
+            Colour.LIGHTBLUE.withAlpha(0.8));
+
+
+    // FIXME!!! sync issue when using recipe book and clicking on recpies when player has items to craft them
+        // seems to be related to putting items back in player inventory MPSCraftingContainer:func_201771_a:100
+
+
+
+
     protected static final ResourceLocation RECIPE_BOOK = new ResourceLocation(MPSConstants.MODID,"textures/gui/recipe_book.png");
     private int xOffset;
     private int width;
     private int height;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
+
+    // TODO: replace these with rectangle buttons
     private final List<MPSRecipeTabToggleWidget> recipeTabs = Lists.newArrayList();
     private MPSRecipeTabToggleWidget currentTab;
+
+    // todo: replace this with a textured button??
+
     protected ToggleWidget toggleRecipesBtn;
+
+
     protected RecipeBookContainer<?> container;
+
+
     protected Minecraft mc;
+
+
     private TextFieldWidget searchBar;
+
+
     private String lastSearch = "";
+
+
     protected ClientRecipeBook recipeBook;
+
+
     protected final RecipeBookPage recipeBookPage = new RecipeBookPage();
+
+
     protected final RecipeItemHelper stackedContents = new RecipeItemHelper();
+
+
     private int timesInventoryChanged;
     private boolean field_199738_u;
 
@@ -77,41 +121,77 @@ public class MPSRecipeBookGui extends RecipeBookGui {
 
 
 
-
+    /**
+     *  Looks like the first stage of an init()
+     *      so we can probably treat it like the constructor
+     *
+     */
     @Override
-    public void func_201520_a(int width, int height, Minecraft minecraft, boolean p_201520_4_, RecipeBookContainer<?> container) {
+    public void func_201520_a(int width, int height, Minecraft minecraft, boolean widthTooNarrow, RecipeBookContainer<?> container) {
+
+
+
+        System.out.println("doing something here");
+
+
+
         this.mc = minecraft;
         this.width = width;
         this.height = height;
         this.container = container;
         minecraft.player.openContainer = container;
+
         this.recipeBook = minecraft.player.getRecipeBook();
+
         this.timesInventoryChanged = minecraft.player.inventory.getTimesChanged();
         if (this.isVisible()) {
-            this.func_201518_a(p_201520_4_);
+            this.func_201518_a(widthTooNarrow);
         }
-
         minecraft.keyboardListener.enableRepeatEvents(true);
     }
 
+    /** Looks like a second stage init() */
     @Override
-    public void func_201518_a(boolean p_201518_1_) {
-        this.xOffset = p_201518_1_ ? 0 : 86;
-        int i = (this.width - 147) / 2 - this.xOffset;
-        int j = (this.height - 166) / 2;
+    public void func_201518_a(boolean widthTooNarrow) {
+        System.out.println("doing something here");
+
+
+
+
+
+        this.xOffset = widthTooNarrow ? 0 : 86;
+        int guiLeft = (this.width - 147) / 2 - this.xOffset;
+        int guiTop = (this.height - 166) / 2;
+
+
+
+
+
+        outerFrame.setTargetDimensions(new MusePoint2D(guiLeft, guiTop), new MusePoint2D(146, 166));
+        innerFrame.setTargetDimensions(new MusePoint2D(guiLeft + 7, guiTop + 7), new MusePoint2D( 146 - 14, 166 -14));
+
+
         this.stackedContents.clear();
         this.mc.player.inventory.func_201571_a(this.stackedContents);
         this.container.func_201771_a(this.stackedContents);
+
+
         String s = this.searchBar != null ? this.searchBar.getText() : "";
-        this.searchBar = new TextFieldWidget(this.mc.fontRenderer, i + 25, j + 14, 80, 9 + 5, I18n.format("itemGroup.search"));
+        this.searchBar = new TextFieldWidget(this.mc.fontRenderer, guiLeft + 25, guiTop + 14, 80, 9 + 5, I18n.format("itemGroup.search"));
         this.searchBar.setMaxStringLength(50);
         this.searchBar.setEnableBackgroundDrawing(false);
         this.searchBar.setVisible(true);
         this.searchBar.setTextColor(16777215);
         this.searchBar.setText(s);
-        this.recipeBookPage.init(this.mc, i, j);
+
+
+        this.recipeBookPage.init(this.mc, guiLeft, guiTop);
         this.recipeBookPage.addListener(this);
-        this.toggleRecipesBtn = new ToggleWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable(this.container));
+
+
+        this.toggleRecipesBtn = new ToggleWidget(guiLeft + 110, guiTop + 12, 26, 16, this.recipeBook.isFilteringCraftable(this.container));
+
+
         this.func_205702_a();
         this.recipeTabs.clear();
 
@@ -133,6 +213,11 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         this.updateCollections(false);
         this.updateTabs();
     }
+
+
+
+
+
 
     @Override
     public boolean changeFocus(boolean p_changeFocus_1_) {
@@ -174,9 +259,9 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     }
 
     @Override
-    protected void setVisible(boolean p_193006_1_) {
-        this.recipeBook.setGuiOpen(p_193006_1_);
-        if (!p_193006_1_) {
+    protected void setVisible(boolean visible) {
+        this.recipeBook.setGuiOpen(visible);
+        if (!visible) {
             this.recipeBookPage.setInvisible();
         }
 
@@ -265,18 +350,28 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (this.isVisible()) {
+            outerFrame.draw();
+            innerFrame.draw();
+
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.disableLighting();
             GlStateManager.pushMatrix();
             GlStateManager.translatef(0.0F, 0.0F, 100.0F);
+
+
             this.mc.getTextureManager().bindTexture(RECIPE_BOOK);
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             int i = (this.width - 147) / 2 - this.xOffset;
             int j = (this.height - 166) / 2;
             this.blit(i, j, 1, 1, 147, 166);
+
+
+
             this.searchBar.render(mouseX, mouseY, partialTicks);
             RenderHelper.disableStandardItemLighting();
 
+
+            // move this up to before the outer frame once the texture is no longer needed
             for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
                 MPSRecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
             }
@@ -284,6 +379,10 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             this.toggleRecipesBtn.render(mouseX, mouseY, partialTicks);
             this.recipeBookPage.render(i, j, mouseX, mouseY, partialTicks);
             GlStateManager.popMatrix();
+
+
+
+
         }
     }
 
@@ -517,6 +616,9 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     @Override
     protected void sendUpdateSettings() {
         if (this.mc.getConnection() != null) {
+            System.out.println("sending packet");
+
+
             this.mc.getConnection().sendPacket(new CRecipeInfoPacket(this.recipeBook.isGuiOpen(), this.recipeBook.isFilteringCraftable(), this.recipeBook.isFurnaceGuiOpen(), this.recipeBook.isFurnaceFilteringCraftable(), this.recipeBook.func_216758_e(), this.recipeBook.func_216761_f()));
         }
     }
