@@ -100,7 +100,7 @@ public class PlayerUpdateHandler {
 //            System.out.println("player fall distance after: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
 
             // Sound update
-            if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+            if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                 if (modularItemsEquipped.get() > 0) {
                     double velsq2 = MuseMathUtils.sumsq(player.getMotion().x, player.getMotion().y, player.getMotion().z) - 0.5;
                     if (player.isAirBorne && velsq2 > 0) {

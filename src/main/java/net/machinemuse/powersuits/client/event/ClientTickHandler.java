@@ -9,9 +9,9 @@ import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.numina.string.MuseStringUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.basemod.config.ClientConfig;
 import net.machinemuse.powersuits.item.module.environmental.AutoFeederModule;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -22,11 +22,11 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class ClientTickHandler {
         double yOffsetIcon = 16.0;
         double yBaseIcon;
         int yBaseString;
-        if (MPSConfig.INSTANCE.HUD_USE_GRAPHICAL_METERS.get()) {
+        if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {
             yBaseIcon = 150.0;
             yBaseString = 155;
         } else {
@@ -109,7 +109,7 @@ public class ClientTickHandler {
                         String ampm;
                         long time = player.world.getGameTime();
                         long hour = ((time % 24000) / 1000);
-                        if (MPSConfig.INSTANCE.HUD_USE_24_HOUR_CLOCK.get()) {
+                        if (ClientConfig.HUD_USE_24_HOUR_CLOCK.get()) {
                             if (hour < 19) {
                                 hour += 6;
                             } else {
@@ -214,7 +214,7 @@ public class ClientTickHandler {
                 String maxPlasmaStr = MuseStringUtils.formatNumberShort(maxPlasma.get());
 
 
-                if (MPSConfig.INSTANCE.HUD_USE_GRAPHICAL_METERS.get()) {
+                if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {
                     int numMeters = 0;
 
                     if (maxEnergy > 0) {

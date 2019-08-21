@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.numina.math.geometry.MuseRect;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleSelectionSubFrame {
-    protected List<ClickableModule> moduleButtons;
+    protected List<ClickableModuleSlot> moduleButtons;
     protected MuseRelativeRect border;
     protected String category;
 
@@ -21,8 +21,8 @@ public class ModuleSelectionSubFrame {
         this.moduleButtons = new ArrayList<>();
     }
 
-    public ClickableModule addModule(ItemStack module) {
-        ClickableModule clickie = new ClickableModule(module, new MusePoint2D(0, 0));
+    public ClickableModuleSlot addModule(ItemStack module) {
+        ClickableModuleSlot clickie = new ClickableModuleSlot(module, new MusePoint2D(0, 0));
         this.moduleButtons.add(clickie);
         // refreshButtonPositions();
         return clickie;
@@ -32,14 +32,14 @@ public class ModuleSelectionSubFrame {
         refreshButtonPositions();
         double top = border.top();
         MuseRenderer.drawString(this.category, border.left(), top);
-        for (ClickableModule clickie : moduleButtons) {
+        for (ClickableModuleSlot clickie : moduleButtons) {
             clickie.drawPartial(border.left(), min, border.right(), max);
         }
     }
 
     public void refreshButtonPositions() {
         int i = 0, j = 0;
-        for (ClickableModule clickie : moduleButtons) {
+        for (ClickableModuleSlot clickie : moduleButtons) {
             if (i > 4) {
                 i = 0;
                 j++;

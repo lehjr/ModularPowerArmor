@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
 import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
@@ -55,7 +55,7 @@ public class MobRepulsorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 2500, "RF");
             this.ticker = new Ticker(moduleCap);
         }

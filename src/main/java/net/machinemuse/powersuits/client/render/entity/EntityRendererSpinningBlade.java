@@ -3,7 +3,6 @@ package net.machinemuse.powersuits.client.render.entity;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
 import net.machinemuse.numina.client.render.entity.MuseEntityRenderer;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.ModularPowersuits;
 import net.machinemuse.powersuits.entity.SpinningBladeEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +15,7 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBlad
         super(renderManager);
     }
 
-    public static final ResourceLocation textureLocation = new ResourceLocation(MPSConstants.MODID, "modules/spinningblade.png");
+    public static final ResourceLocation textureLocation = new ResourceLocation(MPSConstants.TEXTURE_PREFIX + "item/module/weapon/spinningblade.png");
 
     @Nullable
     @Override

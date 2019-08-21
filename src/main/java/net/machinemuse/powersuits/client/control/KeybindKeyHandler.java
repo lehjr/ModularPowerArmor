@@ -4,12 +4,11 @@ import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingI
 import net.machinemuse.numina.capabilities.player.CapabilityPlayerKeyStates;
 import net.machinemuse.numina.network.NuminaPackets;
 import net.machinemuse.numina.network.packets.MusePacketPlayerUpdate;
-import net.machinemuse.powersuits.containers.ModeChangingContainer;
-import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.ModeChangingRequest;
+import net.machinemuse.powersuits.client.gui.modechanging.GuiModeSelector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -38,6 +37,8 @@ public class KeybindKeyHandler {
     }
 
     void updatePlayerValues(ClientPlayerEntity clientPlayer) {
+        if (clientPlayer == null)
+            return;
             clientPlayer.getCapability(CapabilityPlayerKeyStates.PLAYER_KEYSTATES).ifPresent(playerCap -> {
                 boolean markForSync = false;
                 boolean downKeyState = goDownKey.isKeyDown();
@@ -64,6 +65,9 @@ public class KeybindKeyHandler {
 //
 //    public void checkPlayerKeys() {
         ClientPlayerEntity player = minecraft.player;
+        if (player == null)
+            return;
+
         KeyBinding[] hotbarKeys = minecraft.gameSettings.keyBindsHotbar;
         updatePlayerValues(player);
 
@@ -77,9 +81,15 @@ public class KeybindKeyHandler {
 ////
         if (hotbarKeys[player.inventory.currentItem].isKeyDown() && minecraft.isGameFocused()) {
             player.inventory.getCurrentItem().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModeChanging->{
-                // check if player has window open already
-                if (!(player.openContainer instanceof ModeChangingContainer) && iModeChanging instanceof IModeChangingItem)
-                    MPSPackets.CHANNEL_INSTANCE.sendToServer(new ModeChangingRequest());
+                        if(player.world.isRemote) {
+            Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiModeSelector(player, new StringTextComponent("modeChanging"))));
+
+//
+//
+//                // check if player has window open already
+//                if (!(player.openContainer instanceof ModeChangingContainer) && iModeChanging instanceof IModeChangingItem)
+//                    MPSPackets.CHANNEL_INSTANCE.sendToServer(new ModeChangingRequest());
+                        }
             });
         }
 

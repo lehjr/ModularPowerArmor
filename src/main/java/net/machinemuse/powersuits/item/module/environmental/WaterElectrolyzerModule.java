@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,7 +40,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 10000, "RF");
             this.ticker = new Ticker(moduleCap);
         }
@@ -65,7 +65,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
                 int energy = ElectricItemUtils.getPlayerEnergy(player);
                 int energyConsumption = (int) Math.round(moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION));
                 if (energy > energyConsumption && player.getAir() < 10) {
-                    if ((player.world.isRemote()) && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                    if ((player.world.isRemote()) && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.playClientSound(SoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f);
                     }
                     ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);

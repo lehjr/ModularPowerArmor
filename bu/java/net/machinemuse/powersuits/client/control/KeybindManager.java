@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.control;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.control.KeyBindingHelper;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
 import net.machinemuse.powersuits.basemod.MPSConfig;
@@ -57,7 +57,7 @@ public enum KeybindManager {
             List<ItemStack> modulesToWrite = ModuleManager.INSTANCE.getPlayerInstalledModules(Minecraft.getInstance().player);
             for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
                 writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
-                for (ClickableModule module : keybinding.getBoundModules()) {
+                for (ClickableModuleSlot module : keybinding.getBoundModules()) {
                     writer.write(module.getModule().getItem().getRegistryName().toString() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
                 }
             }
@@ -111,7 +111,7 @@ public enum KeybindManager {
                     MusePoint2D position = new MusePoint2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
                     ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(exploded[0])));
                     if (!module.isEmpty()) {
-                        ClickableModule cmodule = new ClickableModule(module, position);
+                        ClickableModuleSlot cmodule = new ClickableModuleSlot(module, position);
                         workingKeybinding.bindModule(cmodule);
                     }
                 }

@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "component",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GRG"
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "result": {
+    "item":"powersuits:component_wiring",
+    "count": 8
+  }
+}

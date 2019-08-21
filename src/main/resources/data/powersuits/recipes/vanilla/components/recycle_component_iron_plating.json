@@ -1,0 +1,18 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "group": "component",
+  "ingredients": [
+    {
+      "item": "powersuits:component_plating_iron"
+    }
+  ],
+  "result": {
+    "item": "minecraft:iron_ingot",
+    "count": 5
+  }
+}

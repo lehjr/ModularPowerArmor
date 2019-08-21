@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.client.event;
 
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
 import net.machinemuse.numina.item.MuseItemUtils;
@@ -110,7 +110,7 @@ public class RenderEventHandler {
                     frame.draw();
                     MuseRenderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
                     double x = frame.left() + stringwidth;
-                    for (ClickableModule module : kb.getBoundModules()) {
+                    for (ClickableModuleSlot module : kb.getBoundModules()) {
                         MuseTextureUtils.pushTexture(MuseTextureUtils.TEXTURE_QUILT);
                         boolean active = false;
                         for (ItemStack stack : MuseItemUtils.getModularItemsEquipped(player)) {

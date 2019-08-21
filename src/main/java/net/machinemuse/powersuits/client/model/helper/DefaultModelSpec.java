@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.model.helper;
 
 import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -86,7 +86,7 @@ public class DefaultModelSpec {
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPSConfig.INSTANCE.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
 
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {

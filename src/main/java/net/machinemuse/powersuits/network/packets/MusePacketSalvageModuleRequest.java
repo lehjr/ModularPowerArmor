@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.network.packets;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.basemod.Numina;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -60,7 +59,7 @@ public class MusePacketSalvageModuleRequest {
 //                        MuseNBTUtils.removeMuseValuesTag(stack);
 //                        ModuleManager.INSTANCE.removeModule(stack, moduleName);
 //                        for (ItemStack refundItem : refund) {
-//                            MuseItemUtils.giveOrDropItemWithChance(player, refundItem.copy(), MPSConfig.INSTANCE.getSalvageChance());
+//                            MuseItemUtils.giveOrDropItemWithChance(player, refundItem.copy(), CommonConfig.moduleConfig.getSalvageChance());
 //                        }
 //
 //                        IPowerModule module = ModuleManager.INSTANCE.getModule(moduleName);

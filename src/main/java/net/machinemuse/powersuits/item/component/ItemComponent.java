@@ -1,6 +1,5 @@
 package net.machinemuse.powersuits.item.component;
 
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.event.RegisterStuff;
 import net.minecraft.item.Item;
 

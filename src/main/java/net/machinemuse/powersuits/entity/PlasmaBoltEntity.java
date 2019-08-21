@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -16,13 +17,16 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
 
 public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public static final int SIZE = 24;
     public double size;
     public double damagingness;
     public double explosiveness;
-    public Entity shootingEntity;
+    public LivingEntity shootingEntity;
 
     public PlasmaBoltEntity(EntityType<? extends PlasmaBoltEntity> entityType, World world) {
         super(entityType, world);
@@ -59,6 +63,13 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
 
     }
 
+    @Nullable
+    @Override
+    public LivingEntity getThrower() {
+        LivingEntity other = super.getThrower();
+        return other != null ? other : this.shootingEntity;
+    }
+
     @Override
     public void baseTick() {
         super.baseTick();
@@ -88,19 +99,6 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
     protected boolean canTriggerWalking() {
         return false;
     }
-//
-//    @Override
-//    public void read(CompoundNBT var1) {
-//        this.setDead();
-//    }
-//
-//    @Override
-//    public void write(CompoundNBT var1) {
-//    }
-
-
-
-
 
 
     /**
@@ -162,5 +160,10 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         this.size = additionalData.readDouble();
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

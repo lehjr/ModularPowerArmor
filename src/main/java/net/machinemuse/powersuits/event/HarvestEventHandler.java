@@ -1,12 +1,8 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

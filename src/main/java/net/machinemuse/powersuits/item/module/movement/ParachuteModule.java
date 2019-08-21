@@ -9,8 +9,8 @@ import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -43,7 +43,7 @@ public class ParachuteModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.TORSOONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.SWIM_BOOST_AMOUNT, 1, "m/s");

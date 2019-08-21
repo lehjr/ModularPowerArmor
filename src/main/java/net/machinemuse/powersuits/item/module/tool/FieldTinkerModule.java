@@ -4,7 +4,7 @@ import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
-import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -44,7 +44,7 @@ public class FieldTinkerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.rightClick = new RightClickie();
         }

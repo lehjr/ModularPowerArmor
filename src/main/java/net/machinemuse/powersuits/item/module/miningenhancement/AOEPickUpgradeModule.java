@@ -6,8 +6,8 @@ import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhanc
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -51,7 +51,7 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.DIAMETER, MPSConstants.ENERGY_CONSUMPTION, 9500);
             this.moduleCap.addIntTradeoffProperty(MPSConstants.DIAMETER, MPSConstants.AOE_MINING_RADIUS, 5, "m", 2, 1);

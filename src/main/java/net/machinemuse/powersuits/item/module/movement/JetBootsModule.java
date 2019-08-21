@@ -12,10 +12,9 @@ import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -54,7 +53,7 @@ public class JetBootsModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.FEETONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0);
             this.moduleCap.addBasePropertyDouble(MPSConstants.JETBOOTS_THRUST, 0);
@@ -93,23 +92,23 @@ public class JetBootsModule extends AbstractPowerModule {
                 if (jetEnergy < ElectricItemUtils.getPlayerEnergy(player)) {
                     if (hasFlightControl && thrust > 0) {
                         thrust = MovementManager.thrust(player, thrust, true);
-                        if ((player.world.isRemote) && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                        if ((player.world.isRemote) && NuminaConfig.USE_SOUNDS.get()) {
                             Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else if (playerInput.jumpKey && player.getMotion().y < 0.5) {
                         thrust = MovementManager.thrust(player, thrust, false);
-                        if ((player.world.isRemote) && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                        if ((player.world.isRemote) && NuminaConfig.USE_SOUNDS.get()) {
                             Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else {
-                        if ((player.world.isRemote) && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                        if ((player.world.isRemote) && NuminaConfig.USE_SOUNDS.get()) {
                             Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
                         }
                     }
                 } else {
-                    if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
                     }
                 }
@@ -117,7 +116,7 @@ public class JetBootsModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
-                if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
                 }
             }

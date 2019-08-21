@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.network.packets;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.basemod.Numina;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -17,40 +16,41 @@ import java.util.function.Supplier;
  * Ported to Java by lehjr on 11/14/16.
  */
 public class MusePacketInstallModuleRequest {
-    protected static int playerID;
-    int itemSlot;
+    int slotSource;
     String moduleName;
+    int slotTarget;
 
     public MusePacketInstallModuleRequest() {
     }
 
-    public MusePacketInstallModuleRequest(int playerID, int itemSlot, String moduleName) {
-        this.playerID = playerID;
-        this.itemSlot = itemSlot;
+    public MusePacketInstallModuleRequest(int itemSlotSource, String moduleName, int slotTarget) {
+        this.slotSource = itemSlotSource;
         this.moduleName = moduleName;
+        this.slotTarget = slotTarget;
     }
 
     public static void encode(MusePacketInstallModuleRequest msg, PacketBuffer packetBuffer) {
-        packetBuffer.writeInt(msg.playerID);
-        packetBuffer.writeInt(msg.itemSlot);
+        packetBuffer.writeInt(msg.slotSource);
         packetBuffer.writeString(msg.moduleName);
+        packetBuffer.writeInt(msg.slotTarget);
     }
 
     public static MusePacketInstallModuleRequest decode(PacketBuffer packetBuffer) {
         return new MusePacketInstallModuleRequest(
                 packetBuffer.readInt(),
-                packetBuffer.readInt(),
-                packetBuffer.readString(500));
+                packetBuffer.readString(500),
+                packetBuffer.readInt());
     }
 
     public static void handle(MusePacketInstallModuleRequest message, Supplier<NetworkEvent.Context> ctx) {
-        MuseLogger.logger.error("this has not been implemented yet");
+            ctx.get().enqueueWork(() -> {
+                ServerPlayerEntity player = ctx.get().getSender();
+                int slotSource = message.slotSource;
+                String moduleName = message.moduleName;
+                int slotTarget = message.slotTarget;
 
-//        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-//
-//
-//            ServerPlayerEntity player = ctx.getServerHandler().player;
-//            ctx.get().enqueueWork(() -> {
+//                if (player.container.
+
 //                int itemSlot = message.itemSlot;
 //                String moduleName = message.moduleName;
 //                ItemStack stack = player.inventory.getStackInSlot(itemSlot);
@@ -65,7 +65,7 @@ public class MusePacketInstallModuleRequest {
 //                            MuseNBTUtils.removeMuseValuesTag(stack);
 //                            ModuleManager.INSTANCE.itemAddModule(stack, moduleType);
 //                            for (ItemStack stackInCost : cost) {
-//                                ElectricItemUtils.givePlayerEnergy(player, MPSConfig.INSTANCE.rfValueOfComponent(stackInCost));
+//                                ElectricItemUtils.givePlayerEnergy(player, CommonConfig.moduleConfig.rfValueOfComponent(stackInCost));
 //                            }
 //
 //                            if (!player.capabilities.isCreativeMode) {
@@ -76,7 +76,7 @@ public class MusePacketInstallModuleRequest {
 //                        }
 //                    }
 //                }
-//            });
-//        }
+            });
+            ctx.get().setPacketHandled(true);
     }
 }

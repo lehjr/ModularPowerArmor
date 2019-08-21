@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhanc
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -45,7 +45,7 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
 

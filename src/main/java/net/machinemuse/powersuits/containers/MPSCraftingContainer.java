@@ -41,24 +41,29 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         this.resultInventory = new CraftResultInventory();
         this.worldPosCallable = worldPosCallable;
         this.player = playerInventory.player;
+
+        // crafting result: slot 0
         this.addSlot(new CraftingResultSlot(playerInventory.player, this.craftingInventory, this.resultInventory, 0, 124, 35));
 
-        int i;
-        int j;
-        for(i = 0; i < 3; ++i) {
-            for(j = 0; j < 3; ++j) {
-                this.addSlot(new Slot(this.craftingInventory, j + i * 3, 30 + j * 18, 17 + i * 18));
+        int row;
+        int col;
+        // crafting inventory: slot 1-9
+        for(row = 0; row < 3; ++row) {
+            for(col = 0; col < 3; ++col) {
+                this.addSlot(new Slot(this.craftingInventory, col + row * 3, 30 + col * 18, 17 + row * 18));
             }
         }
 
-        for(i = 0; i < 3; ++i) {
-            for(j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        // inventory slot 10-
+        for(row = 0; row < 3; ++row) {
+            for(col = 0; col < 9; ++col) {
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
-        for(i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+        // hotbar
+        for(col = 0; col < 9; ++col) {
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
         }
     }
 
@@ -105,12 +110,6 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         System.out.println("clear");
         this.craftingInventory.clear();
         this.resultInventory.clear();
-
-        // FIXME : ServerRecipePlacer checks WorkbenchContainer instance...
-        // FIXME: instance checks in ClientRecipeBook and ServerRecipePlacer
-
-
-
     }
 
     @Override

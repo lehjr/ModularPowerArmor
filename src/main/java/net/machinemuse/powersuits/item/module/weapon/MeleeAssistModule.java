@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.item.module.weapon;
 
 import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -31,7 +31,7 @@ public class MeleeAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_WEAPON, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.PUNCH_ENERGY, 10, "RF");
             this.moduleCap.addBasePropertyDouble(MPSConstants.PUNCH_DAMAGE, 2, "pt");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.IMPACT, MPSConstants.PUNCH_ENERGY, 1000, "RF");

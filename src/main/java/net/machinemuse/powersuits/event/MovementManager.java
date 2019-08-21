@@ -10,10 +10,9 @@ import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.client.event.RenderEventHandler;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -196,7 +195,7 @@ public class MovementManager {
         double horzm2 = player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z;
 
         // currently comes out to 0.0625
-        double horizontalLimit = MPSConfig.INSTANCE.GENERAL_MAX_FLYING_SPEED.get() * MPSConfig.INSTANCE.GENERAL_MAX_FLYING_SPEED.get() / 400;
+        double horizontalLimit = CommonConfig.GENERAL_MAX_FLYING_SPEED.get() * CommonConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
 
 //        double playerVelocity = Math.abs(player.getMotion().x) + Math.abs(player.getMotion().y) + Math.abs(player.getMotion().z);
 
@@ -233,7 +232,7 @@ public class MovementManager {
                     double jumpAssist = jumper.applyPropertyModifiers(MPSConstants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
-                    if ((player.world.isRemote()) && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                    if ((player.world.isRemote()) && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
                     }
 
@@ -266,7 +265,7 @@ public class MovementManager {
                 ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPSConstants.MULTIPLIER);
-                    if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
                     double drain = distanceAbsorb * sa.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);

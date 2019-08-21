@@ -5,8 +5,8 @@ import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCap
 import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +46,7 @@ public class PickaxeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
             this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");

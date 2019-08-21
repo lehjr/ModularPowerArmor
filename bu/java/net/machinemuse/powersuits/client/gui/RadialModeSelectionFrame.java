@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.gui;
 
 import net.machinemuse.numina.capabilities.inventory.CapabilityModeChangingModularItem;
 import net.machinemuse.numina.capabilities.inventory.IModeChangingItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
@@ -25,7 +25,7 @@ import static net.minecraftforge.common.util.LazyOptional.empty;
 
 public class RadialModeSelectionFrame implements IGuiFrame {
     protected final long spawnTime;
-    protected List<ClickableModule> modeButtons = new ArrayList<>();
+    protected List<ClickableModuleSlot> modeButtons = new ArrayList<>();
     protected int selectedModuleOriginal = -1;
     protected int selectedModuleNew = -1;
 
@@ -50,7 +50,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
             if (modeChangingCapability.isPresent()) {
                 if (modeButtons != null) {
                     int i = 0;
-                    for (ClickableModule mode : modeButtons) {
+                    for (ClickableModuleSlot mode : modeButtons) {
                         ItemStack activeModule = stack.getCapability(CapabilityModeChangingModularItem.MODE_CHANGING_MODULAR_ITEM_HANDLER_CAPABILITY).map(m ->m.getActiveModule()).orElse(ItemStack.EMPTY);
 
                         if (!activeModule.isEmpty() && activeModule.getItem().getRegistryName().equals(mode.getModule().getItem().getRegistryName())) {
@@ -75,7 +75,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     }
 
     private boolean alreadyAdded(ItemStack module) {
-        for (ClickableModule clickie : modeButtons) {
+        for (ClickableModuleSlot clickie : modeButtons) {
             if (clickie.getModule().getItem().getRegistryName().equals(module.getItem().getRegistryName())) {
                 return true;
             }
@@ -94,7 +94,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
             int modeNum = 0;
             for (ItemStack module : modules) {
                 if (!alreadyAdded(module)) {
-                    ClickableModule clickie = new ClickableModule(module, new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modules.size()), 250));
+                    ClickableModuleSlot clickie = new ClickableModuleSlot(module, new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modules.size()), 250));
                     modeButtons.add(clickie);
                     modeNum++;
                 }
@@ -105,7 +105,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     private void selectModule(double x, double y) {
         if (modeButtons != null) {
             int i = 0;
-            for (ClickableModule module : modeButtons) {
+            for (ClickableModuleSlot module : modeButtons) {
                 if (module.hitBox(x, y)) {
                     selectedModuleNew = i;
                     break;
@@ -115,7 +115,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
         }
     }
 
-    public ClickableModule getSelectedModule() {
+    public ClickableModuleSlot getSelectedModule() {
         if (modeButtons.size() > selectedModuleNew && selectedModuleNew != -1) {
             return modeButtons.get(selectedModuleNew);
         } else {
@@ -143,7 +143,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     }
 
     public void drawSelection() {
-        ClickableModule module = getSelectedModule();
+        ClickableModuleSlot module = getSelectedModule();
         if (module != null) {
             MusePoint2D pos = module.getPosition();
             MuseRenderer.drawCircleAround(pos.getX(), pos.getY(), 10);
@@ -153,7 +153,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)  {
         //Draw the installed power fist modes
-        for (ClickableModule mode : modeButtons) {
+        for (ClickableModuleSlot mode : modeButtons) {
             mode.render(mouseX, mouseY, partialTicks);
         }
         //Draw the selected mode indicator
@@ -172,7 +172,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
 
     @Override
     public List<ITextComponent> getToolTip(int x, int y) {
-        ClickableModule module = getSelectedModule();
+        ClickableModuleSlot module = getSelectedModule();
         if (module != null) {
             ItemStack selectedModule = module.getModule();
             return Collections.singletonList(module.getLocalizedName(selectedModule));

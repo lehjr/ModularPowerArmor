@@ -4,8 +4,8 @@ import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
 import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -35,7 +35,7 @@ public class ShockAbsorberModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.FEETONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig);
 
 
 

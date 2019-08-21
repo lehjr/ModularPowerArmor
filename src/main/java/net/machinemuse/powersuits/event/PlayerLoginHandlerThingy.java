@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.event;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /**
  * Author: MachineMuse (Claire Semple)

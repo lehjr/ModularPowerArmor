@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.LivingEntity;
@@ -45,7 +45,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_WEAPON, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
             this.moduleCap.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.AMPERAGE, MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");

@@ -5,7 +5,7 @@
 
     }
   ],
-  "type": "powersuits:mps_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "II",
     "GI",

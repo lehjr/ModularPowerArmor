@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "component",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DD",
+    "WD",
+    "DD"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "D": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "powersuits:component_plating_diamond"
+  }
+}

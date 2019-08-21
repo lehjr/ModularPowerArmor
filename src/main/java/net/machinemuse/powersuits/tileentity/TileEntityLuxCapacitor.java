@@ -8,7 +8,6 @@ import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 import javax.annotation.Nonnull;
 

@@ -3,12 +3,12 @@ package net.machinemuse.powersuits.misc;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.config.ConfigHelper;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class CosmeticPresetSaveLoad {
         String subfolder = item.getRegistryName().getPath();
 
         // path with subfolder
-        Path directory = Paths.get(MPSConfig.INSTANCE.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
+        Path directory = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
         if (Files.exists(directory))
             try {
                 Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), 1, new SimpleFileVisitor<Path>() {
@@ -109,7 +109,7 @@ public class CosmeticPresetSaveLoad {
                         Path subFolder = selectedPath.getParent().getFileName();
 
                         // path with subfolder
-                        Path target = Paths.get(MPSConfig.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subFolder.toString(), selectedPath.getFileName().toString());
+                        Path target = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subFolder.toString(), selectedPath.getFileName().toString());
                         try {
                             // create dir
                             if (!Files.exists(target.getParent()))
@@ -171,7 +171,7 @@ public class CosmeticPresetSaveLoad {
             String subfolder = registryNameIn.getPath();
 
             // path with subfolder
-            Path directory = Paths.get(MPSConfig.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
+            Path directory = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
 
             try {
                 Files.createDirectories(directory);

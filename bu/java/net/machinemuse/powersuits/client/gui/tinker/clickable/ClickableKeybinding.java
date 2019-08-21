@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.gui.tinker.clickable;
 
 import net.machinemuse.numina.client.gui.IClickable;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.geometry.MusePoint2D;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ClickableKeybinding extends ClickableButton {
     public boolean toggleval = false;
     public boolean displayOnHUD;
-    protected List<ClickableModule> boundModules = new ArrayList<>();
+    protected List<ClickableModuleSlot> boundModules = new ArrayList<>();
     boolean toggled = false;
     KeyBinding keybind;
 
@@ -61,7 +61,7 @@ public class ClickableKeybinding extends ClickableButton {
             return;
         }
 
-        for (ClickableModule module : boundModules) {
+        for (ClickableModuleSlot module : boundModules) {
             String valstring = (toggleval) ? " on" : " off";
             NuminaPackets.sendToServer(new MusePacketToggleRequest(player.getEntityId(), module.getModule().getItem().getRegistryName(), toggleval));
         }
@@ -71,7 +71,7 @@ public class ClickableKeybinding extends ClickableButton {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
-        for (ClickableModule module : boundModules) {
+        for (ClickableModuleSlot module : boundModules) {
             MuseRenderer.drawLineBetween(this, module, Colour.LIGHTBLUE);
             GL11.glPushMatrix();
             GL11.glScaled(0.5, 0.5, 0.5);
@@ -88,23 +88,23 @@ public class ClickableKeybinding extends ClickableButton {
         return keybind;
     }
 
-    public List<ClickableModule> getBoundModules() {
+    public List<ClickableModuleSlot> getBoundModules() {
         return boundModules;
     }
 
-    public void bindModule(ClickableModule module) {
+    public void bindModule(ClickableModuleSlot module) {
         if (!boundModules.contains(module)) {
             boundModules.add(module);
         }
     }
 
-    public void unbindModule(ClickableModule module) {
+    public void unbindModule(ClickableModuleSlot module) {
         boundModules.remove(module);
     }
 
     public void unbindFarModules() {
-        Iterator<ClickableModule> iterator = boundModules.iterator();
-        ClickableModule module;
+        Iterator<ClickableModuleSlot> iterator = boundModules.iterator();
+        ClickableModuleSlot module;
         while (iterator.hasNext()) {
             module = iterator.next();
             int maxDistance = getTargetDistance() * 2;
@@ -120,7 +120,7 @@ public class ClickableKeybinding extends ClickableButton {
     }
 
     public void attractBoundModules(IClickable exception) {
-        for (ClickableModule module : boundModules) {
+        for (ClickableModuleSlot module : boundModules) {
             if (!module.equals(exception)) {
                 MusePoint2D euclideanDistance = module.getPosition().minus(this.getPosition());
                 MusePoint2D directionVector = euclideanDistance.normalize();

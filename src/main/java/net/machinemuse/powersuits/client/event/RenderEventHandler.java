@@ -2,11 +2,11 @@ package net.machinemuse.powersuits.client.event;
 
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.client.gui.geometry.DrawableMuseRect;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.math.geometry.DrawableMuseRect;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.basemod.config.ClientConfig;
 import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public enum RenderEventHandler {
     INSTANCE;
-    private static final MPSConfig config = MPSConfig.INSTANCE;
     private static boolean ownFly = false;
     public static final ResourceLocation binoculars = new ResourceLocation(MPSRegistryNames.BINOCULARS_MODULE__REGNAME);
     public static final ResourceLocation jetpack =  new ResourceLocation(MPSRegistryNames.MODULE_JETPACK__REGNAME);
@@ -30,7 +29,7 @@ public enum RenderEventHandler {
     public static final ResourceLocation jetBoots = new ResourceLocation(MPSRegistryNames.MODULE_JETBOOTS__REGNAME);
     public static final ResourceLocation flightControl= new ResourceLocation(MPSRegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
 
-    private final DrawableMuseRect frame = new DrawableMuseRect(MPSConfig.INSTANCE.HUD_KEYBIND_HUD_X.get(), MPSConfig.INSTANCE.HUD_KEYBIND_HUD_Y.get(), MPSConfig.INSTANCE.HUD_KEYBIND_HUD_X.get() + (double) 16, MPSConfig.INSTANCE.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
+    private final DrawableMuseRect frame = new DrawableMuseRect(ClientConfig.HUD_KEYBIND_HUD_X.get(), ClientConfig.HUD_KEYBIND_HUD_Y.get(), ClientConfig.HUD_KEYBIND_HUD_X.get() + (double) 16, ClientConfig.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
 
     @OnlyIn(Dist.CLIENT)
@@ -112,7 +111,7 @@ public enum RenderEventHandler {
 
     @OnlyIn(Dist.CLIENT)
     public void drawKeybindToggles() {
-        if (config.HUD_DISPLAY_HUD.get()) {
+        if (ClientConfig.HUD_DISPLAY_HUD.get()) {
 //            Minecraft minecraft = Minecraft.getInstance();
 //            ClientPlayerEntity player = minecraft.player;
 //            frame.setLeft(config.HUD_KEYBIND_HUD_X.get());
@@ -125,7 +124,7 @@ public enum RenderEventHandler {
 //                    frame.draw();
 //                    MuseRenderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
 //                    double x = frame.left() + stringwidth;
-//                    for (ClickableModule module : kb.getBoundModules()) {
+//                    for (ClickableModuleSlot module : kb.getBoundModules()) {
 //                        MuseTextureUtils.pushTexture(MuseTextureUtils.TEXTURE_QUILT);
 //                        boolean active = false;
 //                        for (ItemStack stack : MuseItemUtils.getModularItemsEquipped(player)) {

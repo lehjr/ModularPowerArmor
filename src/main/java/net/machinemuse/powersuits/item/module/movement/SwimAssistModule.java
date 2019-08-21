@@ -11,8 +11,8 @@ import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -47,7 +47,7 @@ public class SwimAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.LEGSONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
@@ -85,22 +85,22 @@ public class SwimAssistModule extends AbstractPowerModule {
                         double swimAssistRate = moduleCap.applyPropertyModifiers(MPSConstants.SWIM_BOOST_AMOUNT) * 0.05 * moveRatio;
                         double swimEnergyConsumption = moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
                         if (swimEnergyConsumption < ElectricItemUtils.getPlayerEnergy(player)) {
-                            if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                            if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                                 Musique.playerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
                             }
                             MovementManager.thrust(player, swimAssistRate, true);
                         } else {
-                            if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                            if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                                 Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                             }
                         }
                     } else {
-                        if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                        if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                             Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                         }
                     }
                 } else {
-                    if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                     }
                 }
@@ -108,7 +108,7 @@ public class SwimAssistModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
-                if (player.world.isRemote && NuminaConfig.INSTANCE.USE_SOUNDS.get()) {
+                if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                 }
             }

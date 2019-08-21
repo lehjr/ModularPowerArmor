@@ -4,7 +4,7 @@
       "type": "powersuits:gregtech_recipes_enabled"
     }
   ],
-  "type": "powersuits:mps_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "II",
     "BI",

@@ -46,12 +46,9 @@ public class MusePacketInstallModuleRequest {
     public static void handle(MusePacketInstallModuleRequest message, Supplier<NetworkEvent.Context> ctx) {
         MuseLogger.logger.error("this has not been implemented yet");
 
-//        if (ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-//
-//
-//            EntityPlayerMP player = ctx.getServerHandler().player;
-//            player.getServerWorld().addScheduledTask(() -> {
-//                int itemSlot = message.itemSlot;
+        EntityPlayerMP player = ctx.getServerHandler().player;
+        player.getServerWorld().addScheduledTask(() -> {
+            int itemSlot = message.itemSlot;
 //                String moduleName = message.moduleName;
 //                ItemStack stack = player.inventory.getStackInSlot(itemSlot);
 //                if (moduleName != null) {
@@ -76,7 +73,7 @@ public class MusePacketInstallModuleRequest {
 //                        }
 //                    }
 //                }
-//            });
-//        }
+        });
+
     }
 }

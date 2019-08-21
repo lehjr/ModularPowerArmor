@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "W W"
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "W": {
+      "item":"powersuits:component_wiring"
+    }
+  },
+  "result": {
+    "item": "powersuits:powerarmor_head"
+  }
+}

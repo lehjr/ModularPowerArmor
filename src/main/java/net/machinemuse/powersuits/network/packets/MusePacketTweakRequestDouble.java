@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.network.packets;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.basemod.Numina;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

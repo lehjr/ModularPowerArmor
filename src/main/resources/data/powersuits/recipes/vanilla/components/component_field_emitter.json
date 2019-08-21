@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SES",
+    "ESE",
+    "SES"
+  ],
+  "key": {
+    "E": {
+      "item":"minecraft:ender_pearl"
+    },
+    "S": {
+      "tag":"forge:solenoid"
+    }
+  },
+  "result": {
+    "item": "powersuits:component_field_emitter"
+  }
+}

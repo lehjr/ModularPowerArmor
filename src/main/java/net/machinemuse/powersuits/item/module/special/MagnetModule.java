@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
 import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
 import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,7 +48,7 @@ public class MagnetModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_SPECIAL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 2000);

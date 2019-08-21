@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.model.block.ModelLuxCapacitor;
 import net.machinemuse.powersuits.client.model.block.TinkerTableModel;
@@ -31,10 +30,8 @@ public enum ModelBakeEventHandler {
 
     public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSRegistryNames.ITEM__POWER_FIST__REGNAME, "inventory");
     public static IBakedModel powerFistIconModel;
-
-
     private static Map<ResourceLocation, IBakedModel> modelRegistry;
-
+    public ModelLuxCapacitor luxCapModel;
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
@@ -58,7 +55,6 @@ public enum ModelBakeEventHandler {
                         MuseModelHelper.defaultTextureGetter(),
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
-
         modelRegistry.put(
                 new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "inventory"),
                 new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
@@ -70,7 +66,14 @@ public enum ModelBakeEventHandler {
                                 MuseModelHelper.defaultTextureGetter(),
                                 ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
-
+        luxCapModel = new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
+                event.getModelLoader(),
+                MuseModelHelper.defaultTextureGetter(),
+                TRSRTransformation.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM),
+                luxcapacitorLenseUnbaked.bake(
+                        event.getModelLoader(),
+                        MuseModelHelper.defaultTextureGetter(),
+                        TRSRTransformation.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM));
 
 
 //        if (new TinkerTableModel(tinkertableUnbaked.bake(event.getModelLoader(),
@@ -96,7 +99,6 @@ public enum ModelBakeEventHandler {
                                     event.getModelLoader(),
                                     MuseModelHelper.defaultTextureGetter(),
                                     TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
-
 
             if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
                 continue;

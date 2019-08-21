@@ -2,8 +2,8 @@ package net.machinemuse.powersuits.item.module.armor;
 
 import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -31,7 +31,7 @@ public class DiamondPlatingModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ARMOR, EnumModuleTarget.ARMORONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ARMOR_VALUE_PHYSICAL, 5, NuminaConstants.MODULE_TRADEOFF_PREFIX + MPSConstants.ARMOR_POINTS);
             this.moduleCap.addBasePropertyDouble(MPSConstants.MAXIMUM_HEAT, 400);
         }

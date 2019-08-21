@@ -3,7 +3,7 @@ package net.machinemuse.powersuits.client.gui.tinker.frame;
 import net.machinemuse.numina.client.gui.IClickable;
 import net.machinemuse.numina.client.gui.MuseGui;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.render.MuseTextureUtils;
@@ -31,7 +31,7 @@ import java.util.*;
 
 public class KeybindConfigFrame implements IGuiFrame {
     private static KeyBindingHelper keyBindingHelper = new KeyBindingHelper();
-    protected Set<ClickableModule> modules;
+    protected Set<ClickableModuleSlot> modules;
     protected IClickable selectedClickie;
     protected ClickableKeybinding closestKeybind;
     protected EntityPlayer player;
@@ -61,7 +61,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     public void onMouseDown(double x, double y, int button) {
         if (button == 0) {
             if (selectedClickie == null) {
-                for (ClickableModule module : modules) {
+                for (ClickableModuleSlot module : modules) {
                     if (module.hitBox(x, y)) {
                         selectedClickie = module;
                         return;
@@ -114,7 +114,7 @@ public class KeybindConfigFrame implements IGuiFrame {
         Iterator<MusePoint2D> pointIterator = points.iterator();
         for (ItemStack module : installedModules) {
             if (module.getItem() instanceof IToggleableModule && !alreadyAdded(module)) {
-                ClickableModule clickie = new ClickableModule(module, pointIterator.next());
+                ClickableModuleSlot clickie = new ClickableModuleSlot(module, pointIterator.next());
                 modules.add(clickie);
             }
         }
@@ -124,7 +124,7 @@ public class KeybindConfigFrame implements IGuiFrame {
         if (module.isEmpty())
             return false;
 
-        for (ClickableModule clickie : modules) {
+        for (ClickableModuleSlot clickie : modules) {
             if (clickie.getModule().getItem().getRegistryName().equals(module.getItem().getRegistryName())) {
                 return true;
             }
@@ -135,8 +135,8 @@ public class KeybindConfigFrame implements IGuiFrame {
     @Override
     public void onMouseUp(double x, double y, int button) {
         if (button == 0) {
-            if (selectedClickie != null && closestKeybind != null && selectedClickie instanceof ClickableModule) {
-                closestKeybind.bindModule((ClickableModule) selectedClickie);
+            if (selectedClickie != null && closestKeybind != null && selectedClickie instanceof ClickableModuleSlot) {
+                closestKeybind.bindModule((ClickableModuleSlot) selectedClickie);
             } else if (selectedClickie != null && selectedClickie instanceof ClickableKeybinding && trashKeybindButton.hitBox(x, y)) {
                 KeyBinding binding = ((ClickableKeybinding) selectedClickie).getKeyBinding();
                 keyBindingHelper.removeKey(binding);
@@ -159,8 +159,8 @@ public class KeybindConfigFrame implements IGuiFrame {
         double closestDistance = Double.MAX_VALUE;
         if (this.selectedClickie != null) {
             this.selectedClickie.move(mousex, mousey);
-            if (this.selectedClickie instanceof ClickableModule) {
-                ClickableModule selectedModule = ((ClickableModule) this.selectedClickie);
+            if (this.selectedClickie instanceof ClickableModuleSlot) {
+                ClickableModuleSlot selectedModule = ((ClickableModuleSlot) this.selectedClickie);
                 for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                     double distance = keybind.getPosition().minus(selectedModule.getPosition()).distance();
                     if (distance < closestDistance) {
@@ -214,7 +214,7 @@ public class KeybindConfigFrame implements IGuiFrame {
 
     private void repelOtherModules(IClickable module) {
         MusePoint2D modulePosition = module.getPosition();
-        for (ClickableModule otherModule : modules) {
+        for (ClickableModuleSlot otherModule : modules) {
             if (otherModule != selectedClickie && otherModule != module && otherModule.getPosition().distanceTo(modulePosition) < 16) {
                 MusePoint2D euclideanDistance = otherModule.getPosition().minus(module.getPosition());
                 MusePoint2D directionVector = euclideanDistance.normalize();
@@ -251,7 +251,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             MusePoint2D pos = newKeybindButton.getPosition().plus(new MusePoint2D(0, -20));
             MuseRenderer.drawCenteredString(I18n.format("gui.powersuits.keybindTaken"), pos.getX(), pos.getY());
         }
-        for (ClickableModule module : modules) {
+        for (ClickableModuleSlot module : modules) {
             module.render(mouseX, mouseY, partialTicks);
         }
         for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
@@ -267,7 +267,7 @@ public class KeybindConfigFrame implements IGuiFrame {
 
     @Override
     public List<ITextComponent> getToolTip(int x, int y) {
-        for (ClickableModule module : modules) {
+        for (ClickableModuleSlot module : modules) {
             if (module.hitBox(x, y)) {
                 if (doAdditionalInfo()) {
                     return module.getToolTip();

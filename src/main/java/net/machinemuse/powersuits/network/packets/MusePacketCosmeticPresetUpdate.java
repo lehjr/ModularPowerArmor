@@ -1,11 +1,9 @@
 package net.machinemuse.powersuits.network.packets;
 
 import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.basemod.Numina;
 import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -60,7 +58,7 @@ public class MusePacketCosmeticPresetUpdate {
 //                    ResourceLocation registryName = message.registryName;
 //                    String name = message.name;
 //                    CompoundNBT cosmeticSettings = message.cosmeticSettings;
-//                    MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
+//                    MPSServerSettings settings = CommonConfig.moduleConfig.getServerSettings();
 //                    if (settings != null) {
 //                        settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
 //                        MPSPackets.sendToAll(new MusePacketCosmeticPresetUpdate(registryName, name, cosmeticSettings));
@@ -78,7 +76,7 @@ public class MusePacketCosmeticPresetUpdate {
 //                ResourceLocation registryName = message.registryName;
 //                String name = message.name;
 //                CompoundNBT cosmeticSettings = message.cosmeticSettings;
-//                MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
+//                MPSServerSettings settings = CommonConfig.moduleConfig.getServerSettings();
 //                settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
 //            });
 //        }

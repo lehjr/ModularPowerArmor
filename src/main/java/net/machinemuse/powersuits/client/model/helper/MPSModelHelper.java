@@ -66,16 +66,16 @@ public class MPSModelHelper {
 //        if (itemTag.contains(NuminaConstants.TAG_RENDER, Constants.NBT.TAG_COMPOUND))
 //            renderTag = itemTag.getCompound(NuminaConstants.TAG_RENDER);
 //        else if (itemTag.contains(NuminaConstants.TAG_COSMETIC_PRESET, Constants.NBT.TAG_STRING))
-//            renderTag = MPSConfig.INSTANCE.getPresetNBTFor(stack, itemTag.getString(NuminaConstants.TAG_COSMETIC_PRESET));
+//            renderTag = CommonConfig.moduleConfig.getPresetNBTFor(stack, itemTag.getString(NuminaConstants.TAG_COSMETIC_PRESET));
 //
 //        if (renderTag != null)
 //            return renderTag;
 //
 //        // if cosmetic presets are to be used, or powerfist customization is not allowed set to default preset
-//        if (!MPSConfig.INSTANCE.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get() ||
-//                (stack.getItem() instanceof ItemPowerFist && MPSConfig.INSTANCE.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())) {
+//        if (!CommonConfig.moduleConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get() ||
+//                (stack.getItem() instanceof ItemPowerFist && CommonConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())) {
 //            itemTag.putString(NuminaConstants.TAG_COSMETIC_PRESET, "Default");
-//            return MPSConfig.INSTANCE.getPresetNBTFor(stack, "Default");
+//            return CommonConfig.moduleConfig.getPresetNBTFor(stack, "Default");
 //        }
 //
 //        renderTag = DefaultModelSpec.makeModelPrefs(stack, armorSlot);

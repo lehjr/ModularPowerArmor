@@ -6,7 +6,6 @@ import net.machinemuse.powersuits.containers.providers.RadialModeContainerProvid
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -15,16 +14,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import java.util.function.Supplier;
 
 public class ModeChangingRequest {
-    int xCenter;
-    int yCenter;
-
     public ModeChangingRequest() {
 
     }
 
     public static void encode(ModeChangingRequest msg, PacketBuffer packetBuffer) {
-        packetBuffer.writeInt(msg.xCenter);
-        packetBuffer.writeInt(msg.yCenter);
+
     }
 
     public static ModeChangingRequest decode(PacketBuffer packetBuffer) {
@@ -36,9 +31,7 @@ public class ModeChangingRequest {
         ctx.get().enqueueWork(() -> {
             final ServerPlayerEntity player = ctx.get().getSender();
 
-            Hand hand = player.getActiveHand();
-
-            player.getHeldItem(hand).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(ih -> {
+            player.getHeldItemMainhand().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(ih -> {
                 if (ih instanceof IModeChangingItem) {
                     if (ih.getStackInSlot(0).isEmpty())
                         ((IModeChangingItem) ih).setStackInSlot(0, new ItemStack(MPSObjects.INSTANCE.moduleBatteryUltimate));
@@ -59,7 +52,7 @@ public class ModeChangingRequest {
 
                 }
             });
-            System.out.println(player.getHeldItem(hand).serializeNBT());
+            System.out.println(player.getHeldItemMainhand().serializeNBT());
 
 
 
@@ -125,8 +118,7 @@ chest
  */
 
 
-            NetworkHooks.openGui((ServerPlayerEntity) player,
-                    new RadialModeContainerProvider(hand), (buffer) -> buffer.writeInt(hand.ordinal()));
+            NetworkHooks.openGui((ServerPlayerEntity) player, new RadialModeContainerProvider());
         });
         ctx.get().setPacketHandled(true);
     }

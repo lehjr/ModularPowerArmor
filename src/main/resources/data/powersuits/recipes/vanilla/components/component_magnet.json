@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "component",
+  "pattern": [
+    "III",
+    "SSS",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "item": "powersuits:component_solenoid"
+    }
+  },
+  "result": {
+    "item" : "powersuits:component_magnet"
+  }
+}

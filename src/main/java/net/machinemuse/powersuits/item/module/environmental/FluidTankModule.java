@@ -2,8 +2,8 @@ package net.machinemuse.powersuits.item.module.environmental;
 
 import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,7 +40,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyInteger(MPSConstants.FLUID_TANK_SIZE, 20000);
             this.fluidHandler = new ModuleTank(moduleCap.applyPropertyModifierBaseInt(MPSConstants.FLUID_TANK_SIZE));
         }

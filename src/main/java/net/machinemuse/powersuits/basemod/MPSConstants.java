@@ -1,7 +1,5 @@
 package net.machinemuse.powersuits.basemod;
 
-import net.minecraft.util.ResourceLocation;
-
 public class MPSConstants {
     public static final String MODID = "powersuits";
 
@@ -20,7 +18,7 @@ public class MPSConstants {
 
     public static final String CONFIG_PREFIX = "config." + MODID + ".";
 
-    // HUD ----------------------------------------------------------------------------------------
+    /** HUD --------------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
     public static final String CONFIG_HUD_TOGGLE_MODULE_SPAM = CONFIG_PREFIX_HUD + "enableModuleSpam";
     public static final String CONFIG_HUD_DISPLAY_HUD = CONFIG_PREFIX_HUD + "DisplayHUD";
@@ -29,13 +27,13 @@ public class MPSConstants {
     public static final String CONFIG_HUD_USE_GRAPHICAL_METERS = CONFIG_PREFIX_HUD + "useGraphicalMeters";
     public static final String CONFIG_HUD_USE_24_HOUR_CLOCK = CONFIG_PREFIX_HUD + "use24HrClock";
 
-    // Cosmetics ----------------------------------------------------------------------------------
+    /** Cosmetics --------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_COSMETIC = CONFIG_PREFIX + "cosmetic.";
     public static final String CONFIG_COSMETIC_USE_LEGACY_COSMETIC_SYSTEM = CONFIG_PREFIX_COSMETIC + "useLegacyCosmeticSystem";
     public static final String CONFIG_COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS = CONFIG_PREFIX_COSMETIC + "allowHighPollyArmorModuels";
     public static final String CONFIG_COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN = CONFIG_PREFIX_COSMETIC + "allowPowerFistCustomization";
 
-    // General ------------------------------------------------------------------------------------
+    /** General ----------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_GENERAL = CONFIG_PREFIX + "general.";
     public static final String CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS = CONFIG_PREFIX_GENERAL + "allowConflictingKeybinds";
     public static final String CONFIG_GENERAL_MAX_FLYING_SPEED = CONFIG_PREFIX_GENERAL + "maxFlyingSpeed";
@@ -45,6 +43,17 @@ public class MPSConstants {
     public static final String CONFIG_GENERAL_BASE_MAX_MODULES_FEET = CONFIG_PREFIX_GENERAL +  "maxModulesFeet";
     public static final String CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxModulesPowerFist";
 
+    /** Recipes ----------------------------------------------------------------------------------- */
+    public static final String CONFIG_PREFIX_RECIPES = CONFIG_PREFIX + "recipes.";
+    public static final String CONFIG_RECIPES_USE_VANILLA = CONFIG_PREFIX_RECIPES + "useVanilla";
+    public static final String CONFIG_RECIPES_USE_THERMAL_EXPANSION = CONFIG_PREFIX_RECIPES + "useThermalExpansion";
+    public static final String CONFIG_RECIPES_USE_ENDERIO = CONFIG_PREFIX_RECIPES + "useEnderIO";
+    public static final String CONFIG_RECIPES_USE_TECH_REBORN = CONFIG_PREFIX_RECIPES + "useTechReborn";
+    public static final String CONFIG_RECIPES_USE_IC2 = CONFIG_PREFIX_RECIPES + "useIC2";
+
+    /**
+     * Modules ------------------------------------------------------------------------------------
+     */
 
     public static final String IS_MODULE_ALLOWED ="isModuleAllowed";
 
@@ -73,7 +82,6 @@ public class MPSConstants {
     public static final String EATING_EFFICIENCY = "autoFeederEfficiency";
     public static final String EFFICIENCY = "efficiency";
     public static final String FLUID_TANK_SIZE = "fluidTankSize";
-
 
     // Mining Enhancement -------------------------------------------------------------------------
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";
@@ -140,7 +148,7 @@ public class MPSConstants {
     public static final String CREEPER = "creeper";
     public static final String VOLTAGE = "voltage";
     public static final String RAILGUN_TOTAL_IMPULSE = "railgunTotalImpulse";
-    public static final String RAILGUN_ENERGY_COST = "railgunEnergyCost;";
+    public static final String RAILGUN_ENERGY_COST = "railgunEnergyCost";
     public static final String RAILGUN_HEAT_EMISSION = "railgunHeatEm";
     public static final String TIMER = "cooldown";
     public static final String POWER = "power";

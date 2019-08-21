@@ -9,8 +9,8 @@ import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -48,7 +48,7 @@ public class RailgunModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_WEAPON, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
             this.moduleCap.addBasePropertyDouble(MPSConstants.RAILGUN_ENERGY_COST, 5000, "RF");
             this.moduleCap.addBasePropertyDouble(MPSConstants.RAILGUN_HEAT_EMISSION, 2, "");

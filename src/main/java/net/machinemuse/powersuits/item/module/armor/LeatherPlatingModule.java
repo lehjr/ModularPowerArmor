@@ -2,8 +2,8 @@ package net.machinemuse.powersuits.item.module.armor;
 
 import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,7 +32,7 @@ public class LeatherPlatingModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ARMOR, EnumModuleTarget.ARMORONLY, MPSConfig.INSTANCE);
+            moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig);
             moduleCap.addBasePropertyDouble(MPSConstants.ARMOR_VALUE_PHYSICAL, 3, NuminaConstants.MODULE_TRADEOFF_PREFIX + MPSConstants.ARMOR_POINTS);
             moduleCap.addBasePropertyDouble(MPSConstants.MAXIMUM_HEAT, 75);
         }

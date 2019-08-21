@@ -8,8 +8,7 @@ import net.machinemuse.numina.client.model.obj.MuseOBJModel;
 import net.machinemuse.numina.client.render.modelspec.*;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
-import net.minecraft.client.Minecraft;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
@@ -91,13 +90,13 @@ public enum ModelSpecXMLReader {
                             switch (specType) {
                                 case WIELDABLE:
                                     // only allow custom models if allowed by config
-//                                    if (isDefault || MPSConfig.INSTANCE.allowCustomPowerFistModels())
+//                                    if (isDefault || CommonConfig.moduleConfig.allowCustomPowerFistModels())
                                     parseModelSpec(specNode, event, EnumSpecType.WIELDABLE, specName, isDefault);
                                     break;
 
                                 case ARMOR_MODEL:
                                     // only allow these models if allowed by config
-                                    if (MPSConfig.INSTANCE.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                                    if (CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
                                         parseModelSpec(specNode, event, EnumSpecType.ARMOR_MODEL, specName, isDefault);
                                     }
                                     break;

@@ -10,10 +10,10 @@ public class MPSRegistryNames {
     /**
      * Armor --------------------------------------------------------------------------------------
      */
-    public static final String ITEM__POWER_ARMOR_HELMET__REGNAME = MODID + ":powerarmor.head";
-    public static final String ITEM__POWER_ARMOR_CHESTPLATE__REGNAME = MODID + ":powerarmor.torso";
-    public static final String ITEM__POWER_ARMOR_LEGGINGS__REGNAME = MODID + ":powerarmor.legs";
-    public static final String ITEM__POWER_ARMOR_BOOTS__REGNAME = MODID + ":powerarmor.feet";
+    public static final String ITEM__POWER_ARMOR_HELMET__REGNAME = MODID + ":powerarmor_head";
+    public static final String ITEM__POWER_ARMOR_CHESTPLATE__REGNAME = MODID + ":powerarmor_torso";
+    public static final String ITEM__POWER_ARMOR_LEGGINGS__REGNAME = MODID + ":powerarmor_legs";
+    public static final String ITEM__POWER_ARMOR_BOOTS__REGNAME = MODID + ":powerarmor_feet";
 
     /**
      * HandHeld -----------------------------------------------------------------------------------
@@ -23,53 +23,53 @@ public class MPSRegistryNames {
     /**
      * Components ---------------------------------------------------------------------------------
      */
-    public static final String COMPONENT__WIRING__REGNAME = MODID + ":component.wiring";
-    public static final String COMPONENT__SOLENOID__REGNAME = MODID + ":component.solenoid";
-    public static final String COMPONENT__SERVO__REGNAME = MODID + ":component.servo";
-    public static final String COMPONENT__GLIDER_WING__REGNAME = MODID + ":component.glider_wing";
-    public static final String COMPONENT__ION_THRUSTER__REGNAME = MODID + ":component.ion_thruster";
-    public static final String COMPONENT__LV_CAPACITOR__REGNAME = MODID + ":component.capacitor.lv";
-    public static final String COMPONENT__MV_CAPACITOR___REGNAME = MODID + ":component.capacitor.mv";
-    public static final String COMPONENT__HV_CAPACITOR___REGNAME = MODID + ":component.capacitor.hv";
-    public static final String COMPONENT__EV_CAPACITOR___REGNAME = MODID + ":component.capacitor.ev";
-    public static final String COMPONENT__PARACHUTE__REGNAME = MODID + ":component.parachute";
-    public static final String COMPONENT__LEATHER_PLATING__REGNAME = MODID + ":component.plating.leather";
-    public static final String COMPONENT__IRON_PLATING__REGNAME = MODID + ":component.plating.iron";
-    public static final String COMPONENT__DIAMOND_PLATING__REGNAME = MODID + ":component.plating.diamond";
-    public static final String COMPONENT__FIELD_EMITTER__REGNAME = MODID + ":component.field_emitter";
-    public static final String COMPONENT__LASER_EMITTER__REGNAME = MODID + ":component.laser_emitter";
-    public static final String COMPONENT__CARBON_MYOFIBER__REGNAME = MODID + ":component.carbon_myofiber";
-    public static final String COMPONENT__CONTROL_CIRCUIT__REGNAME = MODID + ":component.control_circuit";
-    public static final String COMPONENT__MYOFIBER_GEL__REGNAME = MODID + ":component.myofiber_gel";
-    public static final String COMPONENT__ARTIFICIAL_MUSCLE__REGNAME = MODID + ":component.artificial_muscle";
-    public static final String COMPONENT__SOLAR_PANEL__REGNAME = MODID + ":component.solar_panel";
-    public static final String COMPONENT__MAGNET__REGNAME = MODID + ":component.magnet";
-    public static final String COMPONENT__COMPUTER_CHIP__REGNAME = MODID + ":component.computer_chip";
-    public static final String COMPONENT__RUBBER_HOSE__REGNAME = MODID + ":component.rubber_hose";
+    public static final String COMPONENT__WIRING__REGNAME = MODID + ":component_wiring";
+    public static final String COMPONENT__SOLENOID__REGNAME = MODID + ":component_solenoid";
+    public static final String COMPONENT__SERVO__REGNAME = MODID + ":component_servo";
+    public static final String COMPONENT__GLIDER_WING__REGNAME = MODID + ":component_glider_wing";
+    public static final String COMPONENT__ION_THRUSTER__REGNAME = MODID + ":component_ion_thruster";
+    public static final String COMPONENT__LV_CAPACITOR__REGNAME = MODID + ":component_capacitor_lv";
+    public static final String COMPONENT__MV_CAPACITOR___REGNAME = MODID + ":component_capacitor_mv";
+    public static final String COMPONENT__HV_CAPACITOR___REGNAME = MODID + ":component_capacitor_hv";
+    public static final String COMPONENT__EV_CAPACITOR___REGNAME = MODID + ":component_capacitor_ev";
+    public static final String COMPONENT__PARACHUTE__REGNAME = MODID + ":component_parachute";
+    public static final String COMPONENT__LEATHER_PLATING__REGNAME = MODID + ":component_plating_leather";
+    public static final String COMPONENT__IRON_PLATING__REGNAME = MODID + ":component_plating_iron";
+    public static final String COMPONENT__DIAMOND_PLATING__REGNAME = MODID + ":component_plating_diamond";
+    public static final String COMPONENT__FIELD_EMITTER__REGNAME = MODID + ":component_field_emitter";
+    public static final String COMPONENT__LASER_EMITTER__REGNAME = MODID + ":component_laser_emitter";
+    public static final String COMPONENT__CARBON_MYOFIBER__REGNAME = MODID + ":component_carbon_myofiber";
+    public static final String COMPONENT__CONTROL_CIRCUIT__REGNAME = MODID + ":component_control_circuit";
+    public static final String COMPONENT__MYOFIBER_GEL__REGNAME = MODID + ":component_myofiber_gel";
+    public static final String COMPONENT__ARTIFICIAL_MUSCLE__REGNAME = MODID + ":component_artificial_muscle";
+    public static final String COMPONENT__SOLAR_PANEL__REGNAME = MODID + ":component_solar_panel";
+    public static final String COMPONENT__MAGNET__REGNAME = MODID + ":component_magnet";
+    public static final String COMPONENT__COMPUTER_CHIP__REGNAME = MODID + ":component_computer_chip";
+    public static final String COMPONENT__RUBBER_HOSE__REGNAME = MODID + ":component_rubber_hose";
 
     /**
      * Modules ------------------------------------------------------------------------------------
      */
     // Armor --------------------------------------------------------------------------------------
-    public static final String MODULE_LEATHER_PLATING__REGNAME = MODID + ":plating.leather";
-    public static final String MODULE_IRON_PLATING__REGNAME =  MODID + ":plating.iron";
-    public static final String MODULE_DIAMOND_PLATING__REGNAME =  MODID + ":plating.diamond";
+    public static final String MODULE_LEATHER_PLATING__REGNAME = MODID + ":plating_leather";
+    public static final String MODULE_IRON_PLATING__REGNAME =  MODID + ":plating_iron";
+    public static final String MODULE_DIAMOND_PLATING__REGNAME =  MODID + ":plating_diamond";
     public static final String MODULE_ENERGY_SHIELD__REGNAME =  MODID + ":energy_shield";
 
     // Cosmetic -----------------------------------------------------------------------------------
     public static final String MODULE_TRANSPARENT_ARMOR__REGNAME = MODID + ":transparent_armor";
 
     // Energy Storage -----------------------------------------------------------------------------
-    public static final String MODULE_BATTERY_BASIC__REGNAME = MODID + ":battery.basic";
-    public static final String MODULE_BATTERY_ADVANCED__REGNAME = MODID + ":battery.advanced";
-    public static final String MODULE_BATTERY_ELITE__REGNAME = MODID + ":battery.elite";
-    public static final String MODULE_BATTERY_ULTIMATE__REGNAME = MODID + ":battery.ultimate";
+    public static final String MODULE_BATTERY_BASIC__REGNAME = MODID + ":battery_basic";
+    public static final String MODULE_BATTERY_ADVANCED__REGNAME = MODID + ":battery_advanced";
+    public static final String MODULE_BATTERY_ELITE__REGNAME = MODID + ":battery_elite";
+    public static final String MODULE_BATTERY_ULTIMATE__REGNAME = MODID + ":battery_ultimate";
 
     // Energy Generation -----------------------------------------------------------------------------
-    public static final String MODULE_SOLAR_GENERATOR__REGNAME = MODID + ":generator.solar";
-    public static final String MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME = MODID + ":generator.solar.adv";
-    public static final String MODULE_KINETIC_GENERATOR__REGNAME = MODID + ":generator.kinetic";
-    public static final String MODULE_THERMAL_GENERATOR__REGNAME = MODID + ":generator.thermal";
+    public static final String MODULE_SOLAR_GENERATOR__REGNAME = MODID + ":generator_solar";
+    public static final String MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME = MODID + ":generator_solar_adv";
+    public static final String MODULE_KINETIC_GENERATOR__REGNAME = MODID + ":generator_kinetic";
+    public static final String MODULE_THERMAL_GENERATOR__REGNAME = MODID + ":generator_thermal";
 
     // todo
     // Debug --------------------------------------------------------------------------------------

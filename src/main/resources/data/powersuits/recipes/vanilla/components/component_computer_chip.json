@@ -1,0 +1,33 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RSR",
+    "CDC",
+    "RLR"
+  ],
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "L": {
+      "item": "powersuits:component_laser_emitter"
+    },
+    "S": {
+      "item": "minecraft:daylight_detector"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "D": {
+      "tag":"forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "powersuits:component_computer_chip"
+  }
+}

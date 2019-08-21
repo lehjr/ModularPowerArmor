@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item":"minecraft:coal_block"
+    }
+  },
+  "result": {
+    "item":"powersuits:component_carbon_myofiber"
+  }
+}

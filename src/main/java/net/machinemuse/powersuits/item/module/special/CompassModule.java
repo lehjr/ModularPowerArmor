@@ -4,7 +4,7 @@ import net.machinemuse.numina.capabilities.module.powermodule.*;
 import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
 import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
-import net.machinemuse.powersuits.basemod.MPSConfig;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,7 +38,7 @@ public class CompassModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_SPECIAL, EnumModuleTarget.HEADONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
             this.moduleToggle = new Toggle(module);
         }
 

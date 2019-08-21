@@ -8,8 +8,8 @@ import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
 import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,7 +45,7 @@ public class SprintAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.LEGSONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.SPRINT_ASSIST, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 100);

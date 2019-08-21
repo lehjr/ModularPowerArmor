@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**

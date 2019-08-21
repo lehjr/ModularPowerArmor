@@ -6,8 +6,8 @@ import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapabilit
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.helper.ToolHelpers;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -48,7 +48,7 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);

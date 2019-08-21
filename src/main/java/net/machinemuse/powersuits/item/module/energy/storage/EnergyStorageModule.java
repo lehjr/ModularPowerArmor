@@ -1,9 +1,10 @@
 package net.machinemuse.powersuits.item.module.energy.storage;
 
 import net.machinemuse.numina.capabilities.energy.ForgeEnergyModuleWrapper;
+import net.machinemuse.numina.capabilities.energy.IEnergyWrapper;
 import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -36,11 +37,11 @@ public class EnergyStorageModule extends AbstractPowerModule {
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
         IPowerModule moduleCap;
-        IEnergyStorage energyStorage;
+        IEnergyWrapper energyStorage;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyInteger(MPSConstants.MAX_ENERGY, maxEnergy, "RF");
             this.moduleCap.addBasePropertyInteger(MPSConstants.MAX_TRAMSFER, maxTransfer, "RF");
             this.energyStorage = new ForgeEnergyModuleWrapper(
@@ -55,7 +56,21 @@ public class EnergyStorageModule extends AbstractPowerModule {
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
             if (cap == PowerModuleCapability.POWER_MODULE)
                 return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
+            if (cap == CapabilityEnergy.ENERGY) {
+                energyStorage.updateFromNBT();
+            }
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
         }
+    }
+
+    @Override
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public double getDurabilityForDisplay(final ItemStack stack) {
+        return stack.getCapability(CapabilityEnergy.ENERGY)
+                .map( energyCap-> 1 - energyCap.getEnergyStored() / (double) energyCap.getMaxEnergyStored()).orElse(1D);
     }
 }

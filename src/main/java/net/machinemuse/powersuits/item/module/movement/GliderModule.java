@@ -10,10 +10,9 @@ import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -50,7 +49,7 @@ public class GliderModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_MOVEMENT, EnumModuleTarget.TORSOONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0);
             this.moduleCap.addBasePropertyDouble(MPSConstants.JETBOOTS_THRUST, 0);

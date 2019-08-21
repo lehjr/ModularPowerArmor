@@ -8,8 +8,8 @@ import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapabilit
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.helper.ToolHelpers;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -52,7 +52,7 @@ public class HoeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);
@@ -85,7 +85,7 @@ public class HoeModule extends AbstractPowerModule {
                     int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(context);
                     if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
-                    double radius = (int) moduleCap.applyPropertyModifiers(MPSConstants.RADIUS);
+                    double radius = (int) Math.min(moduleCap.applyPropertyModifiers(MPSConstants.RADIUS), 1);
                     for (int i = (int) Math.floor(-radius); i < radius; i++) {
                         for (int j = (int) Math.floor(-radius); j < radius; j++) {
                             if (i * i + j * j < radius * radius) {

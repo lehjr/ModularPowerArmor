@@ -11,14 +11,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
 
 public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public Colour color;
+    public LivingEntity shootingEntity;
 
     public LuxCapacitorEntity(EntityType<? extends LuxCapacitorEntity> entityType, World world) {
         super(entityType, world);
@@ -26,8 +31,16 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
             color = Colour.WHITE;
     }
 
+    @Nullable
+    @Override
+    public LivingEntity getThrower() {
+        LivingEntity other = super.getThrower();
+        return other != null ? other : this.shootingEntity;
+    }
+
     public LuxCapacitorEntity(World world, LivingEntity shootingEntity, Colour color) {
         super(MPSObjects.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
+        this.shootingEntity = shootingEntity;
         this.color = color != null ? color : BlockLuxCapacitor.defaultColor;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;
@@ -96,11 +109,14 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
         if (color == null)
             color = Colour.WHITE;
         buffer.writeInt(color.getInt());
+        buffer.writeUniqueId(getThrower().getUniqueID());
+
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         this.color = new Colour(additionalData.readInt());
+        this.shootingEntity = this.world.getPlayerByUuid(additionalData.readUniqueId());
     }
 
     /**
@@ -114,6 +130,10 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
     @Override
     protected void registerData() {
 
+    }
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

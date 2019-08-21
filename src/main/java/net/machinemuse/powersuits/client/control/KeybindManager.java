@@ -1,10 +1,10 @@
 //package net.machinemuse.powersuits.client.control;
 //
 //import net.machinemuse.numina.basemod.MuseLogger;
-//import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+//import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 //import net.machinemuse.numina.control.KeyBindingHelper;
-//import net.machinemuse.numina.math.geometry.MusePoint2D;
-//import net.machinemuse.powersuits.basemod.MPSConfig;
+//import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
+//import net.machinemuse.powersuits.basemod.CommonConfig;
 //import net.machinemuse.powersuits.client.gui.tinker.clickable.ClickableKeybinding;
 //import net.minecraft.client.settings.KeyBinding;
 //import net.minecraft.client.util.InputMappings;
@@ -46,7 +46,7 @@
 //    public static void writeOutKeybinds() {
 //        BufferedWriter writer = null;
 //        try {
-//            File file = new File(MPSConfig.INSTANCE.getConfigFolder(), "powersuits-keybinds.cfg");
+//            File file = new File(CommonConfig.moduleConfig.getConfigFolder(), "powersuits-keybinds.cfg");
 //            if (!file.exists()) {
 //                file.createNewFile();
 //            }
@@ -73,7 +73,7 @@
 //
 //            for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
 //                writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
-//                for (ClickableModule module : keybinding.getBoundModules()) {
+//                for (ClickableModuleSlot module : keybinding.getBoundModules()) {
 //                    writer.write(module.getStack().getItem().getRegistryName().toString() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
 //                }
 //            }
@@ -90,7 +90,7 @@
 //
 //    public static void readInKeybinds() {
 //        try {
-//            File file = new File(MPSConfig.INSTANCE.getConfigFolder(), "powersuits-keybinds.cfg");
+//            File file = new File(CommonConfig.moduleConfig.getConfigFolder(), "powersuits-keybinds.cfg");
 //            if (!file.exists()) {
 //                MuseLogger.logger.error("No powersuits keybind file found.");
 //                return;
@@ -127,7 +127,7 @@
 //                    MusePoint2D position = new MusePoint2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
 //                    ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(exploded[0])));
 //                    if (!module.isEmpty()) {
-////                        ClickableModule cmodule = new ClickableModule(module, position);
+////                        ClickableModuleSlot cmodule = new ClickableModuleSlot(module, position);
 ////                        workingKeybinding.bindModule(cmodule);
 //                    }
 //                }

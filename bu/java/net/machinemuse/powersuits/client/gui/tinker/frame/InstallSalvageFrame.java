@@ -2,7 +2,7 @@ package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
@@ -135,7 +135,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
     @Override
     public void onMouseDown(double x, double y, int button) {
         ClickableItem selItem = targetItem.getSelectedItem();
-        ClickableModule selModule = targetModule.getSelectedModule();
+        ClickableModuleSlot selModule = targetModule.getSelectedModule();
         if (selItem != null && selModule != null) {
             ItemStack stack = selItem.getItem();
             ItemStack module = selModule.getModule();

@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.item.module;
 
 import net.machinemuse.powersuits.basemod.MPSModules;
-import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.event.RegisterStuff;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public abstract class AbstractPowerModule extends Item {
 

@@ -9,8 +9,8 @@ import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
 import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -63,7 +63,7 @@ public class AutoFeederModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 100);
             this.moduleCap.addBasePropertyDouble(MPSConstants.EATING_EFFICIENCY, 50);
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.EFFICIENCY, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
@@ -97,7 +97,7 @@ public class AutoFeederModule extends AbstractPowerModule {
                 double saturationNeeded = 20 - foodStats.getSaturationLevel();
 
                 // this consumes all food in the player's inventory and stores the stats in a buffer
-//        if (MPSConfig.INSTANCE.useOldAutoFeeder()) { // FIXME!!!!!
+//        if (CommonConfig.moduleConfig.useOldAutoFeeder()) { // FIXME!!!!!
                 if (true) {
 
                     for (int i = 0; i < inv.getSizeInventory(); i++) {

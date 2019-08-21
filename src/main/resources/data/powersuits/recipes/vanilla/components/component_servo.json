@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "component",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "WIW",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "tag": "forge:solenoid"
+    },
+    "W": {
+      "item":"powersuits:component_wiring"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "powersuits:component_servo"
+  }
+}

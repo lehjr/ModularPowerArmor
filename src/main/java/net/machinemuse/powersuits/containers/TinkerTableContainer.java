@@ -2,12 +2,13 @@ package net.machinemuse.powersuits.containers;
 
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.slot.ClickableModuleSlot;
 import net.machinemuse.powersuits.basemod.MPSModules;
-import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.containers.providers.ContainerTypePicker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -15,6 +16,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -48,15 +50,25 @@ public class TinkerTableContainer extends Container {
     private static final IItemHandler allModules = new ItemStackHandler(MPSModules.INSTANCE.getModuleRegNames().size());
 
     // A map of the slot that holds the modular item, and the set of slots in that modular item
-    private Map<ClickableModularItem, Set<ClickableModule>> modularItemToSlotMap;
+    private Map<ClickableModularItem, Set<ClickableModuleSlot>> modularItemToSlotMap;
 
     // modules in the player's inventory not installed
-    private Set<ClickableModule> modulesInPlayerInventory;
+    private Set<ClickableModuleSlot> modulesInPlayerInventory;
 
     // a set of all known modules
-    private Set<ClickableModule> allPossibleModules;
-    public TinkerTableContainer(int id, PlayerInventory playerInventory) {
-        super(MPSObjects.TINKER_TABLE_CONTAINER_CONTAINER_TYPE, id);
+    private Set<ClickableModuleSlot> allPossibleModules;
+
+
+
+
+    protected TinkerTableContainer(@Nullable ContainerType<?> type, int windowId) {
+        super(type, windowId);
+
+    }
+
+    public TinkerTableContainer(int id, PlayerInventory playerInventory, int typeIndex) {
+        this(ContainerTypePicker.getContainerType(typeIndex), id);
+
         PlayerEntity player = playerInventory.player;
         modularItemToSlotMap = new HashMap<>();
         modulesInPlayerInventory = new HashSet<>();
@@ -72,10 +84,10 @@ public class TinkerTableContainer extends Container {
                     ClickableModularItem modularItemSlot = (ClickableModularItem)
                             this.addSlot(new ClickableModularItem(playerInventory, finalIndex,0, 0));
 
-                    Set<ClickableModule> moduleSet = new HashSet<>();
+                    Set<ClickableModuleSlot> moduleSet = new HashSet<>();
                     for (int handlerIndex = 0; handlerIndex < itemHandler.getSlots(); handlerIndex ++) {
-                        moduleSet.add((ClickableModule)
-                                this.addSlot(new ClickableModule(itemHandler, handlerIndex, 0, 0)));
+                        moduleSet.add((ClickableModuleSlot)
+                                this.addSlot(new ClickableModuleSlot(itemHandler, handlerIndex, 0, 0)));
                     }
                     modularItemToSlotMap.put(modularItemSlot, moduleSet);
                     return true;
@@ -93,21 +105,21 @@ public class TinkerTableContainer extends Container {
         if(!this.inventorySlots.isEmpty()) {
             for (int index = 0; index < allModules.getSlots(); index ++) {
                 allModules.insertItem(index, new ItemStack(ForgeRegistries.ITEMS.getValue(regNames.get(index))), false);
-                allPossibleModules.add((ClickableModule)
-                        this.addSlot(new ClickableModule(allModules, index, 0, 0)));
+                allPossibleModules.add((ClickableModuleSlot)
+                        this.addSlot(new ClickableModuleSlot(allModules, index, 0, 0)));
             }
         }
     }
 
-    public Set<ClickableModule> getAllModules() {
+    public Set<ClickableModuleSlot> getAllModules() {
         return allPossibleModules;
     }
 
-    public Map<ClickableModularItem, Set<ClickableModule>> getModularItemToSlotMap() {
+    public Map<ClickableModularItem, Set<ClickableModuleSlot>> getModularItemToSlotMap() {
         return modularItemToSlotMap;
     }
 
-    public Set<ClickableModule> getModulesInPlayerInventory() {
+    public Set<ClickableModuleSlot> getModulesInPlayerInventory() {
         return modulesInPlayerInventory;
     }
 

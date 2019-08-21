@@ -7,7 +7,7 @@ import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.block.BlockTinkerTable;
 import net.machinemuse.powersuits.containers.MPSCraftingContainer;
 import net.machinemuse.powersuits.containers.ModeChangingContainer;
-import net.machinemuse.powersuits.containers.PortableCraftingContainer;
+import net.machinemuse.powersuits.containers.ModularItemContainer;
 import net.machinemuse.powersuits.containers.TinkerTableContainer;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
@@ -51,7 +51,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -231,12 +230,15 @@ public enum RegisterStuff {
         event.getRegistry().registerAll(
                 EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
                         .size(0.25F, 0.25F)
+                        .setCustomClientFactory(((spawnEntity, world) -> MPSObjects.LUX_CAPACITOR_ENTITY_TYPE.create(world)))
                         .build(LUX_CAPACITOR_REG_NAME + "_entity").setRegistryName(LUX_CAPACITOR_REG_NAME + "_entity"),
 
                 EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
+                        .setCustomClientFactory((spawnEntity, world) -> MPSObjects.SPINNING_BLADE_ENTITY_TYPE.create(world))
                         .build(MODID +":spinning_blade").setRegistryName(MODID +":spinning_blade"),
 
                 EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
+                        .setCustomClientFactory((spawnEntity, world) -> MPSObjects.PLASMA_BOLT_ENTITY_TYPE.create(world))
                         .build(MODID +":plasma_bolt").setRegistryName(MODID +":plasma_bolt")
         );
     }
@@ -246,20 +248,33 @@ public enum RegisterStuff {
         event.getRegistry().registerAll(
 
                 // MODE CHANGING CONTAINER TYPE
+                new ContainerType<>(ModeChangingContainer::new)
+                        .setRegistryName(MODID + ":mode_changing_container_type"),
+
+                // Modular Item Container
+                new ContainerType<>(ModularItemContainer::new)
+                        .setRegistryName(MODID + ":modular_item_container_type"),
+
                 // the IForgeContainerType only needed for extra data
+                // ModuleConfig
                 IForgeContainerType.create((windowId, playerInventory, data) -> {
-                    Hand hand = Hand.values()[data.readInt()];
-                    return new ModeChangingContainer(windowId, playerInventory, hand);
-                }).setRegistryName(MODID + ":mode_changing_container_type"),
+                    int typeIndex = data.readInt();
+                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+                }).setRegistryName(MODID + ":module_config_container_type"),
 
-                // TINKER TABLE TYPE
-                new ContainerType<>( TinkerTableContainer::new)
-                        .setRegistryName(MODID + ":tinker_table_container_type"),
+                // Keybinding
+                IForgeContainerType.create((windowId, playerInventory, data) -> {
+                    int typeIndex = data.readInt();
+                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+                }).setRegistryName(MODID + ":table_key_config_container_type"),
 
-                new ContainerType<>(PortableCraftingContainer::new)
-                        .setRegistryName("portable_crafting_container"),
+                // Cosmetic
+                IForgeContainerType.create((windowId, playerInventory, data) -> {
+                    int typeIndex = data.readInt();
+                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
 
-
+                // Crafting Gui
                 new ContainerType<>(MPSCraftingContainer::new)
                         .setRegistryName(MODID + ":crafting_container")
         );

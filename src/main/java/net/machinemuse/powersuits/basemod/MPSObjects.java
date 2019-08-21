@@ -4,6 +4,7 @@ import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.block.BlockTinkerTable;
 import net.machinemuse.powersuits.containers.MPSCraftingContainer;
 import net.machinemuse.powersuits.containers.ModeChangingContainer;
+import net.machinemuse.powersuits.containers.ModularItemContainer;
 import net.machinemuse.powersuits.containers.TinkerTableContainer;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
@@ -367,22 +368,20 @@ public enum MPSObjects {
      * Container Types ----------------------------------------------------------------------------
      */
     @ObjectHolder(MODID + ":mode_changing_container_type")
-    public static final ContainerType<ModeChangingContainer> MODE_CHANGING_CONTAINER_CONTAINER_TYPE = null;
+    public static final ContainerType<ModeChangingContainer> MODE_CHANGING_CONTAINER_TYPE = null;
 
-    @ObjectHolder(MODID + ":tinker_table_container_type")
-    public static final ContainerType<TinkerTableContainer> TINKER_TABLE_CONTAINER_CONTAINER_TYPE = null;
+    @ObjectHolder(MODID + ":module_config_container_type")
+    public static final ContainerType<TinkerTableContainer> MODULE_CONFIG_CONTAINER_TYPE = null;
+
+    @ObjectHolder(MODID + ":cosmetic_config_container_type")
+    public static final ContainerType<TinkerTableContainer> COSMETIC_CONFIG_CONTAINER_TYPE = null;
+
+    @ObjectHolder(MODID + ":table_key_config_container_type")
+    public static final ContainerType<TinkerTableContainer> KEY_CONFIG_CONTAINER_TYPE = null;
 
     @ObjectHolder(MODID + ":crafting_container")
     public static final ContainerType<MPSCraftingContainer> MPS_CRAFTING_CONTAINER_TYPE = null;
 
-
-//    public static final ContainerType<PortableCraftingContainer> portableWorkBenchType = null;
-
-
-
-
-
-
-
-
+    @ObjectHolder(MODID + ":modular_item_container_type")
+    public static final ContainerType<ModularItemContainer> MODULAR_ITEM_CONTAINER_CONTAINER_TYPE = null;
 }

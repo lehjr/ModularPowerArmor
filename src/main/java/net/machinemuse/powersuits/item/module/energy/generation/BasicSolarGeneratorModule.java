@@ -5,9 +5,8 @@ import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
 import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.item.armor.ItemPowerArmorHelmet;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,7 @@ public class BasicSolarGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_ENERGY_GENERATION, EnumModuleTarget.HEADONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_GENERATION_DAY, 15000, "RF");
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_GENERATION_NIGHT, 1500, "RF");
             this.ticker = new Ticker(moduleCap);

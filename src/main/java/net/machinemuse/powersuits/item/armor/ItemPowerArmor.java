@@ -2,8 +2,6 @@ package net.machinemuse.powersuits.item.armor;
 
 import com.google.common.collect.Multimap;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.basemod.MPSObjects;
-import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.event.RegisterStuff;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
@@ -14,6 +12,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -45,6 +44,38 @@ public class ItemPowerArmor extends ItemElectricArmor {
         return multimap;
     }
 
+    // TODO: implement getters for armor modules
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+        return super.getAttributeModifiers(slot, stack);
+
+
+        // Armor attributes might have to be set through a ticking event like the sprint/walking assist module
+
+//            @Override
+//            public double getArmorDouble() {
+//                AtomicDouble armorDouble = new AtomicDouble(0);
+//                getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m->{
+//                   armorDouble.getAndAdd(m.applyPropertyModifiers());
+//                    double totalArmor = 0.0;
+//                    double energy = ElectricItemUtils.getPlayerEnergy(player);
+//                    double physArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_VALUE_PHYSICAL);
+//                    double enerArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_VALUE_ENERGY);
+//                    double enerConsum = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_ENERGY_CONSUMPTION);
+//
+//                    totalArmor += physArmor;
+//                    if (energy > enerConsum) {
+//                        totalArmor += enerArmor;
+//                    }
+//                    totalArmor = Math.min(CommonConfig.moduleConfig.getMaximumArmorPerPiece(), totalArmor);
+//
+//                    return totalArmor;
+//                });
+//                return armorDouble.get();
+//            }
+
+    }
+
     public int getDamageReduceAmount() {
         return this.damageReduceAmount;
     }
@@ -65,6 +96,14 @@ public class ItemPowerArmor extends ItemElectricArmor {
     public IArmorMaterial getArmorMaterial() {
         return super.getArmorMaterial();
     }
+
+
+
+
+
+
+
+
 
     @Nullable
     @Override
@@ -95,5 +134,16 @@ public class ItemPowerArmor extends ItemElectricArmor {
 //        } else
 //            ((IArmorModel) model).setRenderSpec(MPSNBTUtils.getMuseRenderTag(armor, armorSlot));
 //        return model;
+    }
+
+    @Override
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public double getDurabilityForDisplay(final ItemStack stack) {
+        return stack.getCapability(CapabilityEnergy.ENERGY)
+                .map( energyCap-> 1 - energyCap.getEnergyStored() / (double) energyCap.getMaxEnergyStored()).orElse(1D);
     }
 }

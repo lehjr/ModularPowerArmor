@@ -7,8 +7,8 @@ import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.basemod.MPSConfig;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +44,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.CATEGORY_TOOL, EnumModuleTarget.TOOLONLY, MPSConfig.INSTANCE);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
 
             this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RED, MPSConstants.RED_HUE, 1, "%");

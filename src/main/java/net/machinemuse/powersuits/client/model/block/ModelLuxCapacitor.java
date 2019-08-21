@@ -6,7 +6,6 @@ import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
-import net.machinemuse.powersuits.client.model.helper.ColoredQuadHelperThingie;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
@@ -61,40 +60,6 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
 
         builder.addAll(MuseModelHelper.getColoredQuadsWithGlow(lensModel.getQuads(state, side, rand, extraData), colour, true));
         return builder.build();
-
-
-//        return baseModel.getQuads(state, side, rand, extraData);
-
-//        if (side != null)
-//            return Collections.emptyList();
-//
-//        Direction facing = Direction.NORTH; // both NORTH and items use TRSRTransformation.Identity because I finally rotated the model
-//        colour = BlockLuxCapacitor.defaultColor;
-//
-//        if (state != null) {
-//            facing = state.get(BlockLuxCapacitor.FACING);
-//
-//            // FIXME: move color to IModelData
-//
-////            if (state instanceof IExtendedBlockState)
-////                if (((IExtendedBlockState) state).getUnlistedProperties().containsKey(BlockLuxCapacitor.COLOR))
-////                    colour = ((IExtendedBlockState) state).getValue(BlockLuxCapacitor.COLOR);
-//        }
-//        if (colour == null)
-//            colour = BlockLuxCapacitor.defaultColor;
-//        ColoredQuadHelperThingie helperThingie = new ColoredQuadHelperThingie(colour, facing);
-//
-//        try {
-//
-//            List<BakedQuad> quads = ModelLuxCapacitorHelper.INSTANCE.luxCapColoredQuadMap.get(helperThingie);
-//            if (quads.size() > 0 && this.particleTexture == null)
-//                this.particleTexture = quads.get(0).getSprite();
-//            return quads;
-//
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//            return Collections.emptyList();
-//        }
     }
 
     @Override

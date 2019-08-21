@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.gui.tinker.frame;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.clickable.ClickableModuleSlot;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.client.sound.Musique;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class ModuleSelectionFrame extends ScrollableFrame {
     protected ItemSelectionFrame target;
     protected Map<String, ModuleSelectionSubFrame> categories = new LinkedHashMap<>();
-    protected List<ClickableModule> moduleButtons = new LinkedList<>();
+    protected List<ClickableModuleSlot> moduleButtons = new LinkedList<>();
     protected int selectedModule = -1;
     protected ItemStack prevSelection;
     protected ClickableItem lastItem;
@@ -74,7 +74,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
     }
 
     private void drawSelection() {
-        ClickableModule module = getSelectedModule();
+        ClickableModuleSlot module = getSelectedModule();
         if (module != null) {
             MusePoint2D pos = moduleButtons.get(selectedModule).getPosition();
             if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
@@ -83,7 +83,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         }
     }
 
-    public ClickableModule getSelectedModule() {
+    public ClickableModuleSlot getSelectedModule() {
         if (moduleButtons.size() > selectedModule && selectedModule != -1) {
             return moduleButtons.get(selectedModule);
         } else {
@@ -116,7 +116,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
                 this.selectedModule = -1;
                 for (ItemStack module : workingModules) {
                     ModuleSelectionSubFrame frame = getOrCreateCategory(ModuleManager.INSTANCE.getModuleCategory(module).orElse(EnumModuleCategory.CATEGORY_NONE).getName());
-                    ClickableModule moduleClickable = frame.addModule(module);
+                    ClickableModuleSlot moduleClickable = frame.addModule(module);
                     // Indicate installed modules
                     if (!ModuleManager.INSTANCE.isModuleAllowed(module)) {
                         // If a disallowed module made it to the list, indicate
@@ -164,7 +164,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
             y += currentscrollpixels;
             // loadModules();
             int i = 0;
-            for (ClickableModule module : moduleButtons) {
+            for (ClickableModuleSlot module : moduleButtons) {
                 if (module.hitBox(x, y)) {
                     Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
                     selectedModule = i;
@@ -184,7 +184,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
             if (moduleButtons != null) {
                 int moduleHover = -1;
                 int i = 0;
-                for (ClickableModule module : moduleButtons) {
+                for (ClickableModuleSlot module : moduleButtons) {
                     if (module.hitBox(x, y)) {
                         moduleHover = i;
                         break;
