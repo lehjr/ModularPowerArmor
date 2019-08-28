@@ -1,6 +1,7 @@
 package net.machinemuse.powersuits.block;
 
 import net.machinemuse.numina.math.Colour;
+import net.machinemuse.powersuits.client.gui.tinker.module_new.GuiTinkerTable;
 import net.machinemuse.powersuits.containers.providers.TinkerContainerProvider;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
 import net.minecraft.block.Block;
@@ -8,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -21,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
@@ -55,14 +58,14 @@ public class BlockLuxCapacitor extends DirectionalBlock {
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         int typeIndex = 0;
 
-//        if(world.isRemote) {
-//            Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiTinkerTable2(player)));
-//        }
+        if(world.isRemote) {
+            Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiTinkerTable(player, new TranslationTextComponent("gui.tinkertable"))));
+        }
 
 
-        if(!world.isRemote)
-            NetworkHooks.openGui((ServerPlayerEntity) player,
-                    new TinkerContainerProvider(typeIndex), (buffer) -> buffer.writeInt(typeIndex));
+//        if(!world.isRemote)
+//            NetworkHooks.openGui((ServerPlayerEntity) player,
+//                    new TinkerContainerProvider(typeIndex), (buffer) -> buffer.writeInt(typeIndex));
         return true;
     }
 

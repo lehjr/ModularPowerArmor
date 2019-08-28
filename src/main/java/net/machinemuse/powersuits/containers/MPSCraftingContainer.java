@@ -54,37 +54,30 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
             }
         }
 
-        // inventory slot 10-
+        // inventory slot 10-36
         for(row = 0; row < 3; ++row) {
             for(col = 0; col < 9; ++col) {
                 this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
-        // hotbar
+        // hotbar slots 37-45
         for(col = 0; col < 9; ++col) {
             this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
         }
     }
 
     protected static void func_217066_a(int windowId, World world, PlayerEntity playerIn, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
-        System.out.println("func_217066_a");
-
         if (!world.isRemote) {
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity)playerIn;
             ItemStack itemStack = ItemStack.EMPTY;
             Optional<ICraftingRecipe> optionalRecipe = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
             if (optionalRecipe.isPresent()) {
-
-                System.out.println("made it here");
-
                 ICraftingRecipe recipe = (ICraftingRecipe)optionalRecipe.get();
                 if (resultInventory.canUseRecipe(world, serverPlayer, recipe)) {
                     itemStack = recipe.getCraftingResult(craftingInventory);
                 }
-            } else
-                System.out.println("not present");
-
+            }
             resultInventory.setInventorySlotContents(0, itemStack);
             serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemStack));
         }
@@ -142,25 +135,32 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
 
 
         ItemStack stackCopy = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack itemStack = slot.getStack();
             stackCopy = itemStack.copy();
+
+            // crafting result
             if (index == 0) {
                 this.worldPosCallable.consume((world, pos) -> itemStack.getItem().onCreated(itemStack, world, playerEntity));
                 if (!this.mergeItemStack(itemStack, 10, 46, true)) {
                     return ItemStack.EMPTY;
                 }
-
                 slot.onSlotChange(itemStack, stackCopy);
+
+            // player inventory
             } else if (index >= 10 && index < 37) {
                 if (!this.mergeItemStack(itemStack, 37, 46, false)) {
                     return ItemStack.EMPTY;
                 }
+
+            // hotbar
             } else if (index >= 37 && index < 46) {
                 if (!this.mergeItemStack(itemStack, 10, 37, false)) {
                     return ItemStack.EMPTY;
                 }
+
+
             } else if (!this.mergeItemStack(itemStack, 10, 46, false)) {
                 return ItemStack.EMPTY;
             }
@@ -215,5 +215,4 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         // needed since this isn't an an actual instance of WorkbenchContainer
         return Lists.newArrayList(new RecipeBookCategories[]{RecipeBookCategories.SEARCH, RecipeBookCategories.EQUIPMENT, RecipeBookCategories.BUILDING_BLOCKS, RecipeBookCategories.MISC, RecipeBookCategories.REDSTONE});
     }
-
 }

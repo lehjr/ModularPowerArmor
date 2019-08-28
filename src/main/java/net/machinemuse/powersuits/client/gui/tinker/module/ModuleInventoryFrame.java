@@ -1,4 +1,4 @@
-package net.machinemuse.powersuits.client.gui.tinker.module_install;
+package net.machinemuse.powersuits.client.gui.tinker.module;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;

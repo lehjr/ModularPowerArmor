@@ -36,7 +36,7 @@ import net.machinemuse.powersuits.item.module.special.InvisibilityModule;
 import net.machinemuse.powersuits.item.module.special.MagnetModule;
 import net.machinemuse.powersuits.item.module.tool.*;
 import net.machinemuse.powersuits.item.module.vision.BinocularsModule;
-import net.machinemuse.powersuits.item.module.vision.ItemModuleNightVision;
+import net.machinemuse.powersuits.item.module.vision.NightVisionModule;
 import net.machinemuse.powersuits.item.module.weapon.*;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
@@ -268,7 +268,7 @@ public enum MPSObjects {
     public static final BinocularsModule binoculars = null;
 
     @ObjectHolder(MODULE_NIGHT_VISION__REGNAME)
-    public static final ItemModuleNightVision night_vision = null;
+    public static final NightVisionModule night_vision = null;
 
     // Mining Enhancements ------------------------------------------------------------------------
     @ObjectHolder(MODULE_AOE_PICK_UPGRADE__REGNAME)
@@ -285,7 +285,7 @@ public enum MPSObjects {
     public static final AquaAffinityModule aquaAffinity = null;
 
     @ObjectHolder(MODULE_AXE__REGNAME)
-    public static final ItemModuleAxe axe = null;
+    public static final AxeModule axe = null;
 
     @ObjectHolder(MODULE_DIAMOND_PICK_UPGRADE__REGNAME)
     public static final DiamondPickUpgradeModule diamondPickUpgrade = null;

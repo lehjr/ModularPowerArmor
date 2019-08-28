@@ -1,22 +1,21 @@
-package net.machinemuse.powersuits.client.gui.tinker.module_install;
+package net.machinemuse.powersuits.client.gui.tinker.module;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.client.gui.geometry.MuseRect;
 import net.machinemuse.numina.client.gui.geometry.MuseRelativeRect;
-import net.machinemuse.numina.client.gui.slot.ClickableModuleSlot;
 import net.machinemuse.numina.client.render.MuseRenderer;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleSelectionSubFrame2 {
+public class ModuleSelectionSubFrame {
     protected List<ClickableModule> moduleButtons;
     protected MuseRelativeRect border;
     protected String category;
 
-    public ModuleSelectionSubFrame2(String category, MuseRelativeRect border) {
+    public ModuleSelectionSubFrame(String category, MuseRelativeRect border) {
         this.category = category;
         this.border = border;
         this.moduleButtons = new ArrayList<>();

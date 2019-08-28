@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WW",
+    "LC",
+    "WW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "C": {
+      "item":"powersuits:component_control_circuit"
+    },
+    "L": {
+      "item": "powersuits:component_laser_emitter"
+    }
+  },
+  "result": {
+    "item": "powersuits:transparent_armor"
+  }
+}

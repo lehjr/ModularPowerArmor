@@ -1,15 +1,17 @@
-package net.machinemuse.powersuits.client.gui.tinker.common;
+package net.machinemuse.powersuits.client.gui.tinker.module_new;
 
-import net.machinemuse.numina.client.gui.slot.ClickableModuleSlot;
+import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.client.gui.geometry.MuseRect;
 import net.machinemuse.numina.client.gui.geometry.MuseRelativeRect;
 import net.machinemuse.numina.client.render.MuseRenderer;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleSelectionSubFrame {
-    protected List<ClickableModuleSlot> moduleButtons;
+    protected List<ClickableModule> moduleButtons;
     protected MuseRelativeRect border;
     protected String category;
 
@@ -19,9 +21,10 @@ public class ModuleSelectionSubFrame {
         this.moduleButtons = new ArrayList<>();
     }
 
-    public ClickableModuleSlot addModule(ClickableModuleSlot clickie) {
+    public ClickableModule addModule(ItemStack module, int index) {
+        ClickableModule clickie = new ClickableModule(module, new MusePoint2D(0, 0), index);
         this.moduleButtons.add(clickie);
-        // refreshButtonPositions();
+//         refreshButtonPositions();
         return clickie;
     }
 
@@ -29,24 +32,24 @@ public class ModuleSelectionSubFrame {
         refreshButtonPositions();
         double top = border.top();
         MuseRenderer.drawString(this.category, border.left(), top);
-        for (ClickableModuleSlot clickie : moduleButtons) {
+        for (ClickableModule clickie : moduleButtons) {
             clickie.render(min, max, partialTicks);
         }
     }
 
     public void refreshButtonPositions() {
-        int i = 0, j = 0;
-        for (ClickableModuleSlot clickie : moduleButtons) {
-            if (i > 4) {
-                i = 0;
-                j++;
+        int col = 0, row = 0;
+        for (ClickableModule clickie : moduleButtons) {
+            if (col > 4) {
+                col = 0;
+                row++;
             }
-            double x = border.left() + 8 + 16 * i;
-            double y = border.top() + 16 + 16 * j;
+            double x = border.left() + 8 + 16 * col;
+            double y = border.top() + 16 + 16 * row;
             clickie.move(x, y);
-            i++;
+            col++;
         }
-        border.setHeight(28 + 16 * j);
+        border.setHeight(28 + 16 * row);
     }
 
     public MuseRect getBorder() {

@@ -13,8 +13,15 @@ import java.util.List;
 
 public class MuseContainerlessGui extends Screen {
     protected long creationTime;
-    protected int xSize;
-    protected int ySize;
+    /** The X size of the inventory window in pixels. */
+    public int xSize = 176;
+    /** The Y size of the inventory window in pixels. */
+    public int ySize = 166;
+    /** Starting X position for the Gui. Inconsistent use for Gui backgrounds. */
+    public int guiLeft;
+    /** Starting Y position for the Gui. Inconsistent use for Gui backgrounds. */
+    public int guiTop;
+
     protected DrawableMuseRect tooltipRect;
 
     protected List<IGuiFrame> frames;
@@ -22,7 +29,12 @@ public class MuseContainerlessGui extends Screen {
     public MuseContainerlessGui(ITextComponent titleIn) {
         super(titleIn);
         frames = new ArrayList();
-        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false, new Colour(0.2F, 0.6F, 0.9F, 0.7F), new Colour(0.1F, 0.3F, 0.4F, 0.7F));
+//        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false, new Colour(0.2F, 0.6F, 0.9F, 0.7F), new Colour(0.1F, 0.3F, 0.4F, 0.7F));
+        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false, Colour.BLACK.withAlpha(0.7), Colour.PURPLE);
+
+
+
+
     }
 
     /**
@@ -164,8 +176,8 @@ public class MuseContainerlessGui extends Screen {
      * coordinates (int 0 to width)
      */
     public int relY(float absy) {
-        int padding = (height - ySize) / 2;
-        return (int) ((absy - padding) * 2 / ySize - 1);
+        int padding = (height - getYSize()) / 2;
+        return (int) ((absy - padding) * 2 / getYSize() - 1);
     }
 
     /**
@@ -196,6 +208,58 @@ public class MuseContainerlessGui extends Screen {
         this.ySize = ySize;
     }
 
+
+
+
+
+
+
+
+
+
+    public int getGuiLeft() {
+        return guiLeft;
+    }
+
+    public int getGuiTop() {
+        return guiTop;
+    }
+
+    public int getXSize() {
+        return xSize;
+    }
+
+    public void setXSize(int xSize) {
+        this.xSize = xSize;
+        this.guiLeft = (this.width - getXSize()) / 2;
+    }
+
+    public int getYSize() {
+        return ySize;
+    }
+
+    public void setYSize(int ySize) {
+        this.ySize = ySize;
+        this.guiTop = (this.height - getYSize()) / 2;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
         for (IGuiFrame frame : frames) {
@@ -204,6 +268,17 @@ public class MuseContainerlessGui extends Screen {
         }
         return false;
     }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Called when the mouse is clicked.
@@ -238,7 +313,7 @@ public class MuseContainerlessGui extends Screen {
         if (tooltip != null) {
             double strwidth = 0;
             for (ITextComponent s : tooltip) {
-                double currstrwidth = MuseRenderer.getStringWidth(s.getString());
+                double currstrwidth = MuseRenderer.getStringWidth(s.getFormattedText());
                 if (currstrwidth > strwidth) {
                     strwidth = currstrwidth;
                 }
@@ -263,7 +338,7 @@ public class MuseContainerlessGui extends Screen {
             tooltipRect.setBottom(bottom);
             tooltipRect.draw();
             for (int i = 0; i < tooltip.size(); i++) {
-                MuseRenderer.drawString(tooltip.get(i).getString(), left + 4, bottom - 10 * (tooltip.size() - i) - 4);
+                MuseRenderer.drawString(tooltip.get(i).getFormattedText(), left + 4, bottom - 10 * (tooltip.size() - i) - 4);
             }
         }
     }

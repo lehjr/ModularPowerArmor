@@ -15,7 +15,6 @@ import net.machinemuse.powersuits.client.gui.tinker.common.ItemSelectionFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.opengl.GL11;
 
@@ -103,10 +102,5 @@ public class DetailedSummaryFrame extends ScrollableFrame {
 
             GL11.glPopMatrix();
         }
-    }
-
-    @Override
-    public List<ITextComponent> getToolTip(int x, int y) {
-        return null;
     }
 }

@@ -267,7 +267,7 @@
 
   "_comment": "Vision",
   "item.powersuits.binoculars": "Binoculars",
-  "item.powersuits.binoculars.desc": "With the problems that have been plagui.powersuits.g Optifine lately, you've decided to take that Zoom ability into your own hands.",
+  "item.powersuits.binoculars.desc": "With the problems that have been plaguing Optifine lately, you've decided to take that Zoom ability into your own hands.",
   "item.powersuits.night_vision": "Night Vision",
   "item.powersuits.night_vision.desc": "A pair of augmented vision goggles to help you see at night and underwater.",
 
@@ -320,12 +320,14 @@
   "item.powersuits.railgun.desc": "An assembly which accelerates a projectile to supersonic speeds using magnetic force. Heavy recoil.",
 
   "_comment": "GUI",
+  "gui.powersuits.tinkertable" : "Tinker Table",
   "gui.powersuits.noModulesFound.line1": "No Modular Powersuit items",
   "gui.powersuits.noModulesFound.line2": "found in inventory. Make some!",
   "gui.powersuits.red": "Red",
   "gui.powersuits.green": "Green",
   "gui.powersuits.blue": "Blue",
   "gui.powersuits.install": "Install",
+  "gui.powersuits.craftAndInstall" : "Craft and Install",
   "gui.powersuits.salvage": "Salvage",
   "gui.powersuits.newKeybind": "New",
   "gui.powersuits.trashKeybind": "Trash",

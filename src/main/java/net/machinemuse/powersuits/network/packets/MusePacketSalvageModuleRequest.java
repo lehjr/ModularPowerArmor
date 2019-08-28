@@ -3,6 +3,7 @@ package net.machinemuse.powersuits.network.packets;
 import net.machinemuse.numina.basemod.MuseLogger;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.function.Supplier;
 
@@ -45,6 +46,8 @@ public class MusePacketSalvageModuleRequest {
 
     public static void handle(MusePacketSalvageModuleRequest message, Supplier<NetworkEvent.Context> ctx) {
         MuseLogger.logger.error("this has not been implemented yet");
+
+//        ItemHandlerHelper.giveItemToPlayer(player, refundItem);
 
 
 //        if (ctx.side == Side.SERVER) {

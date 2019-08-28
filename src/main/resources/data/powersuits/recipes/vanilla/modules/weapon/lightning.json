@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WHW",
+    "WFW",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "H": {
+      "item": "powersuits:component_capacitor_hv"
+    },
+    "F": {
+      "item":"powersuits:component_field_emitter"
+    },
+    "S": {
+      "tag": "forge:solenoid"
+    }
+  },
+  "result": {
+    "item": "powersuits:lightning_summoner"
+  }
+}

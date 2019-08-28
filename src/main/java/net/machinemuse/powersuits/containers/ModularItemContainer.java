@@ -10,6 +10,7 @@ import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -30,24 +31,83 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
     // A map of the slot that holds the modular item, and the set of slots in that modular item
     private Map<ClickableItem, List<Integer>> modularItemToSlotMap;
 
+    private final CraftingInventory craftingInventory;
+
     public ModularItemContainer(int windowId, PlayerInventory playerInventory) {
         this(windowId, playerInventory, IWorldPosCallable.DUMMY);
     }
 
+    /**
+     *
+            FIXME!!!
+            need a way to find the source and target slot here
+
+            craft and install:
+            ------------------
+            no source slot .. remove crafting ingredients
+            target slot:
+                    dependent on target modular item (certain categories have limited slots)
+                    loop through and find acceptable inventory
+
+            install (non-creative)
+            --------------------
+            source slot = first available slot with item to install
+            target slot:
+                 dependent on target modular item (certain categories have limited slots)
+                 loop through and find acceptable inventory
+
+            install (creative)
+            --------------------
+             source slot = none. Create new item to install
+             target slot:
+                 dependent on target modular item (certain categories have limited slots)
+                 loop through and find acceptable inventory
+
+            remove
+            ----------------------
+            source slot = slot of item to remove
+            target slot:
+                free spot in player inventory
+
+
+
+
+
+
+
+
+
+            most likely way would be to add change the map to the
+
+
+
+     */
+
+
+
+
+
+
+
+
+
     public ModularItemContainer(int windowId, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(MPSObjects.MODULAR_ITEM_CONTAINER_CONTAINER_TYPE, windowId);
         modularItemToSlotMap = new HashMap<>();
+        this.craftingInventory = new CraftingInventory(this, 3, 3);
 
-        //hotbar
+
+        //hotbar, slots 0-8
         for(int index = 0; index < 9; ++index) {
             this.addSlot(new UniversalSlot(playerInventory, index, 34 + index * 18, 163));
         }
 
-        // main invenentory
+        // main invenentory, slots 9-35
         for(int row = 0; row < 3; ++row) {
             for(int col = 0; col < 9; ++col) {
                 this.addSlot(new UniversalSlot(playerInventory, col + row * 9 + 9, 34 + col * 18, 83 + row * 18));
             }
+
         }
 
         // All inventory. creates a modularItem to modularItemInventorySlot map. Note does create duplicates but unavoidable.
@@ -77,6 +137,15 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
                     modularItemToSlotMap.put(modularItemSlot, indexList);
                 }
             });
+        }
+
+        int row;
+        int col;
+        // crafting inventory: slot 1-9
+        for(row = 0; row < 3; ++row) {
+            for(col = 0; col < 3; ++col) {
+                this.addSlot(new UniversalSlot(this.craftingInventory, col + row * 3, 30 + col * 18, 17 + row * 18));
+            }
         }
     }
 
@@ -111,7 +180,7 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
 
     @Override
     public ItemStack transferStackInSlot(final PlayerEntity player, final int index) {
-        System.out.println("index: " + index);
+        System.out.println("transfer stack from slot #: " + index);
 
         final Slot from = inventorySlots.get(index);
         if (from == null) {
@@ -123,6 +192,9 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
         }
 
         final boolean intoPlayerInventory = from.inventory != player.inventory;
+
+        System.out.println("intoPlayerInventory: + " + intoPlayerInventory);
+
         final ItemStack fromStack = from.getStack();
 
         final int step, begin;
@@ -173,6 +245,8 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
         }
         // Target
         for (int i = begin; i >= 0 && i < inventorySlots.size(); i += step) {
+            System.out.println("checking slot: + " + i);
+
             if (from.getStack().isEmpty()) {
                 break;
             }
@@ -197,11 +271,21 @@ public class ModularItemContainer extends Container implements IModularItemToSlo
                     continue;
             }
 
+            System.out.println(" into: " + i);
+
             final int maxSizeInSlot = Math.min(fromStack.getMaxStackSize(), into.getItemStackLimit(fromStack));
             final int itemsMoved = Math.min(maxSizeInSlot, fromStack.getCount());
             into.putStack(from.decrStackSize(itemsMoved));
         }
 
+
+
+
         return from.getStack().getCount() < stack.getCount() ? from.getStack() : ItemStack.EMPTY;
+    }
+
+    @Override
+    public void putStackInSlot(int slotID, ItemStack stack) {
+        super.putStackInSlot(slotID, stack);
     }
 }

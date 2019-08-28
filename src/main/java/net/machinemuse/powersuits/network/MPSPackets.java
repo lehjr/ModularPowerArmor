@@ -81,7 +81,6 @@ public class MPSPackets {
                 ModeChangingRequest::decode,
                 ModeChangingRequest::handle);
         i++;
-
     }
 
     public SimpleChannel getWrapper() {

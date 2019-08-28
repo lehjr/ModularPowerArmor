@@ -23,11 +23,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemModuleNightVision extends AbstractPowerModule {
+public class NightVisionModule extends AbstractPowerModule {
     static final int powerDrain = 50;
     private static final Effect nightvision = Effects.NIGHT_VISION;
 
-    public ItemModuleNightVision(String regName) {
+    public NightVisionModule(String regName) {
         super(regName);
     }
 

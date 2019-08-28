@@ -4,7 +4,7 @@
       "type": "powersuits:vanilla_recipes_enabled"
     }
   ],
-  "group": "component",
+  "group": "mps_component",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "GRG"

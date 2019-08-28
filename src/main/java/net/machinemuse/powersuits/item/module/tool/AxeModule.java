@@ -26,10 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
-public class ItemModuleAxe extends AbstractPowerModule {
+public class AxeModule extends AbstractPowerModule {
     private static final ItemStack emulatedTool = new ItemStack(Items.IRON_AXE);
 
-    public ItemModuleAxe(String regName) {
+    public AxeModule(String regName) {
         super(regName);
     }
 

@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WEW",
+    "WCW",
+    "WEW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "C": {
+      "item":"powersuits:component_control_circuit"
+    },
+    "E": {
+      "item": "powersuits:component_field_emitter"
+    }
+  },
+  "result": {
+    "item": "powersuits:plating_diamond"
+  }
+}

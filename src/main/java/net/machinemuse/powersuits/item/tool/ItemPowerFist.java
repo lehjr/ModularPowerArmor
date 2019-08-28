@@ -9,6 +9,7 @@ import net.machinemuse.numina.capabilities.inventory.modularitem.MuseRangedWrapp
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
@@ -18,10 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -31,6 +29,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -148,8 +148,17 @@ public class ItemPowerFist extends AbstractElectricTool {
         if (handIn != Hand.MAIN_HAND)
             return fallack;
 
+
+
+
         ItemStack module = fist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map( handler-> {
             if(handler instanceof IModeChangingItem) {
+                if(handler.getStackInSlot(0).isEmpty()) {
+                    ((IModeChangingItem) handler).setStackInSlot(0, new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(MPSRegistryNames.MODULE_BATTERY_ULTIMATE__REGNAME))));
+
+                    System.out.println("doing something here");
+
+                }
                 return ((IModeChangingItem) handler).getActiveModule();
             }
             return ItemStack.EMPTY;
@@ -157,7 +166,7 @@ public class ItemPowerFist extends AbstractElectricTool {
 
         ActionResult<ItemStack> test = module.getCapability(RightClickCapability.RIGHT_CLICK).map(rc-> rc.onItemRightClick(fist, world, playerIn, handIn)).orElse(fallack);
 
-        System.out.println("test: " + test.getType().name());
+        System.out.println("module: " + test.getType().name());
 
         return test;
     }

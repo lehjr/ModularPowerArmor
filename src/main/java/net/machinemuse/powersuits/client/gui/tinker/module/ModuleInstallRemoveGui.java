@@ -1,4 +1,4 @@
-package net.machinemuse.powersuits.client.gui.tinker.module_install;
+package net.machinemuse.powersuits.client.gui.tinker.module;
 
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.client.gui.MuseContainerGui;
@@ -28,12 +28,16 @@ import java.util.stream.IntStream;
 public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContainer> {
     protected DrawableMuseRect backgroundRect;
     protected ItemSelectionFrame itemSelectFrame;
+    protected DetailedSummaryFrame summaryFrame;
+    protected InstallSalvageFrame installFrame;
+
+
     protected final PlayerEntity player;
     Container container;
     protected final Colour gridColour = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
     protected final Colour gridBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
     protected final Colour gridBackGound = Colour.DARKBLUE.withAlpha(0.8);
-    ModuleSelectionFrame2 moduleSelectFrame;
+    ModuleSelectionFrame moduleSelectFrame;
     protected InventoryFrame hotbar, mainInventory;
     final int slotWidth = 18;
     final int slotHeight = 18;
@@ -80,7 +84,7 @@ public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContaine
         }});
         frames.add(mainInventory);
 
-        moduleSelectFrame = new ModuleSelectionFrame2(containerIn, itemSelectFrame,
+        moduleSelectFrame = new ModuleSelectionFrame(containerIn, itemSelectFrame,
                 new MusePoint2D(absX(-0.75F), absY(-0.95f)), new MusePoint2D(absX(-0.05F), absY(0.75f)),
                 Colour.DARKBLUE.withAlpha(0.8),
                 Colour.LIGHTBLUE.withAlpha(0.8));
@@ -88,12 +92,43 @@ public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContaine
 
         itemSelectFrame.setDoOnNewSelect(doThis-> moduleSelectFrame.loadModules());
 
+        summaryFrame = new DetailedSummaryFrame(player,
+                new MusePoint2D(absX(0f), absY(-0.9f)),
+                new MusePoint2D(absX(0.95f), absY(-0.3f)),
+                Colour.DARKBLUE.withAlpha(0.8),
+                Colour.LIGHTBLUE.withAlpha(0.8),
+                itemSelectFrame);
+        frames.add(summaryFrame);
+
+        installFrame = new InstallSalvageFrame(containerIn,
+                player,
+                new MusePoint2D(absX(-0.75F),
+                absY(0.6f)),
+                new MusePoint2D(absX(-0.05F),
+                absY(0.95f)),
+                Colour.DARKBLUE.withAlpha(0.8),
+                Colour.LIGHTBLUE.withAlpha(0.8),
+                gridColour,
+                itemSelectFrame,
+                moduleSelectFrame);
+        frames.add(installFrame);
+
+
+
         /*
          TODO:
-          * summary frame
+          * summary frame needs more detail ... energy not showing
           * install/remove subframe with crafting grid
           * tweak frame/subframe
-          * itemSelection frame needs minimum spacing with scroll option
+
+
+
+        modes:
+        craft & install
+        install (creative or module already in inventory)
+
+        remove
+        tweak
 
 
 
@@ -116,17 +151,17 @@ public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContaine
     }
 
     public void rescale() {
-        this.setXSize(Math.min(minecraft.mainWindow.getScaledWidth() - 20, 300));
-        this.setYSize(Math.min(minecraft.mainWindow.getScaledHeight() - 20, 300));
-
+        this.setXSize(Math.min(minecraft.mainWindow.getScaledWidth(), 320));
+        this.setYSize(Math.min(minecraft.mainWindow.getScaledHeight() - 20, 320));
+        System.out.println("minecraft.mainWindow.getScaledWidth() - 20: " +  (minecraft.mainWindow.getScaledWidth()));
         System.out.println("xSize: " + xSize);
-        System.out.println("ySize: " + ySize);
 
+        System.out.println("minecraft.mainWindow.getScaledHeight() - 20: " + (minecraft.mainWindow.getScaledHeight() - 20));
+        System.out.println("ySize: " + ySize);
     }
 
     @Override
     public void init() {
-//        this.setXSize(200);
         rescale();
         super.init();
         backgroundRect.setTargetDimensions(getGuiLeft(), getGuiTop(), getGuiLeft() + getXSize(), getGuiTop() + getYSize());
@@ -134,32 +169,66 @@ public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContaine
         itemSelectFrame.init(
                 backgroundRect.finalLeft()  + spacer,
                 backgroundRect.finalTop() + spacer,
-                backgroundRect.finalLeft() + 32,
-                backgroundRect.finalBottom() - spacer);
+                backgroundRect.finalLeft() + spacer + 36,
+                backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight - spacer); // top of main inventory plus spacer
 
         // 8 = 1/2 actual slot size of 16x16 because their position is the upper left, not center
         MusePoint2D ulOffset = new MusePoint2D(guiLeft + 8, guiTop + 8);
 
         hotbar.setUlShift( ulOffset);
         hotbar.init(
-                backgroundRect.finalLeft() + 32 + spacer, // item selection frame right plus spacer
+                backgroundRect.finalLeft() + spacer, // border plus spacer
                 backgroundRect.finalBottom() - spacer - slotHeight, // bottom minus 1 slot
-                backgroundRect.finalLeft() + 32 + spacer + 9 * slotWidth, // item selection frame right plus spacer + 9 slots
+                backgroundRect.finalLeft() + spacer + 9 * slotWidth, // border plus spacer + 9 slots
                 backgroundRect.finalBottom() - spacer);
 
         mainInventory.init(
-                backgroundRect.finalLeft() + 32 + spacer, // item selection frame right plus spacer
+                backgroundRect.finalLeft() + spacer, // border plus spacer
                 backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight, // hotbar top minus spacer minus 3 slots high
-                backgroundRect.finalLeft() + 32 + spacer + 9 * slotWidth, // item selection frame right plus spacer + 9 slots wide
+                backgroundRect.finalLeft() + spacer + 9 * slotWidth, // border plus spacer + 9 slots wide
                 backgroundRect.finalBottom() - spacer - slotHeight - spacer); // hotbar top minus spacer
         mainInventory.setUlShift(ulOffset);
 
 
         moduleSelectFrame.init(
-                backgroundRect.finalLeft() + 32 + spacer, // item selection frame right plus spacer,
+                backgroundRect.finalLeft() + spacer + 36 + spacer, // border plus spacer,
                 backgroundRect.finalTop() + spacer, // border top plus spacer
-                absX(-0.05F),
+                backgroundRect.finalLeft() + spacer + 9 * slotWidth, // border plus spacer + 9 slots wide
                 backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight - spacer);
+
+        summaryFrame.init(
+                backgroundRect.finalLeft() + spacer + 9 * slotWidth + spacer, // border plus spacer + 9 slots wide
+                    backgroundRect.finalTop() + spacer,
+                backgroundRect.finalRight() -  spacer,
+                backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight - spacer);
+
+        installFrame.init(
+                backgroundRect.finalLeft() + spacer + 9 * slotWidth + spacer, // border plus spacer + 9 slots wide
+                backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight,
+                backgroundRect.finalRight() -  spacer,
+                backgroundRect.finalBottom() - spacer
+        );
+
+
+
+        /*
+            TODO:
+                * Crafting grid for "craft and install"
+                * craft and install button
+                * result should point to appropriate slot in the modular item
+                * install button
+                * remove button
+                * adjust detect and send changes code
+*/
+
+
+
+
+
+
+
+
+
 
         //        inventoryFrame.updateUlGui(new MusePoint2D(guiLeft, guiTop));
 //        inventoryFrame.init(getGuiLeft() + 32, getGuiTop() + 6, getGuiLeft() + getXSize() -6, getGuiTop() + ySize - 90);
@@ -200,10 +269,14 @@ public class ModuleInstallRemoveGui extends MuseContainerGui<ModularItemContaine
      */
     @Override
     protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
+        // prevent modular items from being moved.
         if (slotIn != null && slotIn.getHasStack()) {
             if(slotIn.getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(handler-> handler instanceof IModularItem).orElse(false))
                 return;
         }
+        // todo: prevent modules from being moved?
+
+
         super.handleMouseClick(slotIn, slotId, mouseButton, type);
     }
 }

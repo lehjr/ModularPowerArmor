@@ -10,8 +10,7 @@ import net.machinemuse.powersuits.client.event.ClientTickHandler;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.machinemuse.powersuits.client.event.RenderEventHandler;
 import net.machinemuse.powersuits.client.gui.tinker.crafting.TinkerCraftingGUI;
-import net.machinemuse.powersuits.client.gui.tinker.module.TinkerModuleGui;
-import net.machinemuse.powersuits.client.gui.tinker.module_install.ModuleInstallRemoveGui;
+import net.machinemuse.powersuits.client.gui.tinker.module.ModuleInstallRemoveGui;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererLuxCapacitorEntity;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererPlasmaBolt;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererSpinningBlade;
@@ -116,7 +115,7 @@ public class ModularPowersuits {
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
         RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
 
-        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
+//        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPSObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
         ScreenManager.registerFactory(MPSObjects.MODULAR_ITEM_CONTAINER_CONTAINER_TYPE, ModuleInstallRemoveGui::new);
 

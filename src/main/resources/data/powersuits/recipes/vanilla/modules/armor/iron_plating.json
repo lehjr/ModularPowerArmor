@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WW",
+    "IW",
+    "WW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "I": {
+      "item": "powersuits:component_plating_iron"
+    }
+  },
+  "result": {
+    "item": "powersuits:plating_iron"
+  }
+}

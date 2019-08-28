@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SWS",
+    "SCS",
+    "SHS"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "H": {
+      "item": "powersuits:component_capacitor_hv"
+    },
+    "C": {
+      "item":"powersuits:component_control_circuit"
+    },
+    "S": {
+      "tag": "forge:servo"
+    }
+  },
+  "result": {
+    "item": "powersuits:lightning_summoner"
+  }
+}

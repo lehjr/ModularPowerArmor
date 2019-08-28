@@ -5,6 +5,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "group": "mps_component",
   "pattern": [
     "RSR",
     "CDC",

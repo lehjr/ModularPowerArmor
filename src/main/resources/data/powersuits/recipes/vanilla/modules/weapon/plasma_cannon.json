@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WHW",
+    "HCH",
+    "WHW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "H": {
+      "item": "powersuits:component_capacitor_hv"
+    },
+    "C": {
+      "item":"powersuits:component_control_circuit"
+    }
+  },
+  "result": {
+    "item": "powersuits:plasma_cannon"
+  }
+}

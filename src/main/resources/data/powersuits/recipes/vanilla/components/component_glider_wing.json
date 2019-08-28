@@ -5,7 +5,7 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
-  "group": "component",
+  "group": "mps_component",
   "pattern": [
     " II",
     "IIS",

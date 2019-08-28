@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "powersuits:vanilla_recipes_enabled"
+    }
+  ],
+  "group": "mps_module",
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WW",
+    "LL",
+    "WW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "L": {
+      "item": "powersuits:component_plating_leather"
+    }
+  },
+  "result": {
+    "item": "powersuits:plating_leather"
+  }
+}

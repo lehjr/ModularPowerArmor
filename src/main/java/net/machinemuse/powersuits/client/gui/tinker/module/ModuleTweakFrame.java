@@ -15,7 +15,6 @@ import net.machinemuse.numina.nbt.propertymodifier.IPropertyModifierDouble;
 import net.machinemuse.numina.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.client.gui.tinker.common.ItemSelectionFrame;
-import net.machinemuse.powersuits.client.gui.tinker.common.ModuleSelectionFrame;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -54,10 +53,10 @@ public class ModuleTweakFrame extends ScrollableFrame {
         mousex /= SCALERATIO;
         if (itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
             ItemStack stack = itemTarget.getSelectedItem().getStack();
-            ItemStack module = moduleTarget.getSelectedModule().getStack();
+            ItemStack module = moduleTarget.getSelectedModule().getModule();
             if (itemTarget.getSelectedItem().getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                     .map(m-> m instanceof IModularItem && ((IModularItem) m)
-                            .isModuleInstalled(moduleTarget.getSelectedModule().getStack().getItem().getRegistryName())).orElse(false)) {
+                            .isModuleInstalled(moduleTarget.getSelectedModule().getModule().getItem().getRegistryName())).orElse(false)) {
                 loadTweaks(stack, module);
             } else {
                 sliders = null;
@@ -167,7 +166,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
         boolean handled = false;
         if (selectedSlider != null && itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
             ClickableItem item = itemTarget.getSelectedItem();
-            ItemStack module = moduleTarget.getSelectedModule().getStack();
+            ItemStack module = moduleTarget.getSelectedModule().getModule();
             if (!module.isEmpty()) {
 //                MPSPackets.CHANNEL_INSTANCE.sendToServer(
 //                        new MusePacketTweakRequestDouble(item.inventorySlot, module.getItem().getRegistryName().toString(), selectedSlider.id(), selectedSlider.getValue()));

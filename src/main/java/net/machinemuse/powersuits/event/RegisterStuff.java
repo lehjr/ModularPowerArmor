@@ -39,7 +39,7 @@ import net.machinemuse.powersuits.item.module.special.InvisibilityModule;
 import net.machinemuse.powersuits.item.module.special.MagnetModule;
 import net.machinemuse.powersuits.item.module.tool.*;
 import net.machinemuse.powersuits.item.module.vision.BinocularsModule;
-import net.machinemuse.powersuits.item.module.vision.ItemModuleNightVision;
+import net.machinemuse.powersuits.item.module.vision.NightVisionModule;
 import net.machinemuse.powersuits.item.module.weapon.*;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.tileentity.TileEntityLuxCapacitor;
@@ -167,7 +167,7 @@ public enum RegisterStuff {
 
                 // Vision -------------------------------------------------------------------------------------
                 new BinocularsModule(BINOCULARS_MODULE__REGNAME),
-                new ItemModuleNightVision(MODULE_NIGHT_VISION__REGNAME),
+                new NightVisionModule(MODULE_NIGHT_VISION__REGNAME),
 
                 // Mining Enhancements ------------------------------------------------------------------------
                 new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
@@ -176,7 +176,7 @@ public enum RegisterStuff {
 
                 // Tools --------------------------------------------------------------------------
                 new AquaAffinityModule(MODULE_AQUA_AFFINITY__REGNAME),
-                new ItemModuleAxe(MODULE_AXE__REGNAME),
+                new AxeModule(MODULE_AXE__REGNAME),
                 new DiamondPickUpgradeModule(MODULE_DIAMOND_PICK_UPGRADE__REGNAME),
                 new DimensionalRiftModule(MODULE_DIMENSIONAL_RIFT__REGNAME),
                 new FieldTinkerModule(MODULE_FIELD_TINKER__REGNAME),

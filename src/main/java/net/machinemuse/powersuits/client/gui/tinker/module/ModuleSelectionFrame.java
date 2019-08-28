@@ -1,4 +1,4 @@
-package net.machinemuse.powersuits.client.gui.tinker.module_install;
+package net.machinemuse.powersuits.client.gui.tinker.module;
 
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
@@ -26,25 +26,23 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 
-
-// fixme: lastItem requires doubleclick to set
-public class ModuleSelectionFrame2 extends ScrollableFrame {
+public class ModuleSelectionFrame extends ScrollableFrame {
     protected ItemSelectionFrame target;
-    protected Map<String, ModuleSelectionSubFrame2> categories = new LinkedHashMap<>();
-    List<ClickableModule> moduleButtons = new LinkedList<>(); // fixme: ditch this
+    protected Map<String, ModuleSelectionSubFrame> categories = new LinkedHashMap<>();
+    List<ClickableModule> moduleButtons = new LinkedList<>();
 
     protected int selectedModule = -1;
     protected ClickableModule prevSelection;
     protected MuseRect lastPosition;
     ModularItemContainer container;
 
-    public ModuleSelectionFrame2(ModularItemContainer containerIn, ItemSelectionFrame itemSelectFrameIn, MusePoint2D topleft, MusePoint2D bottomright, Colour backgroundColour, Colour borderColour) {
+    public ModuleSelectionFrame(ModularItemContainer containerIn, ItemSelectionFrame itemSelectFrameIn, MusePoint2D topleft, MusePoint2D bottomright, Colour backgroundColour, Colour borderColour) {
         super(topleft, bottomright, backgroundColour, borderColour);
         this.container = containerIn;
         this.target = itemSelectFrameIn;
     }
 
-    private ModuleSelectionSubFrame2 getOrCreateCategory(String category) {
+    private ModuleSelectionSubFrame getOrCreateCategory(String category) {
         if (categories.containsKey(category)) {
             return categories.get(category);
         } else {
@@ -55,7 +53,7 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
                     border.top() + 32);
             position.setMeBelow(lastPosition);
             lastPosition = position;
-            ModuleSelectionSubFrame2 frame = new ModuleSelectionSubFrame2(
+            ModuleSelectionSubFrame frame = new ModuleSelectionSubFrame(
                     category,
                     position);
 
@@ -89,7 +87,7 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
                             EnumModuleCategory category = module.getCapability(PowerModuleCapability.POWER_MODULE).map(m->m.getCategory()).orElse(EnumModuleCategory.NONE);
 
                             if (((IModularItem) itemHandler).isModuleValid(module)) {
-                                ModuleSelectionSubFrame2 frame = getOrCreateCategory(category.getName());
+                                ModuleSelectionSubFrame frame = getOrCreateCategory(category.getName());
 
                                 ClickableModule clickie = frame.addModule(module,  -1);
                                 clickie.setInstalled(false);
@@ -104,7 +102,7 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
                         ItemStack module = slot.getStack();
                         module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m->{
                             if (m.isAllowed()) {
-                                ModuleSelectionSubFrame2 frame = getOrCreateCategory(m.getCategory().getName());
+                                ModuleSelectionSubFrame frame = getOrCreateCategory(m.getCategory().getName());
                                 ClickableModule clickie =  frame.addModule(module, index);
                                 clickie.setInstalled(true);
                                 moduleButtons.add(clickie);
@@ -115,20 +113,20 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
             });
         }
 
-        for (ModuleSelectionSubFrame2 frame : categories.values()) {
+        for (ModuleSelectionSubFrame frame : categories.values()) {
             frame.refreshButtonPositions();
         }
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        for (ModuleSelectionSubFrame2 frame : categories.values()) {
+        for (ModuleSelectionSubFrame frame : categories.values()) {
             frame.refreshButtonPositions();
         }
 
         if (target.getSelectedItem() != null) {
             this.totalsize = 0;
-            for (ModuleSelectionSubFrame2 frame : categories.values()) {
+            for (ModuleSelectionSubFrame frame : categories.values()) {
                 totalsize = (int) Math.max(frame.border.bottom() - this.border.top(), totalsize);
             }
             this.currentscrollpixels = Math.min(currentscrollpixels, getMaxScrollPixels());
@@ -143,15 +141,11 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
     }
 
     private void drawItems(int mouseX, int mouseY, float partialTicks) {
-        for (ModuleSelectionSubFrame2 frame : categories.values()) {
+        for (ModuleSelectionSubFrame frame : categories.values()) {
             frame.drawPartial((int) (this.currentscrollpixels + border.top() + 4),
                     (int) (this.currentscrollpixels + border.top() + border.height() - 4), partialTicks);
         }
     }
-
-
-
-
 
     private void drawSelection() {
         ClickableModule module = getSelectedModule();
@@ -160,8 +154,6 @@ public class ModuleSelectionFrame2 extends ScrollableFrame {
             if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
                 MuseRenderer.drawCircleAround(pos.getX(), pos.getY(), 10);
             }
-        } else {
-//            System.out.println("no module selected");
         }
     }
 
