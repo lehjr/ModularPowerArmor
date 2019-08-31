@@ -26,10 +26,12 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -68,6 +70,8 @@ public class ModularPowersuits {
 
         modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
         modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
+        modEventBus.register(this);
+
 
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
             new RuntimeException("Got config " + event.getConfig() + " name " + event.getConfig().getModId() + ":" + event.getConfig().getFileName());
@@ -85,18 +89,19 @@ public class ModularPowersuits {
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
         MPSPackets.registerMPSPackets();
-
-        registerCraftingCondition("thermal_expansion_recipes_enabled");
-        registerCraftingCondition("enderio_recipes_enabled");
-        registerCraftingCondition("tech_reborn_recipes_enabled");
-        registerCraftingCondition("ic2_recipes_enabled");
-        registerCraftingCondition("vanilla_recipes_enabled");
+//        registerCraftingCondition("thermal_expansion_recipes_enabled");
+//        registerCraftingCondition("enderio_recipes_enabled");
+//        registerCraftingCondition("tech_reborn_recipes_enabled");
+//        registerCraftingCondition("ic2_recipes_enabled");
+//        registerCraftingCondition("vanilla_recipes_enabled");
     }
 
-    private void registerCraftingCondition(String conditionName) {
-        ResourceLocation res = new ResourceLocation(MPSConstants.MODID, conditionName);
-        CraftingHelper.register(res, new MPSRecipeConditionFactory(res));
+    @SubscribeEvent
+    public void setupRecipeConditionHandler(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        CraftingHelper.register(MPSRecipeConditionFactory.Serializer.INSTANCE);
     }
+
+
 
 
     // client preInit
@@ -118,9 +123,8 @@ public class ModularPowersuits {
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPSObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
         ScreenManager.registerFactory(MPSObjects.MODULAR_ITEM_CONTAINER_CONTAINER_TYPE, ModuleInstallRemoveGui::new);
-
-
     }
+
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class
     @Mod.EventBusSubscriber

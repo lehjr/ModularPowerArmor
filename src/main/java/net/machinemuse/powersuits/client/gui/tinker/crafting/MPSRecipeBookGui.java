@@ -445,7 +445,7 @@ public class MPSRecipeBookGui extends RecipeBookGui {
                 this.updateSearch();
                 return true;
             } else {
-                return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+                return super.charTyped(p_charTyped_1_, p_charTyped_2_); // fixme NPE
             }
         } else {
             return false;
@@ -505,14 +505,29 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         }
     }
 
+    /*
+        called from: net.minecraft.client.network.play.ClientPlayNetHandler.handlePlaceGhostRecipe
+           which is called from: net.minecraft.network.play.server.SPlaceGhostRecipePacket.processPacket (recipes referenced by resource location)
+
+
+     */
     @Override
     public void setupGhostRecipe(IRecipe<?> recipe, List<Slot> slots) {
         ItemStack itemstack = recipe.getRecipeOutput();
         this.ghostRecipe.setRecipe(recipe);
         this.ghostRecipe.addIngredient(Ingredient.fromStacks(itemstack), (slots.get(0)).xPos, (slots.get(0)).yPos);
-        this.placeRecipe(this.container.getWidth(), this.container.getHeight(), this.container.getOutputSlot(), recipe, recipe.getIngredients().iterator(), 0);
+
+        // IRecipePlacer
+        this.placeRecipe(
+                this.container.getWidth(), // grid width
+                this.container.getHeight(), // grid height
+                this.container.getOutputSlot(), //  usually the first slot added to the list during container init
+                recipe,
+                recipe.getIngredients().iterator(),
+                0);
     }
 
+    /** IRecipePlacer ----------------------------------- */
     @Override
     public void setSlotContents(Iterator<Ingredient> ingredients, int slotIn, int maxAmount, int y, int x) {
         Ingredient ingredient = ingredients.next();

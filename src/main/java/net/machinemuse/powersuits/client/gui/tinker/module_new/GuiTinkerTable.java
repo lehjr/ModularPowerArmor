@@ -97,7 +97,7 @@ public class GuiTinkerTable extends MuseContainerlessGui {
         installFrame.init(
                 backgroundRect.finalLeft() + spacer + 36 + spacer, // border plus spacer + 9 slots wide
                 backgroundRect.finalBottom() - spacer - 18 - spacer - 3 * 18,
-                backgroundRect.finalRight() -  spacer,
+                backgroundRect.finalLeft() + spacer + 200, // adjust as needed
                 backgroundRect.finalBottom() - spacer);
 
     }

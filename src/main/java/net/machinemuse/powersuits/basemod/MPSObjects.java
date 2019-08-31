@@ -204,8 +204,8 @@ public enum MPSObjects {
     @ObjectHolder(MODULE_COOLING_SYSTEM__REGNAME)
     public static CoolingSystemModule basicCoolingSystem = null;
 
-    @ObjectHolder(MODULE_FLUID_TANK__REGNAME)
-    public static final FluidTankModule fluidTankModule = null;
+//    @ObjectHolder(MODULE_FLUID_TANK__REGNAME)
+//    public static final FluidTankModule fluidTankModule = null;
 
     @ObjectHolder(MODULE_AUTO_FEEDER__REGNAME)
     public static final AutoFeederModule autoFeeder = null;

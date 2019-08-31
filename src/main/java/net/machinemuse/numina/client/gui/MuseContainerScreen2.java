@@ -432,17 +432,17 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
             this.doubleClick = this.lastClickSlot == slot && i - this.lastClickTime < 250L && this.lastClickButton == button;
             this.ignoreMouseUp = false;
             if (button == 0 || button == 1 || flag) {
-                int j = this.guiLeft;
-                int k = this.guiTop;
-                boolean flag1 = this.hasClickedOutside(mouseX, mouseY, j, k, button);
+                int left = this.guiLeft;
+                int top = this.guiTop;
+                boolean flag1 = this.hasClickedOutside(mouseX, mouseY, left, top, button);
                 if (slot != null) flag1 = false; // Forge, prevent dropping of items through slots outside of GUI boundaries
-                int l = -1;
+                int slotIndex = -1;
                 if (slot != null) {
-                    l = slot.slotNumber;
+                    slotIndex = slot.slotNumber;
                 }
 
                 if (flag1) {
-                    l = -999;
+                    slotIndex = -999;
                 }
 
                 if (this.minecraft.gameSettings.touchscreen && flag1 && this.minecraft.player.inventory.getItemStack().isEmpty()) {
@@ -450,7 +450,7 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
                     return true;
                 }
 
-                if (l != -1) {
+                if (slotIndex != -1) {
                     if (this.minecraft.gameSettings.touchscreen) {
                         if (slot != null && slot.getHasStack()) {
                             this.clickedSlot = slot;
@@ -462,18 +462,18 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
                     } else if (!this.dragSplitting) {
                         if (this.minecraft.player.inventory.getItemStack().isEmpty()) {
                             if (this.minecraft.gameSettings.keyBindPickBlock.isActiveAndMatches(mouseKey)) {
-                                this.handleMouseClick(slot, l, button, ClickType.CLONE);
+                                this.handleMouseClick(slot, slotIndex, button, ClickType.CLONE);
                             } else {
-                                boolean flag2 = l != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 344));
+                                boolean flag2 = slotIndex != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 344));
                                 ClickType clicktype = ClickType.PICKUP;
                                 if (flag2) {
                                     this.shiftClickedSlot = slot != null && slot.getHasStack() ? slot.getStack().copy() : ItemStack.EMPTY;
                                     clicktype = ClickType.QUICK_MOVE;
-                                } else if (l == -999) {
+                                } else if (slotIndex == -999) {
                                     clicktype = ClickType.THROW;
                                 }
 
-                                this.handleMouseClick(slot, l, button, clicktype);
+                                this.handleMouseClick(slot, slotIndex, button, clicktype);
                             }
 
                             this.ignoreMouseUp = true;

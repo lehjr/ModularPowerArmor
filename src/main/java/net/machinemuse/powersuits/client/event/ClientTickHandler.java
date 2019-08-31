@@ -26,7 +26,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
@@ -173,16 +172,16 @@ public class ClientTickHandler {
                 String currFluidStr = "";
                 String maxFluidStr = "";
 
-                player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fh -> {
-                              for (IFluidTankProperties prop : fh.getTankProperties()) {
-                                  FluidStack stack = prop.getContents();
-                                  if (stack!= null) {
-                                      fluidMeter = new FluidMeter(stack.getFluid());
-                                      maxFluid.getAndAdd(prop.getCapacity());
-                                      currFluid.addAndGet(stack.amount);
-                                  }
-                              }
-                });
+//                player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fh -> {
+//                              for (IFluidTankProperties prop : fh.getTankProperties()) {
+//                                  FluidStack stack = prop.getContents();
+//                                  if (stack!= null) {
+//                                      fluidMeter = new FluidMeter(stack.getFluid());
+//                                      maxFluid.getAndAdd(prop.getCapacity());
+//                                      currFluid.addAndGet(stack.amount);
+//                                  }
+//                              }
+//                });
 
                 // Plasma
                 AtomicDouble currentPlasma = new AtomicDouble(0);

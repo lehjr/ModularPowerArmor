@@ -67,7 +67,7 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         }
     }
 
-    protected static void func_217066_a(int windowId, World world, PlayerEntity playerIn, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
+    protected static void setCraftingResultSlot(int windowId, World world, PlayerEntity playerIn, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
         if (!world.isRemote) {
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity)playerIn;
             ItemStack itemStack = ItemStack.EMPTY;
@@ -78,6 +78,7 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
                     itemStack = recipe.getCraftingResult(craftingInventory);
                 }
             }
+            // set result slot on server side then send packet to set same on client
             resultInventory.setInventorySlotContents(0, itemStack);
             serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemStack));
         }
@@ -88,7 +89,7 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         System.out.println("matrix changed");
 
         if (!player.world.isRemote) {
-            func_217066_a(this.windowId, player.world, this.player, this.craftingInventory, this.resultInventory);
+            setCraftingResultSlot(this.windowId, player.world, this.player, this.craftingInventory, this.resultInventory);
         }
     }
 

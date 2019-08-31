@@ -1,7 +1,8 @@
 {
   "conditions": [
     {
-      "type": "powersuits:vanilla_recipes_enabled"
+      "type": "powersuits:conditional",
+      "condition": "vanilla_recipes_enabled"
     }
   ],
   "group": "mps_module",

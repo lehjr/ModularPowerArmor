@@ -19,68 +19,60 @@ public class MPSPackets {
     public static void registerMPSPackets() {
         int i = 0;
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketColourInfo.class,
                 MusePacketColourInfo::encode,
                 MusePacketColourInfo::decode,
                 MusePacketColourInfo::handle);
-        i ++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketCosmeticInfo.class,
                 MusePacketCosmeticInfo::encode,
                 MusePacketCosmeticInfo::decode,
                 MusePacketCosmeticInfo::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketCosmeticPreset.class,
                 MusePacketCosmeticPreset::encode,
                 MusePacketCosmeticPreset::decode,
                 MusePacketCosmeticPreset::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketCosmeticPresetUpdate.class,
                 MusePacketCosmeticPresetUpdate::encode,
                 MusePacketCosmeticPresetUpdate::decode,
                 MusePacketCosmeticPresetUpdate::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketInstallModuleRequest.class,
                 MusePacketInstallModuleRequest::encode,
                 MusePacketInstallModuleRequest::decode,
                 MusePacketInstallModuleRequest::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketSalvageModuleRequest.class,
                 MusePacketSalvageModuleRequest::encode,
                 MusePacketSalvageModuleRequest::decode,
                 MusePacketSalvageModuleRequest::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 MusePacketTweakRequestDouble.class,
                 MusePacketTweakRequestDouble::encode,
                 MusePacketTweakRequestDouble::decode,
                 MusePacketTweakRequestDouble::handle);
-        i++;
 
         CHANNEL_INSTANCE.registerMessage(
-                i,
+                i++,
                 ModeChangingRequest.class,
                 ModeChangingRequest::encode,
                 ModeChangingRequest::decode,
                 ModeChangingRequest::handle);
-        i++;
     }
 
     public SimpleChannel getWrapper() {

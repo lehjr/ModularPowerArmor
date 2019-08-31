@@ -141,7 +141,7 @@ public enum RegisterStuff {
 
                 // Environmental ------------------------------------------------------------------
                 new CoolingSystemModule(MODULE_COOLING_SYSTEM__REGNAME),
-                new FluidTankModule(MODULE_FLUID_TANK__REGNAME),
+//                new FluidTankModule(MODULE_FLUID_TANK__REGNAME),
                 new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
                 new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
                 new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),

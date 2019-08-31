@@ -1,33 +1,39 @@
 package net.machinemuse.powersuits.client.gui.tinker.module_new;
 
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableButton;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
+import net.machinemuse.numina.client.gui.geometry.DrawableMuseTile;
 import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.gui.slot.UniversalSlot;
 import net.machinemuse.numina.client.render.MuseRenderer;
-import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.containers.ModularItemContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ClientRecipeBook;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.SearchTreeManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 public class InstallSalvageFrame extends ScrollableFrame {
     protected ItemSelectionFrame targetItem;
@@ -35,21 +41,21 @@ public class InstallSalvageFrame extends ScrollableFrame {
     protected ClickableButton craftAndInstallButton;
     protected ClickableButton installButton;
     protected ClickableButton salvageButton;
-//    protected InventoryFrame craftingGrid;
+    //    protected InventoryFrame craftingGrid;
     ModularItemContainer container;
     List<Integer> craftingSlotIndices;
     protected PlayerEntity player;
     final int craftingGridSize = 54; // height and width same
 
     public InstallSalvageFrame(
-                               PlayerEntity player,
-                               MusePoint2D topleft,
-                               MusePoint2D bottomright,
-                               Colour backgroundColour,
-                               Colour borderColour,
-                               Colour gridColour,
-                               ItemSelectionFrame targetItem,
-                               ModuleSelectionFrame targetModule) {
+            PlayerEntity player,
+            MusePoint2D topleft,
+            MusePoint2D bottomright,
+            Colour backgroundColour,
+            Colour borderColour,
+            Colour gridColour,
+            ItemSelectionFrame targetItem,
+            ModuleSelectionFrame targetModule) {
         super(topleft, bottomright, backgroundColour, borderColour);
         this.player = player;
         this.targetItem = targetItem;
@@ -153,7 +159,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
                 installButton.hide();
                 craftAndInstallButton.hide();
             } else if (player.abilities.isCreativeMode
-                    // fixme: condition where player has the crafted item already
+                // fixme: condition where player has the crafted item already
 
             ) {
                 salvageButton.hide();
@@ -296,26 +302,38 @@ public class InstallSalvageFrame extends ScrollableFrame {
         ClickableModule selectedModule = targetModule.getSelectedModule();
         selectedItem.getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
             if (cap instanceof IModularItem) {
-                if(!((IModularItem) cap).isModuleInstalled(selectedModule.getModule().getItem().getRegistryName())) {
+                // if module is installed enable salvage button
+                if(((IModularItem) cap).isModuleInstalled(selectedModule.getModule().getItem().getRegistryName())) {
+                    salvageButton.show();
+                    salvageButton.render(mouseX, mouseY, partialTicks);
+                } else {
+                    installButton.show();
+                    // check if player is in creative mode or has the module in inventory
+                    if (player.abilities.isCreativeMode || player.inventory.hasItemStack(selectedModule.getModule())) {
 
-                    if (player.abilities.isCreativeMode) {
-                        installButton.show();
+                        boolean canInstall = false;
+                        for (int i = 0; i < cap.getSlots(); i++) {
+                            if(cap.insertItem(i, selectedModule.getModule(), true).isEmpty()) {
+                                canInstall = true;
+                                break;
+                            }
+                        }
+                        installButton.setEnabled(canInstall);
+                        installButton.render(mouseX, mouseY, partialTicks);
+                    } else {
+                        craftAndInstallButton.show();
+                        // todo: recipe widget
+                        craftAndInstallButton.render(mouseX, mouseY, partialTicks);
+
                     }
 
 
 
                     // fixme: condition does player have module in inventory
 
-
-                    installButton.setVisible(true);
-                    installButton.render(mouseX, mouseY, partialTicks);
-
-
-
-                } else {
-                    salvageButton.setVisible(true);
-
-                    salvageButton.render(mouseX, mouseY, partialTicks);
+//
+//                    installButton.setVisible(true);
+//                    installButton.render(mouseX, mouseY, partialTicks);
                 }
             }
         });
@@ -337,24 +355,27 @@ public class InstallSalvageFrame extends ScrollableFrame {
     public boolean mouseClicked(double x, double y, int button) {
         ClickableItem selectedItem = targetItem.getSelectedItem();
         ClickableModule selectedModule = targetModule.getSelectedModule();
+        AtomicBoolean handled = new AtomicBoolean(false);
         if (selectedItem != null && !selectedItem.getStack().isEmpty() && selectedModule != null && !selectedModule.getModule().isEmpty()) {
             selectedItem.getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
                 if (cap instanceof IModularItem) {
-                    if(!((IModularItem) cap).isModuleInstalled(selectedModule.getModule().getItem().getRegistryName())) {
-                        if (craftAndInstallButton.hitBox(x, y)) {
-                            doCraftAndInstall();
-                        } else if (installButton.hitBox(x, y)) {
-                            doInstall();
+                    if (((IModularItem) cap).isModuleInstalled(selectedModule.getModule().getItem().getRegistryName())) {
+                        if (salvageButton.isEnabled() && salvageButton.hitBox(x, y)) {
+                            doSalvage();
+                            handled.set(true);
                         }
                     } else {
-                        if (salvageButton.hitBox(x, y)) {
-                            doSalvage();
-                        }
+                        if (craftAndInstallButton.isEnabled() && craftAndInstallButton.hitBox(x, y)) {
+                            doCraftAndInstall();
+                        } else if (installButton.isEnabled() && installButton.hitBox(x, y)) {
+                            doInstall();
+                       }
+                        handled.set(true);
                     }
                 }
             });
         }
-        return false;
+        return handled.get();
     }
 
     private void doCraftAndInstall() {
@@ -395,7 +416,17 @@ public class InstallSalvageFrame extends ScrollableFrame {
      * Performs all the functions associated with the install button. This
      * requires communicating with the server.
      */
-    private void doInstall() { // FIXME: no more install costs
+    private void doInstall() {
+
+        // TODO: packet move item from player inventory slot to modularItem inventory slot
+
+
+
+
+
+        // FIXME: no more install costs
+
+
 //        ItemStack module = targetModule.getSelectedModule().getModule();
 //        ItemStack modularItem = targetItem.getSelectedItem().getStack();
 //        if (!module.isEmpty() && !modularItem.isEmpty()) {

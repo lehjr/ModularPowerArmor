@@ -143,7 +143,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
     }
 
     @Override
-    public boolean func_198955_a(double mouseX, double mouseY, int mouseButton, int p_198955_6_, int p_198955_7_, int p_198955_8_, int p_198955_9_) {
+    public boolean /*mouseClicked */func_198955_a(double mouseX, double mouseY, int mouseButton, int p_198955_6_, int p_198955_7_, int p_198955_8_, int p_198955_9_) {
         this.lastClickedRecipe = null;
         this.lastClickedRecipeList = null;
         if (this.overlay.isVisible()) {
@@ -172,7 +172,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
                         this.lastClickedRecipe = recipewidget.getRecipe();
                         this.lastClickedRecipeList = recipewidget.getList();
                     } else if (mouseButton == 1 && !this.overlay.isVisible() && !recipewidget.isOnlyOption()) {
-                        this.overlay.func_201703_a(this.minecraft, recipewidget.getList(), recipewidget.x, recipewidget.y, p_198955_6_ + p_198955_8_ / 2, p_198955_7_ + 13 + p_198955_9_ / 2, (float)recipewidget.getWidth());
+                        this.overlay./*init*/func_201703_a(this.minecraft, recipewidget.getList(), recipewidget.x, recipewidget.y, p_198955_6_ + p_198955_8_ / 2, p_198955_7_ + 13 + p_198955_9_ / 2, (float)recipewidget.getWidth());
                     }
 
                     return true;

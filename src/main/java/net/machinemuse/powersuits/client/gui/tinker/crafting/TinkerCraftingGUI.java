@@ -28,19 +28,21 @@ import java.util.stream.IntStream;
 
 
 @OnlyIn(Dist.CLIENT)
-//public class TinkerCraftingGUI extends MuseContainerScreen2<MPSCraftingContainer> implements IRecipeShownListener {
-    public class TinkerCraftingGUI extends MuseContainerGui<MPSCraftingContainer> implements IRecipeShownListener {
-
-    /** need this for various reasons */
+public class TinkerCraftingGUI extends MuseContainerGui<MPSCraftingContainer> implements IRecipeShownListener {
+    /** the recipe book */
     private final MPSRecipeBookGui recipeBookGui = new MPSRecipeBookGui();
+    /** determins if the recipe book gui will be over the crafting gui */
     private boolean widthTooNarrow;
+
     protected MPSCraftingContainer container;
 
     /** The outer green rectangle */
     protected DrawableMuseRelativeRect backgroundRect;
     protected final Colour gridColour = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
     protected final Colour gridBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
-    protected final Colour gridBackGound = Colour.DARKBLUE.withAlpha(0.8);
+    protected final Colour gridBackGound = new Colour(0.545D, 0.545D, 0.545D, 1);
+
+//    protected final Colour gridBackGound = Colour.DARKBLUE.withAlpha(0.8);
     protected InventoryFrame craftingGrid, mainInventory, hotbar;
 
     protected DrawableMuseRelativeRect result;
