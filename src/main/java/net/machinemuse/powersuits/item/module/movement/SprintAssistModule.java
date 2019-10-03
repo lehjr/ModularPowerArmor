@@ -1,12 +1,11 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
-import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -39,46 +38,46 @@ public class SprintAssistModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleTick ticker;
-        IModuleToggle toggle;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
 
-            this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.SPRINT_ASSIST, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 100);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_SPEED_MULTIPLIER, .01, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.SPRINT_ASSIST, MPSConstants.SPRINT_SPEED_MULTIPLIER, 2.49);
+            this.ticker.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.SPRINT_ASSIST, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPSConstants.SPRINT_SPEED_MULTIPLIER, .01, "%");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.SPRINT_ASSIST, MPSConstants.SPRINT_SPEED_MULTIPLIER, 2.49);
 
-            this.moduleCap.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 20);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.FOOD_COMPENSATION, 0, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addBasePropertyDouble(MPSConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.SPRINT_ENERGY_CONSUMPTION, 20);
+            this.ticker.addBasePropertyDouble(MPSConstants.FOOD_COMPENSATION, 0, "%");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.COMPENSATION, MPSConstants.FOOD_COMPENSATION, 1);
 
-            this.moduleCap.addBasePropertyDouble(MPSConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.WALKING_ASSISTANCE, MPSConstants.WALKING_ENERGY_CONSUMPTION, 100);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.WALKING_SPEED_MULTIPLIER, 0.01, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.WALKING_ASSISTANCE, MPSConstants.WALKING_SPEED_MULTIPLIER, 1.99);
-
-            this.toggle = new Toggle(module);
-            this.ticker = new Ticker();
+            this.ticker.addBasePropertyDouble(MPSConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.WALKING_ASSISTANCE, MPSConstants.WALKING_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPSConstants.WALKING_SPEED_MULTIPLIER, 0.01, "%");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.WALKING_ASSISTANCE, MPSConstants.WALKING_SPEED_MULTIPLIER, 1.99);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            if (cap == ToggleCapability.TOGGLEABLE_MODULE)
-                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(() -> toggle));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IPlayerTickModule) {
+                System.out.println("ismodule online: " + ticker.isAllowed());
+                ticker.updateFromNBT();
+                System.out.println("ismodule online (after update): " + ticker.isAllowed());
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
 
-        class Ticker extends ModuleTick {
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, true);
+            }
+
             @Override
-            public void onPlayerTickActive(PlayerEntity player, ItemStack itemStack) {
+            public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack itemStack) {
                 if (player.abilities.isFlying || player.isPassenger() || player.isElytraFlying())
                     onPlayerTickInactive(player, itemStack);
 
@@ -87,19 +86,19 @@ public class SprintAssistModule extends AbstractPowerModule {
                 if (horzMovement > 0) { // stop doing drain calculations when player hasn't moved
                     if (player.isSprinting()) {
                         double exhaustion = Math.round(horzMovement * 100.0F) * 0.01;
-                        double sprintCost = moduleCap.applyPropertyModifiers(MPSConstants.SPRINT_ENERGY_CONSUMPTION);
+                        double sprintCost = applyPropertyModifiers(MPSConstants.SPRINT_ENERGY_CONSUMPTION);
                         if (sprintCost < totalEnergy) {
-                            double sprintMultiplier = moduleCap.applyPropertyModifiers(MPSConstants.SPRINT_SPEED_MULTIPLIER);
-                            double exhaustionComp = moduleCap.applyPropertyModifiers(MPSConstants.FOOD_COMPENSATION);
+                            double sprintMultiplier = applyPropertyModifiers(MPSConstants.SPRINT_SPEED_MULTIPLIER);
+                            double exhaustionComp = applyPropertyModifiers(MPSConstants.FOOD_COMPENSATION);
                             ElectricItemUtils.drainPlayerEnergy(player, (int) (sprintCost * horzMovement * 5));
                             MovementManager.setMovementModifier(itemStack, sprintMultiplier, player);
                             player.getFoodStats().addExhaustion((float) (-0.01 * exhaustion * exhaustionComp));
                             player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
                         }
                     } else {
-                        double cost = moduleCap.applyPropertyModifiers(MPSConstants.WALKING_ENERGY_CONSUMPTION);
+                        double cost = applyPropertyModifiers(MPSConstants.WALKING_ENERGY_CONSUMPTION);
                         if (cost < totalEnergy) {
-                            double walkMultiplier = moduleCap.applyPropertyModifiers(MPSConstants.WALKING_SPEED_MULTIPLIER);
+                            double walkMultiplier = applyPropertyModifiers(MPSConstants.WALKING_SPEED_MULTIPLIER);
                             ElectricItemUtils.drainPlayerEnergy(player, (int) (cost * horzMovement * 5));
                             MovementManager.setMovementModifier(itemStack, walkMultiplier, player);
                             player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
@@ -109,7 +108,7 @@ public class SprintAssistModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickInactive(PlayerEntity player, ItemStack itemStack) {
+            public void onPlayerTickInactive(PlayerEntity player, @Nonnull ItemStack itemStack) {
                 MovementManager.setMovementModifier(itemStack, 0, player);
             }
         }

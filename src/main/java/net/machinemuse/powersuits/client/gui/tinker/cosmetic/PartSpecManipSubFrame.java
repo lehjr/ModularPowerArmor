@@ -11,7 +11,7 @@ import net.machinemuse.numina.client.render.RenderState;
 import net.machinemuse.numina.client.render.modelspec.*;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.powersuits.client.gui.tinker.common.ItemSelectionFrame;
+import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -205,7 +205,7 @@ public class PartSpecManipSubFrame {
         if (selcomp > 0)
             new GuiIcons.SelectedArmorOverlay(x + 28 + selcolour * 8, y, null, null, ymino, null, ymaxo);
 
-        MuseRenderer.drawString(partSpec.getDisaplayName(), textstartx + 4, y);
+        MuseRenderer.drawString(partSpec.getDisaplayName().getFormattedText(), textstartx + 4, y);
     }
 
     public void drawOpenArrow(double min, double max) {

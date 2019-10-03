@@ -1,9 +1,11 @@
 package net.machinemuse.powersuits.item.module.tool;
 
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreaking;
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCapability;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModule;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -26,8 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ShovelModule extends AbstractPowerModule {//
-    private static final ItemStack emulatedTool = new ItemStack(Items.IRON_SHOVEL);
-
     public ShovelModule(String regName) {
         super(regName);
     }
@@ -40,30 +40,28 @@ public class ShovelModule extends AbstractPowerModule {//
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IBlockBreakingModule blockBreaking;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.ENERGY_CONSUMPTION, 9500);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.HARVEST_SPEED, 22);
-
-            this.blockBreaking = new BlockBreaker();
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.blockBreaking.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
+            this.blockBreaking.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.ENERGY_CONSUMPTION, 9500);
+            this.blockBreaking.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.HARVEST_SPEED, 22);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == BlockBreakingCapability.BLOCK_BREAKING)
-                return BlockBreakingCapability.BLOCK_BREAKING.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
         }
 
-        class BlockBreaker extends BlockBreaking {
+        class BlockBreaker extends PowerModule implements IBlockBreakingModule {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
                 if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
@@ -75,17 +73,17 @@ public class ShovelModule extends AbstractPowerModule {//
 
             @Override
             public ItemStack getEmulatedTool() {
-                return emulatedTool;
+                return new ItemStack(Items.IRON_SHOVEL);
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
 
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
-                event.setNewSpeed((float) (event.getNewSpeed() * moduleCap.applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
+                event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
             }
         }
     }

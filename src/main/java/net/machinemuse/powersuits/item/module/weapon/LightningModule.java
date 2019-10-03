@@ -1,9 +1,11 @@
 package net.machinemuse.powersuits.item.module.weapon;
 
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
@@ -21,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -45,58 +48,54 @@ public class LightningModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClickie;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 4900000, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.HEAT_EMISSION, 100, "");
-            this.rightClickie = new RightClickie(module, moduleCap);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 4900000, "RF");
+            this.rightClickie.addBasePropertyDouble(MPSConstants.HEAT_EMISSION, 100, "");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClickie));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClickie));
         }
 
         class RightClickie extends RightClickModule {
-            ItemStack module;
-            IPowerModule moduleCap;
-
-            public RightClickie(@Nonnull ItemStack module, IPowerModule moduleCap) {
-                this.module = module;
-                this.moduleCap = moduleCap;
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
             }
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (hand == Hand.MAIN_HAND) {
-                    try {
-                        double range = 64;
-                        int energyConsumption = getEnergyUsage();
-                        if (energyConsumption < ElectricItemUtils.getPlayerEnergy(playerIn)) {
-                            ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
-                            MuseHeatUtils.heatPlayer(playerIn, moduleCap.applyPropertyModifiers(MPSConstants.HEAT_EMISSION));
+                    int energyConsumption = getEnergyUsage();
+                    if (energyConsumption < ElectricItemUtils.getPlayerEnergy(playerIn)) {
+                        if (!worldIn.isRemote()) {
+                            double range = 64;
 
-                            RayTraceResult raytraceResult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
-                            worldIn.addEntity(new LightningBoltEntity(playerIn.world, raytraceResult.getHitVec().x, raytraceResult.getHitVec().y, raytraceResult.getHitVec().z, false));
+                            RayTraceResult raytraceResult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY, range);
+                            if (raytraceResult != null && raytraceResult.getType() != RayTraceResult.Type.MISS) {
+                                if(worldIn instanceof ServerWorld) {
+                                    ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
+                                    MuseHeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPSConstants.HEAT_EMISSION));
+                                    LightningBoltEntity sparkie = new LightningBoltEntity(playerIn.world, raytraceResult.getHitVec().x, raytraceResult.getHitVec().y, raytraceResult.getHitVec().z, false);
+
+                                    ((ServerWorld) worldIn).addLightningBolt(sparkie);
+                                }
+                            }
                         }
-                    } catch (Exception ignored) {
-                        return ActionResult.newResult(ActionResultType.FAIL, itemStackIn);
+                        return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
                     }
-                    return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
                 }
                 return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION));
+                return (int) Math.round(applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION));
             }
         }
     }

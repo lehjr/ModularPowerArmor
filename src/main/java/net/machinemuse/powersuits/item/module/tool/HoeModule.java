@@ -2,9 +2,11 @@ package net.machinemuse.powersuits.item.module.tool;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.helper.ToolHelpers;
@@ -47,29 +49,27 @@ public class HoeModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.RADIUS, 8, "m");
-
-            this.rightClick = new RightClickie();
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.RADIUS, 8, "m");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClick));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+              return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
         }
 
         class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public ActionResultType onItemUse(ItemUseContext context) {
                 int energyConsumed = this.getEnergyUsage();
@@ -80,12 +80,11 @@ public class HoeModule extends AbstractPowerModule {
                 ItemStack itemStack = context.getItem();
 
                 if (!player.canPlayerEdit(pos, facing, itemStack) || ElectricItemUtils.getPlayerEnergy(player) < energyConsumed) {
-                    return ActionResultType.FAIL;
+                    return ActionResultType.PASS;
                 } else {
                     int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(context);
                     if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
-
-                    double radius = (int) Math.min(moduleCap.applyPropertyModifiers(MPSConstants.RADIUS), 1);
+                    int radius = (int)applyPropertyModifiers(MPSConstants.RADIUS);
                     for (int i = (int) Math.floor(-radius); i < radius; i++) {
                         for (int j = (int) Math.floor(-radius); j < radius; j++) {
                             if (i * i + j * j < radius * radius) {
@@ -112,7 +111,7 @@ public class HoeModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

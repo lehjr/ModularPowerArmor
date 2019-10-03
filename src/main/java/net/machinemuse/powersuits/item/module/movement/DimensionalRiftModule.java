@@ -1,9 +1,11 @@
 package net.machinemuse.powersuits.item.module.movement;
 
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
@@ -43,24 +45,24 @@ public class DimensionalRiftModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClick = new RightClickie();
+            this.rightClick = new RightClickie(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClick));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
         }
 
         class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (!playerIn.isPassenger() && !playerIn.isBeingRidden() && playerIn.isNonBoss() && !playerIn.world.isRemote()) {
@@ -71,11 +73,11 @@ public class DimensionalRiftModule extends AbstractPowerModule {
                     }
 
                     playerIn.changeDimension(DimensionType.OVERWORLD);
-                    int energyConsumption = (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                    int energyConsumption = (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
                     int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
                     if (playerEnergy >= energyConsumption) {
                         ElectricItemUtils.drainPlayerEnergy(playerIn, getEnergyUsage());
-                        MuseHeatUtils.heatPlayer(playerIn, moduleCap.applyPropertyModifiers(MPSConstants.HEAT_GENERATION));
+                        MuseHeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPSConstants.HEAT_GENERATION));
                         return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
                     }
                 }
@@ -84,7 +86,7 @@ public class DimensionalRiftModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

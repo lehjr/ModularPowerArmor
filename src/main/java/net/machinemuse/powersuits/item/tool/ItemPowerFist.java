@@ -6,21 +6,28 @@ import net.machinemuse.numina.capabilities.heat.MuseHeatItemWrapper;
 import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
 import net.machinemuse.numina.capabilities.inventory.modechanging.ModeChangingModularItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.MuseRangedWrapper;
+import net.machinemuse.numina.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
+import net.machinemuse.numina.capabilities.render.IHandHeldModelSpecNBT;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
+import net.machinemuse.numina.energy.ElectricItemUtils;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
+import net.machinemuse.powersuits.capabilities.render.PowerFistSpecNBT;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -29,18 +36,25 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemPowerFist extends AbstractElectricTool {
     public ItemPowerFist(String regName) {
         setRegistryName(regName);
+        this.addPropertyOverride(new ResourceLocation("pull"), (itemStack, world, livingEntity) -> {
+            if (livingEntity == null) {
+                return 0.0F;
+            } else {
+                return !(livingEntity.getActiveItemStack().getItem() instanceof BowItem) ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getItemInUseCount()) / 20.0F;
+            }
+        });
+        this.addPropertyOverride(new ResourceLocation("firing"), (itemStack, world, livingEntity) -> {
+            return livingEntity != null && livingEntity.isHandActive() && livingEntity.getActiveItemStack() == itemStack ? 1.0F : 0.0F;
+        });
     }
 
     @Override
@@ -48,10 +62,208 @@ public class ItemPowerFist extends AbstractElectricTool {
         return 72000;
     }
 
+//    /**
+//     * FORGE: Overridden to allow custom tool effectiveness
+//     */
+//    @Override
+//    public float getDestroySpeed(ItemStack itemStack, BlockState state) {
+//        System.out.println("material requires tool: " + (state.getHarvestTool() != null ? state.getHarvestTool().getName() : "none"));
+//        return 50.0F;
+//    }
 
-//    @Override // TODO?
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+        return true;
+    }
+
+
+
+
+
+    /**
+     * Current implementations of this method in child classes do not use the
+     * entry argument beside stack. They just raise the damage on the stack.
+     */
+    @Override
+    public boolean hitEntity(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
+//        if (ModuleManager.INSTANCE.itemHasActiveModule(stack, MPSModuleConstants.MODULE_OMNI_WRENCH__DATANAME)) {
+//            target.rotationYaw += 90.0f;
+//            target.rotationYaw %= 360.0f;
+//        }
+        if (attacker instanceof PlayerEntity) {
+            itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+                if (iItemHandler instanceof IModeChangingItem) {
+                    ((IModeChangingItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(MPSRegistryNames.MODULE_MELEE_ASSIST__REGNAME))
+                            .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
+                        if (pm instanceof IModeChangingItem) {
+                            PlayerEntity player = (PlayerEntity) attacker;
+                            double drain = pm.applyPropertyModifiers(MPSConstants.PUNCH_ENERGY);
+                            if (ElectricItemUtils.getPlayerEnergy(player) > drain) {
+                                ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
+                                double damage = pm.applyPropertyModifiers(MPSConstants.PUNCH_DAMAGE);
+                                double knockback = pm.applyPropertyModifiers(MPSConstants.PUNCH_KNOCKBACK);
+                                DamageSource damageSource = DamageSource.causePlayerDamage(player);
+                                if (target.attackEntityFrom(damageSource, (float) (int) damage)) {
+                                    Vec3d lookVec = player.getLookVec();
+                                    target.addVelocity(lookVec.x * knockback, Math.abs(lookVec.y + 0.2f) * knockback, lookVec.z * knockback);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        return true;
+    }
+
+
+
+    //    @Override // TODO?
 //    public IItemTier getTier() {
 //        return super.getTier();
+//    }
+
+
+//    @Override
+//    public boolean canPlayerBreakBlockWhileHolding(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_, PlayerEntity p_195938_4_) {
+//        System.out.println("doing something here");
+//
+//        return super.canPlayerBreakBlockWhileHolding(p_195938_1_, p_195938_2_, p_195938_3_, p_195938_4_);
+//    }
+
+
+//    @Override
+//    public boolean onBlockDestroyed(ItemStack itemStack, World world, BlockState state, BlockPos pos, LivingEntity player) {
+//        System.out.println("doing something here");
+//
+//        return super.onBlockDestroyed(itemStack, world, state, pos, player);
+//    }
+
+    /**
+     * Called before a block is broken.  Return true to prevent default block harvesting.
+     *
+     * Note: In SMP, this is called on both client and server sides!
+     *
+     * @param itemstack The current ItemStack
+     * @param pos Block's position in world
+     * @param player The Player that is wielding the item
+     * @return True to prevent harvesting, false to continue as normal
+     */
+    @Override
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+        super.onBlockStartBreak(itemstack, pos, player);
+        return itemstack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            if(iItemHandler instanceof IModeChangingItem) {
+                return ((IModeChangingItem) iItemHandler).getActiveModule()
+                        .getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+                            if(pm instanceof IMiningEnhancementModule) {
+                                return ((IMiningEnhancementModule) pm).onBlockStartBreak(itemstack, pos, player);
+                            }
+                            return false;
+                        }).orElse(false);
+            }
+            return false;
+        }).orElse(false);
+    }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        System.out.println("doing something here");
+
+        return false;
+    }
+
+    @Override
+    public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {
+        System.out.println("doing something here");
+
+        return oldStack.isItemEqual(newStack);
+    }
+
+//    // Only fires on blocks that need a tool
+//    @Override
+//    public int getHarvestLevel(ItemStack itemStack, ToolType toolType, @Nullable PlayerEntity player, @Nullable BlockState state) {
+//
+//        System.out.println("super level pass: " + super.getHarvestLevel(itemStack, toolType, player, state));
+//
+//
+//        int retVal = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+//            if (iItemHandler instanceof IModeChangingItem) {
+//                int highestVal = 0;
+//                for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
+//                    int val = module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+//                        if (pm instanceof IBlockBreakingModule) {
+//                            return ((IBlockBreakingModule) pm).getEmulatedTool().getHarvestLevel(toolType, player, state);
+//                        }
+//                        return 0;
+//                    }).orElse(0);
+//                    if (val > highestVal) {
+//                        highestVal = val;
+//                    }
+//                }
+//                return highestVal;
+//            }
+//            return 0;
+//        }).orElse(0);
+//
+//
+////        System.out.println("retVal: " + retVal);
+////        System.out.println("itemstack: " + itemStack);
+////        System.out.println("toolType: " + toolType);
+////        System.out.println("player: " + player);
+////        System.out.println("state.block: " + state.getBlock());
+////        System.out.println("state.harvest level: " + state.getHarvestLevel());
+////        System.out.println("state.harvest tool: " + state.getHarvestTool().getName());
+////        System.out.println("state.getMaterial is Wood: " + state.getMaterial().equals(Material.WOOD));
+////        System.out.println("state.getMaterial requires Tool: " + !state.getMaterial().isToolNotRequired());
+//
+////        return retVal;
+//
+//
+//        return 100;
+//    }
+
+//    @Override
+//    public boolean canHarvestBlock(BlockState p_150897_1_) {
+//
+//        System.out.println("canHarvestBlock: " + super.canHarvestBlock(p_150897_1_));
+//        return super.canHarvestBlock(p_150897_1_);
+//    }
+//
+//    @Override
+//    public boolean canHarvestBlock(ItemStack stack, BlockState state) {
+//        System.out.println("canHarvestBlock: " + super.canHarvestBlock(stack, state));
+//
+//        return super.canHarvestBlock(stack, state);
+//    }
+
+    // this might be what we need
+
+//    @Override
+//    public boolean canHarvestBlock(ItemStack itemStack, BlockState state) {
+//        boolean retVal = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+//                    if (iItemHandler instanceof IModeChangingItem) {
+//                        for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
+//                            boolean val = module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+//                                if (pm instanceof IBlockBreakingModule) {
+//                                    if (((IBlockBreakingModule) pm).getEmulatedTool().canHarvestBlock(state))
+//                                        return true;
+//                                }
+//                                return false;
+//                            }).orElse(false);
+//
+//                        }
+//                        return false;
+//                    }
+//                    return false;
+//                }).orElse(false);
+//        System.out.println("retVal: " + retVal);
+//        return retVal;
 //    }
 
     @Nullable
@@ -65,6 +277,7 @@ public class ItemPowerFist extends AbstractElectricTool {
         IModeChangingItem modeChangingItem;
         IEnergyStorage energyStorage;
         IHeatStorage heatStorage;
+        IHandHeldModelSpecNBT modelSpec;
         double maxHeat = CommonConfig.baseMaxHeatPowerFist();
 
         public PowerToolCap(@Nonnull ItemStack fist) {
@@ -82,6 +295,7 @@ public class ItemPowerFist extends AbstractElectricTool {
             }};
             this.energyStorage = this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
+            this.modelSpec = new PowerFistSpecNBT(fist);
         }
 
         @Nonnull
@@ -93,6 +307,9 @@ public class ItemPowerFist extends AbstractElectricTool {
             }
             if (cap == HeatCapability.HEAT) {
                 ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
+            }
+            if (cap == ModelSpecNBTCapability.RENDER) {
+                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
                     this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
@@ -122,7 +339,35 @@ public class ItemPowerFist extends AbstractElectricTool {
         return fist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(handler->{
             if(handler instanceof IModeChangingItem) {
                 ItemStack module = ((IModeChangingItem) handler).getActiveModule();
-                return module.getCapability(RightClickCapability.RIGHT_CLICK).map(m-> m.onItemUse(context)).orElse(fallback);
+                return module.getCapability(PowerModuleCapability.POWER_MODULE).map(m-> {
+                    if (m instanceof IRightClickModule) {
+                        return ((IRightClickModule) m).onItemUse(context);
+                    }
+                    return fallback;
+                }).orElse(fallback);
+            }
+            return fallback;
+        }).orElse(fallback);
+    }
+
+    @Override
+    public ActionResultType onItemUseFirst(ItemStack itemStack, ItemUseContext context) {
+        final ActionResultType fallback = ActionResultType.PASS;
+
+        final Hand hand = context.getHand();
+        if (hand != Hand.MAIN_HAND)
+            return fallback;
+
+        final ItemStack fist = context.getItem();
+        return fist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(handler->{
+            if(handler instanceof IModeChangingItem) {
+                ItemStack module = ((IModeChangingItem) handler).getActiveModule();
+                return module.getCapability(PowerModuleCapability.POWER_MODULE).map(m-> {
+                    if (m instanceof IRightClickModule) {
+                        return ((IRightClickModule) m).onItemUseFirst(itemStack, context);
+                    }
+                    return fallback;
+                }).orElse(fallback);
             }
             return fallback;
         }).orElse(fallback);
@@ -133,10 +378,11 @@ public class ItemPowerFist extends AbstractElectricTool {
         stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler->{
             if(handler instanceof IModeChangingItem) {
                 ItemStack module = ((IModeChangingItem) handler).getActiveModule();
-
-                System.out.println("module: " + module);
-
-                module.getCapability(RightClickCapability.RIGHT_CLICK).ifPresent(m-> m.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft));
+                module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> {
+                    if (m instanceof IRightClickModule) {
+                        ((IRightClickModule) m).onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
+                    }
+                });
             }
         });
     }
@@ -144,36 +390,25 @@ public class ItemPowerFist extends AbstractElectricTool {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity playerIn, Hand handIn) {
         ItemStack fist = playerIn.getHeldItem(handIn);
-        final ActionResult<ItemStack> fallack = new ActionResult<>(ActionResultType.PASS, fist);
+        final ActionResult<ItemStack> fallback = new ActionResult<>(ActionResultType.PASS, fist);
         if (handIn != Hand.MAIN_HAND)
-            return fallack;
+            return fallback;
 
-
-
-
-        ItemStack module = fist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map( handler-> {
+        return fist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map( handler-> {
             if(handler instanceof IModeChangingItem) {
-                if(handler.getStackInSlot(0).isEmpty()) {
-                    ((IModeChangingItem) handler).setStackInSlot(0, new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(MPSRegistryNames.MODULE_BATTERY_ULTIMATE__REGNAME))));
-
-                    System.out.println("doing something here");
-
-                }
-                return ((IModeChangingItem) handler).getActiveModule();
+                return ((IModeChangingItem) handler).getActiveModule().
+                        getCapability(PowerModuleCapability.POWER_MODULE).map(rc->
+                        rc instanceof IRightClickModule ? ((IRightClickModule) rc).onItemRightClick(fist, world, playerIn, handIn) : fallback).orElse(fallback);
             }
-            return ItemStack.EMPTY;
-        }).orElse(ItemStack.EMPTY);
-
-        ActionResult<ItemStack> test = module.getCapability(RightClickCapability.RIGHT_CLICK).map(rc-> rc.onItemRightClick(fist, world, playerIn, handIn)).orElse(fallack);
-
-        System.out.println("module: " + test.getType().name());
-
-        return test;
+            return fallback;
+        }).orElse(fallback);
     }
 
+    /** Durability bar for showing energy level ------------------------------------------------------------------ */
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
+        return stack.getCapability(CapabilityEnergy.ENERGY)
+                .map( energyCap-> energyCap.getMaxEnergyStored() > 0).orElse(false);
     }
 
     @Override

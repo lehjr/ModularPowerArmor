@@ -2,13 +2,15 @@ package net.machinemuse.powersuits.client.misc;
 
 import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.energy.adapter.ElectricAdapter;
 import net.machinemuse.numina.string.MuseStringUtils;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -18,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -69,6 +70,23 @@ public class AdditionalInfo {
         }
 
         if (doAdditionalInfo()) {
+            stack.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
+                if (pm.getCategory() == EnumModuleCategory.ARMOR) {
+                    double pysArmor = pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_PHYSICAL);
+                    double energyArmor = pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_ENERGY);
+//                    double toughness = pm.applyPropertyModifiers(MPSConstants)
+                    double knockbackResistance = pm.applyPropertyModifiers(MPSConstants.KNOCKBACK_RESISTANCE);
+
+
+
+
+
+                }
+            });
+
+
+
+
 
             // FIXME: fluids???
             // this is just some random info on the fluids installed
@@ -97,6 +115,10 @@ public class AdditionalInfo {
                 currentTipList.add(new TranslationTextComponent("tooltip.powersuits.installedModules"));
                 currentTipList.addAll(installed);
             }
+
+
+
+
         } else {
             currentTipList.add(new TranslationTextComponent("tooltip.powersuits.pressShift")
                     .applyTextStyles(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
@@ -108,7 +130,7 @@ public class AdditionalInfo {
         return MuseStringUtils.wrapMultipleFormatTags(message, MuseStringUtils.FormatCodes.Grey, MuseStringUtils.FormatCodes.Italic);
     }
 
-    public static List<ITextComponent> getItemInstalledModules(@NonNull ItemStack stack) {
+    public static List<ITextComponent> getItemInstalledModules(@Nonnull ItemStack stack) {
         return stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
             List<ITextComponent> moduleNames = new ArrayList<>();
 

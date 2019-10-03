@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
-import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -37,32 +37,29 @@ public class ParachuteModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleTick ticker;
-        IModuleToggle toggle;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
-
-            this.toggle = new Toggle(module);
-            this.ticker = new Ticker();
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.THRUST, MPSConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            if (cap == ToggleCapability.TOGGLEABLE_MODULE)
-                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(() -> toggle));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
         }
 
-        class Ticker extends ModuleTick {
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
+            }
+
             @Override
             public void onPlayerTickActive (PlayerEntity player, ItemStack itemStack){
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);

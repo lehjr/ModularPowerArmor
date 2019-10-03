@@ -85,6 +85,7 @@ public class MPSRegistryNames {
     // Movement -----------------------------------------------------------------------------------
     public static final String MODULE_BLINK_DRIVE__REGNAME = MODID + ":blink_drive";
     public static final String MODULE_CLIMB_ASSIST__REGNAME = MODID + ":climb_assist";
+    public static final String MODULE_DIMENSIONAL_RIFT__REGNAME = MODID + ":dim_rift_gen";
     public static final String MODULE_FLIGHT_CONTROL__REGNAME = MODID + ":flight_control";
     public static final String MODULE_GLIDER__REGNAME = MODID + ":glider";
     public static final String MODULE_JETBOOTS__REGNAME = MODID + ":jet_boots";
@@ -114,7 +115,6 @@ public class MPSRegistryNames {
     public static final String MODULE_AQUA_AFFINITY__REGNAME = MODID + ":aqua_affinity";
     public static final String MODULE_AXE__REGNAME = MODID + ":axe";
     public static final String MODULE_DIAMOND_PICK_UPGRADE__REGNAME = MODID + ":diamond_pick_upgrade";
-    public static final String MODULE_DIMENSIONAL_RIFT__REGNAME = MODID + ":dim_rift_gen";
     public static final String MODULE_FIELD_TINKER__REGNAME = MODID + ":field_tinkerer";
     public static final String MODULE_FLINT_AND_STEEL__REGNAME = MODID + ":flint_and_steel";
     public static final String MODULE_HOE__REGNAME = MODID + ":hoe";
@@ -131,7 +131,7 @@ public class MPSRegistryNames {
     public static final String MODULE_MELEE_ASSIST__REGNAME = MODID + ":melee_assist";
     public static final String MODULE_PLASMA_CANNON__REGNAME = MODID + ":plasma_cannon";
     public static final String MODULE_RAILGUN__REGNAME = MODID + ":railgun";
-
+    public static final String MODULE_SONIC_WEAPON__REGNAME = MODID + "sonic_weapon";
 
     /**
      * Blocks -------------------------------------------------------------------------------------
@@ -139,18 +139,10 @@ public class MPSRegistryNames {
     public static final String TINKER_TABLE_REG_NAME = MODID + ":tinkertable";
     public static final String LUX_CAPACITOR_REG_NAME = MODID + ":luxcapacitor";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Container
+     */
+    public static final String MPS_CRAFTING_CONTAINER_TYPE__REG_NAME = MODID + ":crafting_container";
+    public static final String MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME = MODID + ":tinker_table_container_type";
 
 }

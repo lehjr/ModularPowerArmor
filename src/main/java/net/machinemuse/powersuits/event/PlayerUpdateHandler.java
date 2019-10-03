@@ -1,5 +1,6 @@
 package net.machinemuse.powersuits.event;
 
+import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.basemod.NuminaConfig;
 import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
@@ -32,9 +33,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PlayerUpdateHandler {
     @SuppressWarnings("unchecked")
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onPlayerUpdate(LivingEvent.LivingUpdateEvent e) {
-        if (e.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) e.getEntity();
+    public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntity();
 
             // only MPS modular items in this list
 //            List<ItemStack> modularItemsEquipped = MuseItemUtils.getModularItemsEquipped(player);
@@ -66,38 +67,45 @@ public class PlayerUpdateHandler {
 
 //            Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
 
-            AtomicInteger modularItemsEquipped = new AtomicInteger();
+            AtomicInteger modularItemsEquipped = new AtomicInteger(0);
+
+            // FIXME ... ticking modules not done
 
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+                if(player.getItemStackFromSlot(slot).isEmpty())
+                    continue;
+
                 switch (slot.getSlotType()) {
                     case HAND:
                         player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(i-> {
                             if (i instanceof IModeChangingItem) {
                                 ((IModeChangingItem) i).tick(player);
-                                modularItemsEquipped.addAndGet(1);
+                                modularItemsEquipped.getAndAdd(1);
                             }
                         });
                         break;
 
                     case ARMOR:
+
+                        try {
                             player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(i-> {
-                                if (i instanceof IModularItem)
-                                ((IModularItem) i).tick(player);
-                                modularItemsEquipped.addAndGet(1);
+                                if (i instanceof IModularItem) {
+                                    ((IModularItem) i).tick(player);
+                                    modularItemsEquipped.getAndAdd(1);
+                                }
                             });
+                        } catch (Exception exception) {
+                            MuseLogger.logException(player.getItemStackFromSlot(slot).toString(), exception);
+                        }
+                        break;
                 }
             }
 
-
-
-
-
-
-//            System.out.println("player fall distance before: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
-//
-                player.fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
-//
-//            System.out.println("player fall distance after: [ player: " + player.getName() + " ], [ distance : " + player.fallDistance + " ]"  );
+            // pretty sure the whole point of this was to reduce fall distance, not increase it.
+            float fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MuseMathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
+            if (fallDistance < player.fallDistance) {
+                player.fallDistance = fallDistance;
+            }
 
             // Sound update
             if (player.world.isRemote && NuminaConfig.USE_SOUNDS.get()) {
@@ -122,18 +130,27 @@ public class PlayerUpdateHandler {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
             }
 
-            // Done this way so players can let their stuff cool in their inventory without having to equip it.
+            //  Done this way so players can let their stuff cool in their inventory without having to equip it,
+            // allowing it to cool off enough to not take damage
             List<ItemStack> modularItemsInInventory = MuseItemUtils.getModularItemsInInventory(player);
             if (modularItemsInInventory.size() > 0) {
                 // Heat update
                 double currHeat = MuseHeatUtils.getPlayerHeat(player);
+
+//                System.out.println("currHeat: " + currHeat);
+
                 if (currHeat >= 0 && !player.world.isRemote) { // only apply serverside so change is not applied twice
-                    double coolPlayerAmount = NuminaPlayerUtils.getPlayerCoolingBasedOnMaterial(player) * 0.55;  // cooling value adjustment. Too much or too little cooling makes the heat system useless.
 
                     // cooling value adjustment. Too much or too little cooling makes the heat system useless.
+                    double coolPlayerAmount = NuminaPlayerUtils.getPlayerCoolingBasedOnMaterial(player) * 0.55;  // cooling value adjustment. Too much or too little cooling makes the heat system useless.
 
-                    if (coolPlayerAmount > 0)
+
+//                    System.out.println("coolPlayerAmount: " + coolPlayerAmount);
+
+
+                    if (coolPlayerAmount > 0) {
                         MuseHeatUtils.coolPlayer(player, coolPlayerAmount);
+                    }
 
                     double maxHeat = MuseHeatUtils.getPlayerMaxHeat(player);
 

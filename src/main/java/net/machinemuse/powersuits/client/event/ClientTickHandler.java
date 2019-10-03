@@ -12,6 +12,8 @@ import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.basemod.config.ClientConfig;
+import net.machinemuse.powersuits.client.control.KeybindManager;
+import net.machinemuse.powersuits.client.gui.clickable.ClickableKeybinding;
 import net.machinemuse.powersuits.item.module.environmental.AutoFeederModule;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -24,8 +26,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
@@ -54,10 +54,13 @@ public class ClientTickHandler {
 
     @SubscribeEvent
     public void onPreClientTick(TickEvent.ClientTickEvent event) {
+        if (Minecraft.getInstance().player == null)
+            return;
+
         if (event.phase == TickEvent.Phase.START) {
-//            for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
-//                kb.doToggleTick();
-//            }
+            for (ClickableKeybinding kb : KeybindManager.INSTANCE.getKeybindings()) {
+                kb.doToggleTick();
+            }
         }
     }
 
@@ -65,6 +68,10 @@ public class ClientTickHandler {
     @SubscribeEvent
     public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null)
+            return;
+
+
         int yOffsetString = 18;
         double yOffsetIcon = 16.0;
         double yBaseIcon;
@@ -194,16 +201,17 @@ public class ClientTickHandler {
                         ItemStack module = ((IModeChangingItem) modechanging).getActiveModule();
                         int actualCount = 0;
 
+                        int maxDuration = ((IModeChangingItem) modechanging).getModularItemStack().getUseDuration();
                         if (!module.isEmpty()) {
                             // Plasma Cannon
                             if (module.getItem().getRegistryName().equals(plasmaCannon)) {
-                                actualCount = (72000 - player.getItemInUseCount());
+                                actualCount = (maxDuration - player.getItemInUseCount());
                                 currentPlasma.getAndAdd((actualCount > 50 ? 50 : actualCount) * 2);
                                 maxPlasma.getAndAdd(100);
 
                                 // Ore Scanner
                             } else if (false) {
-                                actualCount = (72000 - player.getItemInUseCount());
+                                actualCount = (maxDuration - player.getItemInUseCount());
                                 currentPlasma.getAndAdd((actualCount > 40 ? 40 : actualCount) * 2.5);
                                 maxPlasma.getAndAdd(100);
                             }

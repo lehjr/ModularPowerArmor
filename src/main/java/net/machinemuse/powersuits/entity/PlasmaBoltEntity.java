@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.entity;
 
 import net.machinemuse.powersuits.basemod.MPSObjects;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;

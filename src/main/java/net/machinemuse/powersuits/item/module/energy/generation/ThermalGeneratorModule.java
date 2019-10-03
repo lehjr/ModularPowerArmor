@@ -1,9 +1,12 @@
 package net.machinemuse.powersuits.item.module.energy.generation;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -37,30 +40,27 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleTick ticker;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_GENERATION, 250);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.ENERGY_GENERATED, MPSConstants.ENERGY_GENERATION, 250, "RF");
-            this.ticker = new Ticker(moduleCap);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker.addBasePropertyDouble(MPSConstants.ENERGY_GENERATION, 250);
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.ENERGY_GENERATED, MPSConstants.ENERGY_GENERATION, 250, "RF");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
 
-        class Ticker extends ModuleTick {
-            IPowerModule moduleCap;
-
-            public Ticker(IPowerModule moduleCapIn) {
-                this.moduleCap = moduleCapIn;
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, true);
             }
 
             @Override
@@ -69,11 +69,11 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
                 double maxHeat = MuseHeatUtils.getPlayerMaxHeat(player);
                 if (player.world.getGameTime() % 20 == 0) {
                     if (player.isBurning()) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) (4 * moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_GENERATION)));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) (4 * applyPropertyModifiers(MPSConstants.ENERGY_GENERATION)));
                     } else if (currentHeat >= 200) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) (2 * moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_GENERATION)));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) (2 * applyPropertyModifiers(MPSConstants.ENERGY_GENERATION)));
                     } else if ((currentHeat / maxHeat) >= 0.5) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_GENERATION));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) applyPropertyModifiers(MPSConstants.ENERGY_GENERATION));
                     }
                 }
             }

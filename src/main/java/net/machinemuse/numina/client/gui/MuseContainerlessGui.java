@@ -22,19 +22,11 @@ public class MuseContainerlessGui extends Screen {
     /** Starting Y position for the Gui. Inconsistent use for Gui backgrounds. */
     public int guiTop;
 
-    protected DrawableMuseRect tooltipRect;
-
     protected List<IGuiFrame> frames;
 
     public MuseContainerlessGui(ITextComponent titleIn) {
         super(titleIn);
         frames = new ArrayList();
-//        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false, new Colour(0.2F, 0.6F, 0.9F, 0.7F), new Colour(0.1F, 0.3F, 0.4F, 0.7F));
-        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false, Colour.BLACK.withAlpha(0.7), Colour.PURPLE);
-
-
-
-
     }
 
     /**
@@ -46,15 +38,14 @@ public class MuseContainerlessGui extends Screen {
         minecraft.keyboardListener.enableRepeatEvents(true);
         creationTime = System.currentTimeMillis();
 
-        int xpadding = (width - getxSize()) / 2;
-        int ypadding = (height - ySize) / 2;
+//        int xpadding = (width - getxSize()) / 2;
+//        int ypadding = (height - ySize) / 2;
     }
 
     /**
      * Draws the gradient-rectangle background you see in the TinkerTable gui.
      */
     public void drawRectangularBackground() {
-
     }
 
     /**
@@ -66,17 +57,17 @@ public class MuseContainerlessGui extends Screen {
         frames.add(frame);
     }
 
-    /**
-     * Draws all clickables in a list
-     */
-    public void drawClickables(List<? extends IClickable> list, int mouseX, int mouseY, float partialTicks) {
-        if (list == null) {
-            return;
-        }
-        for (IClickable clickie : list) {
-            clickie.render(mouseX, mouseY, partialTicks);
-        }
-    }
+//    /**
+//     * Draws all clickables in a list
+//     */
+//    public void drawClickables(List<? extends IClickable> list, int mouseX, int mouseY, float partialTicks) {
+//        if (list == null) {
+//            return;
+//        }
+//        for (IClickable clickie : list) {
+//            clickie.render(mouseX, mouseY, partialTicks);
+//        }
+//    }
 
     @Override
     public void renderBackground() {
@@ -90,43 +81,41 @@ public class MuseContainerlessGui extends Screen {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
-        // item lighting code in super.render method screws up this lighting
-//        super.render(mouseX, mouseY, partialTicks);
         update(mouseX, mouseY);
-//        renderBackground();
-        for (IGuiFrame frame : frames) {
-            frame.render(mouseX, mouseY, partialTicks);
-        }
-        drawToolTip();
+        renderFrames(mouseX, mouseY, partialTicks);
     }
 
     public void update(double x, double y) {
-        //        double x = minecraft.mouseHelper.getMouseX() * this.width / (double) this.minecraft.mainWindow.getWidth();
-//        double y = minecraft.mouseHelper.getMouseY() * this.height / (double) this.minecraft.mainWindow.getHeight();
         for (IGuiFrame frame : frames) {
             frame.update(x, y);
         }
     }
 
-    /**
-     * Returns the first ID in the list that is hit by a click
-     *
-     * @return
-     */
-    public int hitboxClickables(int x, int y, List<? extends IClickable> list) {
-        if (list == null) {
-            return -1;
+    public void renderFrames(int mouseX, int mouseY, float partialTicks) {
+        for (IGuiFrame frame : frames) {
+            frame.render(mouseX, mouseY, partialTicks);
         }
-        IClickable clickie;
-        for (int i = 0; i < list.size(); i++) {
-            clickie = list.get(i);
-            if (clickie.hitBox(x, y)) {
-                // MuseLogger.logDebug("Hit!");
-                return i;
-            }
-        }
-        return -1;
     }
+
+//    /**
+//     * Returns the first ID in the list that is hit by a click
+//     *
+//     * @return
+//     */
+//    public int hitboxClickables(int x, int y, List<? extends IClickable> list) {
+//        if (list == null) {
+//            return -1;
+//        }
+//        IClickable clickie;
+//        for (int i = 0; i < list.size(); i++) {
+//            clickie = list.get(i);
+//            if (clickie.hitBox(x, y)) {
+//                // MuseLogger.logDebug("Hit!");
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
 
     /**
      * Whether or not this gui pauses the game in single player.
@@ -208,15 +197,6 @@ public class MuseContainerlessGui extends Screen {
         this.ySize = ySize;
     }
 
-
-
-
-
-
-
-
-
-
     public int getGuiLeft() {
         return guiLeft;
     }
@@ -243,23 +223,6 @@ public class MuseContainerlessGui extends Screen {
         this.guiTop = (this.height - getYSize()) / 2;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
         for (IGuiFrame frame : frames) {
@@ -268,17 +231,6 @@ public class MuseContainerlessGui extends Screen {
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Called when the mouse is clicked.
@@ -306,40 +258,15 @@ public class MuseContainerlessGui extends Screen {
         return false;
     }
 
-    protected void drawToolTip() {
-        int x = (int) (minecraft.mouseHelper.getMouseX() * this.width / this.minecraft.mainWindow.getWidth());
-        int y = (int) (minecraft.mouseHelper.getMouseY() * this.height / (double) this.minecraft.mainWindow.getHeight());
-        List<ITextComponent> tooltip = getToolTip(x, y);
+    public void drawToolTip(int mouseX, int mouseY) {
+        List<ITextComponent> tooltip = getToolTip(mouseX, mouseY);
         if (tooltip != null) {
-            double strwidth = 0;
-            for (ITextComponent s : tooltip) {
-                double currstrwidth = MuseRenderer.getStringWidth(s.getFormattedText());
-                if (currstrwidth > strwidth) {
-                    strwidth = currstrwidth;
-                }
+            tooltip.forEach(ITextComponent::getFormattedText);
+            List<String> toolTip2 = new ArrayList<>();
+            for (ITextComponent component : tooltip) {
+                toolTip2.add(component.getFormattedText());
             }
-            double top, bottom, left, right;
-            if (y > this.height / 2) {
-                top = y - 10 * tooltip.size() - 8;
-                bottom = y;
-                left = x;
-                right = x + 8 + strwidth;
-            } else {
-                top = y;
-                bottom = y + 10 * tooltip.size() + 8;
-
-                left = x + 4;
-                right = x + 12 + strwidth;
-            }
-
-            tooltipRect.setTop(top);
-            tooltipRect.setLeft(left);
-            tooltipRect.setRight(right);
-            tooltipRect.setBottom(bottom);
-            tooltipRect.draw();
-            for (int i = 0; i < tooltip.size(); i++) {
-                MuseRenderer.drawString(tooltip.get(i).getFormattedText(), left + 4, bottom - 10 * (tooltip.size() - i) - 4);
-            }
+            renderTooltip(toolTip2, mouseX,mouseY);
         }
     }
 

@@ -58,12 +58,13 @@ public class DefaultModelSpec {
         // temp data holder
         CompoundNBT tempNBT;
 
+        // here we loop through the registry looking for the default that applies to the ItemStack
         for (SpecBase spec : ModelRegistry.getInstance().getSpecs()) {
             // Only generate NBT data from Specs marked as "default"
             if (spec.isDefault()) {
 
                 /** Power Fist -------------------------------------------------------------------- */
-                if (stack.getItem() instanceof ItemPowerFist && spec.getSpecType().equals(EnumSpecType.WIELDABLE)) {
+                if (stack.getItem() instanceof ItemPowerFist && spec.getSpecType().equals(EnumSpecType.HANDHELD)) {
                     colours = addNewColourstoList(colours, spec.getColours()); // merge new color int arrays in
 
                     for (PartSpecBase partSpec : spec.getPartSpecs()) {

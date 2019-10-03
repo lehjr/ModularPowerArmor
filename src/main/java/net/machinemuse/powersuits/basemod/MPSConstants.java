@@ -7,9 +7,7 @@ public class MPSConstants {
     public static final String TEXTURE_PREFIX = RESOURCE_PREFIX + "textures/";
     public static final String RESOURCE_DOMAIN = MODID.toLowerCase();
 
-    public static final String BLANK_ARMOR_MODEL_PATH = TEXTURE_PREFIX + "item/armor/blankarmor.png";
-
-    // temporary locations until model spec system up and running
+        // temporary locations until model spec system up and running
     public static final String SEBK_AMROR_PANTS = TEXTURE_PREFIX + "item/armor/sebkarmorpants.png";
     public static final String SEBK_AMROR = TEXTURE_PREFIX + "item/armor/sebkarmor.png";
     public static final String CITIZEN_JOE_ARMOR_PANTS = TEXTURE_PREFIX + "item/armor/joearmorpants.png";
@@ -62,6 +60,7 @@ public class MPSConstants {
     public static final String ARMOR_VALUE_PHYSICAL = "armorPhysical";
     public static final String ARMOR_VALUE_ENERGY = "armorEnergy";
     public static final String ARMOR_ENERGY_CONSUMPTION = "armorEnergyPerDamage";
+    public static final String KNOCKBACK_RESISTANCE = "knockbackResistance";
     public static final String MODULE_FIELD_STRENGTH = "fieldStrength";
     public static final String MAXIMUM_HEAT = "maxHeat";
 

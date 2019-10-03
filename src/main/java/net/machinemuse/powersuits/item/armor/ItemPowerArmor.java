@@ -1,7 +1,14 @@
 package net.machinemuse.powersuits.item.armor;
 
 import com.google.common.collect.Multimap;
+import net.machinemuse.numina.basemod.NuminaConstants;
+import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
+import net.machinemuse.numina.client.render.modelspec.EnumSpecType;
 import net.machinemuse.powersuits.basemod.MPSConstants;
+import net.machinemuse.powersuits.basemod.MPSRegistryNames;
+import net.machinemuse.powersuits.client.model.item.ArmorModelInstance;
+import net.machinemuse.powersuits.client.model.item.HighPolyArmor;
 import net.machinemuse.powersuits.event.RegisterStuff;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
@@ -9,18 +16,19 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class ItemPowerArmor extends ItemElectricArmor {
-    int damageReduceAmount = 0;
-    float toughness = 0;
-
     public ItemPowerArmor(EquipmentSlotType slots) {
         super(slots, new Item.Properties().group(RegisterStuff.INSTANCE.creativeTab).maxStackSize(1).defaultMaxDamage(0));
     }
@@ -30,115 +38,134 @@ public class ItemPowerArmor extends ItemElectricArmor {
         return false;
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
     /**
      * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
      */
-    private static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+//    private static final UUID[] ARMOR_MODIFIERS = new UUID[]{
+//            UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
+//            UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
+//            UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"),
+//            UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
-        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot);
-        if (equipmentSlot == this.slot) {
-            multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", (double)getDamageReduceAmount(), AttributeModifier.Operation.ADDITION));
-            multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", (double)getToughness(), AttributeModifier.Operation.ADDITION));
+    public static final UUID[] ARMOR_MODIFIERS = new UUID[]{
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            UUID.randomUUID(),
+            UUID.randomUUID()};
+
+//    @Override
+//    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slotType) {
+//        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slotType);
+
+//        return multimap;
+//    }
+
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack itemStack) {
+//        System.out.println("doing something here");
+
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, itemStack);
+        if (equipmentSlot != this.slot) {
+            return multimap;
         }
+
+//        AtomicDouble armorVal = new AtomicDouble(0);
+//        AtomicDouble toughnessVal = new AtomicDouble(0);
+//        AtomicDouble knockbackResistance = new AtomicDouble(0);
+//
+//        itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+//            if (iItemHandler instanceof IModularItem) {
+//                // Armor **should** only occupy one slot
+//                Pair<Integer, Integer> range = ((IModularItem) iItemHandler).getRangeForCategory(EnumModuleCategory.ARMOR);
+//                if (range != null) {
+//                    for (int i = range.getLeft(); i < range.getRight(); i++) {
+//                        iItemHandler.getStackInSlot(i).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm -> {
+//                            if (pm.isAllowed()) {
+//                                // physical armor and hybrid energy/physical armor
+//                                double armorDouble = pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_PHYSICAL);
+//                                double knockBack = 0;
+//
+//                                if (pm instanceof IToggleableModule && ((IToggleableModule) pm).isModuleOnline()) {
+//                                    armorDouble += pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_ENERGY);
+//                                }
+//
+//                                if (armorDouble > 0) {
+//                                    knockBack = pm.applyPropertyModifiers(MPSConstants.KNOCKBACK_RESISTANCE);
+//                                    armorVal.getAndAdd(armorDouble);
+//                                }
+//
+//                                if (knockBack > 0) {
+//                                    knockbackResistance.getAndAdd(knockBack);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
+//
+//        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", armorVal.get(), AttributeModifier.Operation.ADDITION));
+//        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", knockbackResistance.get(), AttributeModifier.Operation.ADDITION));
+//        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", toughnessVal.get(), AttributeModifier.Operation.ADDITION));
+//
+
+
+        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", 6, AttributeModifier.Operation.ADDITION));
+        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", 0.25, AttributeModifier.Operation.ADDITION));
+        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", 2.5, AttributeModifier.Operation.ADDITION));
+
         return multimap;
     }
 
-    // TODO: implement getters for armor modules
+    @Nullable
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
-        return super.getAttributeModifiers(slot, stack);
+    public String getArmorTexture(ItemStack armor, Entity entity, EquipmentSlotType equipmentSlotType, String type) {
+        if (type == "overlay") { // this is to allow a tint to be applied tot the armor
+            return NuminaConstants.BLANK_ARMOR_MODEL_PATH;
+        }
+        armor.getCapability(ModelSpecNBTCapability.RENDER).ifPresent(spec-> {
+            System.out.println();
+        });
 
-
-        // Armor attributes might have to be set through a ticking event like the sprint/walking assist module
-
-//            @Override
-//            public double getArmorDouble() {
-//                AtomicDouble armorDouble = new AtomicDouble(0);
-//                getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m->{
-//                   armorDouble.getAndAdd(m.applyPropertyModifiers());
-//                    double totalArmor = 0.0;
-//                    double energy = ElectricItemUtils.getPlayerEnergy(player);
-//                    double physArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_VALUE_PHYSICAL);
-//                    double enerArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_VALUE_ENERGY);
-//                    double enerConsum = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_ENERGY_CONSUMPTION);
-//
-//                    totalArmor += physArmor;
-//                    if (energy > enerConsum) {
-//                        totalArmor += enerArmor;
-//                    }
-//                    totalArmor = Math.min(CommonConfig.moduleConfig.getMaximumArmorPerPiece(), totalArmor);
-//
-//                    return totalArmor;
-//                });
-//                return armorDouble.get();
-//            }
-
+        return equipmentSlotType == EquipmentSlotType.LEGS ? MPSConstants.SEBK_AMROR_PANTS : MPSConstants.SEBK_AMROR;
     }
-
-    public int getDamageReduceAmount() {
-        return this.damageReduceAmount;
-    }
-
-    public void setDamageReduceAmount(int damageReduceAmount) {
-        this.damageReduceAmount = damageReduceAmount;
-    }
-
-    public float getToughness() {
-        return this.toughness;
-    }
-
-    public void setToughness(float toughness) {
-        this.toughness = toughness;
-    }
-
-    @Override
-    public IArmorMaterial getArmorMaterial() {
-        return super.getArmorMaterial();
-    }
-
-
-
-
-
-
-
-
 
     @Nullable
     @Override
-    public String getArmorTexture(ItemStack armor, Entity entity, EquipmentSlotType slot, String type) {
-        if (type == "overlay")  // this is to allow a tint to be applied tot the armor
-            return MPSConstants.BLANK_ARMOR_MODEL_PATH;
-
-        return slot == EquipmentSlotType.LEGS ? MPSConstants.SEBK_AMROR_PANTS : MPSConstants.SEBK_AMROR;
-    }
-
-
-
-
-    @Nullable
-    @Override
+    @OnlyIn(Dist.CLIENT)
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-//        // check if using 2d armor
-//        if (!MPSNBTUtils.hasHighPolyModel(armor, armorSlot))
-        return _default;
-//
-//        ModelBiped model = ArmorModelInstance.getInstance();
-//        ((IArmorModel) model).setVisibleSection(armorSlot);
-//
-//        ItemStack chestPlate = armorSlot == EquipmentSlotType.CHEST ? armor : entityLiving.getItemStackFromSlot(EquipmentSlotType.CHEST);
-//        if (chestPlate.getItem() instanceof ItemPowerArmorChestplate && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, MPSModuleConstants.MODULE_TRANSPARENT_ARMOR__DATANAME) ||
-//                (armorSlot == EquipmentSlotType.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, MPSModuleConstants.MODULE_ACTIVE_CAMOUFLAGE__DATANAME))) {
-//            ((IArmorModel) model).setVisibleSection(null);
-//        } else
-//            ((IArmorModel) model).setRenderSpec(MPSNBTUtils.getMuseRenderTag(armor, armorSlot));
-//        return model;
+        return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
+                    if (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE) {
+                        return _default;
+                    }
+
+                    BipedModel model = ArmorModelInstance.getInstance();
+                    if (slot == EquipmentSlotType.CHEST && itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
+                            iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(MPSRegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME)
+                            )).orElse(false)) {
+                        ((HighPolyArmor) model).setVisibleSection(null);
+                    } else {
+                        CompoundNBT renderTag = spec.getMuseRenderTag();
+
+//                        if (renderTag == null) {
+//                            renderTag =
+//                        }
+                        ((HighPolyArmor) model).setRenderSpec(renderTag);
+                    }
+
+                   return model;
+                }).orElse(_default);
     }
 
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
+        return stack.getCapability(CapabilityEnergy.ENERGY)
+                .map( energyCap-> energyCap.getMaxEnergyStored() > 0).orElse(false);
     }
 
     @Override

@@ -1,13 +1,10 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.powersuits.basemod.MPSCreativeTab;
 import net.machinemuse.powersuits.basemod.MPSObjects;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.block.BlockTinkerTable;
 import net.machinemuse.powersuits.containers.MPSCraftingContainer;
-import net.machinemuse.powersuits.containers.ModeChangingContainer;
-import net.machinemuse.powersuits.containers.ModularItemContainer;
 import net.machinemuse.powersuits.containers.TinkerTableContainer;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
@@ -52,7 +49,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -60,17 +56,16 @@ import net.minecraftforge.fml.common.Mod;
 import static net.machinemuse.powersuits.basemod.MPSConstants.MODID;
 import static net.machinemuse.powersuits.basemod.MPSRegistryNames.*;
 
+//import net.machinemuse.powersuits.containers.ModularItemContainer;
+
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public enum RegisterStuff {
     INSTANCE;
-
 
     public static final MPSCreativeTab creativeTab = new MPSCreativeTab();
 
     @SubscribeEvent
     public void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
-        MuseLogger.logger.info("Started registering MPS Modules");
-
         itemRegistryEvent.getRegistry().registerAll(
                 // Armor --------------------------------------------------------------------------------------
                 new ItemPowerArmorHelmet(ITEM__POWER_ARMOR_HELMET__REGNAME),
@@ -141,7 +136,7 @@ public enum RegisterStuff {
 
                 // Environmental ------------------------------------------------------------------
                 new CoolingSystemModule(MODULE_COOLING_SYSTEM__REGNAME),
-//                new FluidTankModule(MODULE_FLUID_TANK__REGNAME),
+                new FluidTankModule(MODULE_FLUID_TANK__REGNAME),
                 new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
                 new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
                 new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),
@@ -247,36 +242,36 @@ public enum RegisterStuff {
     public void registerContainerTypes(final RegistryEvent.Register<ContainerType<?>> event) {
         event.getRegistry().registerAll(
 
-                // MODE CHANGING CONTAINER TYPE
-                new ContainerType<>(ModeChangingContainer::new)
-                        .setRegistryName(MODID + ":mode_changing_container_type"),
-
+//                // MODE CHANGING CONTAINER TYPE
+//                new ContainerType<>(ModeChangingContainer::new)
+//                        .setRegistryName(MODID + ":mode_changing_container_type"),
+//
                 // Modular Item Container
-                new ContainerType<>(ModularItemContainer::new)
-                        .setRegistryName(MODID + ":modular_item_container_type"),
-
-                // the IForgeContainerType only needed for extra data
-                // ModuleConfig
-                IForgeContainerType.create((windowId, playerInventory, data) -> {
-                    int typeIndex = data.readInt();
-                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-                }).setRegistryName(MODID + ":module_config_container_type"),
-
-                // Keybinding
-                IForgeContainerType.create((windowId, playerInventory, data) -> {
-                    int typeIndex = data.readInt();
-                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-                }).setRegistryName(MODID + ":table_key_config_container_type"),
-
-                // Cosmetic
-                IForgeContainerType.create((windowId, playerInventory, data) -> {
-                    int typeIndex = data.readInt();
-                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
+                new ContainerType<>(TinkerTableContainer::new)
+                        .setRegistryName(MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME),
+//
+//                // the IForgeContainerType only needed for extra data
+//                // ModuleConfig
+//                IForgeContainerType.create((windowId, playerInventory, data) -> {
+//                    int typeIndex = data.readInt();
+//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+//                }).setRegistryName(MODID + ":module_config_container_type"),
+//
+//                // Keybinding
+//                IForgeContainerType.create((windowId, playerInventory, data) -> {
+//                    int typeIndex = data.readInt();
+//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+//                }).setRegistryName(MODID + ":table_key_config_container_type"),
+//
+//                // Cosmetic
+//                IForgeContainerType.create((windowId, playerInventory, data) -> {
+//                    int typeIndex = data.readInt();
+//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
+//                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
 
                 // Crafting Gui
                 new ContainerType<>(MPSCraftingContainer::new)
-                        .setRegistryName(MODID + ":crafting_container")
+                        .setRegistryName(MPS_CRAFTING_CONTAINER_TYPE__REG_NAME)
         );
     }
 }

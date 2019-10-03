@@ -17,7 +17,6 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,18 +27,12 @@ import java.util.Optional;
 public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftingInventory;
     private final CraftResultInventory resultInventory;
-    private final IWorldPosCallable worldPosCallable;
     private final PlayerEntity player;
 
     public MPSCraftingContainer(int windowId, PlayerInventory playerInventory) {
-        this(windowId, playerInventory, IWorldPosCallable.DUMMY);
-    }
-
-    public MPSCraftingContainer(int windowId, PlayerInventory playerInventory, IWorldPosCallable worldPosCallable) {
         super(MPSObjects.INSTANCE.MPS_CRAFTING_CONTAINER_TYPE, windowId);
         this.craftingInventory = new CraftingInventory(this, 3, 3);
         this.resultInventory = new CraftResultInventory();
-        this.worldPosCallable = worldPosCallable;
         this.player = playerInventory.player;
 
         // crafting result: slot 0
@@ -86,8 +79,6 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
 
     @Override
     public void onCraftMatrixChanged(IInventory iInventory) {
-        System.out.println("matrix changed");
-
         if (!player.world.isRemote) {
             setCraftingResultSlot(this.windowId, player.world, this.player, this.craftingInventory, this.resultInventory);
         }
@@ -95,13 +86,11 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
 
     @Override
     public void func_201771_a(RecipeItemHelper helper) {
-        System.out.println("func_201771_a");
         this.craftingInventory.fillStackedContents(helper);
     }
 
     @Override
     public void clear() {
-        System.out.println("clear");
         this.craftingInventory.clear();
         this.resultInventory.clear();
     }
@@ -111,18 +100,23 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         return recipeIn.matches(this.craftingInventory, this.player.world);
     }
 
-    //    @Override
-//    public boolean matches(IRecipe<? super CraftingInventory> recipeIn) {
-//        System.out.println("matches");
-//
-//        return recipeIn.matches(this.craftingInventory, this.player.world);
-//    }
+    /**
+     * replace IWorldPosCallable.consume with something not position specific
+     * since this will be used by a portable setup
+     */
+    public void consume(PlayerEntity playerIn) {
+        this.resultInventory.clear();
+        if (!playerIn.world.isRemote) {
+            this.clearContainer(playerIn, playerIn.world, this.craftingInventory);
+        }
+    }
 
-    @Override
+    /**
+     * Called when the container is closed.
+     */
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
-//        this.clearContainer(playerIn, player.world, this.craftingInventory);
-        this.worldPosCallable.consume((world, pos) -> this.clearContainer(playerIn, world, this.craftingInventory));
+        consume(playerIn);
     }
 
     @Override
@@ -130,11 +124,13 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
         return true;
     }
 
+    /**
+     * @param playerEntity
+     * @param index
+     * @return copy of the itemstack moved. ItemStack.Empty means no change
+     */
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerEntity, int index) {
-        System.out.println("transferStackInSlot");
-
-
         ItemStack stackCopy = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -142,8 +138,9 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
             stackCopy = itemStack.copy();
 
             // crafting result
-            if (index == 0) {
-                this.worldPosCallable.consume((world, pos) -> itemStack.getItem().onCreated(itemStack, world, playerEntity));
+            if (index == getOutputSlot()) {
+                this.consume(playerEntity);
+
                 if (!this.mergeItemStack(itemStack, 10, 46, true)) {
                     return ItemStack.EMPTY;
                 }
@@ -176,12 +173,11 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
                 return ItemStack.EMPTY;
             }
 
-            ItemStack lvt_6_1_ = slot.onTake(playerEntity, itemStack);
-            if (index == 0) {
-                playerEntity.dropItem(lvt_6_1_, false);
+            ItemStack takenStack = slot.onTake(playerEntity, itemStack);
+            if (index == getOutputSlot()) {
+                playerEntity.dropItem(takenStack, false);
             }
         }
-
         return stackCopy;
     }
 
@@ -208,7 +204,8 @@ public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInvento
     @Override
     @OnlyIn(Dist.CLIENT)
     public int getSize() {
-        return 10;
+        // 3x3 crafting grid plus output slot
+        return getHeight() * getWidth() + 1;
     }
 
     @Override

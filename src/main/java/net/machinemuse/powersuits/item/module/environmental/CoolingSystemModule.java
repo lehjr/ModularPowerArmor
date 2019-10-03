@@ -1,10 +1,23 @@
 package net.machinemuse.powersuits.item.module.environmental;
 
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
+import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -18,96 +31,49 @@ public class CoolingSystemModule extends AbstractPowerModule {
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return null;
+        return new CapProvider(stack);
+    }
+
+    public class CapProvider implements ICapabilityProvider {
+        ItemStack module;
+        IPlayerTickModule ticker;
+
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig, true);
+/*
+// cooling system
+        addTradeoffProperty("Power", COOLING_BONUS, 4, "%");
+        addTradeoffProperty("Power", ENERGY, 10, "J/t");
+
+
+// nitrogen
+        addTradeoffProperty("Power", COOLING_BONUS, 7, "%");
+        addTradeoffProperty("Power", ENERGY, 16, "J/t");
+ */
+        }
+
+        @Nonnull
+        @Override
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
+        }
+
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config, boolean defBool) {
+                super(module, category, target, config, defBool);
+            }
+
+            @Override
+            public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
+//                double heatBefore = MuseHeatUtils.getPlayerHeat(player);
+//                MuseHeatUtils.coolPlayer(player, 0.1 * applyPropertyModifiers(MPSConstants.COOLING_BONUS));
+//                double cooling = heatBefore - MuseHeatUtils.getPlayerHeat(player);
+//                ElectricItemUtils.drainPlayerEnergy(player, cooling * applyPropertyModifiers(MPSConstants.ENERGY));
+            }
+        }
     }
 }
-
-
-
-
-
-//
-//    addTradeoffProperty("Power", COOLING_BONUS, 7, "%");
-//    addTradeoffProperty("Power", ENERGY, 16, "J/t");
-//
-//
-//
-//
-//
-//
-//    @Override
-//    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-//        if (MuseItemUtils.getWaterLevel(item) > ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//            MuseItemUtils.setWaterLevel(item, ModuleManager.computeModularProperty(item, WATER_TANK_SIZE));
-//        }
-//
-//        // Fill tank if player is in water
-//        Block block = player.worldObj.getBlockState(player.getPosition()).getBlock();
-//        if (((block == Blocks.WATER) || block == Blocks.FLOWING_WATER) && MuseItemUtils.getWaterLevel(item) < ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//            MuseItemUtils.setWaterLevel(item, MuseItemUtils.getWaterLevel(item) + 1);
-//        }
-//
-//        // Fill tank if raining
-//        int xCoord = MathHelper.floor_double(player.posX);
-//        int zCoord = MathHelper.floor_double(player.posZ);
-//        boolean isRaining = (player.worldObj.getBiomeForCoordsBody(player.getPosition()).getRainfall() > 0) && (player.worldObj.isRaining() || player.worldObj.isThundering());
-//        if (isRaining && player.worldObj.canBlockSeeSky(player.getPosition().add(0,1,0))
-//                && (player.worldObj.getTotalWorldTime() % 5) == 0 && MuseItemUtils.getWaterLevel(item) < ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//            MuseItemUtils.setWaterLevel(item, MuseItemUtils.getWaterLevel(item) + 1);
-//        }
-//
-//        // Apply cooling
-//        double currentHeat = MuseHeatUtils.getPlayerHeat(player);
-//        double maxHeat = MuseHeatUtils.getMaxHeat(player);
-//        if ((currentHeat / maxHeat) >= ModuleManager.computeModularProperty(item, ACTIVATION_PERCENT) && MuseItemUtils.getWaterLevel(item) > 0) {
-//            MuseHeatUtils.coolPlayer(player, 1);
-//            MuseItemUtils.setWaterLevel(item, MuseItemUtils.getWaterLevel(item) - 1);
-//            for (int i = 0; i < 4; i++) {
-//                player.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, player.posX, player.posY + 0.5, player.posZ, 0.0D, 0.0D, 0.0D);
-//            }
-//        }
-//
-//
-//
-//             public NitrogenCoolingSystem(List<IModularItem> validItems) {
-//            super(validItems);
-//            //addInstallCost(new ItemStack(Item.netherStar, 1));
-//            addInstallCost(MuseItemUtils.copyAndResize(Iteminecraftomponent.liquidNitrogen, 1));
-//            addInstallCost(MuseItemUtils.copyAndResize(Iteminecraftomponent.rubberHose, 2));
-//            addInstallCost(MuseItemUtils.copyAndResize(Iteminecraftomponent.controlCircuit, 1));
-//            addInstallCost(MuseItemUtils.copyAndResize(Iteminecraftomponent.computerChip, 2));
-//            addTradeoffProperty("Power", COOLING_BONUS, 7, "%");
-//            addTradeoffProperty("Power", ENERGY, 16, "J/t");
-//        }
-//
-//        @Override
-//        public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-//            double heatBefore = MuseHeatUtils.getPlayerHeat(player);
-//            MuseHeatUtils.coolPlayer(player, 0.210 * ModuleManager.computeModularProperty(item, COOLING_BONUS));
-//            double cooling = heatBefore - MuseHeatUtils.getPlayerHeat(player);
-//            ElectricItemUtils.drainPlayerEnergy(player, cooling * ModuleManager.computeModularProperty(item, ENERGY));
-//        }
-//
-//
-////
-////        addTradeoffPropertyDouble(MPSModuleConstants.ADVANCED_COOLING_POWER, MPSModuleConstants.COOLING_BONUS, 7, "%");
-////        addTradeoffPropertyDouble(MPSModuleConstants.ADVANCED_COOLING_POWER, MPSModuleConstants.ADVANCED_COOLING_SYSTEM_ENERGY_CONSUMPTION, 160, "RF/t");
-//
-//
-//    @Override
-//    public double getCoolingFactor() {
-//        return 2.1;
-//    }
-//
-//    @Override
-//    public double getCoolingBonus(@Nonnull ItemStack itemStack) {
-//        return 0;
-////        return moduleCap.applyPropertyModifiers(MPSModuleConstants.COOLING_BONUS);
-//    }
-//
-//    @Override
-//    public double getEnergyConsumption(@Nonnull ItemStack itemStack) {
-//        return 0;
-////        return moduleCap.applyPropertyModifiers(MPSModuleConstants.ADVANCED_COOLING_SYSTEM_ENERGY_CONSUMPTION);
-//    }
-//}

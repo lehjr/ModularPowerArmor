@@ -35,6 +35,7 @@ public class LeatherPlatingModule extends AbstractPowerModule {
             moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig);
             moduleCap.addBasePropertyDouble(MPSConstants.ARMOR_VALUE_PHYSICAL, 3, NuminaConstants.MODULE_TRADEOFF_PREFIX + MPSConstants.ARMOR_POINTS);
             moduleCap.addBasePropertyDouble(MPSConstants.MAXIMUM_HEAT, 75);
+            moduleCap.addBasePropertyDouble(MPSConstants.KNOCKBACK_RESISTANCE, 0.25, "");
         }
 
         @Nonnull

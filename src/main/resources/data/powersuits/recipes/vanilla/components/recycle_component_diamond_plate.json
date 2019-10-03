@@ -6,7 +6,6 @@
     }
   ],
   "type": "minecraft:crafting_shapeless",
-  "group": "mps_component",
   "ingredients": [
     {
       "item": "powersuits:component_plating_diamond"

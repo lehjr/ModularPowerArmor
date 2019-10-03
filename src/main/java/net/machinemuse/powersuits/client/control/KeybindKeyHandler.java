@@ -62,8 +62,6 @@ public class KeybindKeyHandler {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
-//
-//    public void checkPlayerKeys() {
         ClientPlayerEntity player = minecraft.player;
         if (player == null)
             return;
@@ -71,24 +69,13 @@ public class KeybindKeyHandler {
         KeyBinding[] hotbarKeys = minecraft.gameSettings.keyBindsHotbar;
         updatePlayerValues(player);
 
-
-//
-//////        if (openKeybindGUI.isKeyDown() && minecraft.isGameFocused())
-////            minecraft.displayGuiScreen(new KeyConfigGui(player));
-//
-////        if (openCosmeticGUI.isKeyDown() && minecraft.isGameFocused())
-////            minecraft.displayGuiScreen(new CosmeticGui(player));
-////
+        // Mode changinging GUI
         if (hotbarKeys[player.inventory.currentItem].isKeyDown() && minecraft.isGameFocused()) {
             player.inventory.getCurrentItem().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModeChanging->{
                         if(player.world.isRemote) {
-            Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiModeSelector(player, new StringTextComponent("modeChanging"))));
-
-//
-//
-//                // check if player has window open already
-//                if (!(player.openContainer instanceof ModeChangingContainer) && iModeChanging instanceof IModeChangingItem)
-//                    MPSPackets.CHANNEL_INSTANCE.sendToServer(new ModeChangingRequest());
+                            if (!(Minecraft.getInstance().currentScreen instanceof GuiModeSelector)) {
+                                Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiModeSelector(player, new StringTextComponent("modeChanging"))));
+                            }
                         }
             });
         }

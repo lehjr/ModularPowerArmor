@@ -2,6 +2,8 @@ package net.machinemuse.powersuits.network;
 
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.network.packets.*;
+import net.machinemuse.powersuits.network.packets.reworked_crafting_packets.CPlaceRecipePacket;
+import net.machinemuse.powersuits.network.packets.reworked_crafting_packets.SPlaceGhostRecipePacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -32,47 +34,62 @@ public class MPSPackets {
                 MusePacketCosmeticInfo::decode,
                 MusePacketCosmeticInfo::handle);
 
-        CHANNEL_INSTANCE.registerMessage(
-                i++,
-                MusePacketCosmeticPreset.class,
-                MusePacketCosmeticPreset::encode,
-                MusePacketCosmeticPreset::decode,
-                MusePacketCosmeticPreset::handle);
+//        CHANNEL_INSTANCE.registerMessage(
+//                i++,
+//                MusePacketCosmeticPreset.class,
+//                MusePacketCosmeticPreset::encode,
+//                MusePacketCosmeticPreset::decode,
+//                MusePacketCosmeticPreset::handle);
+
+//        CHANNEL_INSTANCE.registerMessage(
+//                i++,
+//                MusePacketCosmeticPresetUpdate.class,
+//                MusePacketCosmeticPresetUpdate::encode,
+//                MusePacketCosmeticPresetUpdate::decode,
+//                MusePacketCosmeticPresetUpdate::handle);
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                MusePacketCosmeticPresetUpdate.class,
-                MusePacketCosmeticPresetUpdate::encode,
-                MusePacketCosmeticPresetUpdate::decode,
-                MusePacketCosmeticPresetUpdate::handle);
+                MusePacketCreativeInstallModuleRequest.class,
+                MusePacketCreativeInstallModuleRequest::encode,
+                MusePacketCreativeInstallModuleRequest::decode,
+                MusePacketCreativeInstallModuleRequest::handle);
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                MusePacketInstallModuleRequest.class,
-                MusePacketInstallModuleRequest::encode,
-                MusePacketInstallModuleRequest::decode,
-                MusePacketInstallModuleRequest::handle);
+                MusePacketModuleMoveFromSlotToSlot.class,
+                MusePacketModuleMoveFromSlotToSlot::encode,
+                MusePacketModuleMoveFromSlotToSlot::decode,
+                MusePacketModuleMoveFromSlotToSlot::handle);
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                MusePacketSalvageModuleRequest.class,
-                MusePacketSalvageModuleRequest::encode,
-                MusePacketSalvageModuleRequest::decode,
-                MusePacketSalvageModuleRequest::handle);
+                CPlaceRecipePacket.class,
+                CPlaceRecipePacket::encode,
+                CPlaceRecipePacket::decode,
+                CPlaceRecipePacket::handle);
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                MusePacketTweakRequestDouble.class,
-                MusePacketTweakRequestDouble::encode,
-                MusePacketTweakRequestDouble::decode,
-                MusePacketTweakRequestDouble::handle);
+                SPlaceGhostRecipePacket.class,
+                SPlaceGhostRecipePacket::encode,
+                SPlaceGhostRecipePacket::decode,
+                SPlaceGhostRecipePacket::handle);
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                ModeChangingRequest.class,
-                ModeChangingRequest::encode,
-                ModeChangingRequest::decode,
-                ModeChangingRequest::handle);
+                MusePacketClientOnLogin.class,
+                MusePacketClientOnLogin::encode,
+                MusePacketClientOnLogin::decode,
+                MusePacketClientOnLogin::handle);
+
+        CHANNEL_INSTANCE.registerMessage(
+                i++,
+                ContainerGuiOpenPacket.class,
+                ContainerGuiOpenPacket::encode,
+                ContainerGuiOpenPacket::decode,
+                ContainerGuiOpenPacket::handle);
+
     }
 
     public SimpleChannel getWrapper() {

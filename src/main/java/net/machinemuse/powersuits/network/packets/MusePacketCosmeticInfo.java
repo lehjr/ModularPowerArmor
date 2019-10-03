@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.network.packets;
 
-import net.machinemuse.numina.capabilities.render.MuseRenderCapability;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,37 +48,8 @@ public class MusePacketCosmeticInfo {
             int itemSlot = message.itemSlot;
             String tagName = message.tagName;
             CompoundNBT tagData = message.tagData;
-
-            player.inventory.getStackInSlot(itemSlot).getCapability(MuseRenderCapability.RENDER).ifPresent(render->{
-
-                // fixme!! preset tags still a thing? I don't think anyone knows how to create or use them
-//                if (tagName != null && (modularItemCap.isPresent()|| modeChangingItemCap.isPresent())) {
-//                    CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(itemStack);
-//                    itemTag.remove(NuminaConstants.TAG_COSMETIC_PRESET);
-//
-//                    if (Objects.equals(tagName, NuminaConstants.TAG_RENDER)) {
-//                        itemTag.remove(NuminaConstants.TAG_RENDER);
-//                        if (!tagData.isEmpty())
-//                            itemTag.put(NuminaConstants.TAG_RENDER, tagData);
-//                    } else {
-//                        CompoundNBT renderTag;
-//                        if (!itemTag.contains(NuminaConstants.TAG_RENDER)) {
-//                            renderTag = new CompoundNBT();
-//                            itemTag.put(NuminaConstants.TAG_RENDER, renderTag);
-//                        } else {
-//                            renderTag = itemTag.getCompound(NuminaConstants.TAG_RENDER);
-//                        }
-//                        if (tagData.isEmpty()) {
-//                            MuseLogger.logger.debug("Removing tag " + tagName);
-//                            renderTag.remove(tagName);
-//                        } else {
-//                            MuseLogger.logger.debug("Adding tag " + tagName + " : " + tagData);
-//                            renderTag.put(tagName, tagData);
-//                        }
-//                    }
-//                }
-
-
+            player.inventory.getStackInSlot(itemSlot).getCapability(ModelSpecNBTCapability.RENDER).ifPresent(render->{
+                render.setMuseRenderTag(tagData, tagName);
             });
         });
         ctx.get().setPacketHandled(true);

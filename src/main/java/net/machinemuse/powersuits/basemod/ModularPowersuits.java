@@ -1,6 +1,5 @@
 package net.machinemuse.powersuits.basemod;
 
-import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.obj.MuseOBJLoader;
 import net.machinemuse.powersuits.basemod.config.ClientConfig;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -9,14 +8,16 @@ import net.machinemuse.powersuits.client.control.KeybindKeyHandler;
 import net.machinemuse.powersuits.client.event.ClientTickHandler;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.machinemuse.powersuits.client.event.RenderEventHandler;
-import net.machinemuse.powersuits.client.gui.tinker.crafting.TinkerCraftingGUI;
-import net.machinemuse.powersuits.client.gui.tinker.module.ModuleInstallRemoveGui;
+import net.machinemuse.powersuits.client.gui.crafting.TinkerCraftingGUI;
+import net.machinemuse.powersuits.client.gui.tinker.module.TinkerTableGui;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererLuxCapacitorEntity;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererPlasmaBolt;
 import net.machinemuse.powersuits.client.render.entity.EntityRendererSpinningBlade;
 import net.machinemuse.powersuits.entity.LuxCapacitorEntity;
 import net.machinemuse.powersuits.entity.PlasmaBoltEntity;
 import net.machinemuse.powersuits.entity.SpinningBladeEntity;
+import net.machinemuse.powersuits.event.HarvestEventHandler;
+import net.machinemuse.powersuits.event.PlayerLoginHandler;
 import net.machinemuse.powersuits.event.PlayerUpdateHandler;
 import net.machinemuse.powersuits.event.RegisterStuff;
 import net.machinemuse.powersuits.network.MPSPackets;
@@ -28,7 +29,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -61,6 +61,7 @@ public class ModularPowersuits {
         MinecraftForge.EVENT_BUS.register(this);
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.register(this);
 
         modEventBus.addGenericListener(Block.class, RegisterStuff.INSTANCE::registerBlocks);
         modEventBus.addGenericListener(Item.class, RegisterStuff.INSTANCE::registerItems);
@@ -68,21 +69,25 @@ public class ModularPowersuits {
         modEventBus.addGenericListener(EntityType.class, RegisterStuff.INSTANCE::registerEntities);
         modEventBus.addGenericListener(ContainerType.class, RegisterStuff.INSTANCE::registerContainerTypes);
 
-        modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
-        modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
-        modEventBus.register(this);
+        MinecraftForge.EVENT_BUS.addListener(PlayerLoginHandler::onPlayerLogin);
+
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handHarvestDrops);
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBlockBreak);
 
 
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
             new RuntimeException("Got config " + event.getConfig() + " name " + event.getConfig().getModId() + ":" + event.getConfig().getFileName());
             final ModConfig config = event.getConfig();
-                if (config.getSpec() == ClientConfig.CLIENT_SPEC) {
+            if (config.getSpec() == ClientConfig.CLIENT_SPEC) {
 //
-                } else if (config.getSpec() == CommonConfig.COMMON_SPEC) {
-                    CommonConfig.commonConfig = config;
-                    CommonConfig.setLoadingDone();
-                    CommonConfig.finishBuilder();
-                }
+            } else if (config.getSpec() == CommonConfig.COMMON_SPEC) {
+                CommonConfig.commonConfig = config;
+                CommonConfig.setLoadingDone();
+                CommonConfig.finishBuilder();
+                CosmeticPresetSaveLoad.copyPresetsFromJar();
+            }
         });
     }
 
@@ -101,15 +106,14 @@ public class ModularPowersuits {
         CraftingHelper.register(MPSRecipeConditionFactory.Serializer.INSTANCE);
     }
 
-
-
-
     // client preInit
     private void setupClient(final FMLClientSetupEvent event) {
-        MuseLogger.logger.info("doing something here: .... ");
-
         MuseOBJLoader.INSTANCE.addDomain(MPSConstants.MODID.toLowerCase());
-////        MinecraftForge.EVENT_BUS.register(ModelRegisterEventHandler.INSTANCE);
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
+        modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
+
         MinecraftForge.EVENT_BUS.register(RenderEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
         MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
@@ -122,9 +126,8 @@ public class ModularPowersuits {
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPSObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
-        ScreenManager.registerFactory(MPSObjects.MODULAR_ITEM_CONTAINER_CONTAINER_TYPE, ModuleInstallRemoveGui::new);
+        ScreenManager.registerFactory(MPSObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
     }
-
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class
     @Mod.EventBusSubscriber

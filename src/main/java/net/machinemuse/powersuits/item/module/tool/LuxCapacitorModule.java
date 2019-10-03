@@ -1,8 +1,10 @@
 package net.machinemuse.powersuits.item.module.tool;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
@@ -39,31 +41,29 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RED, MPSConstants.RED_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.GREEN, MPSConstants.GREEN_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.BLUE, MPSConstants.BLUE_HUE, 1, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.ALPHA, MPSConstants.OPACITY, 1, "%");
-
-            this.rightClick = new RightClickie();
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.RED, MPSConstants.RED_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.GREEN, MPSConstants.GREEN_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.BLUE, MPSConstants.BLUE_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.ALPHA, MPSConstants.OPACITY, 1, "%");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClick));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
         }
 
         class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 playerIn.setActiveHand(hand);
@@ -73,10 +73,10 @@ public class LuxCapacitorModule extends AbstractPowerModule {
                     if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
                         ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
 
-                        double red = moduleCap.applyPropertyModifiers(MPSConstants.RED_HUE);
-                        double green = moduleCap.applyPropertyModifiers(MPSConstants.GREEN_HUE);
-                        double blue = moduleCap.applyPropertyModifiers(MPSConstants.BLUE_HUE);
-                        double alpha = moduleCap.applyPropertyModifiers(MPSConstants.OPACITY);
+                        double red = applyPropertyModifiers(MPSConstants.RED_HUE);
+                        double green = applyPropertyModifiers(MPSConstants.GREEN_HUE);
+                        double blue = applyPropertyModifiers(MPSConstants.BLUE_HUE);
+                        double alpha = applyPropertyModifiers(MPSConstants.OPACITY);
 
                         LuxCapacitorEntity luxCapacitor = new LuxCapacitorEntity(worldIn, playerIn, new Colour(red, green, blue, alpha));
                         worldIn.addEntity(luxCapacitor);
@@ -88,7 +88,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

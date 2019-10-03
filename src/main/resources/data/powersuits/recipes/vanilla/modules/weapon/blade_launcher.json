@@ -5,7 +5,6 @@
       "condition": "vanilla_recipes_enabled"
     }
   ],
-  "group": "mps_module",
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "WMW",

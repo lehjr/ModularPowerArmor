@@ -9,8 +9,11 @@ import net.machinemuse.numina.capabilities.inventory.modularitem.ModularItem;
 import net.machinemuse.numina.capabilities.inventory.modularitem.MuseRangedWrapper;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.render.IArmorModelSpecNBT;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
+import net.machinemuse.powersuits.capabilities.render.ArmorModelSpecNBT;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -45,6 +48,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
         IModularItem modularItemCap;
         IEnergyStorage energyStorage;
         IHeatWrapper heatStorage;
+        IArmorModelSpecNBT modelSpec;
         AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatFeet());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
@@ -52,12 +56,17 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
             this.modularItemCap = new ModularArmorCap();
             this.energyStorage = this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPSConstants.MAXIMUM_HEAT)));
+            this.modelSpec = new ArmorModelSpecNBT(armor);
             this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == null) {
+                return LazyOptional.empty();
+            }
+
             if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
                 modularItemCap.updateFromNBT();
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modularItemCap));
@@ -65,6 +74,9 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
             if (cap == HeatCapability.HEAT) {
                 heatStorage.updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
+            }
+            if (cap == ModelSpecNBTCapability.RENDER) {
+                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> energyStorage));
         }

@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.item.module.environmental;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
-import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -57,40 +57,38 @@ public class AutoFeederModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleToggle toggle;
-        IModuleTick ticker;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 100);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.EATING_EFFICIENCY, 50);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.EFFICIENCY, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.EFFICIENCY, MPSConstants.EATING_EFFICIENCY, 50);
-            this.toggle= new Toggle(module);
-            this.ticker = new Ticker();
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPSConstants.EATING_EFFICIENCY, 50);
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.EFFICIENCY, MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.EFFICIENCY, MPSConstants.EATING_EFFICIENCY, 50);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            if(cap == ToggleCapability.TOGGLEABLE_MODULE)
-                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(() -> toggle));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
 
-        class Ticker extends ModuleTick {
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, true);
+            }
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, ItemStack itemX) {
                 double foodLevel = getFoodLevel(module);
                 double saturationLevel = getSaturationLevel(module);
                 IInventory inv = player.inventory;
-                double eatingEnergyConsumption = moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
-                double efficiency = moduleCap.applyPropertyModifiers(MPSConstants.EATING_EFFICIENCY);
+                double eatingEnergyConsumption = applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                double efficiency = applyPropertyModifiers(MPSConstants.EATING_EFFICIENCY);
 
                 FoodStats foodStats = player.getFoodStats();
                 int foodNeeded = 20 - foodStats.getFoodLevel();

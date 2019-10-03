@@ -13,7 +13,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,7 +64,8 @@ public class EnergyStorageModule extends AbstractPowerModule {
 
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
-        return true;
+        return stack.getCapability(CapabilityEnergy.ENERGY)
+                .map( energyCap-> energyCap.getMaxEnergyStored() > 0).orElse(false);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package net.machinemuse.powersuits.item.module.weapon;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.heat.MuseHeatUtils;
@@ -40,50 +42,50 @@ public class PlasmaCannonModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClickie;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.AMPERAGE, MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.AMPERAGE, MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 38, "pt");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.VOLTAGE, MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 500, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.VOLTAGE, MPSConstants.PLASMA_CANNON_EXPLOSIVENESS, 0.5, MPSConstants.CREEPER);
-            this.rightClickie = new RightClickie(module, moduleCap);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
+            this.rightClickie.addBasePropertyDouble(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
+            this.rightClickie.addTradeoffPropertyDouble(MPSConstants.AMPERAGE, MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");
+            this.rightClickie.addTradeoffPropertyDouble(MPSConstants.AMPERAGE, MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 38, "pt");
+            this.rightClickie.addTradeoffPropertyDouble(MPSConstants.VOLTAGE, MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK, 500, "RF");
+            this.rightClickie.addTradeoffPropertyDouble(MPSConstants.VOLTAGE, MPSConstants.PLASMA_CANNON_EXPLOSIVENESS, 0.5, MPSConstants.CREEPER);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClickie));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClickie));
         }
 
         class RightClickie extends RightClickModule {
-            ItemStack module;
-            IPowerModule moduleCap;
-
-            public RightClickie(@Nonnull ItemStack module, IPowerModule moduleCap) {
-                this.module = module;
-                this.moduleCap = moduleCap;
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
             }
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                if (hand == Hand.MAIN_HAND && ElectricItemUtils.getPlayerEnergy(playerIn) > 500) {
+                System.out.println("doing somethign here");
+
+                if (hand == Hand.MAIN_HAND && ElectricItemUtils.getPlayerEnergy(playerIn) > getEnergyUsage()) {
+                    System.out.println("doing somethign here");
+
                     playerIn.setActiveHand(hand);
                     return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
                 }
-                return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
+                System.out.println("doing somethign here");
+                return new ActionResult<>(ActionResultType.PASS, playerIn.getHeldItem(hand));
             }
 
             @Override
             public void onPlayerStoppedUsing(ItemStack itemStack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 int chargeTicks = (int) MuseMathUtils.clampDouble(itemStack.getUseDuration() - timeLeft, 10, 50);
+                System.out.println("time left: " + timeLeft);
+
+
                 if (!worldIn.isRemote) {
                     double energyConsumption = getEnergyUsage()* chargeTicks;
                     if (entityLiving instanceof PlayerEntity) {
@@ -91,8 +93,8 @@ public class PlasmaCannonModule extends AbstractPowerModule {
                         MuseHeatUtils.heatPlayer(player, energyConsumption / 5000);
                         if (ElectricItemUtils.getPlayerEnergy(player) > energyConsumption) {
                             ElectricItemUtils.drainPlayerEnergy(player, (int) energyConsumption);
-                            double explosiveness = moduleCap.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_EXPLOSIVENESS);
-                            double damagingness = moduleCap.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
+                            double explosiveness = rightClickie.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_EXPLOSIVENESS);
+                            double damagingness = rightClickie.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
 
                             PlasmaBoltEntity plasmaBolt = new PlasmaBoltEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
                             worldIn.addEntity(plasmaBolt);
@@ -103,7 +105,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(moduleCap.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK));
+                return (int) Math.round(rightClickie.applyPropertyModifiers(MPSConstants.PLASMA_CANNON_ENERGY_PER_TICK));
             }
         }
     }

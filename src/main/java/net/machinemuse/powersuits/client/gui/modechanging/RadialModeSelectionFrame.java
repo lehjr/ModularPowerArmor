@@ -1,6 +1,7 @@
 package net.machinemuse.powersuits.client.gui.modechanging;
 
 import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.client.gui.clickable.ClickableModule;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
@@ -103,7 +104,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
                         selectedModuleOriginal = activeMode;
                     int modeNum = 0;
                     for (int mode : modes) {
-                        ClickableModule clickie = new ClickableModule(handler.getStackInSlot(mode), new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modes.size()), 250), mode);
+                        ClickableModule clickie = new ClickableModule(handler.getStackInSlot(mode), new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modes.size()), 250), mode, EnumModuleCategory.NONE);
                         modeButtons.add(clickie);
                         modeNum ++;
                     }

@@ -1,11 +1,13 @@
 package net.machinemuse.powersuits.item.module.tool;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingItem;
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreaking;
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCapability;
 import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModule;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.helper.ToolHelpers;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -48,30 +50,28 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IBlockBreakingModule blockBreaking;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.ENERGY_CONSUMPTION, 9500);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.HARVEST_SPEED, 52);
-
-            this.blockBreaking = new BlockBreaker();
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.blockBreaking.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
+            this.blockBreaking.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.ENERGY_CONSUMPTION, 9500);
+            this.blockBreaking.addTradeoffPropertyDouble(MPSConstants.OVERCLOCK, MPSConstants.HARVEST_SPEED, 52);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == BlockBreakingCapability.BLOCK_BREAKING)
-                return BlockBreakingCapability.BLOCK_BREAKING.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
         }
 
-        class BlockBreaker extends BlockBreaking {
+        class BlockBreaker extends PowerModule implements IBlockBreakingModule {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public boolean canHarvestBlock(@Nonnull ItemStack modeChangingStack, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
                 AtomicBoolean canHarvest = new AtomicBoolean(false);
@@ -79,9 +79,19 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                     if (powerFist instanceof IModeChangingItem) {
                         ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
                         if (!pickaxeModule.isEmpty()) {
-                            int energyUsage = pickaxeModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(m -> m.getEnergyUsage()).orElse(0);
-                            canHarvest.set(pickaxeModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(m -> !m.canHarvestBlock(modeChangingStack, state, player, pos, playerEnergy) &&
-                                    playerEnergy >= energyUsage && ToolHelpers.isToolEffective(player.getEntityWorld(), pos, getEmulatedTool())).orElse(false));
+                            int energyUsage = pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
+                                if (m instanceof IBlockBreakingModule) {
+                                    return ((IBlockBreakingModule) m).getEnergyUsage();
+                                }
+                                return 0;
+                            }).orElse(0);
+                            canHarvest.set(pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
+                                if (m instanceof IBlockBreakingModule) {
+                                    return !((IBlockBreakingModule) m).canHarvestBlock(modeChangingStack, state, player, pos, playerEnergy) &&
+                                            playerEnergy >= energyUsage && ToolHelpers.isToolEffective(player.getEntityWorld(), pos, getEmulatedTool());
+                                }
+                                return false;
+                            }).orElse(false));
                         }
                     }
                 });
@@ -96,7 +106,12 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                         if (powerFist instanceof IModeChangingItem) {
                             ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
                             if (!pickaxeModule.isEmpty()) {
-                                energyUsage.set(pickaxeModule.getCapability(BlockBreakingCapability.BLOCK_BREAKING).map(m -> m.getEnergyUsage()).orElse(0));
+                                energyUsage.set(pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
+                                    if (m instanceof IBlockBreakingModule) {
+                                        return ((IBlockBreakingModule) m).getEnergyUsage();
+                                    }
+                                    return 0;
+                                }).orElse(0));
                             }
                         }
                     });
@@ -115,9 +130,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
                 PlayerEntity player = event.getEntityPlayer();
                 ItemStack modeChangingStack = player.getActiveItemStack();
-
                 AtomicDouble newSpeed = new AtomicDouble(event.getNewSpeed());
-
                 modeChangingStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(powerFist -> {
                     if (powerFist instanceof IModeChangingItem) {
                         ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
@@ -129,6 +142,11 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                     }
                 });
                 event.setNewSpeed((float) newSpeed.get());
+            }
+
+            @Override
+            public int getEnergyUsage() {
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

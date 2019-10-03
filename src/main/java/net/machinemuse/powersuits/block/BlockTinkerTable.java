@@ -1,20 +1,17 @@
 package net.machinemuse.powersuits.block;
 
-import net.machinemuse.powersuits.containers.MPSCraftingContainer;
+import net.machinemuse.powersuits.containers.providers.TinkerContainerProvider;
 import net.machinemuse.powersuits.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
-import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -22,6 +19,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -38,20 +36,12 @@ public class BlockTinkerTable extends HorizontalBlock {
 
     private static final ITextComponent title = new TranslationTextComponent("container.crafting", new Object[0]);
 
-
-
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        player.openContainer(state.getContainer(worldIn, pos));
-        player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        if(!world.isRemote)
+            NetworkHooks.openGui((ServerPlayerEntity) player,
+                    new TinkerContainerProvider(0), (buffer) -> buffer.writeInt(0));
         return true;
     }
-
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new SimpleNamedContainerProvider((p_220270_2_, p_220270_3_, p_220270_4_) -> {
-            return new MPSCraftingContainer(p_220270_2_, p_220270_3_, IWorldPosCallable.of(worldIn, pos));
-        }, title);
-    }
-
 
     @Override
     public int getHarvestLevel(BlockState state) {

@@ -1,11 +1,12 @@
 package net.machinemuse.powersuits.item.module.miningenhancement;
 
-import net.machinemuse.numina.capabilities.module.enchantment.EnchantmentModule;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.numina.capabilities.module.enchantment.IEnchantmentModule;
 import net.machinemuse.numina.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancement;
-import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -39,29 +40,25 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IMiningEnhancementModule miningEnhancement;
-        IEnchantmentModule enchantmentModule;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
-
-            this.miningEnhancement = new Enhancement();
-            this.enchantmentModule = new EnchantmentThingie();
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.miningEnhancement.addBasePropertyDouble(MPSConstants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == MiningEnhancementCapability.MINING_ENHANCEMENT)
-                return MiningEnhancementCapability.MINING_ENHANCEMENT.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
         }
 
-        class Enhancement extends MiningEnhancement {
+        class Enhancement extends MiningEnhancement implements IEnchantmentModule {
+            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             /**
              * Called before a block is broken.  Return true to prevent default block harvesting.
              *
@@ -76,7 +73,7 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
             public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
                 if (!player.world.isRemote) {
                     if (getEnergyUsage() > ElectricItemUtils.getPlayerEnergy(player))
-                        enchantmentModule.removeEnchantment(itemstack);
+                        removeEnchantment(itemstack);
                     else {
                         Block block = player.world.getBlockState(pos).getBlock();
                         // fixme!!
@@ -91,11 +88,9 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.SILK_TOUCH_ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.SILK_TOUCH_ENERGY_CONSUMPTION);
             }
-        }
 
-        class EnchantmentThingie extends EnchantmentModule {
             @Override
             public Enchantment getEnchantment() {
                 return Enchantments.SILK_TOUCH;

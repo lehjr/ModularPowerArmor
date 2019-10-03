@@ -2,12 +2,13 @@ package net.machinemuse.powersuits.client.event;
 
 
 import com.google.common.collect.ImmutableMap;
-import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.numina.client.model.helper.MuseModelHelper;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.model.block.ModelLuxCapacitor;
 import net.machinemuse.powersuits.client.model.block.TinkerTableModel;
+import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
+import net.machinemuse.powersuits.client.model.item.ModelPowerFist;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -25,6 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Map;
 
+
 public enum ModelBakeEventHandler {
     INSTANCE;
 
@@ -36,6 +38,9 @@ public enum ModelBakeEventHandler {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
         modelRegistry = event.getModelRegistry();
+        modelRegistry.put(powerFistIconLocation, new ModelPowerFist(modelRegistry.get(powerFistIconLocation)));
+
+        MPSModelHelper.loadArmorModels(null, event.getModelLoader());
 
         // New Lux Capacitor Inventory Model
         IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPSConstants.MODID,
@@ -69,26 +74,15 @@ public enum ModelBakeEventHandler {
         luxCapModel = new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                 event.getModelLoader(),
                 MuseModelHelper.defaultTextureGetter(),
-                TRSRTransformation.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM),
+                TRSRTransformation.getRotation(Direction.DOWN),
+                DefaultVertexFormats.ITEM),
                 luxcapacitorLenseUnbaked.bake(
                         event.getModelLoader(),
                         MuseModelHelper.defaultTextureGetter(),
                         TRSRTransformation.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM));
 
 
-//        if (new TinkerTableModel(tinkertableUnbaked.bake(event.getModelLoader(),
-//                MuseModelHelper.defaultTextureGetter(),
-//                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)) == null)
-//            MuseLogger.logger.info("model is null ");
-//
-//        else
-//            MuseLogger.logger.info("model is NOT null ");
-
-
-//
         for (Direction facing : Direction.values()) {
-//            modelRegistry.put(ModelLuxCapacitor.getModelResourceLocation(facing), new ModelLuxCapacitor());
-
             modelRegistry.put(
                     new ModelResourceLocation(MPSRegistryNames.LUX_CAPACITOR_REG_NAME, "facing=" + facing.getName()),
                     new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
@@ -103,8 +97,8 @@ public enum ModelBakeEventHandler {
             if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
                 continue;
 
-            MuseLogger.logger.info("MPS model location: " + new ModelResourceLocation(
-                    MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()).toString());
+//            MuseLogger.logger.info("MPS model location: " + new ModelResourceLocation(
+//                    MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()).toString());
 
             modelRegistry.put(new ModelResourceLocation(MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()),
 
@@ -112,20 +106,7 @@ public enum ModelBakeEventHandler {
                             event.getModelLoader(),
                             MuseModelHelper.defaultTextureGetter(),
                             TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
-
         }
-//
-//        for (ResourceLocation location : modelRegistry.keySet()) {
-////            MuseLogger.logInfo("model location namespace: " + location.getNamespace());
-//
-//
-//            if (location.getNamespace().equals(MPSConstants.MODID)) {
-//                MuseLogger.logger.info("MPS model location: " + location.toString());
-//            }
-//        }
-
-
-
     }
 
     public IModelState getModelState() {

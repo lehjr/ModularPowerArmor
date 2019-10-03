@@ -1,8 +1,10 @@
 package net.machinemuse.powersuits.item.module.tool;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.helper.ToolHelpers;
@@ -43,33 +45,31 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.RADIUS, 1, "m");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.RADIUS, 15);
-
-            this.rightClick = new RightClickie();
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addBasePropertyDouble(MPSConstants.RADIUS, 1, "m");
+            this.rightClick.addTradeoffPropertyDouble(MPSConstants.RADIUS, MPSConstants.RADIUS, 15);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(() -> rightClick));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
         }
 
         class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                int radius = (int) moduleCap.applyPropertyModifiers(MPSConstants.RADIUS);
+                int radius = (int) applyPropertyModifiers(MPSConstants.RADIUS);
                 if (useBlower(radius, itemStackIn, playerIn, worldIn, playerIn.getPosition()))
                     return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
                 return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
@@ -94,7 +94,7 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

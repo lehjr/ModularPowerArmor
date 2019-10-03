@@ -1,22 +1,32 @@
 package net.machinemuse.powersuits.containers;
 
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.slot.ClickableModuleSlot;
-import net.machinemuse.powersuits.basemod.MPSModules;
-import net.machinemuse.powersuits.containers.providers.ContainerTypePicker;
+import net.machinemuse.powersuits.basemod.MPSObjects;
+import net.machinemuse.powersuits.network.MPSPackets;
+import net.machinemuse.powersuits.network.packets.MusePacketCreativeInstallModuleRequest;
+import net.machinemuse.powersuits.network.packets.MusePacketModuleMoveFromSlotToSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.CraftingResultSlot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.items.SlotItemHandler;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -24,139 +34,366 @@ import java.util.*;
  * This means that only equiped
  *
  */
-public class TinkerTableContainer extends Container {
-    /*
-    types of slots to deal with
-    =============================
-
-    Player inventory:
-    ----------------------------
-    slots with modular items
-    slots with modules
-    slots with junk -> ignore completely?
-    slots with nothing -> ignore or use for targets for uninstalling items
-
-    modular item inventory
-    ----------------------------
-    slots with modules
-    slots with nothing
-
-    fake module inventory
-    ----------------------------
-    slots with modules -> used to show modules not installed
-     */
-
-    // A fake inventory to hold a copy of every module
-    private static final IItemHandler allModules = new ItemStackHandler(MPSModules.INSTANCE.getModuleRegNames().size());
+public class TinkerTableContainer extends MPSRecipeBookContainer<CraftingInventory> implements IModularItemToSlotMapProvider {
+    private final CraftingInventory craftingInventory;
+    private final CraftResultInventory resultInventory;
+    private final PlayerEntity player;
 
     // A map of the slot that holds the modular item, and the set of slots in that modular item
-    private Map<ClickableModularItem, Set<ClickableModuleSlot>> modularItemToSlotMap;
-
-    // modules in the player's inventory not installed
-    private Set<ClickableModuleSlot> modulesInPlayerInventory;
+    private Map<Integer, List<SlotItemHandler>> modularItemToSlotMap;
 
     // a set of all known modules
     private Set<ClickableModuleSlot> allPossibleModules;
 
+    public TinkerTableContainer(int windowId, PlayerInventory playerInventory) {
+        super(MPSObjects.INSTANCE.TINKER_TABLE_CONTAINER_TYPE, windowId);
+        this.craftingInventory = new CraftingInventory(this, 3, 3);
+        this.resultInventory = new CraftResultInventory();
+        this.player = playerInventory.player;
 
-
-
-    protected TinkerTableContainer(@Nullable ContainerType<?> type, int windowId) {
-        super(type, windowId);
-
-    }
-
-    public TinkerTableContainer(int id, PlayerInventory playerInventory, int typeIndex) {
-        this(ContainerTypePicker.getContainerType(typeIndex), id);
-
-        PlayerEntity player = playerInventory.player;
         modularItemToSlotMap = new HashMap<>();
-        modulesInPlayerInventory = new HashSet<>();
-        allPossibleModules = new HashSet<>();
 
-        for (int index = 0; index < playerInventory.getSizeInventory(); index++) {
+        // crafting result: slot 0
+        this.addSlot(new HideableResultSlot(playerInventory.player, this.craftingInventory, this.resultInventory, 0, -1000, -1000));
 
-            // look for modular items and get all the modules from them.
-            int finalIndex = index;
-            if(playerInventory.getStackInSlot(index).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(itemHandler -> {
-                if (itemHandler instanceof IModularItem) {
-                    // add the slot to the container
-                    ClickableModularItem modularItemSlot = (ClickableModularItem)
-                            this.addSlot(new ClickableModularItem(playerInventory, finalIndex,0, 0));
+        int row;
+        int col;
+        // crafting inventory: slot 1-9
+        for(row = 0; row < 3; ++row) {
+            for(col = 0; col < 3; ++col) {
+                this.addSlot(new HideableSlot(this.craftingInventory, col + row * 3, -1000, -1000));
+            }
+        }
 
-                    Set<ClickableModuleSlot> moduleSet = new HashSet<>();
-                    for (int handlerIndex = 0; handlerIndex < itemHandler.getSlots(); handlerIndex ++) {
-                        moduleSet.add((ClickableModuleSlot)
-                                this.addSlot(new ClickableModuleSlot(itemHandler, handlerIndex, 0, 0)));
+        // add all player inventory slots
+        for (int index = 0; index < playerInventory.getSizeInventory(); index ++) {
+            this.addSlot(new HideableSlot(playerInventory, index, 0, 0));
+        }
+
+        // add all modular item slots
+        for (Slot slot :  new ArrayList<Slot>(this.inventorySlots)) {
+            List<SlotItemHandler> slots = new ArrayList<>();
+
+            slot.getStack().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+                if (iItemHandler instanceof IModularItem) {
+                    for (int modularItemInvIndex = 0; modularItemInvIndex < iItemHandler.getSlots(); modularItemInvIndex ++) {
+                        HideableSlotItemHandler slot1 =
+                                (HideableSlotItemHandler) addSlot(new HideableSlotItemHandler(iItemHandler, inventorySlots.indexOf(slot), modularItemInvIndex, -1000, -1000));
+                        slots.add(slot1);
                     }
-                    modularItemToSlotMap.put(modularItemSlot, moduleSet);
-                    return true;
                 }
-                return false;
-            }).orElse(false)) {
+            });
 
-                // really not sure what to do here. Modules in the person's inventory are fine, but what about other stuff?
+            if (!slots.isEmpty()) {
+                modularItemToSlotMap.put(slot.slotNumber, slots);
             }
         }
 
-        List<ResourceLocation> regNames = MPSModules.INSTANCE.getModuleRegNames();
-
-        // A list if modules for display. Maybe use it to open the recipe book or JEI?
-        if(!this.inventorySlots.isEmpty()) {
-            for (int index = 0; index < allModules.getSlots(); index ++) {
-                allModules.insertItem(index, new ItemStack(ForgeRegistries.ITEMS.getValue(regNames.get(index))), false);
-                allPossibleModules.add((ClickableModuleSlot)
-                        this.addSlot(new ClickableModuleSlot(allModules, index, 0, 0)));
+        for (Slot slot : this.inventorySlots) {
+            if(slot instanceof IHideableSlot) {
+                ((IHideableSlot) slot).disable();
             }
         }
     }
 
-    public Set<ClickableModuleSlot> getAllModules() {
-        return allPossibleModules;
+    class HideableSlotItemHandler extends SlotItemHandler implements IHideableSlot {
+        boolean isEnabled = false;
+        protected int parentSlot = -1;
+
+        public HideableSlotItemHandler(IItemHandler itemHandler, int parent, int index, int xPosition, int yPosition) {
+            super(itemHandler, index, xPosition, yPosition);
+            this.parentSlot = parent;
+        }
+
+        public int getParentSlot(){
+            return parentSlot;
+        }
+
+        @Override
+        public void enable() {
+            this.isEnabled = true;
+        }
+
+        @Override
+        public void disable() {
+            this.isEnabled = false;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isEnabled;
+        }
     }
 
-    public Map<ClickableModularItem, Set<ClickableModuleSlot>> getModularItemToSlotMap() {
+    class HideableSlot extends Slot implements IHideableSlot {
+        boolean isEnabled = false;
+        public HideableSlot(IInventory iInventory, int slotIndex, int posX, int posY) {
+            super(iInventory, slotIndex, posX, posY);
+        }
+
+        @Override
+        public void enable() {
+            this.isEnabled = true;
+        }
+
+        @Override
+        public void disable() {
+            this.isEnabled = false;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isEnabled;
+        }
+    }
+
+    class HideableResultSlot extends CraftingResultSlot implements IHideableSlot {
+        boolean isEnabled = false;
+        public HideableResultSlot(PlayerEntity playerEntity, CraftingInventory craftingInventory, IInventory inventory, int slotIndex, int posX, int posY) {
+            super(playerEntity, craftingInventory, inventory, slotIndex, posX, posY);
+        }
+
+        @Override
+        public void enable() {
+            this.isEnabled = true;
+        }
+
+        @Override
+        public void disable() {
+            this.isEnabled = false;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return isEnabled;
+        }
+    }
+
+    public Map<Integer, List<SlotItemHandler>> getModularItemToSlotMap() {
         return modularItemToSlotMap;
     }
 
-    public Set<ClickableModuleSlot> getModulesInPlayerInventory() {
-        return modulesInPlayerInventory;
+    @Override
+    public boolean canMergeSlot(ItemStack itemStack, Slot slot) {
+        if (slot instanceof SlotItemHandler) {
+            return ((SlotItemHandler) slot).getItemHandler().isItemValid(slot.getSlotIndex(), itemStack);
+        }
+        return slot.inventory != this.resultInventory && super.canMergeSlot(itemStack, slot);
+    }
+
+    @Override
+    public boolean canDragIntoSlot(Slot slotIn) {
+        return false;
     }
 
     /**
-     *
-     intention here is to differentiate slots with modular items installed and slots with everything else
-     every modular item/mode changing item needs to go into a special set of slots... their inventory needs to go into another set of slots...
-     there needs to be a way to call those so when a modular item is selected, that inventory can be shown
-     player inventory should also have slots mapped.. and those can either contain available modules or can be targets of
-     removed modules... trick is figuring out how to show modules not in player inventory and not installed... maybe a detached inventory of some sort?
-
-
-
-
+     * Merges provided ItemStack with the first avaliable one in the container/player inventor between minIndex
+     * (included) and maxIndex (excluded). Args : stack, minIndex, maxIndex, negativDirection. /!\ the Container
+     * implementation do not check if the item is valid for the slot
      */
+    @Override
+    public boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+        boolean flag = false;
+        int i = startIndex;
+        if (reverseDirection) {
+            i = endIndex - 1;
+        }
 
+        if (stack.isStackable()) {
+            while(!stack.isEmpty()) {
+                if (reverseDirection) {
+                    if (i < startIndex) {
+                        break;
+                    }
+                } else if (i >= endIndex) {
+                    break;
+                }
 
+                Slot slot = this.inventorySlots.get(i);
+                ItemStack itemstack = slot.getStack();
+                if (!itemstack.isEmpty() && areItemsAndTagsEqual(stack, itemstack)) {
+                    int j = itemstack.getCount() + stack.getCount();
+                    int maxSize = Math.min(slot.getItemStackLimit(stack)/*.getSlotStackLimit()*/, stack.getMaxStackSize());
+                    if (j <= maxSize) {
+                        stack.setCount(0);
+                        itemstack.setCount(j);
+                        slot.onSlotChanged();
+                        flag = true;
+                    } else if (itemstack.getCount() < maxSize) {
+                        stack.shrink(maxSize - itemstack.getCount());
+                        itemstack.setCount(maxSize);
+                        slot.onSlotChanged();
+                        flag = true;
+                    }
+                }
 
+                if (reverseDirection) {
+                    --i;
+                } else {
+                    ++i;
+                }
+            }
+        }
 
-//        armor_Head_Slot_Set = new ArrayList<>();
-//        armor_Chest_Slot_Set = new ArrayList<>();
-//        armor_Legs_Slot_Set = new ArrayList<>();
-//        armor_Feet_Slot_Set;
-//        left_Hand_Slot_Set;
-//        right_Hand_Slot_Set;
+        if (!stack.isEmpty()) {
+            if (reverseDirection) {
+                i = endIndex - 1;
+            } else {
+                i = startIndex;
+            }
 
+            while(true) {
+                if (reverseDirection) {
+                    if (i < startIndex) {
+                        break;
+                    }
+                } else if (i >= endIndex) {
+                    break;
+                }
 
+                Slot slot1 = this.inventorySlots.get(i);
+                ItemStack itemstack1 = slot1.getStack();
+                if (itemstack1.isEmpty() && slot1.isItemValid(stack)) {
+                    if (stack.getCount() > slot1.getItemStackLimit(stack)/*.getSlotStackLimit()*/) {
+                        slot1.putStack(stack.split(slot1.getSlotStackLimit()));
+                    } else {
+                        slot1.putStack(stack.split(stack.getCount()));
+                    }
 
+                    slot1.onSlotChanged();
+                    flag = true;
+                    break;
+                }
 
+                if (reverseDirection) {
+                    --i;
+                } else {
+                    ++i;
+                }
+            }
+        }
 
+        return flag;
+    }
 
+    @Override
+    public Container getContainer() {
+        return this;
+    }
 
+    public void creativeInstall(int slot, @Nonnull ItemStack itemStack) {
+        if(this.getSlot(slot).getItemStackLimit(itemStack) > 0) {
+            putStackInSlot(slot, itemStack);
+//            this.detectAndSendChanges();
+            MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCreativeInstallModuleRequest(this.windowId, slot, itemStack));
+        }
+    }
 
+    public void move(int source, int target) {
+        if (source == -1)
+            return;
+        if (target == -1)
+            return;
 
+        Slot sourceSlot = inventorySlots.get(source);
+        Slot targetSlot = inventorySlots.get(target);
 
+        ItemStack contents = sourceSlot.getStack();
+        ItemStack stackCopy = contents.copy();
 
+        if(sourceSlot.canTakeStack(player) && canMergeSlot(contents, targetSlot)) {
+            if (source == getOutputSlot()) {
+                if (this.mergeItemStack(stackCopy, target, target+ 1, false)) {
+                    sourceSlot.onTake(player, contents);
+                    MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketModuleMoveFromSlotToSlot(this.windowId, source, target));
+                }
+            } else {
+                MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketModuleMoveFromSlotToSlot(this.windowId, source, target));
+                targetSlot.putStack(stackCopy);
+                sourceSlot.putStack(ItemStack.EMPTY);
+            }
+            detectAndSendChanges();
+        }
+    }
 
+    @Override
+    public void onCraftMatrixChanged(IInventory iInventory) {
+        if (!player.world.isRemote) {
+            setCraftingResultSlot(this.windowId, player.world, this.player, this.craftingInventory, this.resultInventory);
+        }
+    }
+
+    protected static void setCraftingResultSlot(int windowId, World world, PlayerEntity playerIn, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
+        if (!world.isRemote) {
+            ServerPlayerEntity serverPlayer = (ServerPlayerEntity)playerIn;
+            ItemStack itemStack = ItemStack.EMPTY;
+            Optional<ICraftingRecipe> optionalRecipe = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
+            if (optionalRecipe.isPresent()) {
+                ICraftingRecipe recipe = (ICraftingRecipe)optionalRecipe.get();
+                if (resultInventory.canUseRecipe(world, serverPlayer, recipe)) {
+                    itemStack = recipe.getCraftingResult(craftingInventory);
+                }
+            }
+            // set result slot on server side then send packet to set same on client
+            resultInventory.setInventorySlotContents(0, itemStack);
+            serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemStack));
+        }
+    }
+
+    /**
+     * replace IWorldPosCallable.consume with something not position specific
+     * since this will be used by a portable setup
+     */
+    public void consume(PlayerEntity playerIn) {
+        this.resultInventory.clear();
+        if (!playerIn.world.isRemote) {
+            this.clearContainer(playerIn, playerIn.world, this.craftingInventory);
+        }
+    }
+
+    /**
+     * Called when the container is closed.
+     */
+    public void onContainerClosed(PlayerEntity playerIn) {
+        super.onContainerClosed(playerIn);
+        consume(playerIn);
+    }
+
+    @Override
+    public void func_201771_a(RecipeItemHelper helper) {
+        this.craftingInventory.fillStackedContents(helper);
+    }
+
+    @Override
+    public void clear() {
+        this.craftingInventory.clear();
+        this.resultInventory.clear();
+    }
+
+    @Override
+    public boolean matches(IRecipe recipeIn) {
+        return recipeIn.matches(this.craftingInventory, this.player.world);
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 0;
+    }
+
+    @Override
+    public int getWidth() {
+        return 3;
+    }
+
+    @Override
+    public int getHeight() {
+        return 3;
+    }
+
+    @Override
+    public int getSize() {
+        return getHeight() * getWidth() + 1;
+    }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {

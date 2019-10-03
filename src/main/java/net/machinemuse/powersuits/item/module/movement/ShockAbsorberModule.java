@@ -1,9 +1,10 @@
 package net.machinemuse.powersuits.item.module.movement;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
-import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
+import net.machinemuse.numina.capabilities.module.toggleable.ToggleableModule;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -30,30 +31,24 @@ public class ShockAbsorberModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleToggle moduleToggle;
+        IToggleableModule moduleToggle;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig);
-
-
-
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF/m");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 100);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.MULTIPLIER, 0, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.MULTIPLIER, 10);
-
-            this.moduleToggle = new Toggle(module);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig, true);
+            this.moduleToggle.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF/m");
+            this.moduleToggle.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 100);
+            this.moduleToggle.addBasePropertyDouble(MPSConstants.MULTIPLIER, 0, "%");
+            this.moduleToggle.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.MULTIPLIER, 10);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ToggleCapability.TOGGLEABLE_MODULE)
-                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
         }
     }
 }

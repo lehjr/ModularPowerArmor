@@ -8,7 +8,6 @@ import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.control.PlayerMovementInputWrapper;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.numina.player.NuminaPlayerUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
@@ -73,26 +72,39 @@ public class MovementManager {
                         });
         });
         multiplier -= movementResistance.get();
-
         // player walking speed: 0.10000000149011612
         // player sprintint speed: 0.13000001
         double additive = multiplier * (player.isSprinting() ? 0.13 : 0.1)/2;
-        CompoundNBT itemNBT = MuseNBTUtils.getMuseItemTag(itemStack);
+        CompoundNBT itemNBT = itemStack.getOrCreateTag();
         boolean hasAttribute = false;
-        if (itemNBT.contains("AttributeModifiers", Constants.NBT.TAG_LIST)) {
-            ListNBT ListNBT = itemNBT.getList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < ListNBT.size(); ++i) {
-                CompoundNBT attributeTag = ListNBT.getCompound(i);
-                if (attributeTag.getString("Name").equals(SharedMonsterAttributes.MOVEMENT_SPEED.getName())) {
-                    attributeTag.putDouble("Amount", additive);
-                    hasAttribute = true;
-                    break;
+        if (itemNBT.contains("AttributeModifiers", Constants.NBT.TAG_LIST)) {
+            ListNBT listnbt = itemNBT.getList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
+            int remove = -1;
+
+            for (int i = 0; i < listnbt.size(); ++i) {
+                CompoundNBT attributeTag = listnbt.getCompound(i);
+                AttributeModifier attributemodifier = SharedMonsterAttributes.readAttributeModifier(attributeTag);
+                if (attributemodifier != null && attributemodifier.getName().equals(SharedMonsterAttributes.MOVEMENT_SPEED.getName())) {
+                    // adjust the tag
+                    if (additive != 0) {
+                        attributeTag.putDouble("Amount", additive);
+                        hasAttribute = true;
+                        break;
+                    } else {
+                        // discard the tag
+                        remove = i;
+                        break;
+                    }
                 }
             }
+            if (hasAttribute && remove != -1) {
+                listnbt.remove(remove);
+            }
         }
-        if (!hasAttribute && additive != 0)
+        if (!hasAttribute && additive != 0) {
             itemStack.addAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), additive, AttributeModifier.Operation.ADDITION), EquipmentSlotType.LEGS);
+        }
     }
 
     public static double thrust(PlayerEntity player, double thrust, boolean flightControl) {

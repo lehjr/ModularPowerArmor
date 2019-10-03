@@ -3,7 +3,6 @@ package net.machinemuse.numina.client.gui;
 import net.machinemuse.numina.client.gui.clickable.IClickable;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.gui.geometry.DrawableMuseRect;
-import net.machinemuse.numina.client.render.MuseRenderer;
 import net.machinemuse.numina.math.Colour;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,9 +20,11 @@ public class MuseContainerGui <T extends Container> extends MuseContainerScreen2
     public MuseContainerGui(T container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title);
         frames = new ArrayList();
-        tooltipRect = new DrawableMuseRect(0, 0, 0, 0, false,
-                new Colour(0.1F, 0.3F, 0.4F, 0.7F),
-                new Colour(0.2F, 0.6F, 0.9F, 0.7F));
+        tooltipRect = new DrawableMuseRect(
+                0, 0, 0, 0,
+                false,
+                Colour.BLACK.withAlpha(0.9),
+                Colour.PURPLE);
     }
 
     @Override
@@ -78,24 +79,19 @@ public class MuseContainerGui <T extends Container> extends MuseContainerScreen2
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         update(mouseX, mouseY);
-
-
-        // item lighting code in super.render method screws up this lighting
-//        super.render(mouseX, mouseY, partialTicks);
-
-
-//        renderBackground();
-        for (IGuiFrame frame : frames) {
-            frame.render(mouseX, mouseY, partialTicks);
-        }
-
+        renderFrames(mouseX, mouseY, partialTicks);
         super.render(mouseX, mouseY, partialTicks);
-        drawToolTip();
     }
 
     public void update(double x, double y) {
         for (IGuiFrame frame : frames) {
             frame.update(x, y);
+        }
+    }
+
+    public void renderFrames(int mouseX, int mouseY, float partialTicks) {
+        for (IGuiFrame frame : frames) {
+            frame.render(mouseX, mouseY, partialTicks);
         }
     }
 
@@ -144,46 +140,20 @@ public class MuseContainerGui <T extends Container> extends MuseContainerScreen2
         return false;
     }
 
-    protected void drawToolTip() {
-        int x = (int) (minecraft.mouseHelper.getMouseX() * this.width / this.minecraft.mainWindow.getWidth());
-        int y = (int) (minecraft.mouseHelper.getMouseY() * this.height / (double) this.minecraft.mainWindow.getHeight());
-        List<ITextComponent> tooltip = getToolTip(x, y);
+    public void drawToolTip(int mouseX, int mouseY) {
+//        int mouseX = (int) (minecraft.mouseHelper.getMouseX() * this.width / this.minecraft.mainWindow.getWidth());
+//        int mouseY = (int) (minecraft.mouseHelper.getMouseY() * this.height / (double) this.minecraft.mainWindow.getHeight());
+        List<ITextComponent> tooltip = getToolTip(mouseX, mouseY);
         if (tooltip != null) {
-            double strwidth = 0;
-            for (ITextComponent s : tooltip) {
-                double currstrwidth = MuseRenderer.getStringWidth(s.getString());
-                if (currstrwidth > strwidth) {
-                    strwidth = currstrwidth;
-                }
+            tooltip.forEach(ITextComponent::getFormattedText);
+            List<String> toolTip2 = new ArrayList<>();
+            for (ITextComponent component : tooltip) {
+                toolTip2.add(component.getFormattedText());
             }
-            double top, bottom, left, right;
-            if (y > this.height / 2) {
-                top = y - 10 * tooltip.size() - 8;
-                bottom = y;
-                left = x;
-                right = x + 8 + strwidth;
-            } else {
-                top = y;
-                bottom = y + 10 * tooltip.size() + 8;
-
-                left = x + 4;
-                right = x + 12 + strwidth;
-            }
-
-            tooltipRect.setTop(top);
-            tooltipRect.setLeft(left);
-            tooltipRect.setRight(right);
-            tooltipRect.setBottom(bottom);
-            tooltipRect.draw();
-            for (int i = 0; i < tooltip.size(); i++) {
-                MuseRenderer.drawString(tooltip.get(i).getString(), left + 4, bottom - 10 * (tooltip.size() - i) - 4);
-            }
+            renderTooltip(toolTip2, mouseX,mouseY);
         }
     }
 
-    /**
-     * @return
-     */
     public List<ITextComponent> getToolTip(int x, int y) {
         List<ITextComponent> hitTip;
         for (IGuiFrame frame : frames) {

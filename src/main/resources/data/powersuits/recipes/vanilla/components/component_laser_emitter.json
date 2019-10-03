@@ -6,7 +6,6 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
-  "group": "mps_component",
     "pattern": [
     "#B!",
     "BWB",

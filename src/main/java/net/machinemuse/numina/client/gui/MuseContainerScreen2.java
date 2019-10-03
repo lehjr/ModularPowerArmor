@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.machinemuse.numina.client.gui.slot.UniversalSlot;
 import net.machinemuse.numina.client.render.RenderState;
+import net.machinemuse.powersuits.containers.IModularItemToSlotMapProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,7 +23,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
@@ -146,7 +149,6 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
         int l = 240;
         GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, 240.0F, 240.0F);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
         for(int slotIndex = 0; slotIndex < this.container.inventorySlots.size(); ++slotIndex) {
             Slot slot = this.container.inventorySlots.get(slotIndex);
             if (slot.isEnabled()) {
@@ -154,7 +156,6 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
                 if (this.isSlotSelected(slot, (double)mouseX, (double)mouseY)){
                     this.hoveredSlot = slot;
                     this.hoveredSlotIndex = slotIndex;
-//                    System.out.println("slot index: " + slotIndex);
                 }
             }
         }
@@ -181,7 +182,6 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
         boolean flag = false;
         boolean flag1 = slotIn == this.clickedSlot && !this.draggedStack.isEmpty() && !this.isRightMouseClick;
         ItemStack itemstack1 = this.minecraft.player.inventory.getItemStack();
-//        String s = null;
 
         // drag source ?
         if (slotIn == this.clickedSlot && !this.draggedStack.isEmpty() && this.isRightMouseClick && !itemstack.isEmpty()) {
@@ -338,6 +338,7 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
     public boolean mouseDragged(double mouseX, double mouseY, int button, double p_mouseDragged_6_, double p_mouseDragged_8_) {
         Slot slot = this.getSelectedSlot(mouseX, mouseY);
         ItemStack itemstack = this.minecraft.player.inventory.getItemStack();
+
         if (this.clickedSlot != null && this.minecraft.gameSettings.touchscreen) {
             if (button == 0 || button == 1) {
                 if (this.draggedStack.isEmpty()) {
@@ -434,18 +435,20 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
             if (button == 0 || button == 1 || flag) {
                 int left = this.guiLeft;
                 int top = this.guiTop;
-                boolean flag1 = this.hasClickedOutside(mouseX, mouseY, left, top, button);
-                if (slot != null) flag1 = false; // Forge, prevent dropping of items through slots outside of GUI boundaries
+                boolean clickedOutside = this.hasClickedOutside(mouseX, mouseY, left, top, button);
+                if (slot != null)
+                    clickedOutside = false; // Forge, prevent dropping of items through slots outside of GUI boundaries
                 int slotIndex = -1;
                 if (slot != null) {
                     slotIndex = slot.slotNumber;
                 }
 
-                if (flag1) {
+                if (clickedOutside) {
                     slotIndex = -999;
                 }
 
-                if (this.minecraft.gameSettings.touchscreen && flag1 && this.minecraft.player.inventory.getItemStack().isEmpty()) {
+                // closes gui?
+                if (this.minecraft.gameSettings.touchscreen && clickedOutside && this.minecraft.player.inventory.getItemStack().isEmpty()) {
                     this.minecraft.displayGuiScreen((Screen)null);
                     return true;
                 }
@@ -464,7 +467,7 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
                             if (this.minecraft.gameSettings.keyBindPickBlock.isActiveAndMatches(mouseKey)) {
                                 this.handleMouseClick(slot, slotIndex, button, ClickType.CLONE);
                             } else {
-                                boolean flag2 = slotIndex != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 344));
+                                boolean flag2 = slotIndex != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
                                 ClickType clicktype = ClickType.PICKUP;
                                 if (flag2) {
                                     this.shiftClickedSlot = slot != null && slot.getHasStack() ? slot.getStack().copy() : ItemStack.EMPTY;
@@ -593,7 +596,7 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
                 if (this.minecraft.gameSettings.keyBindPickBlock.isActiveAndMatches(mouseKey)) {
                     this.handleMouseClick(slot, k, buton, ClickType.CLONE);
                 } else {
-                    boolean flag1 = k != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 340) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), 344));
+                    boolean flag1 = k != -999 && (InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT));
                     if (flag1) {
                         this.shiftClickedSlot = slot != null && slot.getHasStack() ? slot.getStack().copy() : ItemStack.EMPTY;
                     }
@@ -633,11 +636,70 @@ public class MuseContainerScreen2<T extends Container> extends Screen implements
 
     /**
      * Called when the mouse is clicked over a slot or outside the gui.
+     *
+     * This looks like how this is how the server side is synced from the client.
+
+     Testing moving a full stack from one slot to another
+     (requires 2 clicks, 1 to pickup, one drop into slot let go):
+     -------------------------------------------------------------------------
+     pickup
+     [11:03:22] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:handleMouseClick:682]: slotId: 24, mousebutton: 0, type: PICKUP
+     [11:03:22] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 24, dragType: 0, clickType: PICKUP, resultStack: 44 gold_ingot
+     [11:03:22] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:mouseClicked:525]: doing something here
+     [11:03:22] [Server thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 24, dragType: 0, clickType: PICKUP, resultStack: 44 gold_ingot
+     [11:03:22] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:func_201771_a:99]: func_201771_a
+
+
+     drop into slot
+     [11:03:25] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:mouseClicked:525]: doing something here
+     [11:03:26] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:handleMouseClick:682]: slotId: 22, mousebutton: 0, type: PICKUP
+     [11:03:26] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 22, dragType: 0, clickType: PICKUP, resultStack: 1 air
+     [11:03:26] [Server thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 22, dragType: 0, clickType: PICKUP, resultStack: 1 air
+     [11:03:26] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:func_201771_a:99]: func_201771_a
+
+     half stack
+     -------------------------------------------------------------------
+     pickup
+     [11:04:58] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:handleMouseClick:682]: slotId: 22, mousebutton: 1, type: PICKUP
+     [11:04:58] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 22, dragType: 1, clickType: PICKUP, resultStack: 44 gold_ingot
+     [11:04:58] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:mouseClicked:525]: doing something here
+     [11:04:58] [Server thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 22, dragType: 1, clickType: PICKUP, resultStack: 44 gold_ingot
+     [11:04:58] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:func_201771_a:99]: func_201771_a
+
+     drop
+     [11:05:01] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:mouseClicked:525]: doing something here
+     [11:05:01] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:handleMouseClick:682]: slotId: 23, mousebutton: 0, type: PICKUP
+     [11:05:01] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 23, dragType: 0, clickType: PICKUP, resultStack: 1 air
+     [11:05:01] [Server thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 23, dragType: 0, clickType: PICKUP, resultStack: 1 air
+     [11:05:01] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:func_201771_a:99]: func_201771_a
+
+     Use this to move stack from one slot to another... requires 2 calls, one from source slot, one from target slot.
+
+     Example: to move stack from slot 21 to slot 20
+     handleMouseClick(container.getSlot(21), 21, 1, , ClickType.PICKUP
+     handleMouseClick(container.getSlot(21), 20, 1, , ClickType.PICKUP
+
+     to do automatic find player inventory slot (triggered from both click and release):
+     ------------------------------------------
+     shift click source slot
+     [11:55:00] [Client thread/INFO] [STDOUT/]: [net.machinemuse.numina.client.gui.MuseContainerScreen2:handleMouseClick:682]: slotId: 41, mousebutton: 0, type: QUICK_MOVE
+     [11:55:00] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 41, dragType: 0, clickType: QUICK_MOVE, resultStack: 1 air
+
+     // autoselected target
+     [11:55:00] [Server thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:slotClick:125]: slotId: 41, dragType: 0, clickType: QUICK_MOVE, resultStack: 1 air
+     [11:55:00] [Client thread/INFO] [STDOUT/]: [net.machinemuse.powersuits.containers.MPSCraftingContainer:func_201771_a:99]: func_201771_a
+
+
+
+
+
      */
-    protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
+    public void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type) {
         if (slotIn != null) {
             slotId = slotIn.slotNumber;
         }
+
+        System.out.println("slotId: " + slotId + ", mousebutton: " + mouseButton + ", type: " + type.name());
 
         this.minecraft.playerController.windowClick(this.container.windowId, slotId, mouseButton, type, this.minecraft.player);
     }

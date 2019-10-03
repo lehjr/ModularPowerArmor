@@ -1,8 +1,10 @@
 package net.machinemuse.powersuits.item.module.weapon;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
-import net.machinemuse.numina.capabilities.module.rightclick.RightClickCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -38,38 +40,30 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         IRightClickModule rightClickie;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.BLADE_ENERGY, 5000, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.BLADE_DAMAGE, 6, "pt");
-            this.rightClickie = new RightClickie(module, moduleCap);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie.addBasePropertyDouble(MPSConstants.BLADE_ENERGY, 5000, "RF");
+            this.rightClickie.addBasePropertyDouble(MPSConstants.BLADE_DAMAGE, 6, "pt");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == RightClickCapability.RIGHT_CLICK)
-                return RightClickCapability.RIGHT_CLICK.orEmpty(cap, LazyOptional.of(()-> rightClickie));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> rightClickie));
         }
 
         class RightClickie extends RightClickModule {
-            ItemStack module;
-            IPowerModule moduleCap;
-
-            public RightClickie(@Nonnull ItemStack module, IPowerModule moduleCap) {
-                this.module = module;
-                this.moduleCap = moduleCap;
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
             }
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (hand == Hand.MAIN_HAND) {
-                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > moduleCap.applyPropertyModifiers(MPSConstants.BLADE_ENERGY)) {
+                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > applyPropertyModifiers(MPSConstants.BLADE_ENERGY)) {
                         playerIn.setActiveHand(hand);
                         return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
                     }
@@ -92,7 +86,7 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(moduleCap.applyPropertyModifiers(MPSConstants.BLADE_ENERGY));
+                return (int) Math.round(applyPropertyModifiers(MPSConstants.BLADE_ENERGY));
             }
         }
     }

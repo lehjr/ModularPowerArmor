@@ -1,9 +1,10 @@
 package net.machinemuse.powersuits.item.module.tool;
 
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreaking;
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreakingCapability;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.capabilities.module.rightclick.IRightClickModule;
 import net.machinemuse.numina.capabilities.module.rightclick.RightClickModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
@@ -42,7 +43,6 @@ import java.util.Random;
 
 // FIXME IShearable ?? pretty much a dead thing now?
 public class ShearsModule extends AbstractPowerModule {
-    private static final ItemStack emulatedTool = new ItemStack(Items.SHEARS);
     static final ArrayList<Material> materials =
             new ArrayList<Material>() {{
                 add(Material.PLANTS);
@@ -67,31 +67,26 @@ public class ShearsModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IBlockBreakingModule blockBreaking;
         IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
-
-            this.blockBreaking = new BlockBreaker();
-
-            this.rightClick = new RightClickie();
+            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 8, "x");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == BlockBreakingCapability.BLOCK_BREAKING)
-                return BlockBreakingCapability.BLOCK_BREAKING.orEmpty(cap, LazyOptional.of(() -> blockBreaking));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
         }
 
-        class BlockBreaker extends BlockBreaking {
+        class BlockBreaker extends RightClickModule implements IBlockBreakingModule {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
             @Override
             public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
                 if (entityLiving.world.isRemote()) {
@@ -124,21 +119,18 @@ public class ShearsModule extends AbstractPowerModule {
 
             @Override
             public ItemStack getEmulatedTool() {
-                return emulatedTool;
+                return new ItemStack(Items.SHEARS);
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
 
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
-                event.setNewSpeed((float) (event.getNewSpeed() * moduleCap.applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
+                event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
             }
-        }
-
-        class RightClickie extends RightClickModule {
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
@@ -168,11 +160,6 @@ public class ShearsModule extends AbstractPowerModule {
                     }
                 }
                 return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
-            }
-
-            @Override
-            public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
             }
         }
     }

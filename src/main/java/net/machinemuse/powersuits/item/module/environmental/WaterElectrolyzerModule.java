@@ -1,10 +1,13 @@
 package net.machinemuse.powersuits.item.module.environmental;
 
 import net.machinemuse.numina.basemod.NuminaConfig;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
@@ -35,35 +38,32 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleTick ticker;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 10000, "RF");
-            this.ticker = new Ticker(moduleCap);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 10000, "RF");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
 
-        class Ticker extends ModuleTick {
-            IPowerModule moduleCap;
-
-            public Ticker(IPowerModule moduleCapIn) {
-                this.moduleCap = moduleCapIn;
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
             }
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
                 int energy = ElectricItemUtils.getPlayerEnergy(player);
-                int energyConsumption = (int) Math.round(moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION));
+                int energyConsumption = (int) Math.round(applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION));
                 if (energy > energyConsumption && player.getAir() < 10) {
                     if ((player.world.isRemote()) && NuminaConfig.USE_SOUNDS.get()) {
                         Musique.playClientSound(SoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f);

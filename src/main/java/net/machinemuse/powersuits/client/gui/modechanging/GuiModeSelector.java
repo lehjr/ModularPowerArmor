@@ -2,7 +2,6 @@ package net.machinemuse.powersuits.client.gui.modechanging;
 
 import net.machinemuse.numina.client.gui.MuseContainerlessGui;
 import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
-import net.machinemuse.powersuits.client.gui.modechanging.RadialModeSelectionFrame;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,13 +19,17 @@ public class GuiModeSelector extends MuseContainerlessGui {
         this.xSize = Math.min(screen.getScaledWidth() - 50, 500);
         this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
 
-
-
         radialSelect = new RadialModeSelectionFrame(
                 new MusePoint2D(absX(-0.5F), absY(-0.5F)),
                 new MusePoint2D(absX(0.5F), absY(0.5F)),
                 player);
         frames.add(radialSelect);
+    }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
+        drawToolTip(mouseX, mouseY);
     }
 
     /**

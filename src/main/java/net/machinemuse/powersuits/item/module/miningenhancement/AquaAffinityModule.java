@@ -1,10 +1,11 @@
 package net.machinemuse.powersuits.item.module.miningenhancement;
 
-import net.machinemuse.numina.capabilities.module.blockbreaking.BlockBreaking;
+import net.machinemuse.numina.capabilities.IConfig;
 import net.machinemuse.numina.capabilities.module.blockbreaking.IBlockBreakingModule;
 import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancement;
-import net.machinemuse.numina.capabilities.module.miningenhancement.MiningEnhancementCapability;
-import net.machinemuse.numina.capabilities.module.powermodule.*;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -40,30 +41,33 @@ public class AquaAffinityModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
         MiningEnhancement miningEnhancement;
-        IBlockBreakingModule blockBreaking;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.moduleCap.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 0.2, "%");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 1000);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.HARVEST_SPEED, 0.8);
-            this.miningEnhancement = new MiningEnhancement();
-            this.blockBreaking = new BlockBreaker();
+            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.miningEnhancement.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.miningEnhancement.addBasePropertyDouble(MPSConstants.HARVEST_SPEED, 0.2, "%");
+            this.miningEnhancement.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 1000);
+            this.miningEnhancement.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.HARVEST_SPEED, 0.8);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == MiningEnhancementCapability.MINING_ENHANCEMENT)
-                return MiningEnhancementCapability.MINING_ENHANCEMENT.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
         }
 
-        class BlockBreaker extends BlockBreaking {
+        class BlockBreaker extends MiningEnhancement implements IBlockBreakingModule {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
+
+            @Override
+            public boolean canHarvestBlock(@Nonnull ItemStack stack, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
+                return false;
+            }
+
             @Override
             public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
                 if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
@@ -78,13 +82,19 @@ public class AquaAffinityModule extends AbstractPowerModule {
                 PlayerEntity player = event.getEntityPlayer();
                 if (event.getNewSpeed() > 1 && (player.canSwim() || !player.onGround)
                         && ElectricItemUtils.getPlayerEnergy(player) > getEnergyUsage()) {
-                    event.setNewSpeed((float) (event.getNewSpeed() * 5 * moduleCap.applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
+                    event.setNewSpeed((float) (event.getNewSpeed() * 5 * applyPropertyModifiers(MPSConstants.HARVEST_SPEED)));
                 }
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getEmulatedTool() {
+                return ItemStack.EMPTY; // FIXME?
             }
         }
     }

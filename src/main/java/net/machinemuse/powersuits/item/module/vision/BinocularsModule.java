@@ -1,9 +1,10 @@
 package net.machinemuse.powersuits.item.module.vision;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
-import net.machinemuse.numina.capabilities.module.toggleable.ToggleCapability;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
+import net.machinemuse.numina.capabilities.module.toggleable.ToggleableModule;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
@@ -36,23 +37,22 @@ public class BinocularsModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleToggle moduleToggle;
+        IToggleableModule moduleToggle;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.FOV, 0.5);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.FIELD_OF_VIEW, MPSConstants.FOV, 9.5, "%");
-            this.moduleToggle = new Toggle(module);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig, false);
+            this.moduleToggle.addBasePropertyDouble(MPSConstants.FOV, 0.5);
+            this.moduleToggle.addTradeoffPropertyDouble(MPSConstants.FIELD_OF_VIEW, MPSConstants.FOV, 9.5, "%");
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ToggleCapability.TOGGLEABLE_MODULE)
-                return ToggleCapability.TOGGLEABLE_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
+            if(cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
         }
     }
 }

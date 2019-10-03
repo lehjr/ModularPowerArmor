@@ -3,8 +3,8 @@ package net.machinemuse.powersuits.misc;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.machinemuse.numina.basemod.MuseLogger;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.machinemuse.powersuits.basemod.config.ConfigHelper;
-import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -158,7 +158,7 @@ public class CosmeticPresetSaveLoad {
             return false;
 
         // get the render tag for the item
-        CompoundNBT nbt = MPSModelHelper.getMuseRenderTag(itemStack).copy();
+        CompoundNBT nbt = itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec->spec.getMuseRenderTag()).orElse(new CompoundNBT());
         return savePreset(itemStack.getItem().getRegistryName(), presetName, nbt);
     }
 

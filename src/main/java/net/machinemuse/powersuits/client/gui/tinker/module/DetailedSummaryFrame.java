@@ -11,34 +11,50 @@ import net.machinemuse.numina.item.MuseItemUtils;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
-import net.machinemuse.powersuits.client.gui.tinker.common.ItemSelectionFrame;
+import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 public class DetailedSummaryFrame extends ScrollableFrame {
-    public static final double SCALEFACTOR = 1;
     protected PlayerEntity player;
     protected int energy;
     protected double armor;
     protected ItemSelectionFrame itemSelectionFrame;
 
     public DetailedSummaryFrame(
-
                                 PlayerEntity player,
                                 MusePoint2D topleft,
                                 MusePoint2D bottomright,
                                 Colour borderColour,
                                 Colour insideColour,
                                 ItemSelectionFrame itemSelectionFrame) {
-        super(topleft.times(1.0 / SCALEFACTOR), bottomright.times(1.0 / SCALEFACTOR), borderColour, insideColour);
+        super(topleft, bottomright, borderColour, insideColour);
         this.player = player;
         this.itemSelectionFrame = itemSelectionFrame;
     }
+
+    /*
+    Todo: break down by item:
+    Energy current/max
+    Armor Points
+    Occupied slots/total (break down by specialty slots)
+
+
+
+
+
+
+
+
+     */
+
+
+
+
 
     @Override
     public void update(double mousex, double mousey) {
@@ -68,8 +84,6 @@ public class DetailedSummaryFrame extends ScrollableFrame {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)  {
         if (player != null) {
-            GL11.glPushMatrix();
-            GL11.glScaled(SCALEFACTOR, SCALEFACTOR, SCALEFACTOR);
             super.render(mouseX, mouseY, partialTicks);
             int margin = 4;
             int nexty = (int) border.top() + margin;
@@ -77,7 +91,7 @@ public class DetailedSummaryFrame extends ScrollableFrame {
             nexty += 10;
 
             // Max Energy
-            String formattedValue = "";// FIXME MuseStringUtils.formatNumberFromUnits(energy, AbstractPowerModule.getUnit(NuminaConstants.MAXIMUM_ENERGY));
+            String formattedValue = MuseStringUtils.formatNumberFromUnits(energy, "RF");
             String name = I18n.format("gui.powersuits.energyStorage");
             double valueWidth = MuseRenderer.getStringWidth(formattedValue);
             double allowedNameWidth = border.width() - valueWidth - margin * 2;
@@ -99,8 +113,6 @@ public class DetailedSummaryFrame extends ScrollableFrame {
                 MuseRenderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
             }
             MuseRenderer.drawRightAlignedString(formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
-
-            GL11.glPopMatrix();
         }
     }
 }

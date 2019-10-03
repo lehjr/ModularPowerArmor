@@ -1,11 +1,12 @@
 package net.machinemuse.powersuits.item.module.special;
 
-import net.machinemuse.numina.capabilities.module.powermodule.*;
-import net.machinemuse.numina.capabilities.module.tickable.IModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTick;
-import net.machinemuse.numina.capabilities.module.tickable.ModuleTickCapability;
-import net.machinemuse.numina.capabilities.module.toggleable.IModuleToggle;
-import net.machinemuse.numina.capabilities.module.toggleable.Toggle;
+import net.machinemuse.numina.capabilities.IConfig;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
+import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleTarget;
+import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
+import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
+import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
+import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
 import net.machinemuse.numina.energy.ElectricItemUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
@@ -42,35 +43,34 @@ public class MagnetModule extends AbstractPowerModule {
 
     public class CapProvider implements ICapabilityProvider {
         ItemStack module;
-        IPowerModule moduleCap;
-        IModuleTick ticker;
-        IModuleToggle toggle;
+        IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-
-            this.moduleCap.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 2000);
-            this.moduleCap.addBasePropertyDouble(MPSConstants.RADIUS, 5);
-            this.moduleCap.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.RADIUS, 10);
-
-            this.toggle = new Toggle(module);
-            this.ticker = new Ticker();
+            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker.addBasePropertyDouble(MPSConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 2000);
+            this.ticker.addBasePropertyDouble(MPSConstants.RADIUS, 5);
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.RADIUS, 10);
         }
 
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ModuleTickCapability.TICK)
-                return ModuleTickCapability.TICK.orEmpty(cap, LazyOptional.of(() -> ticker));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            if (cap instanceof IToggleableModule) {
+                ((IToggleableModule) cap).updateFromNBT();
+            }
+            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
 
-        class Ticker extends ModuleTick {
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
+            }
+
             @Override
             public void onPlayerTickActive(PlayerEntity player, ItemStack stack) {
-                int energyUSage = (int) moduleCap.applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
+                int energyUSage = (int) applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION);
 
                 if (ElectricItemUtils.getPlayerEnergy(player) > energyUSage) {
                     boolean isServerSide = !player.world.isRemote;
@@ -78,7 +78,7 @@ public class MagnetModule extends AbstractPowerModule {
                     if ((player.world.getGameTime() % 20) == 0 && isServerSide) {
                         ElectricItemUtils.drainPlayerEnergy(player, energyUSage);
                     }
-                    int range = (int) moduleCap.applyPropertyModifiers(MPSConstants.RADIUS);
+                    int range = (int) applyPropertyModifiers(MPSConstants.RADIUS);
                     World world = player.world;
                     AxisAlignedBB bounds = player.getBoundingBox().grow(range);
 

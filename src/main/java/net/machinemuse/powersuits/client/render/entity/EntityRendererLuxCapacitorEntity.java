@@ -1,11 +1,8 @@
 package net.machinemuse.powersuits.client.render.entity;
 
-import com.sun.prism.TextureMap;
 import net.machinemuse.numina.client.render.entity.MuseEntityRenderer;
-import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.basemod.MPSObjects;
-import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.machinemuse.powersuits.client.model.block.ModelLuxCapacitor;
@@ -17,8 +14,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;

@@ -7,7 +7,7 @@ import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;
 import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
 import net.machinemuse.numina.client.render.modelspec.SpecBase;
 import net.machinemuse.numina.math.Colour;
-import net.machinemuse.powersuits.client.gui.tinker.common.ItemSelectionFrame;
+import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 

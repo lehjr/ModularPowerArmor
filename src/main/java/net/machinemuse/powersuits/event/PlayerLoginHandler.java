@@ -1,0 +1,44 @@
+package net.machinemuse.powersuits.event;
+
+import net.machinemuse.powersuits.client.control.KeybindManager;
+import net.machinemuse.powersuits.network.MPSPackets;
+import net.machinemuse.powersuits.network.packets.MusePacketClientOnLogin;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
+
+/**
+ * Author: MachineMuse (Claire Semple)
+ * Created: 8:01 PM, 12/05/13
+ * <p>
+ * Ported to Java by lehjr on 10/24/16.
+ */
+public final class PlayerLoginHandler {
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        PlayerEntity player = event.getPlayer();
+        if (player != null) {
+            MPSPackets.CHANNEL_INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayerEntity) player), new MusePacketClientOnLogin());
+        }
+    }
+
+
+
+//        boolean isUsingBuiltInServer = FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
+//
+//        // dedidated server or multiplayer game
+//        if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
+//            // sync config settings between client and server
+//            MPSPackets.sendTo(new MPSPacketConfig(), (EntityPlayerMP) player);
+//        } else {
+//            MPSSettings.loadCustomInstallCosts();
+//        }
+
+
+
+    public static void clientPlayerLogin(PlayerEntity player) {
+        KeybindManager.INSTANCE.readInKeybinds();
+    }
+}

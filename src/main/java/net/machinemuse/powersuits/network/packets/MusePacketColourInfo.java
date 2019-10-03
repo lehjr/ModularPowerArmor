@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.network.packets;
 
-import net.machinemuse.numina.capabilities.render.MuseRenderCapability;
+import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -40,7 +40,7 @@ public class MusePacketColourInfo {
             int itemSlot = message.itemSlot;
             int[] tagData = message.tagData;
 
-            player.inventory.getStackInSlot(itemSlot).getCapability(MuseRenderCapability.RENDER).ifPresent(
+            player.inventory.getStackInSlot(itemSlot).getCapability(ModelSpecNBTCapability.RENDER).ifPresent(
                     render -> {
                         render.setColorArray(tagData);
                     });

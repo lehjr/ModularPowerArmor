@@ -9,7 +9,9 @@ import net.machinemuse.numina.client.render.modelspec.*;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,33 +48,33 @@ import java.util.Objects;
 public enum ModelSpecXMLReader {
     INSTANCE;
 
-    public static void parseFile(URL file, @Nullable TextureStitchEvent event) {
+    public static void parseFile(URL file, @Nullable TextureStitchEvent.Pre event, ModelBakery bakery) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             InputSource x = new InputSource(file.openStream());
             Document xml = dBuilder.parse(new InputSource(file.openStream()));
-            parseXML(xml, event);
+            parseXML(xml, event, bakery);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void parseFile(File file, @Nullable TextureStitchEvent event) {
+    public static void parseFile(File file, @Nullable TextureStitchEvent.Pre event, ModelBakery bakery) {
         if (file.exists()) {
             try {
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = null;
                 dBuilder = dbFactory.newDocumentBuilder();
                 Document xml = dBuilder.parse(file);
-                parseXML(xml, event);
+                parseXML(xml, event, bakery);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void parseXML(Document xml, @Nullable TextureStitchEvent event) {
+    public static void parseXML(Document xml, @Nullable TextureStitchEvent.Pre event, ModelBakery bakery) {
         if (xml != null) {
             try {
                 xml.normalizeDocument();
@@ -83,21 +85,27 @@ public enum ModelSpecXMLReader {
                         if (specNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element) specNode;
                             EnumSpecType specType = EnumSpecType.getTypeFromName(eElement.getAttribute("type"));
+
+                            if (specType == null) {
+                                System.out.println("type: "+ eElement.getAttribute("type"));
+                            }
+
+
                             String specName = eElement.getAttribute("specName");
 
                             boolean isDefault = (eElement.hasAttribute("default") ? Boolean.parseBoolean(eElement.getAttribute("default")) : false);
 
                             switch (specType) {
-                                case WIELDABLE:
+                                case HANDHELD:
                                     // only allow custom models if allowed by config
 //                                    if (isDefault || CommonConfig.moduleConfig.allowCustomPowerFistModels())
-                                    parseModelSpec(specNode, event, EnumSpecType.WIELDABLE, specName, isDefault);
+                                    parseModelSpec(specNode, event, bakery, EnumSpecType.HANDHELD, specName, isDefault);
                                     break;
 
                                 case ARMOR_MODEL:
                                     // only allow these models if allowed by config
                                     if (CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
-                                        parseModelSpec(specNode, event, EnumSpecType.ARMOR_MODEL, specName, isDefault);
+                                        parseModelSpec(specNode, event, bakery, EnumSpecType.ARMOR_MODEL, specName, isDefault);
                                     }
                                     break;
 
@@ -142,7 +150,7 @@ public enum ModelSpecXMLReader {
     /**
      * Biggest difference between the ModelSpec for Armor vs PowerFist is that the armor models don't need item camera transforms
      */
-    public static void parseModelSpec(Node specNode, TextureStitchEvent event, EnumSpecType specType, String specName, boolean isDefault) {
+    public static void parseModelSpec(Node specNode, TextureStitchEvent.Pre event, ModelBakery bakery, EnumSpecType specType, String specName, boolean isDefault) {
         NodeList models = specNode.getOwnerDocument().getElementsByTagName(NuminaConstants.TAG_MODEL);
         java.util.List<String> textures = new ArrayList<>();
         IModelState modelState = null;
@@ -176,7 +184,8 @@ public enum ModelSpecXMLReader {
                             modelState = TRSRTransformation.identity();
                     }
 
-                    MuseOBJModel.MuseOBJBakedModel bakedModel = (MuseOBJModel.MuseOBJBakedModel) MuseModelHelper.loadBakedModel(new ResourceLocation(modelLocation), modelState);
+                    MuseOBJModel.MuseOBJBakedModel bakedModel = (MuseOBJModel.MuseOBJBakedModel) MuseModelHelper.loadBakedModel(new ResourceLocation(modelLocation), modelState, bakery);
+
                     // ModelSpec stuff
                     if (bakedModel != null && bakedModel instanceof MuseOBJModel.MuseOBJBakedModel) {
                         ModelSpec modelspec = new ModelSpec(bakedModel, modelState, specName, isDefault, specType);
@@ -204,8 +213,11 @@ public enum ModelSpecXMLReader {
 
         // Register textures
         if (event != null) {
-//            for (String texture : textures)
-//                event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(),new ResourceLocation(texture));
+            if (event.getMap() == Minecraft.getInstance().getTextureMap()) {
+                for (String texture : textures) {
+                    event.addSprite(new ResourceLocation(texture));
+                }
+            }
         }
     }
 
