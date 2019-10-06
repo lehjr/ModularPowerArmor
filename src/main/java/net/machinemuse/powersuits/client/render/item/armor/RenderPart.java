@@ -53,7 +53,7 @@ public class RenderPart extends RendererModel {
 
         int partColor;
         for (CompoundNBT nbt : NBTTagAccessor.getValues(renderSpec)) {
-            PartSpecBase part = ModelRegistry.getInstance().getPart(nbt);
+             PartSpecBase part = ModelRegistry.getInstance().getPart(nbt);
             if (part != null && part instanceof ModelPartSpec) {
                 if (part.getBinding().getSlot() == ((HighPolyArmor) (ArmorModelInstance.getInstance())).getVisibleSection()
                         && part.getBinding().getTarget().apply(ArmorModelInstance.getInstance()) == parent) {
@@ -76,6 +76,9 @@ public class RenderPart extends RendererModel {
                         Tessellator tess = Tessellator.getInstance();
                         BufferBuilder buffer = tess.getBuffer();
                         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
+
+
+
 
                         for (BakedQuad quad : ((ModelPartSpec) part).getQuads()) {
                             buffer.addVertexData(quad.getVertexData());

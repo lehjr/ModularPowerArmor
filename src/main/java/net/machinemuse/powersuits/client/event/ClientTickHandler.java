@@ -209,8 +209,8 @@ public class ClientTickHandler {
                                 currentPlasma.getAndAdd((actualCount > 50 ? 50 : actualCount) * 2);
                                 maxPlasma.getAndAdd(100);
 
-                                // Ore Scanner
-                            } else if (false) {
+                            // Ore Scanner or whatever
+                            } else {
                                 actualCount = (maxDuration - player.getItemInUseCount());
                                 currentPlasma.getAndAdd((actualCount > 40 ? 40 : actualCount) * 2.5);
                                 maxPlasma.getAndAdd(100);

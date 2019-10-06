@@ -1,10 +1,6 @@
 package net.machinemuse.numina.client.gui;
 
-import net.machinemuse.numina.client.gui.clickable.IClickable;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
-import net.machinemuse.numina.client.gui.geometry.DrawableMuseRect;
-import net.machinemuse.numina.client.render.MuseRenderer;
-import net.machinemuse.numina.math.Colour;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 
@@ -226,8 +222,9 @@ public class MuseContainerlessGui extends Screen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
         for (IGuiFrame frame : frames) {
-            if (frame.mouseScrolled(mouseX, mouseY, dWheel))
+            if (frame.mouseScrolled(mouseX, mouseY, dWheel)) {
                 return true;
+            }
         }
         return false;
     }

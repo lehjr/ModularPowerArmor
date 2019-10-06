@@ -65,6 +65,8 @@ public class HighPolyArmor extends BipedModel {
     }
 
     public void clearAndAddChildWithInitialOffsets(RendererModel mr, float xo, float yo, float zo) {
+        System.out.println("doing something here");
+
         mr.cubeList.clear();
         RenderPart rp = new RenderPart(this, mr);
         mr.addChild(rp);

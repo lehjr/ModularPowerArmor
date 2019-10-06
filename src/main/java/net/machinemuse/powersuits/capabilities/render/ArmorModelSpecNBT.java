@@ -6,6 +6,7 @@ import net.machinemuse.numina.capabilities.render.ModelSpecNBT;
 import net.machinemuse.numina.client.render.modelspec.*;
 import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -26,6 +27,9 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
     public EnumSpecType getSpecType() {
         CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(getItemStack());
         CompoundNBT renderTag = itemTag.getCompound(NuminaConstants.TAG_RENDER);
+        if (renderTag == null || renderTag.isEmpty()) {
+              renderTag = getDefaultRenderTag();
+        }
 
         try {
             TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(NuminaConstants.NBT_TEXTURESPEC_TAG));
@@ -35,9 +39,16 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
         } catch (Exception ignored) {
         }
 
-        SpecBase modelSpec = ModelRegistry.getInstance().getModel(renderTag.getCompound(NuminaConstants.TAG_MODEL));
-        if (modelSpec instanceof ModelSpec) {
-            return EnumSpecType.ARMOR_MODEL;
+        for (String key : renderTag.keySet()) {
+            if (key.equals("colours")) {
+                continue;
+            }
+            if (renderTag.get(key) instanceof CompoundNBT) {
+                SpecBase testSpec = ModelRegistry.getInstance().getModel(renderTag.getCompound(key));
+                if (testSpec instanceof ModelSpec) {
+                    return EnumSpecType.ARMOR_MODEL;
+                }
+            }
         }
         return EnumSpecType.NONE;
     }
@@ -62,6 +73,9 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
         CompoundNBT tempNBT;
 
         EquipmentSlotType slot = getItemStack().getEquipmentSlot();
+        if (slot == null) {
+            slot = MobEntity.getSlotForItemStack(getItemStack());
+        }
 
         for (SpecBase spec : ModelRegistry.getInstance().getSpecs()) {
             // Only generate NBT data from Specs marked as "default"
@@ -108,7 +122,6 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
             nbt.put(NuminaConstants.NBT_TEXTURESPEC_TAG, texSpecTag);
 
         nbt.put(NuminaConstants.TAG_COLOURS, new IntArrayNBT(colours));
-
         return nbt;
     }
 

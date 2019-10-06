@@ -41,8 +41,6 @@ import java.util.stream.Collectors;
  * <p>
  * Ported to Java by lehjr on 11/2/16.
  */
-
-// TODO: create base class and make this extend it for cosmetic preset friendly setup
 public class ColourPickerFrame extends ScrollableFrame {
     public ItemSelectionFrame itemSelector;
     public ScrollableSlider rslider;
@@ -62,6 +60,18 @@ public class ColourPickerFrame extends ScrollableFrame {
     public ColourPickerFrame(MusePoint2D topleft, MusePoint2D bottomright, Colour borderColour, Colour insideColour, ItemSelectionFrame itemSelector) {
         super(topleft, bottomright, borderColour, insideColour);
         this.itemSelector = itemSelector;
+    }
+
+    @Override
+    public void init(double left, double top, double right, double bottom) {
+        super.init(left, top, right, bottom);
+
+        if (itemSelector.hasNoItems()) {
+            this.disable();
+        } else {
+            this.enable();
+        }
+
         this.rectangles = new ScrollableRectangle[6];
         this.totalsize = 120;
 
@@ -87,7 +97,6 @@ public class ColourPickerFrame extends ScrollableFrame {
         this.selectedSlider = null;
         this.selectedColour = 0;
         this.decrAbove = -1;
-        this.enable();
     }
 
     public ScrollableSlider getScrollableSlider(String id, ScrollableRectangle prev, int index) {
@@ -112,26 +121,10 @@ public class ColourPickerFrame extends ScrollableFrame {
         }
         return itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).map(spec->{
             CompoundNBT renderSpec = spec.getMuseRenderTag();
-            if (renderSpec.contains(NuminaConstants.TAG_COLOURS) && renderSpec.get(NuminaConstants.TAG_COLOURS) instanceof IntArrayNBT) {
-                return (IntArrayNBT) renderSpec.get(NuminaConstants.TAG_COLOURS);
-            } else {
-                Item item = this.itemSelector.getSelectedItem().getStack().getItem();
-                if (item instanceof ItemPowerArmor) {
-                    ItemPowerArmor itemPowerArmor = (ItemPowerArmor) item;
-                    // fixme!!!!
-                    int[] intArray = new int[0];// {itemPowerArmor.getColorFromItemStack(this.itemSelector.getSelectedItem().getItem()).getInt()};
-                    renderSpec.putIntArray(NuminaConstants.TAG_COLOURS, intArray);
-                } else {
-                    int[] intArray2 = new int[]{Colour.WHITE.getInt()};
-                    renderSpec.putIntArray(NuminaConstants.TAG_COLOURS, intArray2);
-                }
-                ClientPlayerEntity player = Minecraft.getInstance().player;
-                if (player.world.isRemote) {
-                    MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(this.itemSelector.getSelectedItem().getSlotIndex(), this.colours()));
-                }
-                return (IntArrayNBT) renderSpec.get(NuminaConstants.TAG_COLOURS);
+            if (renderSpec != null && !renderSpec.isEmpty()) {
+                return new IntArrayNBT(spec.getColorArray());
             }
-
+            return new IntArrayNBT(new int[0]);
         }).orElse(new IntArrayNBT(new int[0]));
     }
 
@@ -150,19 +143,6 @@ public class ColourPickerFrame extends ScrollableFrame {
         }).orElse(new IntArrayNBT(new int[0]));
     }
 
-    public ArrayList<Integer> importColours() {
-        return new ArrayList<Integer>();
-    }
-
-    public void refreshColours() {
-        //    getOrCreateColourTag.map(coloursTag => {
-        //      val colourints: Array[Int] = coloursTag.intArray
-        //      val colourset: HashSet[Int] = HashSet.empty ++ colours ++ colourints
-        //      val colourarray = colourset.toArray
-        //      coloursTag.intArray = colourarray
-        //    })
-    }
-
     @Override
     public boolean mouseReleased(double x, double y, int button) {
         if (this.isEnabled())
@@ -174,26 +154,26 @@ public class ColourPickerFrame extends ScrollableFrame {
         return this.border;
     }
 
-//    @Override
-//    public void update(double mousex, double mousey) {
-//        super.update(mousex, mousey);
-//        if (this.isEnabled()) {
-//            if (this.selectedSlider != null) {
-//                this.selectedSlider.getSlider().setValueByX(mousex);
-//                if (colours().length > selectedColour) {
-//                    colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
-//
-//                    ClientPlayerEntity player = Minecraft.getInstance().player;
-//                    if (player.world.isRemote)
-//                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(itemSelector.getSelectedItem().slotNumber, colours()));
-//                }
-//                // this just sets up the sliders on selecting an item
-//            } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
-//                if (selectedColour <= colours().length -1)
-//                    onSelectColour(selectedColour);
-//            }
-//        }
-//    }
+    @Override
+    public void update(double mousex, double mousey) {
+        super.update(mousex, mousey);
+        if (this.isEnabled()) {
+            if (this.selectedSlider != null) {
+                this.selectedSlider.getSlider().setValueByX(mousex);
+                if (colours().length > selectedColour) {
+                    colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
+
+                    ClientPlayerEntity player = Minecraft.getInstance().player;
+                    if (player.world.isRemote)
+                        MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketColourInfo(itemSelector.getSelectedItem().inventorySlot, colours()));
+                }
+                // this just sets up the sliders on selecting an item
+            } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
+                if (selectedColour <= colours().length -1)
+                    onSelectColour(selectedColour);
+            }
+        }
+    }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {

@@ -6,6 +6,7 @@ import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.client.gui.geometry.MuseRect;
 import net.machinemuse.numina.client.sound.Musique;
 import net.machinemuse.powersuits.client.gui.keybind.TinkerKeybindGui;
+import net.machinemuse.powersuits.client.gui.tinker.cosmetic.CosmeticGui;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.ContainerGuiOpenPacket;
@@ -52,10 +53,7 @@ public class TabSelectFrame extends MuseRect implements IGuiFrame {
             button = new ClickableButton(new TranslationTextComponent("gui.powersuits.tab.visual"), new MusePoint2D(0, 0), true);
             button.setOnPressed(onPressed->{
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
-
-                System.out.println("launch tinker table cosmetic gui");
-
-                // fixme: add onPressed code here
+                Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new CosmeticGui(player.inventory, new TranslationTextComponent("gui.tinkertable"))));
             });
             buttons.add(button);
         }

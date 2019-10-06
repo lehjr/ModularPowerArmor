@@ -3,18 +3,25 @@ package net.machinemuse.powersuits.item.armor;
 import com.google.common.collect.Multimap;
 import net.machinemuse.numina.basemod.NuminaConstants;
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
+import net.machinemuse.numina.capabilities.render.IArmorModelSpecNBT;
 import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.machinemuse.numina.client.render.modelspec.EnumSpecType;
+import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
+import net.machinemuse.numina.client.render.modelspec.TexturePartSpec;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.MPSRegistryNames;
 import net.machinemuse.powersuits.client.model.item.ArmorModelInstance;
 import net.machinemuse.powersuits.client.model.item.HighPolyArmor;
 import net.machinemuse.powersuits.event.RegisterStuff;
+import net.machinemuse.powersuits.network.MPSPackets;
+import net.machinemuse.powersuits.network.packets.MusePacketCosmeticInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -128,38 +135,70 @@ public class ItemPowerArmor extends ItemElectricArmor {
         if (type == "overlay") { // this is to allow a tint to be applied tot the armor
             return NuminaConstants.BLANK_ARMOR_MODEL_PATH;
         }
-        armor.getCapability(ModelSpecNBTCapability.RENDER).ifPresent(spec-> {
-            System.out.println();
-        });
-
-        return equipmentSlotType == EquipmentSlotType.LEGS ? MPSConstants.SEBK_AMROR_PANTS : MPSConstants.SEBK_AMROR;
+        return armor.getCapability(ModelSpecNBTCapability.RENDER).map(spec->
+                spec instanceof IArmorModelSpecNBT ?
+                        ((IArmorModelSpecNBT) spec).getArmorTexture() :
+                        NuminaConstants.BLANK_ARMOR_MODEL_PATH).orElse(NuminaConstants.BLANK_ARMOR_MODEL_PATH);
     }
 
     @Nullable
     @Override
     @OnlyIn(Dist.CLIENT)
     public BipedModel getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, BipedModel _default) {
-        return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
-                    if (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE) {
-                        return _default;
+        if (!(entityLiving instanceof PlayerEntity)) {
+            return _default;
+        }
+
+
+//        return
+                BipedModel out =
+                itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
+
+            CompoundNBT renderTag = spec.getMuseRenderTag();
+            PlayerEntity player = (PlayerEntity) entityLiving;
+
+            // only triggered by this client's player looking at their own equipped armor
+            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
+                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
+                        renderTag = spec.getDefaultRenderTag();
+                        if (renderTag != null && !renderTag.isEmpty()) {
+                            spec.setMuseRenderTag(renderTag, NuminaConstants.TAG_RENDER);
+                            MPSPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(i, NuminaConstants.TAG_RENDER, renderTag));
+                        }
+                        break;
                     }
+                }
+            }
 
-                    BipedModel model = ArmorModelInstance.getInstance();
-                    if (slot == EquipmentSlotType.CHEST && itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
-                            iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(MPSRegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME)
-                            )).orElse(false)) {
-                        ((HighPolyArmor) model).setVisibleSection(null);
-                    } else {
-                        CompoundNBT renderTag = spec.getMuseRenderTag();
+            if (spec.getMuseRenderTag() != null &&
+                    (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
 
-//                        if (renderTag == null) {
-//                            renderTag =
-//                        }
-                        ((HighPolyArmor) model).setRenderSpec(renderTag);
-                    }
 
-                   return model;
-                }).orElse(_default);
+
+
+
+                System.out.println("spectype: " + spec.getSpecType().getName());
+
+                return _default;
+            }
+
+            BipedModel model = ArmorModelInstance.getInstance();
+            if (slot == EquipmentSlotType.CHEST && itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
+                    iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
+                            .isModuleOnline(new ResourceLocation(MPSRegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
+                ((HighPolyArmor) model).setVisibleSection(null);
+            } else {
+                if (renderTag != null) {
+                    ((HighPolyArmor) model).setRenderSpec(renderTag);
+                }
+            }
+            return model;
+        }).orElse(_default);
+        System.out.println("armor out is default: " + (out == _default));
+
+        return out;
+
     }
 
     @Override
