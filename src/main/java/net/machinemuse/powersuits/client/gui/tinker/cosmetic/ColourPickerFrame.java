@@ -290,7 +290,8 @@ public class ColourPickerFrame extends ScrollableFrame {
             return false;
         }
 
-        public void draw() {
+        @Override
+        public void render(int mouseX, int mouseY, float partialTicks) {
             // colours
             for (int i=0; i < colours().length; i++) {
                 new GuiIcons.ArmourColourPatch(this.left() + 8 + i * 8, this.centery() + 8 , new Colour(colours()[i]), null, null, null, null);

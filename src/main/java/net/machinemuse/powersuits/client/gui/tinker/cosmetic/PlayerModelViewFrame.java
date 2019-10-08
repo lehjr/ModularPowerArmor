@@ -126,32 +126,6 @@ public class PlayerModelViewFrame implements IGuiFrame {
     @Override
     public void render(int mouseX_, int mouseY_, float partialTicks)  {
         border.draw();
-        if (itemSelector.getSelectedItem() == null) {
-            return;
-        }
-
-        getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specie->{
-            if (specie instanceof IArmorModelSpecNBT) {
-                CompoundNBT renderTag = specie.getMuseRenderTag();
-                ArmorModelInstance.getInstance().setRenderSpec(renderTag);
-
-                EquipmentSlotType slot = specie.getItemStack().getEquipmentSlot();
-                if (slot == null) {
-                    slot = MobEntity.getSlotForItemStack(specie.getItemStack());
-                }
-                ArmorModelInstance.getInstance().setVisibleSection(slot);
-
-            }
-        });
-
-
-        // FIXME --- capabilities
-
-
-
-
-
-
         // set color to normal state
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 

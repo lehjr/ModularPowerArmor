@@ -150,9 +150,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
         }
 
 
-//        return
-                BipedModel out =
-                itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
+        return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
 
             CompoundNBT renderTag = spec.getMuseRenderTag();
             PlayerEntity player = (PlayerEntity) entityLiving;
@@ -173,13 +171,6 @@ public class ItemPowerArmor extends ItemElectricArmor {
 
             if (spec.getMuseRenderTag() != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
-
-
-
-
-
-                System.out.println("spectype: " + spec.getSpecType().getName());
-
                 return _default;
             }
 
@@ -187,18 +178,19 @@ public class ItemPowerArmor extends ItemElectricArmor {
             if (slot == EquipmentSlotType.CHEST && itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
                     iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
                             .isModuleOnline(new ResourceLocation(MPSRegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
+//                System.out.println("setting active camoflage on");
+
                 ((HighPolyArmor) model).setVisibleSection(null);
             } else {
                 if (renderTag != null) {
+                    ((HighPolyArmor) model).setVisibleSection(slot);
                     ((HighPolyArmor) model).setRenderSpec(renderTag);
                 }
+
+//                System.out.println("render tag: " + renderTag);
             }
             return model;
         }).orElse(_default);
-        System.out.println("armor out is default: " + (out == _default));
-
-        return out;
-
     }
 
     @Override

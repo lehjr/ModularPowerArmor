@@ -123,26 +123,26 @@ public class CosmeticGui extends MuseContainerlessGui {
                 backgroundRect.finalLeft()  + spacer,
                 backgroundRect.finalTop() + spacer,
                 backgroundRect.finalLeft() + spacer + 36,
-                backgroundRect.finalBottom() - 100 - spacer
+                backgroundRect.centery() - spacer
         );
 
         renderframe.init(
                 backgroundRect.finalLeft() + spacer + 36 + spacer,
                 backgroundRect.finalTop() + spacer,
                 backgroundRect.finalRight() - spacer - 150 -spacer,
-                backgroundRect.finalBottom() - 100 - spacer
+                backgroundRect.centery() - spacer
                 );
 
         colourpicker.init(
                 backgroundRect.finalRight() - spacer - 150,
                 backgroundRect.finalTop() + spacer,
                 backgroundRect.finalRight() - spacer,
-                backgroundRect.finalBottom() - 100 - spacer
+                backgroundRect.centery() - spacer
         );
 
         partframe.init(
                 backgroundRect.finalLeft()  + spacer,
-                backgroundRect.finalBottom() - 100,
+                backgroundRect.centery(),
                 backgroundRect.finalRight() - spacer,
                 backgroundRect.finalBottom() - spacer
 
