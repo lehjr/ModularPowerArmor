@@ -98,11 +98,25 @@ public class FluidTankModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
+                // seems to be setup in such a way as to allow for multiple tanks in one
+                int maxFluid = fluidHandler.getTankCapacity(1);
+                int currentFluid = fluidHandler.getFluidInTank(0).getAmount();
+
+
+
+
+
+
 //                if (MuseItemUtils.getWaterLevel(item) > ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
 //                    MuseItemUtils.setWaterLevel(item, ModuleManager.computeModularProperty(item, WATER_TANK_SIZE));
 //                }
+
 //                // Fill tank if player is in water
-//                Block block = player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ));
+//                Block block = player.world.getBlockState(new BlockPos(MathHelper.floor(player.posX), MathHelper.floor(player.posY), MathHelper.floor(player.posZ)));
+//
+////                if (player.isInWater())
+//
+//
 //                if (((block == Blocks.water) || block == Blocks.flowing_water) && MuseItemUtils.getWaterLevel(item) < ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
 //                    MuseItemUtils.setWaterLevel(item, MuseItemUtils.getWaterLevel(item) + 1);
 //                }

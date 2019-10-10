@@ -175,6 +175,7 @@
   "module.tradeoff.walkingAssist": "Walking Assist",
   "module.tradeoff.vertically": "Verticality",
   "module.tradeoff.maxEnergy": "Maximum Energy",
+  "module.tradeoff.maxTransfer": "Maximum Transfer per Tick",
   "module.tradeoff.maxHeat": "Maximum Heat",
   "module.tradeoff.aoeEnergyCon": "AoE Energy Consumption",
   "module.tradeoff.aoeMiningDiameter": "AoE Mining Diameter",
@@ -331,8 +332,11 @@
   "gui.powersuits.green": "Green",
   "gui.powersuits.blue": "Blue",
   "gui.powersuits.install": "Install",
+  "gui.powersuits.install.desc": "Installs the mopdule in the selected item",
   "gui.powersuits.craftAndInstall" : "Craft\n and \nInstall",
+  "gui.powersuits.craftAndInstall.desc" : "craft using items in player's inventory and install in selected item",
   "gui.powersuits.salvage": "Salvage",
+  "gui.powersuits.salvage.desc": "Remove module from selected item and return to player",
   "gui.powersuits.newKeybind": "New",
   "gui.powersuits.trashKeybind": "Trash",
   "gui.powersuits.pressKey": "Press Key",
@@ -356,7 +360,6 @@
   "gui.powersuits.saveAs": "Save as:",
   "gui.powersuits.new": "New",
   "gui.powersuits.savesuccessful": "Save Successful",
-
 
   "_comment": "Toooltips",
   "tooltip.powersuits.pressShift": "Press SHIFT for more information.",

@@ -8,7 +8,6 @@ import net.machinemuse.numina.client.model.obj.MuseOBJModel;
 import net.machinemuse.numina.client.render.modelspec.*;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.string.MuseStringUtils;
-import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;

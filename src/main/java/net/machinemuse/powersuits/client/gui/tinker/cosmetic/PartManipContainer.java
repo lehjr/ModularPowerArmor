@@ -1,7 +1,6 @@
 package net.machinemuse.powersuits.client.gui.tinker.cosmetic;
 
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
-import net.machinemuse.numina.client.gui.clickable.ClickableModularItem;
 import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.client.gui.geometry.MuseRelativeRect;
 import net.machinemuse.numina.client.gui.scrollable.ScrollableFrame;

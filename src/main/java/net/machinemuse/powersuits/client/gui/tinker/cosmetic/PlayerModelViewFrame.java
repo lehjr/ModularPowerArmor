@@ -2,8 +2,6 @@ package net.machinemuse.powersuits.client.gui.tinker.cosmetic;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.machinemuse.numina.capabilities.render.IArmorModelSpecNBT;
-import net.machinemuse.numina.capabilities.render.ModelSpecNBTCapability;
 import net.machinemuse.numina.client.gui.clickable.ClickableItem;
 import net.machinemuse.numina.client.gui.frame.IGuiFrame;
 import net.machinemuse.numina.client.gui.geometry.DrawableMuseRect;
@@ -11,13 +9,9 @@ import net.machinemuse.numina.client.gui.geometry.MusePoint2D;
 import net.machinemuse.numina.math.Colour;
 import net.machinemuse.numina.math.MuseMathUtils;
 import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
-import net.machinemuse.powersuits.client.model.item.ArmorModelInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;

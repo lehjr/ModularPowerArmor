@@ -33,7 +33,6 @@ public class TinkerKeybindGui extends MuseContainerlessGui {
 
         tabSelectFrame = new TabSelectFrame(player, 1);
         addFrame(tabSelectFrame);
-
     }
 
     public void rescale() {

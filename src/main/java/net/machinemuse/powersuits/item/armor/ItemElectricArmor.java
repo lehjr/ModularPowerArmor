@@ -7,6 +7,8 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -19,9 +21,11 @@ public class ItemElectricArmor extends ArmorItem {
         super(MPSArmorMaterial.EMPTY_ARMOR, slots, builder);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (worldIn != null)
+        if (worldIn != null) {
             AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
+        }
     }
 }

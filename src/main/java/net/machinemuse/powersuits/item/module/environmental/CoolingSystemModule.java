@@ -7,6 +7,9 @@ import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapabil
 import net.machinemuse.numina.capabilities.module.tickable.IPlayerTickModule;
 import net.machinemuse.numina.capabilities.module.tickable.PlayerTickModule;
 import net.machinemuse.numina.capabilities.module.toggleable.IToggleableModule;
+import net.machinemuse.numina.energy.ElectricItemUtils;
+import net.machinemuse.numina.heat.MuseHeatUtils;
+import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.machinemuse.powersuits.basemod.config.CommonConfig;
 import net.machinemuse.powersuits.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,16 +44,8 @@ public class CoolingSystemModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig, true);
-/*
-// cooling system
-        addTradeoffProperty("Power", COOLING_BONUS, 4, "%");
-        addTradeoffProperty("Power", ENERGY, 10, "J/t");
-
-
-// nitrogen
-        addTradeoffProperty("Power", COOLING_BONUS, 7, "%");
-        addTradeoffProperty("Power", ENERGY, 16, "J/t");
- */
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.COOLING_BONUS, 1, "%");
+            this.ticker.addTradeoffPropertyDouble(MPSConstants.POWER, MPSConstants.ENERGY_CONSUMPTION, 40, "RF/t");
         }
 
         @Nonnull
@@ -69,10 +64,11 @@ public class CoolingSystemModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
-//                double heatBefore = MuseHeatUtils.getPlayerHeat(player);
-//                MuseHeatUtils.coolPlayer(player, 0.1 * applyPropertyModifiers(MPSConstants.COOLING_BONUS));
-//                double cooling = heatBefore - MuseHeatUtils.getPlayerHeat(player);
-//                ElectricItemUtils.drainPlayerEnergy(player, cooling * applyPropertyModifiers(MPSConstants.ENERGY));
+                double heatBefore = MuseHeatUtils.getPlayerHeat(player);
+
+                MuseHeatUtils.coolPlayer(player, /*0.1 * */ applyPropertyModifiers(MPSConstants.COOLING_BONUS));
+                double cooling = heatBefore - MuseHeatUtils.getPlayerHeat(player);
+                ElectricItemUtils.drainPlayerEnergy(player, (int) (cooling * applyPropertyModifiers(MPSConstants.ENERGY_CONSUMPTION)));
             }
         }
     }

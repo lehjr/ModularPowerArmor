@@ -81,6 +81,7 @@ public class MPSConstants {
     public static final String EATING_EFFICIENCY = "autoFeederEfficiency";
     public static final String EFFICIENCY = "efficiency";
     public static final String FLUID_TANK_SIZE = "fluidTankSize";
+    public static final String COOLING_BONUS = "coolingBonus";
 
     // Mining Enhancement -------------------------------------------------------------------------
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";
@@ -151,6 +152,4 @@ public class MPSConstants {
     public static final String RAILGUN_HEAT_EMISSION = "railgunHeatEm";
     public static final String TIMER = "cooldown";
     public static final String POWER = "power";
-
-
 }

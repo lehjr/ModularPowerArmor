@@ -4,7 +4,8 @@ import net.machinemuse.numina.capabilities.inventory.modechanging.IModeChangingI
 import net.machinemuse.numina.capabilities.inventory.modularitem.IModularItem;
 import net.machinemuse.numina.capabilities.module.powermodule.EnumModuleCategory;
 import net.machinemuse.numina.capabilities.module.powermodule.PowerModuleCapability;
-import net.machinemuse.numina.energy.adapter.ElectricAdapter;
+import net.machinemuse.numina.energy.ElectricAdapterManager;
+import net.machinemuse.numina.energy.adapter.IElectricAdapter;
 import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.basemod.MPSConstants;
 import net.minecraft.client.Minecraft;
@@ -61,7 +62,7 @@ public class AdditionalInfo {
             }
         });
 
-        ElectricAdapter adapter = ElectricAdapter.wrap(stack);
+        IElectricAdapter adapter = ElectricAdapterManager.INSTANCE.wrap(stack, true);
         if (adapter != null) {
             String energyinfo = I18n.format("tooltip.powersuits.energy") + " " +
                     MuseStringUtils.formatNumberShort(adapter.getEnergyStored()) + '/'
@@ -115,8 +116,6 @@ public class AdditionalInfo {
                 currentTipList.add(new TranslationTextComponent("tooltip.powersuits.installedModules"));
                 currentTipList.addAll(installed);
             }
-
-
 
 
         } else {
