@@ -1,8 +1,8 @@
 ![](/src/main/resources/assets/powersuits/textures/logo.png?raw=true)
 
-#MachineMuse Modular Powersuits
+#Modular Power Armor (a continuation of Modular Powersuits by MachineMuse)
 
-Modular Powersuits is a Minecraft mod based around the idea of an inventor who tinkers with high-tech electronics and makes a suit of powered armor chock-full of useful gadgets and features. Inspired by heroes like Iron Man and Megaman as well as by the high-tech armor in mods like IndustrialCraft 2 and EE2.
+Modular Power Armor is a Minecraft mod based around the idea of an inventor who tinkers with high-tech electronics and makes a suit of powered armor chock-full of useful gadgets and features. Inspired by heroes like Iron Man and Megaman as well as by the high-tech armor in mods like IndustrialCraft 2 and EE2.
 
 #Changelog
 
@@ -11,18 +11,12 @@ Modular Powersuits is a Minecraft mod based around the idea of an inventor who t
 
 CurseForge:
 
-https://minecraft.curseforge.com/projects/modular-powersuits/files?
-
-Site:
-
-http://machinemuse.net/download.php
-
-Jenkins: No longer working
+https://www.curseforge.com/minecraft/mc-mods/modular-power-armor
 
 #Issues
 
 Before posting to the issue tracker, make sure you meet the following criteria. 1.7.10 support has ended. It was a long run and we had a good time, but it's time to work on the future.
-- You're using the LATEST ALPHA version of MPS from curseforge.
+- You're using the LATEST version of MPA and MPA-Lib from curseforge.
 - You've made sure the version of Forge you're using is the one MPS has been compiled for. (Newer is usually OK, but be careful!)
 - You've gone through the effort to isolate MPS from other mods that aren't related to the issue.
 - You've gone through the effort to find what conditions are necessary to reproduce the issue.
@@ -34,11 +28,6 @@ Before posting to the issue tracker, make sure you meet the following criteria. 
 #Contacts
 
 Twitter:
-https://twitter.com/machinemuse
 https://twitter.com/Lehjr1
 
-Minecraft Forums: https://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/1442976-machinemuses-modular-powersuits-finally-updated
-
-IndustrialCraft Forums: http://forum.industrial-craft.net/index.php?page=Thread&threadID=8767
-
-E-Mail: muse@machinemuse.net
+E-Mail: lehjr1@gmail.com
