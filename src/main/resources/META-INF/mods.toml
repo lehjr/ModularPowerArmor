@@ -1,13 +1,12 @@
 modLoader="javafml"
 loaderVersion="[28,)"
-issueTrackerURL="https://github.com/MachineMuse/MachineMusePowersuits/issues/"
-#displayURL="http://machinemuse.net/"
-#logoFile="assets/powersuits/textures/logo.png"
+issueTrackerURL="https://github.com/lehjr/ModularPowerArmor/issues"
+#logoFile="assets/modularpowerarmor/textures/logo.png"
 
 [[mods]]
-    modId="powersuits"
+    modId="modularpowerarmor"
     version="${version}"
-    displayName="MachineMuse's Modular Powersuits"
+    displayName="Modular Power Armor"
     description='''
 A mod which adds modular power armor, power tool, and a tinker table to configure them. Uses FE (Foreg Energy), EU (IndustrialCraft 2) or RF (Thermal Expansion 4).
 '''
@@ -15,7 +14,7 @@ A mod which adds modular power armor, power tool, and a tinker table to configur
     credits="Icons by WaterCandle, Modeling by SebK"
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.powersuits]] #optional
+[[dependencies.modularpowerarmor]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -27,21 +26,21 @@ A mod which adds modular power armor, power tool, and a tinker table to configur
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.powersuits]]
+[[dependencies.modularpowerarmor]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.14.4]"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.powersuits]]
-    modId="numina"
+[[dependencies.modularpowerarmor]]
+    modId="mpalib"
     mandatory=true
     versionRange="[2.0.1,)"
     ordering="AFTER"
     side="BOTH"
 
-    [[dependencies.powersuits]]
+    [[dependencies.modularpowerarmor]]
         modId="centralizedmaterials"
         mandatory=false
         versionRange="[1.0.0,)"

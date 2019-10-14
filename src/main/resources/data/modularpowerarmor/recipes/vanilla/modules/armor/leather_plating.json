@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WW",
+    "LL",
+    "WW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "L": {
+      "item": "modularpowerarmor:component_plating_leather"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:plating_leather"
+  }
+}

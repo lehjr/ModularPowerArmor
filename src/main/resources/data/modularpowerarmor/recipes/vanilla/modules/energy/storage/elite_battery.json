@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "WCW",
+    "WHW"
+  ],
+  "key": {
+    "C": {
+      "item":"modularpowerarmor:component_control_circuit"
+    },
+    "W": {
+      "item":"modularpowerarmor:component_wiring"
+    },
+    "H": {
+      "item": "modularpowerarmor:component_capacitor_hv"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:battery_elite"
+  }
+}

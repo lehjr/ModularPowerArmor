@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:gregtech_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CWC",
+    "CUC",
+    "CUC"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore" : "ingotChrome"
+    },
+    "W": {
+      "type": "forge:ore_dict",
+      "ore" : "componentWiring"
+    },
+    "U": {
+      "type": "forge:ore_dict",
+      "ore" : "batteryUltimate"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "componentHVCapacitor"
+  }
+}

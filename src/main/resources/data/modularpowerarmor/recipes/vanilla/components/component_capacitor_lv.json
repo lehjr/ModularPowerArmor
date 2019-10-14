@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WPI",
+    "W W"
+  ],
+  "key": {
+    "W": {
+      "item":"modularpowerarmor:component_wiring"
+    },
+    "P": {
+     "item": "minecraft:paper"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:component_capacitor_lv"
+  }
+}

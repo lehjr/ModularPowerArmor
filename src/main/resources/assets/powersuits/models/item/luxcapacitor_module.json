@@ -1,6 +1,0 @@
-{
-  "parent": "powersuits:item/generated",
-  "textures": {
-    "layer0": "powersuits:item/module/tool/luxcapacitor"
-  }
-}

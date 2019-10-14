@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DD",
+    "WD",
+    "DD"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "D": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:component_plating_diamond"
+  }
+}

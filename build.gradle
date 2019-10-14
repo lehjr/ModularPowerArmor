@@ -17,7 +17,7 @@ def buildnumber = System.getenv("BUILD_NUMBER")
 def travisbuildnumber = (System.getenv("TRAVIS_BUILD_NUMBER") ?: -000).toInteger() + 00
 version = "${mod_version}.${buildnumber ?: travisbuildnumber}"
 group = group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Powersuits-${minecraft_version}"
+archivesBaseName = "ModularPowerArmor-${minecraft_version}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -32,15 +32,15 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
-    flatDir {
-        dirs 'libs'
-    }
+//    flatDir {
+//        dirs 'libs'
+//    }
 }
 
 minecraft {
     mappings channel: "snapshot", version: "${project.mcp_version}".toString()
 // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    accessTransformer = file('src/main/resources/META-INF/numina_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/mpalib_at.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -83,7 +83,9 @@ dependencies {
     ])
 
     // compile against the JEI API but do not include it at runtime
+    // currently not actually using any JEI code, just using it as a matter of convienience for testing.
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
@@ -99,7 +101,7 @@ jar {
                     "Implementation-Version": "${version}",
                     "Implementation-Vendor" :"MachineMuse",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "FMLAT": "numina_at.cfg"
+                    "FMLAT": "mpalib_at.cfg"
         ],)
     }
 }

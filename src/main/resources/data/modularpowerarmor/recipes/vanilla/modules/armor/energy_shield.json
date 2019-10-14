@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WEW",
+    "WCW",
+    "WEW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "C": {
+      "item":"modularpowerarmor:component_control_circuit"
+    },
+    "E": {
+      "item": "modularpowerarmor:component_field_emitter"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:energy_shield"
+  }
+}

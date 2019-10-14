@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:ic2_classic_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WCW",
+    "W W"
+  ],
+  "key": {
+    "C": {
+      "item" : "ic2:itemBatLamaCrystal"
+    },
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "componentWiring"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "componentHVCapacitor"
+  }
+}

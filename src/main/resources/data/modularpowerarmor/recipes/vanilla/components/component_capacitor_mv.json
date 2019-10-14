@@ -1,0 +1,30 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GPB",
+    "W W"
+  ],
+  "key": {
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "W": {
+      "item":"modularpowerarmor:component_wiring"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "B": {
+      "tag": "forge:dyes/blue"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:component_capacitor_mv"
+  }
+}

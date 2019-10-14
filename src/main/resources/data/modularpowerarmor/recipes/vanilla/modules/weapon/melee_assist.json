@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WLW",
+    "WCW",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "L": {
+      "item": "modularpowerarmor:component_capacitor_lv"
+    },
+    "C": {
+      "item":"modularpowerarmor:component_control_circuit"
+    },
+    "S": {
+      "tag": "forge:servo"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:melee_assist"
+  }
+}

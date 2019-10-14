@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DSD",
+    "WCW",
+    "DSD"
+  ],
+  "key": {
+    "D": {
+      "item": "modularpowerarmor:component_plating_diamond"
+    },
+    "W": {
+      "tag": "forge:wiring"
+    },
+    "C": {
+      "item":"modularpowerarmor:component_control_circuit"
+    },
+    "S": {
+      "tag":"forge:servo"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:generator_thermal"
+  }
+}
