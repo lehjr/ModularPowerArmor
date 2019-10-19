@@ -17,7 +17,7 @@ public class ConfigHelper {
     }
 
     public static File setupConfigFile(String fileName) {
-        Path configFile = FMLPaths.CONFIGDIR.get().resolve("machinemuse").resolve(MPAConstants.MODID).resolve(fileName);
+        Path configFile = FMLPaths.CONFIGDIR.get().resolve("lehjr").resolve(MPAConstants.MODID).resolve(fileName);
         File cfgFile = configFile.toFile();
         try {
             if (!cfgFile.getParentFile().exists())

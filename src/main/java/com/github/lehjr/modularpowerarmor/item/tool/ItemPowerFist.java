@@ -45,16 +45,16 @@ import java.util.Map;
 public class ItemPowerFist extends AbstractElectricTool {
     public ItemPowerFist(String regName) {
         setRegistryName(regName);
-        this.addPropertyOverride(new ResourceLocation("pull"), (itemStack, world, livingEntity) -> {
-            if (livingEntity == null) {
-                return 0.0F;
-            } else {
-                return !(livingEntity.getActiveItemStack().getItem() instanceof BowItem) ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getItemInUseCount()) / 20.0F;
-            }
-        });
-        this.addPropertyOverride(new ResourceLocation("firing"), (itemStack, world, livingEntity) -> {
-            return livingEntity != null && livingEntity.isHandActive() && livingEntity.getActiveItemStack() == itemStack ? 1.0F : 0.0F;
-        });
+//        this.addPropertyOverride(new ResourceLocation("pull"), (itemStack, world, livingEntity) -> {
+//            if (livingEntity == null) {
+//                return 0.0F;
+//            } else {
+//                return !(livingEntity.getActiveItemStack().getItem() instanceof BowItem) ? 0.0F : (float)(itemStack.getUseDuration() - livingEntity.getItemInUseCount()) / 20.0F;
+//            }
+//        });
+//        this.addPropertyOverride(new ResourceLocation("firing"), (itemStack, world, livingEntity) -> {
+//            return livingEntity != null && livingEntity.isHandActive() && livingEntity.getActiveItemStack() == itemStack ? 1.0F : 0.0F;
+//        });
     }
 
     @Override
