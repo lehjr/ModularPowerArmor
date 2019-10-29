@@ -25,16 +25,13 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
-
-plugins {
-    id 'idea'
-}
 apply plugin: 'net.minecraftforge.gradle.forge'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+//sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+//compileJava {
+//    sourceCompatibility = targetCompatibility = '1.8'
+//}
 
 def buildnumber = System.getenv("BUILD_NUMBER")
 def travisbuildnumber = (System.getenv("TRAVIS_BUILD_NUMBER") ?: -000).toInteger() + 00
@@ -120,14 +117,16 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+
         // replace version and mcversion
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
-    // copy everything else, thats not the mcmod.info
+    // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
     // Move access transformers to META-INF
     rename '(.+_at.cfg)', 'META-INF/$1'
 }
@@ -147,11 +146,16 @@ jar {
 //    archives devJar
 //}
 //
-//idea {
-//    module {
-//        inheritOutputDirs = true
-//    }
-//}
+
+apply plugin: 'idea'
+idea {
+    module {
+        inheritOutputDirs = true
+
+        //and some extra resource dirs
+        resourceDirs += file('some-extra-resource-dir')
+    }
+}
 
 runClient {
     jvmArgs "-Xmx3G"
