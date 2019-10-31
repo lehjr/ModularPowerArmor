@@ -1,15 +1,15 @@
 package net.machinemuse.powersuits.powermodule.movement;
 
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IToggleableModule;
-import net.machinemuse.numina.player.NuminaPlayerUtils;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
+import com.github.lehjr.mpalib.player.PlayerUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
-import net.machinemuse.powersuits.control.PlayerMovementInputWrapper;
 import net.machinemuse.powersuits.item.ItemComponent;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -20,12 +20,12 @@ import net.minecraft.util.math.Vec3d;
 public class GliderModule extends PowerModuleBase implements IToggleableModule, IPlayerTickModule {
     public GliderModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.gliderWing, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.gliderWing, 2));
     }
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MOVEMENT;
+        return EnumModuleCategory.MOVEMENT;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GliderModule extends PowerModuleBase implements IToggleableModule, 
         playerHorzFacing.normalize();
         PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
 
-        NuminaPlayerUtils.resetFloatKickTicks(player);
+        PlayerUtils.resetFloatKickTicks(player);
         boolean hasParachute = ModuleManager.INSTANCE.itemHasActiveModule(itemStack, MPSModuleConstants.MODULE_PARACHUTE__DATANAME);
         if (playerInput.sneakKey && player.motionY < 0 && (!hasParachute || playerInput.moveForward > 0)) {
             if (player.motionY < -0.1) {

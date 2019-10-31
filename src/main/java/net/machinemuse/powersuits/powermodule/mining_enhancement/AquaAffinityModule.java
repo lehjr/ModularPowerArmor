@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.mining_enhancement;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IBlockBreakingModule;
-import net.machinemuse.numina.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 public class AquaAffinityModule extends PowerModuleBase implements IMiningEnhancementModule, IBlockBreakingModule {
     public AquaAffinityModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.servoMotor, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 1));
         addBasePropertyDouble(MPSModuleConstants.AQUA_AFFINITY_ENERGY_CONSUMPTION, 0, "RF");
         addBasePropertyDouble(MPSModuleConstants.UNDERWATER_HARVEST_SPEED, 0.2, "%");
         addTradeoffPropertyDouble(MPSModuleConstants.POWER, MPSModuleConstants.AQUA_AFFINITY_ENERGY_CONSUMPTION, 1000);
@@ -42,7 +42,7 @@ public class AquaAffinityModule extends PowerModuleBase implements IMiningEnhanc
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT;
+        return EnumModuleCategory.MINING_ENHANCEMENT;
     }
 
     @Override

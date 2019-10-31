@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.tool;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IBlockBreakingModule;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -30,7 +30,7 @@ public class PickaxeModule extends PowerModuleBase implements IBlockBreakingModu
     public PickaxeModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
         ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Items.IRON_INGOT, 3));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.solenoid, 1));
         addBasePropertyDouble(MPSModuleConstants.PICKAXE_ENERGY_CONSUMPTION, 500, "RF");
         addBasePropertyDouble(MPSModuleConstants.PICKAXE_HARVEST_SPEED, 8, "x");
         addTradeoffPropertyDouble(MPSModuleConstants.OVERCLOCK, MPSModuleConstants.PICKAXE_ENERGY_CONSUMPTION, 9500);
@@ -39,7 +39,7 @@ public class PickaxeModule extends PowerModuleBase implements IBlockBreakingModu
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_TOOL;
+        return EnumModuleCategory.TOOL;
     }
 
     @Override

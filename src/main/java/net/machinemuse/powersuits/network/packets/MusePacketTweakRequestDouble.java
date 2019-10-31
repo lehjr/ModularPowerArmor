@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,7 +21,6 @@ public class MusePacketTweakRequestDouble implements IMessage {
     double tweakValue;
 
     public MusePacketTweakRequestDouble() {
-
     }
 
     public MusePacketTweakRequestDouble(EntityPlayer player, int itemSlot, String moduleName, String tweakName, double tweakValue) {
@@ -60,10 +59,10 @@ public class MusePacketTweakRequestDouble implements IMessage {
                     double tweakValue = message.tweakValue;
                     if (moduleName != null && tweakName != null) {
                         ItemStack stack = player.inventory.getStackInSlot(itemSlot);
-                        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
+                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
 
                         if (itemTag != null && ModuleManager.INSTANCE.tagHasModule(itemTag, moduleName)) {
-                            MuseNBTUtils.removeMuseValuesTag(stack);
+                            NBTUtils.removeMuseValuesTag(stack);
                             NBTTagCompound moduleTag = itemTag.getCompoundTag(moduleName);
                             moduleTag.setDouble(tweakName, tweakValue);
                         }

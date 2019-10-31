@@ -1,5 +1,6 @@
 package net.machinemuse.powersuits.common.proxy;
 
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.capabilities.CapabilityHandler;
 import net.machinemuse.powersuits.common.MPSGuiHandler;
 import net.machinemuse.powersuits.common.MPSItems;
@@ -22,8 +23,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
-
 /**
  * Common side of the proxy. Provides functions which
  * the ClientProxy and CommonProxy will override if the behaviour is different for client and
@@ -41,8 +40,8 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         MPSModules.loadPowerModules();
-        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "entityPlasmaBolt"), EntityPlasmaBolt.class, "entityPlasmaBolt", 2477, ModularPowersuits.getInstance(), 64, 20, true);
-        EntityRegistry.registerModEntity(new ResourceLocation(MODID, "entitySpinningBlade"), EntitySpinningBlade.class, "entitySpinningBlade", 2478, ModularPowersuits.getInstance(), 64, 20, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(MPSModConstants.MODID, "entityPlasmaBolt"), EntityPlasmaBolt.class, "entityPlasmaBolt", 2477, ModularPowersuits.getInstance(), 64, 20, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(MPSModConstants.MODID, "entitySpinningBlade"), EntitySpinningBlade.class, "entitySpinningBlade", 2478, ModularPowersuits.getInstance(), 64, 20, true);
         EntityRegistry.registerModEntity(MPSItems.INSTANCE.luxCapacitor.getRegistryName(), EntityLuxCapacitor.class, "entityLuxCapacitor", 2479, ModularPowersuits.getInstance(), 64, 20, true);
         NetworkRegistry.INSTANCE.registerGuiHandler(ModularPowersuits.getInstance(), MPSGuiHandler.INSTANCE);
         TerminalHandler.registerHandler();

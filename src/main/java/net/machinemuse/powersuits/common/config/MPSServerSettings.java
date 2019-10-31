@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.common.config;
 
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorBoots;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorChestplate;

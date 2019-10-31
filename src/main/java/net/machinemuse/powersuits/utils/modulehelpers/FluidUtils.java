@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.utils.modulehelpers;
 
-import net.machinemuse.numina.string.MuseStringUtils;
+import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.capabilities.MPSChestPlateFluidHandler;
-import net.machinemuse.powersuits.gui.hud.FluidMeter;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -46,16 +46,16 @@ public class FluidUtils {
         int maxFluidLevel = getMaxFluidLevel();
 
         if (fluidTank != null && maxFluidLevel > 0 && fluidLevel > 0) {
-            String fluidInfo = I18n.format(fluidTank.getFluid().getLocalizedName()) + " " + MuseStringUtils.formatNumberShort(fluidLevel) + '/'
-                    + MuseStringUtils.formatNumberShort(maxFluidLevel);
+            String fluidInfo = I18n.format(fluidTank.getFluid().getLocalizedName()) + " " + StringUtils.formatNumberShort(fluidLevel) + '/'
+                    + StringUtils.formatNumberShort(maxFluidLevel);
 
-            currentTipList.add(MuseStringUtils.wrapMultipleFormatTags(fluidInfo, MuseStringUtils.FormatCodes.Italic.character,
-                    MuseStringUtils.FormatCodes.Indigo));
+            currentTipList.add(StringUtils.wrapMultipleFormatTags(fluidInfo, StringUtils.FormatCodes.Italic.character,
+                    StringUtils.FormatCodes.Indigo));
 
-            fluidInfo = MuseStringUtils.formatNumberFromUnits(fluidTank.getFluid().getFluid().getTemperature() - 273.15D, "°C");
+            fluidInfo = StringUtils.formatNumberFromUnits(fluidTank.getFluid().getFluid().getTemperature() - 273.15D, "°C");
 
-            currentTipList.add(MuseStringUtils.wrapMultipleFormatTags(fluidInfo, MuseStringUtils.FormatCodes.Italic.character,
-                    MuseStringUtils.FormatCodes.Indigo));
+            currentTipList.add(StringUtils.wrapMultipleFormatTags(fluidInfo, StringUtils.FormatCodes.Italic.character,
+                    StringUtils.FormatCodes.Indigo));
         }
         return currentTipList;
     }
@@ -223,14 +223,14 @@ public class FluidUtils {
 // I think this was for the power fist and the personal shrinking device...
 //    public static void setLiquid(@Nonnull ItemStack stack, String id) {
 //        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
+//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
 //            itemTag.setString(TAG_LIQUID, id);
 //        }
 //    }
 //
 //    public static String getLiquid(@Nonnull ItemStack stack) {
 //        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
+//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
 //            String s = itemTag.getString(TAG_LIQUID);
 //            if (s != null) {
 //                return s;

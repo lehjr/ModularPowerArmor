@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.block;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.tileentity.MuseTileEntity;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
  * <p>
  * Ported to Java by lehjr on 10/21/16.
  */
-public class TileEntityTinkerTable extends MuseTileEntity {
+public class TileEntityTinkerTable extends MPALibTileEntity {
     EnumFacing facing;
 
     public TileEntityTinkerTable() {
@@ -42,7 +42,7 @@ public class TileEntityTinkerTable extends MuseTileEntity {
         if (nbt.hasKey("f")) {
             facing = EnumFacing.values()[nbt.getInteger("f")];
         } else {
-            MuseLogger.logDebug("No NBT found! D:");
+            MPALibLogger.logDebug("No NBT found! D:");
         }
     }
 }

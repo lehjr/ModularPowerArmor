@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.powermodule.energy_storage;
 
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -15,14 +15,14 @@ import net.minecraft.item.ItemStack;
 public class BasicBatteryModule extends PowerModuleBase {
     public BasicBatteryModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.lvcapacitor, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.lvcapacitor, 1));
 
-        addBasePropertyDouble(NuminaNBTConstants.MAXIMUM_ENERGY, 1000000, "RF");
+        addBasePropertyDouble(MPALIbConstants.MAXIMUM_ENERGY, 1000000, "RF");
     }
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_ENERGY_STORAGE;
+        return EnumModuleCategory.ENERGY_STORAGE;
     }
 
     @Override

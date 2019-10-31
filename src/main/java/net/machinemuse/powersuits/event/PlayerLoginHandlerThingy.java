@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.event;
 
 import net.machinemuse.powersuits.common.config.MPSSettings;
-import net.machinemuse.powersuits.control.KeybindManager;
+import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.network.MPSPackets;
 import net.machinemuse.powersuits.network.packets.MPSPacketConfig;
 import net.minecraft.entity.player.EntityPlayer;

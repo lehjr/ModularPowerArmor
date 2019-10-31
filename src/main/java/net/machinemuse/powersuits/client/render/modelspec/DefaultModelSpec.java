@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.render.modelspec;
 
-import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.numina.constants.ModelSpecTags;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.client.render.modelspec.*;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
@@ -63,13 +63,13 @@ public class DefaultModelSpec {
             if (spec.isDefault()) {
 
                 /** Power Fist -------------------------------------------------------------------- */
-                if (stack.getItem() instanceof ItemPowerFist && spec.getSpecType().equals(EnumSpecType.WIELDABLE)) {
+                if (stack.getItem() instanceof ItemPowerFist && spec.getSpecType().equals(EnumSpecType.HANDHELD)) {
                     colours = addNewColourstoList(colours, spec.getColours()); // merge new color int arrays in
 
                     for (PartSpecBase partSpec : spec.getPartSpecs()) {
                         if (partSpec instanceof ModelPartSpec) {
                             prefArray.add(((ModelPartSpec) partSpec).multiSet(new NBTTagCompound(),
-                                    getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourtIndex()),
+                                    getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourIndex()),
                                     ((ModelPartSpec) partSpec).getGlow()));
                         }
                     }
@@ -82,7 +82,7 @@ public class DefaultModelSpec {
                     if (spec.getSpecType().equals(EnumSpecType.ARMOR_SKIN) && spec.get(slot.getName()) != null) {
                         // only a single texture per equipment slot can be used at a time
                         texSpecTag = spec.get(slot.getName()).multiSet(new NBTTagCompound(),
-                                getNewColourIndex(colours, spec.getColours(), spec.get(slot.getName()).getDefaultColourtIndex()));
+                                getNewColourIndex(colours, spec.getColours(), spec.get(slot.getName()).getDefaultColourIndex()));
                     }
 
                     // Armor models
@@ -96,7 +96,7 @@ public class DefaultModelSpec {
                                         (partSpec.binding.getItemState().equals("jetpack") &&
                                                 ModuleManager.INSTANCE.itemHasModule(stack, MPSModuleConstants.MODULE_JETPACK__DATANAME))) { */
                                     prefArray.add(((ModelPartSpec) partSpec).multiSet(new NBTTagCompound(),
-                                            getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourtIndex()),
+                                            getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourIndex()),
                                             ((ModelPartSpec) partSpec).getGlow()));
                                 /*} */
                             }
@@ -108,16 +108,16 @@ public class DefaultModelSpec {
 
         NBTTagCompound nbt = new NBTTagCompound();
         for (NBTTagCompound elem : prefArray) {
-            nbt.setTag(elem.getString(ModelSpecTags.TAG_MODEL) + "." + elem.getString(ModelSpecTags.TAG_PART), elem);
+            nbt.setTag(elem.getString(MPALIbConstants.TAG_MODEL) + "." + elem.getString(MPALIbConstants.TAG_PART), elem);
         }
 
         if (!specList.isEmpty())
-            nbt.setTag(ModelSpecTags.NBT_SPECLIST_TAG, specList);
+            nbt.setTag(MPALIbConstants.NBT_SPECLIST_TAG, specList);
 
         if (!texSpecTag.isEmpty())
-            nbt.setTag(ModelSpecTags.NBT_TEXTURESPEC_TAG, texSpecTag);
+            nbt.setTag(MPALIbConstants.NBT_TEXTURESPEC_TAG, texSpecTag);
 
-        nbt.setTag(ModelSpecTags.TAG_COLOURS, new NBTTagIntArray(colours));
+        nbt.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(colours));
 
         return nbt;
     }

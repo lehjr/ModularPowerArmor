@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.module.IBlockBreakingModule;
-import net.machinemuse.numina.module.IPowerModule;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.utils.MusePlayerUtils;
@@ -59,49 +59,8 @@ public class HarvestEventHandler {
                     if (event.getNewSpeed() == 0)
                         event.setNewSpeed(1);
                     ((IBlockBreakingModule) module).handleBreakSpeed(event);
-//                }
                 }
             }
         }
     }
-
-//    @SubscribeEvent
-//    public void onBlockBreak(BlockEvent.BreakEvent e) {
-//
-//    }
-
-//    @SubscribeEvent
-//    public void lang(BlockEvent.HarvestDropsEvent event) {
-//        if (event.getHarvester() != null) {
-//            System.out.println("made it here");
-//
-//            EntityPlayer player = event.getHarvester();
-//            ItemStack tool = player.getHeldItemMainhand();
-//
-//            List<ItemStack> originalDrops = event.getDrops();
-//
-//
-//            for (ItemStack item:  originalDrops) {
-//                System.out.println(item.serializeNBT());
-//            }
-//
-//            System.out.println("original drops size: " + originalDrops.size());
-//
-//            if (tool.getItem() instanceof ItemPowerFist && ModuleManager.INSTANCE.itemHasModule(tool, MPSModuleConstants.MODULE_SILK_TOUCH__DATANAME)) {
-//                event.setResult(new BlockEvent.HarvestDropsEvent(event.getWorld(), event.getPos(), event.getState(), event.getFortuneLevel(), event.getDropChance(), event.getDrops(), event.getHarvester(), true).getResult());
-//
-//                List<ItemStack> newList = event.getDrops();
-//
-//
-//                for (ItemStack item:  newList) {
-//                    System.out.println(item.serializeNBT());
-//                }
-//
-//                System.out.println("new drops size: " + newList.size());
-//
-//                System.out.println("new list same as old list? : " + Objects.equals(originalDrops, newList));
-//
-//            }
-//        }
-//    }
 }

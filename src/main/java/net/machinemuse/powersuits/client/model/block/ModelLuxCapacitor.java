@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.client.model.block;
 
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
+import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.machinemuse.numina.client.model.helper.MuseModelHelper;
-import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.client.model.helper.ColoredQuadHelperThingie;
@@ -59,25 +59,25 @@ public class ModelLuxCapacitor implements IBakedModel {
     IModelState getModelState() {
         ImmutableMap.Builder<IModelPart, TRSRTransformation> builder = ImmutableMap.builder();
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(1.13F, 3.2F, 1.13F, -25F, -90F, 0F, 0.41F));
+                ModelHelper.get(1.13F, 3.2F, 1.13F, -25F, -90F, 0F, 0.41F));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(0F, 2F, 3F, 0F, 0F, 45F, 0.5F));
+                ModelHelper.get(0F, 2F, 3F, 0F, 0F, 45F, 0.5F));
 
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-                MuseModelHelper.get(1.13F, 3.2F, 1.13F, -25F, -90F, 0F, 0.41F));
+                ModelHelper.get(1.13F, 3.2F, 1.13F, -25F, -90F, 0F, 0.41F));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,
-                MuseModelHelper.get(0F, 2F, 3F, 0F, 0F, 45F, 0.5F));
+                ModelHelper.get(0F, 2F, 3F, 0F, 0F, 45F, 0.5F));
 
         builder.put(ItemCameraTransforms.TransformType.GUI,
-                MuseModelHelper.get(0F, 2.75F, 0F, -45F, 0F, 45F, 0.75F));
+                ModelHelper.get(0F, 2.75F, 0F, -45F, 0F, 45F, 0.75F));
 
         builder.put(ItemCameraTransforms.TransformType.GROUND,
-                MuseModelHelper.get(0F, 2F, 0F, -90F, -0F, 0F, 0.5F));
+                ModelHelper.get(0F, 2F, 0F, -90F, -0F, 0F, 0.5F));
 
         builder.put(ItemCameraTransforms.TransformType.FIXED,
-                MuseModelHelper.get(0F, 0F, -7.5F, 0F, 180F, 0F, 1F));
+                ModelHelper.get(0F, 0F, -7.5F, 0F, 180F, 0F, 1F));
         return new SimpleModelState(builder.build());
     }
 

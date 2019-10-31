@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.entity;
 
+import com.github.lehjr.mpalib.math.Colour;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.block.TileEntityLuxCapacitor;
 import net.machinemuse.powersuits.common.MPSItems;

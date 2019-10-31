@@ -1,5 +1,6 @@
 package net.machinemuse.powersuits.common;
 
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.block.BlockLuxCapacitor;
 import net.machinemuse.powersuits.block.BlockTinkerTable;
 import net.machinemuse.powersuits.fluid.BlockFluidLiquidNitrogen;
@@ -20,22 +21,20 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
-
 /**
  * Created by Claire Semple on 9/9/2014.
  * <p>
  * Ported to Java by lehjr on 10/22/16.
  */
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MPSModConstants.MODID)
 public enum MPSItems {
     INSTANCE;
 
     // Armor --------------------------------------------------------------------------------------
-    public static final String powerArmorHelmetRegName = MODID + ":powerarmor_head";
-    public static final String powerArmorChestPlateRegName = MODID + ":powerarmor_torso";
-    public static final String powerArmorLeggingsRegName = MODID + ":powerarmor_legs";
-    public static final String powerArmorBootsRegName = MODID + ":powerarmor_feet";
+    public static final String powerArmorHelmetRegName = MPSModConstants.MODID + ":powerarmor_head";
+    public static final String powerArmorChestPlateRegName = MPSModConstants.MODID + ":powerarmor_torso";
+    public static final String powerArmorLeggingsRegName = MPSModConstants.MODID + ":powerarmor_legs";
+    public static final String powerArmorBootsRegName = MPSModConstants.MODID + ":powerarmor_feet";
 
     @GameRegistry.ObjectHolder(powerArmorHelmetRegName)
     public static final ItemPowerArmorHelmet powerArmorHead = null;
@@ -47,20 +46,20 @@ public enum MPSItems {
     public static final ItemPowerArmorBoots powerArmorFeet = null;
 
     // HandHeld -----------------------------------------------------------------------------------
-    public static final String powerFistRegName = MODID + ":power_fist";
+    public static final String powerFistRegName = MPSModConstants.MODID + ":power_fist";
 
     @GameRegistry.ObjectHolder(powerFistRegName)
     public static final ItemPowerFist powerFist = null;
 
     // Components ---------------------------------------------------------------------------------
-    public static final String componentsRegname = MODID + ":powerarmorcomponent";
+    public static final String componentsRegname = MPSModConstants.MODID + ":powerarmorcomponent";
 
     @GameRegistry.ObjectHolder(componentsRegname)
     public static final ItemComponent components = null;
 
     // Blocks -------------------------------------------------------------------------------------
-    public static final String tinkerTableRegName = MODID + ":tinkertable";
-    public static final String luxCapaRegName = MODID + ":luxcapacitor";
+    public static final String tinkerTableRegName = MPSModConstants.MODID + ":tinkertable";
+    public static final String luxCapaRegName = MPSModConstants.MODID + ":luxcapacitor";
 
     @GameRegistry.ObjectHolder(tinkerTableRegName)
     public static final BlockTinkerTable tinkerTable = null;
@@ -71,7 +70,7 @@ public enum MPSItems {
     // Fluid --------------------------------------------------------------------------------------
     public static final LiquidNitrogen liquidNitrogen = new LiquidNitrogen();
 
-    public static final String blockLiquidNitrogenName = MODID + ":liquid_nitrogen";
+    public static final String blockLiquidNitrogenName = MPSModConstants.MODID + ":liquid_nitrogen";
     @GameRegistry.ObjectHolder(blockLiquidNitrogenName)
     public static final BlockFluidLiquidNitrogen blockLiquidNitrogen = null;
 

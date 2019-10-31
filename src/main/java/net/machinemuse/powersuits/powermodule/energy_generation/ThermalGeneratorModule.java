@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.powermodule.energy_generation;
 
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -28,10 +28,10 @@ public class ThermalGeneratorModule extends PowerModuleBase implements IPlayerTi
 //            ModuleManager.INSTANCE.addInstallCost(getDataName(),ModCompatibility.getIC2Item("geothermalGenerator"));
         // <ic2:te:4> = geothermal generator
 
-//            ModuleManager.INSTANCE.addInstallCost(getDataName(),MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+//            ModuleManager.INSTANCE.addInstallCost(getDataName(),ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
 //        } else {
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 2));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.ironPlating, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.ironPlating, 1));
 //        }
 
         addBasePropertyDouble(MPSModuleConstants.THERMAL_ENERGY_GENERATION, 250);
@@ -40,7 +40,7 @@ public class ThermalGeneratorModule extends PowerModuleBase implements IPlayerTi
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_ENERGY_GENERATION;
+        return EnumModuleCategory.ENERGY_GENERATION;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class ThermalGeneratorModule extends PowerModuleBase implements IPlayerTi
 
     @Override
     public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-        double currentHeat = MuseHeatUtils.getPlayerHeat(player);
-        double maxHeat = MuseHeatUtils.getPlayerMaxHeat(player);
+        double currentHeat = HeatUtils.getPlayerHeat(player);
+        double maxHeat = HeatUtils.getPlayerMaxHeat(player);
         if (player.world.getTotalWorldTime() % 20 == 0) {
             if (player.isBurning()) {
                 ElectricItemUtils.givePlayerEnergy(player, (int) (4 * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(item, MPSModuleConstants.THERMAL_ENERGY_GENERATION)));

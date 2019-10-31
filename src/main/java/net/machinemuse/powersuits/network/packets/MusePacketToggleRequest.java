@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,9 +16,7 @@ public class MusePacketToggleRequest implements IMessage {
     Boolean active;
 
     public MusePacketToggleRequest() {
-
     }
-
 
     public MusePacketToggleRequest(EntityPlayer player, String module, Boolean active) {
         this.player = player;

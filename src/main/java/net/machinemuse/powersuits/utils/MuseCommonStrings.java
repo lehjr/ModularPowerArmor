@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.utils;
 
-import net.machinemuse.numina.capabilities.energy.adapter.ElectricAdapter;
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.item.IModeChangingItem;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.string.MuseStringUtils;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
+import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
+import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
@@ -40,6 +40,10 @@ public abstract class MuseCommonStrings {
      *                         their settings.
      */
     public static void addInformation(@Nonnull ItemStack stack, World worldIn, List currentTipList, ITooltipFlag advancedToolTips) {
+        if (worldIn == null || stack.isEmpty()) {
+            return;
+        }
+
         EntityPlayer player = Minecraft.getMinecraft().player;
 
         // TODO: remove enchantment labels.
@@ -49,20 +53,20 @@ public abstract class MuseCommonStrings {
 
         // Mode changing item such as power fist
         if (stack.getItem() instanceof IModeChangingItem) {
-            String moduleDataName = MuseItemUtils.getStringOrNull(stack, NuminaNBTConstants.TAG_MODE);
+            String moduleDataName = NBTUtils.getStringOrNull(stack, MPALIbConstants.TAG_MODE);
             if (moduleDataName != null) {
                 String localizedName = I18n.format("module.powersuits." + moduleDataName + ".name");
-                currentTipList.add(I18n.format("tooltip.powersuits.mode") + " " + MuseStringUtils.wrapFormatTags(localizedName, MuseStringUtils.FormatCodes.Red));
+                currentTipList.add(I18n.format("tooltip.powersuits.mode") + " " + StringUtils.wrapFormatTags(localizedName, StringUtils.FormatCodes.Red));
             } else
                 currentTipList.add(I18n.format("tooltip.powersuits.changeModes"));
         }
 
-        ElectricAdapter adapter = ElectricAdapter.wrap(stack);
+        IElectricAdapter adapter = ElectricAdapterManager.INSTANCE.wrap(stack, true);
         if (adapter != null) {
-            String energyinfo = I18n.format("tooltip.powersuits.energy") + " " + MuseStringUtils.formatNumberShort(adapter.getEnergyStored()) + '/'
-                    + MuseStringUtils.formatNumberShort(adapter.getMaxEnergyStored());
-            currentTipList.add(MuseStringUtils.wrapMultipleFormatTags(energyinfo, MuseStringUtils.FormatCodes.Italic.character,
-                    MuseStringUtils.FormatCodes.Aqua));
+            String energyinfo = I18n.format("tooltip.powersuits.energy") + " " + StringUtils.formatNumberShort(adapter.getEnergyStored()) + '/'
+                    + StringUtils.formatNumberShort(adapter.getMaxEnergyStored());
+            currentTipList.add(StringUtils.wrapMultipleFormatTags(energyinfo, StringUtils.FormatCodes.Italic.character,
+                    StringUtils.FormatCodes.Aqua));
         }
         if (MPSConfig.INSTANCE.doAdditionalInfo()) {
             // this is just some random info on the fluids installed
@@ -86,11 +90,11 @@ public abstract class MuseCommonStrings {
             List<String> installed = getItemInstalledModules(player, stack);
             if (installed.size() == 0) {
                 String message = I18n.format("tooltip.powersuits.noModules");
-                currentTipList.addAll(MuseStringUtils.wrapStringToLength(message, 30));
+                currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
             } else {
                 currentTipList.add(I18n.format("tooltip.powersuits.installedModules"));
                 for (String moduleName : installed) {
-                    currentTipList.add(MuseStringUtils.wrapFormatTags(moduleName, MuseStringUtils.FormatCodes.Indigo));
+                    currentTipList.add(StringUtils.wrapFormatTags(moduleName, StringUtils.FormatCodes.Indigo));
                 }
 //                currentTipList.addAll(installed);
             }
@@ -103,7 +107,7 @@ public abstract class MuseCommonStrings {
     @SideOnly(Side.CLIENT)
     public static String additionalInfoInstructions() {
         String message = I18n.format("tooltip.powersuits.pressShift");
-        return MuseStringUtils.wrapMultipleFormatTags(message, MuseStringUtils.FormatCodes.Grey, MuseStringUtils.FormatCodes.Italic);
+        return StringUtils.wrapMultipleFormatTags(message, StringUtils.FormatCodes.Grey, StringUtils.FormatCodes.Italic);
     }
 
     // //////////////////////// //
@@ -117,7 +121,7 @@ public abstract class MuseCommonStrings {
     }
 
     public static List<String> getItemInstalledModules(EntityPlayer player, ItemStack stack) {
-        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
+        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
         List<String> modules = new LinkedList();
         for (IPowerModule module : ModuleManager.INSTANCE.getValidModulesForItem(stack)) {
             if (ModuleManager.INSTANCE.tagHasModule(itemTag, module.getDataName())) {

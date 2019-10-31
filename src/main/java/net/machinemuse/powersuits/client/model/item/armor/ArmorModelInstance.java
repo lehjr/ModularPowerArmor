@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.client.model.item.armor;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.misc.ModCompatibility;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import net.minecraft.client.model.ModelBiped;
 
 /**
@@ -15,11 +15,11 @@ public class ArmorModelInstance {
         if (instance == null) {
             if (ModCompatibility.isRenderPlayerAPILoaded()) {
                 try {
-                    MuseLogger.logger.info("Attempting to load SmartMoving armor model.");
+                    MPALibLogger.logger.info("Attempting to load SmartMoving armor model.");
                     instance = Class.forName("net.machinemuse.powersuits.client.model.item.armor.SMovingArmorModel").asSubclass(ModelBiped.class).newInstance();
-                    MuseLogger.logger.info("SmartMoving armor model loaded successfully!");
+                    MPALibLogger.logger.info("SmartMoving armor model loaded successfully!");
                 } catch (Exception e) {
-                    MuseLogger.logger.info("Smart Moving armor model did not loadButton successfully. Either Smart Moving is not installed, or there was another problem.");
+                    MPALibLogger.logger.info("Smart Moving armor model did not loadButton successfully. Either Smart Moving is not installed, or there was another problem.");
                     instance = new HighPolyArmor();
                 }
             }

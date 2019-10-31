@@ -7,11 +7,11 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
+import com.github.lehjr.mpalib.config.MPALibConfig;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import extracells.api.ECApi;
 import extracells.api.IWirelessFluidTermHandler;
-import net.machinemuse.numina.config.NuminaConfig;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.misc.ModCompatibility;
 import net.machinemuse.powersuits.common.MPSItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -71,8 +71,8 @@ public class TerminalHandler implements
     @Optional.Method(modid = "appliedenergistics2")
     @Override
     public boolean usePower(EntityPlayer entityPlayer, double v, @Nonnull ItemStack itemStack) {
-        if ((v * NuminaConfig.INSTANCE.getAE2Ratio()) < (ElectricItemUtils.getPlayerEnergy(entityPlayer) * NuminaConfig.INSTANCE.getAE2Ratio())) {
-            ElectricItemUtils.drainPlayerEnergy(entityPlayer, (int) (v * NuminaConfig.INSTANCE.getAE2Ratio()));
+        if ((v * MPALibConfig.INSTANCE.getAE2Ratio()) < (ElectricItemUtils.getPlayerEnergy(entityPlayer) * MPALibConfig.INSTANCE.getAE2Ratio())) {
+            ElectricItemUtils.drainPlayerEnergy(entityPlayer, (int) (v * MPALibConfig.INSTANCE.getAE2Ratio()));
             return true;
         }
         return false;
@@ -81,7 +81,7 @@ public class TerminalHandler implements
     @Optional.Method(modid = "appliedenergistics2")
     @Override
     public boolean hasPower(EntityPlayer entityPlayer, double v, @Nonnull ItemStack itemStack) {
-        return ((v * NuminaConfig.INSTANCE.getAE2Ratio()) < (ElectricItemUtils.getPlayerEnergy(entityPlayer) * NuminaConfig.INSTANCE.getAE2Ratio()));
+        return ((v * MPALibConfig.INSTANCE.getAE2Ratio()) < (ElectricItemUtils.getPlayerEnergy(entityPlayer) * MPALibConfig.INSTANCE.getAE2Ratio()));
     }
 
     @Optional.Method(modid = "extracells")

@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.mining_enhancement;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.misc.ModCompatibility;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IMiningEnhancementModule;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -34,8 +34,8 @@ public class MADModule extends PowerModuleBase implements IToggleableModule, IMi
 
     public MADModule(EnumModuleTarget moduleTargetIn) {
         super(moduleTargetIn);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 1));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.solenoid, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
         ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("mekanism", "atomicdisassembler")), 1));
         if (ModCompatibility.isMekanismLoaded()) {
             emulatedTool = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("mekanism", "atomicdisassembler")), 1);

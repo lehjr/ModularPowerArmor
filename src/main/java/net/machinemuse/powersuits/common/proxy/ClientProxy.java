@@ -1,22 +1,21 @@
 package net.machinemuse.powersuits.common.proxy;
 
-import net.machinemuse.numina.client.model.obj.MuseOBJLoader;
+import com.github.lehjr.forge.obj.MPALibOBJLoader;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.client.event.ClientTickHandler;
 import net.machinemuse.powersuits.client.event.EventRegisterRenderers;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
+import net.machinemuse.powersuits.client.event.RenderEventHandler;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.config.CosmeticPresetSaveLoad;
 import net.machinemuse.powersuits.common.config.MPSConfig;
-import net.machinemuse.powersuits.control.KeybindKeyHandler;
-import net.machinemuse.powersuits.client.event.RenderEventHandler;
+import net.machinemuse.powersuits.client.control.KeybindKeyHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
 
 /**
  * Client side of the proxy.
@@ -32,7 +31,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
         // FIXME: delete? or leave it. Leaving it is harmless.
         CosmeticPresetSaveLoad.copyPresetsFromJar();
-        MuseOBJLoader.INSTANCE.addDomain(MODID.toLowerCase());
+        MPALibOBJLoader.INSTANCE.addDomain(MPSModConstants.MODID.toLowerCase());
     }
 
     @Override

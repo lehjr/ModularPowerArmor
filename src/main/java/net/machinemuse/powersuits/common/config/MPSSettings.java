@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.common.config;
 
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
-import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.powersuits.api.constants.MPSConfigConstants;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.common.InstallCost;
@@ -606,7 +606,7 @@ public class MPSSettings {
                 String string = Charset.defaultCharset().decode(ByteBuffer.wrap(bytes)).toString();
                 is.close();
 
-                MuseLogger.logDebug(string);
+                MPALibLogger.logDebug(string);
                 InstallCost[] costs = (InstallCost[])gson.fromJson(string, (Class)InstallCost[].class);
                 for(InstallCost cost: costs) {
                     String moduleName = cost.moduleName;
@@ -618,10 +618,10 @@ public class MPSSettings {
                         if(!stack.isEmpty()) {
                             ModuleManager.INSTANCE.addCustomInstallCost(moduleName, stack);
                         } else {
-                            MuseLogger.logError("Invalid Itemstack in custom install cost. Module [" + cost.moduleName + "], item [" + cost.itemName + "]");
+                            MPALibLogger.logError("Invalid Itemstack in custom install cost. Module [" + cost.moduleName + "], item [" + cost.itemName + "]");
                         }
                     } else {
-                        MuseLogger.logError("Invalid Item in custom install cost. Module [" + cost.moduleName + "], item [" + cost.itemName + "]");
+                        MPALibLogger.logError("Invalid Item in custom install cost. Module [" + cost.moduleName + "], item [" + cost.itemName + "]");
                     }
                 }
             } else {

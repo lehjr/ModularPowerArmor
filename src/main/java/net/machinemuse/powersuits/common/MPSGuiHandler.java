@@ -1,10 +1,13 @@
 package net.machinemuse.powersuits.common;
 
-import net.machinemuse.powersuits.gui.PortableCraftingContainer;
-import net.machinemuse.powersuits.gui.PortableCraftingGui;
-import net.machinemuse.powersuits.gui.ScannerContainer;
-import net.machinemuse.powersuits.gui.ScannerGUI;
-import net.machinemuse.powersuits.gui.tinker.*;
+import net.machinemuse.powersuits.client.gui.tinker.cosmetic.CosmeticGui;
+import net.machinemuse.powersuits.client.gui.crafting.PortableCraftingContainer;
+import net.machinemuse.powersuits.client.gui.crafting.PortableCraftingGui;
+import net.machinemuse.powersuits.client.gui.keybind.KeyConfigGui;
+import net.machinemuse.powersuits.client.gui.modeselection.GuiModeSelector;
+import net.machinemuse.powersuits.client.gui.tinker.module.TinkerTableGui;
+import net.machinemuse.powersuits.client.gui.scanner.ScannerContainer;
+import net.machinemuse.powersuits.client.gui.scanner.ScannerGUI;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,9 +33,9 @@ public enum MPSGuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == 4)
+        if (ID == 3)
             return new PortableCraftingContainer(player.inventory, world, new BlockPos(x, y, z));
-        if (ID == 6) {
+        if (ID == 5) {
             return new ScannerContainer(player, getPlayerHand(player));
         }
         return null;
@@ -44,18 +47,16 @@ public enum MPSGuiHandler implements IGuiHandler {
         //        Minecraft.getMinecraft().player.addStat(AchievementList.OPEN_INVENTORY, 1);
         switch (ID) {
             case 0:
-                return new GuiTinkerTable(player, x, y, z);
+                return new TinkerTableGui(player, x, y, z);
             case 1:
                 return new KeyConfigGui(player, x, y, z);
             case 2:
-                return new GuiFieldTinker(player);
-            case 3:
                 return new CosmeticGui(player, x, y, z);
+            case 3:
+                return new PortableCraftingGui(player.inventory, world, new BlockPos(x, y, z));
             case 4:
-                return new PortableCraftingGui(player, world, new BlockPos(x, y, z));
-            case 5:
                 return new GuiModeSelector(player);
-            case 6:
+            case 5:
                 return new ScannerGUI(new ScannerContainer(player, getPlayerHand(player)));
             default:
                 return null;

@@ -1,14 +1,14 @@
 package net.machinemuse.powersuits.client.render.modelspec;
 
-import net.machinemuse.numina.client.render.RenderState;
-import net.machinemuse.numina.client.render.modelspec.ModelPartSpec;
-import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
-import net.machinemuse.numina.client.render.modelspec.PartSpecBase;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.math.Colour;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.client.render.RenderState;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
+import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
 import net.machinemuse.powersuits.client.model.item.armor.ArmorModelInstance;
 import net.machinemuse.powersuits.client.model.item.armor.IArmorModel;
-import net.machinemuse.powersuits.utils.nbt.NBTTagAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -47,7 +47,7 @@ public class RenderPart extends ModelRenderer {
         if (renderSpec == null)
             return;
 
-        int[] colours = renderSpec.getIntArray(ModelSpecTags.TAG_COLOURS);
+        int[] colours = renderSpec.getIntArray(MPALIbConstants.TAG_COLOURS);
         if (colours.length == 0)
             colours = new int[]{Colour.WHITE.getInt()};
 

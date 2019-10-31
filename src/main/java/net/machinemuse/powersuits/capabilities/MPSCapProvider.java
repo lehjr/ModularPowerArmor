@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.capabilities;
 
-import net.machinemuse.numina.capabilities.heat.CapabilityHeat;
+import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorChestplate;
@@ -57,7 +57,7 @@ public final class MPSCapProvider implements ICapabilityProvider {
                 return true;
         // TODO: others
 
-        if (capability == CapabilityHeat.HEAT)
+        if (capability == HeatCapability.HEAT)
             if (heatWrapper != null)
                 return true;
 
@@ -88,7 +88,7 @@ public final class MPSCapProvider implements ICapabilityProvider {
             }
         }
 
-        if (capability == CapabilityHeat.HEAT) {
+        if (capability == HeatCapability.HEAT) {
             if (heatWrapper != null) {
                 heatWrapper.updateFromNBT();
                 return (T) heatWrapper;

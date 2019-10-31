@@ -1,9 +1,10 @@
 package net.machinemuse.powersuits.item.armor;
 
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.legacy.item.IArmorTraits;
 import com.google.common.collect.Multimap;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.IArmorTraits;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.api.constants.MPSResourceConstants;
 import net.machinemuse.powersuits.capabilities.MPSCapProvider;
@@ -34,8 +35,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.UUID;
 
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
-
 /**
  * Describes the 4 different modular armor pieces - head, torso, legs, feet.
  *
@@ -53,7 +52,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
     public ItemPowerArmor(String regName, String unlocalizedName, int renderIndex, EntityEquipmentSlot entityEquipmentSlot) {
         super(ItemArmor.ArmorMaterial.IRON, renderIndex, entityEquipmentSlot);
         this.setRegistryName(regName);
-        this.setTranslationKey(new StringBuilder(MODID).append(".").append(unlocalizedName).toString());
+        this.setTranslationKey(new StringBuilder(MPSModConstants.MODID).append(".").append(unlocalizedName).toString());
         this.setMaxStackSize(1);
         this.setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
         this.setMaxDamage(0);
@@ -74,7 +73,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 //            System.out.println("damage source: " + source.damageType);
 //            System.out.println("slot: " + slot);
 
-        if (source == null || source == MuseHeatUtils.overheatDamage)
+        if (source == null || source == HeatUtils.overheatDamage)
             return false;
 
         if (source.damageType.equals("electricity") || source.damageType.equals("radiation") || source.damageType.equals("sulphuric_acid"))
@@ -117,7 +116,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         }
 
         if (source.getDamageType().equals("cryotheum"))
-            return MuseHeatUtils.getPlayerHeat((EntityPlayer) entity) > 0;
+            return HeatUtils.getPlayerHeat((EntityPlayer) entity) > 0;
 
 
         // TODO: Galacticraft "thermal", "sulphuric_acid", "pressure"
@@ -136,7 +135,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            DamageSource overheatDamage = MuseHeatUtils.overheatDamage;
+            DamageSource overheatDamage = HeatUtils.overheatDamage;
 
 //            if (source == null || source.equals(overheatDamage)) {
 //                if (source != null)
@@ -148,7 +147,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
             // cool the player instead of applying damage. Only fires if player has heat
             if (source.getDamageType().equals("cryotheum") && entity.world.isRemote)
-                MuseHeatUtils.coolPlayer(player, damage * 10);
+                HeatUtils.coolPlayer(player, damage * 10);
 
 
             // FIXME: heat needs to either be applied here or in the player uodate handler through environment
@@ -158,10 +157,10 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 //                System.out.println("heat damage: " + damage);
 
 //                if (!source.equals(DamageSource.ON_FIRE) ||
-//                        MuseHeatUtils.getPlayerHeat(player) < MuseHeatUtils.getPlayerMaxHeat(player))
-//                MuseHeatUtils.heatPlayer(player, damage);
+//                        HeatUtils.getPlayerHeat(player) < HeatUtils.getPlayerMaxHeat(player))
+//                HeatUtils.heatPlayer(player, damage);
 
-                MuseHeatUtils.heatPlayer(player, damage * 5); // FIXME: this value needs tweaking. 10 too high, 1 too low
+                HeatUtils.heatPlayer(player, damage * 5); // FIXME: this value needs tweaking. 10 too high, 1 too low
             } else {
                 double enerConsum = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.ARMOR_ENERGY_CONSUMPTION);
                 double drain = enerConsum * damage;
@@ -177,7 +176,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         int priority = 0;
 
         // Fire damage is just heat based damage like fire or lava
-        if (source.isFireDamage() && !(source.equals(MuseHeatUtils.overheatDamage))) { //  heat damage is only 1 point ?
+        if (source.isFireDamage() && !(source.equals(HeatUtils.overheatDamage))) { //  heat damage is only 1 point ?
 //            System.out.println("heat damage: " + damage);
 
             return new ISpecialArmor.ArmorProperties(priority, absorbRatio, absorbMax);

@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.utils.modulehelpers;
 
-import net.machinemuse.numina.item.IModularItem;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 

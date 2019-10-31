@@ -39,7 +39,7 @@ version = "${mod_version}.${buildnumber ?: travisbuildnumber}"
 group = group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${mod_id}-${minecraft_version}"
 
-def numina_version = (System.getenv("NUMINA_VERSION") ?: "${version}")
+def mpalib_version = (System.getenv("MPALIB_VERSION") ?: "${version}")
 
 repositories {
     //url                                                           //dependencies
@@ -103,7 +103,7 @@ minecraft {
     version = minecraft_version + "-" + forge_version// + "-" + "1.10.0"
     runDir = "run"
     mappings = mcp_mappings
-    replace "@numina_version@", numina_version
+    replace "@mpalib_version@", mpalib_version
     replace "@VERSION@", project.version
     useDepAts = true
 
@@ -133,7 +133,7 @@ processResources {
 
 jar {
     manifest {
-        attributes 'FMLAT': 'numina_at.cfg'
+        attributes 'FMLAT': 'mpalib_at.cfg'
     }
 }
 
@@ -151,9 +151,6 @@ apply plugin: 'idea'
 idea {
     module {
         inheritOutputDirs = true
-
-        //and some extra resource dirs
-        resourceDirs += file('some-extra-resource-dir')
     }
 }
 

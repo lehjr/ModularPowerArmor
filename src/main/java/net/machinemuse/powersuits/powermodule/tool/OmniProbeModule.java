@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.tool;
 
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.misc.ModCompatibility;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -44,7 +44,7 @@ public class OmniProbeModule extends PowerModuleBase implements IRightClickModul
 
     public OmniProbeModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 4));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 4));
         ItemStack tHighest = new ItemStack(Items.COMPARATOR);
 
         // Does not exist
@@ -73,7 +73,7 @@ public class OmniProbeModule extends PowerModuleBase implements IRightClickModul
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_TOOL;
+        return EnumModuleCategory.TOOL;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.capabilities;
 
-import net.machinemuse.numina.capabilities.player.CapabilityPlayerValues;
-import net.machinemuse.powersuits.common.ModularPowersuits;
+import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -16,6 +16,6 @@ public class CapabilityHandler {
     @SubscribeEvent
     public void attachCapability(AttachCapabilitiesEvent event) {
         if (!(event.getObject() instanceof EntityPlayer)) return;
-        event.addCapability(new ResourceLocation(ModularPowersuits.MODID, "IPlayerValues"), new CapabilityPlayerValues());
+        event.addCapability(new ResourceLocation(MPSModConstants.MODID, "IPlayerValues"), new CapabilityPlayerKeyStates());
     }
 }

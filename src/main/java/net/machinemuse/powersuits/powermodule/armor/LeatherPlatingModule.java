@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.powermodule.armor;
 
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -17,11 +17,11 @@ public class LeatherPlatingModule extends PowerModuleBase {
 
     public LeatherPlatingModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(this.getDataName(), MuseItemUtils.copyAndResize(new ItemStack(Items.LEATHER), 2));
+        ModuleManager.INSTANCE.addInstallCost(this.getDataName(), ItemUtils.copyAndResize(new ItemStack(Items.LEATHER), 2));
 
         addBasePropertyDouble(MPSModuleConstants.ARMOR_VALUE_PHYSICAL, 3,
                 MPSModuleConstants.MODULE_TRADEOFF_PREFIX + MPSModuleConstants.ARMOR_POINTS);
-        addBasePropertyDouble(NuminaNBTConstants.MAXIMUM_HEAT, 75);
+        addBasePropertyDouble(MPALIbConstants.MAXIMUM_HEAT, 75);
     }
 
     @Override
@@ -36,6 +36,6 @@ public class LeatherPlatingModule extends PowerModuleBase {
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_ARMOR;
+        return EnumModuleCategory.ARMOR;
     }
 }

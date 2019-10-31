@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.powermodule.movement;
 
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public class ShockAbsorberModule extends PowerModuleBase implements IToggleableModule {
     public ShockAbsorberModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
         ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Blocks.WOOL, 2));
         addBasePropertyDouble(MPSModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION, 0, "RF/m");
         addTradeoffPropertyDouble(MPSModuleConstants.POWER, MPSModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION, 100);
@@ -26,7 +26,7 @@ public class ShockAbsorberModule extends PowerModuleBase implements IToggleableM
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MOVEMENT;
+        return EnumModuleCategory.MOVEMENT;
     }
 
     @Override

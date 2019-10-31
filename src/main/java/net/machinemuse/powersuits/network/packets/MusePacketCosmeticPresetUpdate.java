@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.config.CosmeticPresetSaveLoad;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.common.config.MPSServerSettings;

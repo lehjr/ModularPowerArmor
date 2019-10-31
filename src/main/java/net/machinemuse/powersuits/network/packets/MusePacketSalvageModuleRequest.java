@@ -1,13 +1,13 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
+import com.github.lehjr.mpalib.legacy.module.IEnchantmentModule;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.math.MathUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.item.IModeChangingItem;
-import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.numina.module.IEnchantmentModule;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.numina.module.IRightClickModule;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,10 +69,10 @@ public class MusePacketSalvageModuleRequest implements IMessage {
                         ItemStack stack = player.inventory.getStackInSlot(itemSlot);
                         NonNullList<ItemStack> refund = ModuleManager.INSTANCE.getInstallCost(moduleName);
                         if (ModuleManager.INSTANCE.itemHasModule(stack, moduleName)) {
-                            MuseNBTUtils.removeMuseValuesTag(stack);
+                            NBTUtils.removeMuseValuesTag(stack);
                             ModuleManager.INSTANCE.removeModule(stack, moduleName);
                             for (ItemStack refundItem : refund) {
-                                if (MuseMathUtils.nextDouble() < MPSConfig.INSTANCE.getSalvageChance()) {
+                                if (MathUtils.nextDouble() < MPSConfig.INSTANCE.getSalvageChance()) {
                                     ItemHandlerHelper.giveItemToPlayer(player, refundItem);
                                 }
                             }

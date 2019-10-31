@@ -1,13 +1,13 @@
 package net.machinemuse.powersuits.client.model.helper;
 
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
+import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.base.Objects;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.machinemuse.numina.client.model.helper.MuseModelHelper;
-import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.api.constants.MPSResourceConstants;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -53,30 +53,30 @@ public enum ModelPowerFistHelper {
                         case THIRD_PERSON_LEFT_HAND:
                         case FIRST_PERSON_LEFT_HAND:
                             powerFistLeft.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                    MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                    ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             if (key.isFiring())
                                 powerFistFingersLeftFiring.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                        MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                        ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             else
                                 powerFistFingersLeft.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                        MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                        ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             return builder.build();
 
                         case THIRD_PERSON_RIGHT_HAND:
                         case FIRST_PERSON_RIGHT_HAND:
                         case GROUND:
                             powerFist.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                    MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                    ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             if (key.isFiring())
                                 powerFistFingersFiring.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                        MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                        ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             else
                                 powerFistFingers.getQuads(null, null, 0).forEach(quad -> builder.add(
-                                        MuseModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
+                                        ModelHelper.colorQuad(key.getColour(), quad, quad.shouldApplyDiffuseLighting())));
                             return builder.build();
 
                         default:
-                            return MuseModelHelper.getColoredQuads(ModelBakeEventHandler.powerFistIconModel.getQuads(null, null, 0), key.getColour());
+                            return ModelHelper.getColoredQuads(ModelBakeEventHandler.powerFistIconModel.getQuads(null, null, 0), key.getColour());
                     }
                 }
             });
@@ -95,13 +95,13 @@ public enum ModelPowerFistHelper {
             } catch (Exception ignored) {
             }
         } else {
-            powerFist = MuseModelHelper.loadBakedModel(powerFistLocation);
-            powerFistFingers = MuseModelHelper.loadBakedModel(powerFistFingersNormalLocation);
-            powerFistFingersFiring = MuseModelHelper.loadBakedModel(powerFistFingersFiringLocation);
+            powerFist = ModelHelper.loadBakedModel(powerFistLocation);
+            powerFistFingers = ModelHelper.loadBakedModel(powerFistFingersNormalLocation);
+            powerFistFingersFiring = ModelHelper.loadBakedModel(powerFistFingersFiringLocation);
 
-            powerFistLeft = MuseModelHelper.loadBakedModel(powerFistLeftLocation);
-            powerFistFingersLeft = MuseModelHelper.loadBakedModel(powerFistFingersLeftNormalLocation);
-            powerFistFingersLeftFiring = MuseModelHelper.loadBakedModel(powerFistFingersLeftFiringLocation);
+            powerFistLeft = ModelHelper.loadBakedModel(powerFistLeftLocation);
+            powerFistFingersLeft = ModelHelper.loadBakedModel(powerFistFingersLeftNormalLocation);
+            powerFistFingersLeftFiring = ModelHelper.loadBakedModel(powerFistFingersLeftFiringLocation);
         }
     }
 
@@ -109,19 +109,19 @@ public enum ModelPowerFistHelper {
         ImmutableMap.Builder<IModelPart, TRSRTransformation> builder = ImmutableMap.builder();
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(8, 8.01f, 9, -15, 180, 0, 0.630f, 0.630f, 0.630f));
+                ModelHelper.get(8, 8.01f, 9, -15, 180, 0, 0.630f, 0.630f, 0.630f));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,
-                MuseModelHelper.get(13.2f/*-2 */, 8.01f, 9, -15, 180, 0, 0.630f, 0.630f, 0.630f));
+                ModelHelper.get(13.2f/*-2 */, 8.01f, 9, -15, 180, 0, 0.630f, 0.630f, 0.630f));
 
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(11.8f, 8, 7, -16, -162, 0, 0.5f, 0.5f, 0.5f));
+                ModelHelper.get(11.8f, 8, 7, -16, -162, 0, 0.5f, 0.5f, 0.5f));
 
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-                MuseModelHelper.get(14.8f/*11.8f*/ /* 1.8f */, 8, 7, 344, 198, 0, 0.5f, 0.5f, 0.5f));
+                ModelHelper.get(14.8f/*11.8f*/ /* 1.8f */, 8, 7, 344, 198, 0, 0.5f, 0.5f, 0.5f));
 
         builder.put(ItemCameraTransforms.TransformType.GROUND,
-                MuseModelHelper.get(0, 5, 0, 0, 0, 0, 0.630f));
+                ModelHelper.get(0, 5, 0, 0, 0, 0, 0.630f));
         return new SimpleModelState(builder.build());
     }
 

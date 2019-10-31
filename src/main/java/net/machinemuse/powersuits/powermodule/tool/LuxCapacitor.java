@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.tool;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.math.Colour;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -39,7 +39,7 @@ public class LuxCapacitor extends PowerModuleBase implements IRightClickModule {
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_TOOL;
+        return EnumModuleCategory.TOOL;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LuxCapacitor extends PowerModuleBase implements IRightClickModule {
         playerIn.setActiveHand(hand);
         if (!worldIn.isRemote) {
             double energyConsumption = getEnergyUsage(itemStackIn);
-            MuseHeatUtils.heatPlayer(playerIn, energyConsumption / 500);
+            HeatUtils.heatPlayer(playerIn, energyConsumption / 500);
             if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
                 ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
 

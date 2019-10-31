@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -65,26 +65,26 @@ public class MusePacketCosmeticInfo implements IMessage {
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
 
                     if (tagName != null && stack.getItem() instanceof IModularItem) {
-                        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-                        itemTag.removeTag(ModelSpecTags.TAG_COSMETIC_PRESET);
+                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+                        itemTag.removeTag(MPALIbConstants.TAG_COSMETIC_PRESET);
 
-                        if (Objects.equals(tagName, ModelSpecTags.TAG_RENDER)) {
-                            itemTag.removeTag(ModelSpecTags.TAG_RENDER);
+                        if (Objects.equals(tagName, MPALIbConstants.TAG_RENDER)) {
+                            itemTag.removeTag(MPALIbConstants.TAG_RENDER);
                             if (!tagData.isEmpty())
-                                itemTag.setTag(ModelSpecTags.TAG_RENDER, tagData);
+                                itemTag.setTag(MPALIbConstants.TAG_RENDER, tagData);
                         } else {
                             NBTTagCompound renderTag;
-                            if (!itemTag.hasKey(ModelSpecTags.TAG_RENDER)) {
+                            if (!itemTag.hasKey(MPALIbConstants.TAG_RENDER)) {
                                 renderTag = new NBTTagCompound();
-                                itemTag.setTag(ModelSpecTags.TAG_RENDER, renderTag);
+                                itemTag.setTag(MPALIbConstants.TAG_RENDER, renderTag);
                             } else {
-                                renderTag = itemTag.getCompoundTag(ModelSpecTags.TAG_RENDER);
+                                renderTag = itemTag.getCompoundTag(MPALIbConstants.TAG_RENDER);
                             }
                             if (tagData.isEmpty()) {
-                                MuseLogger.logDebug("Removing tag " + tagName);
+                                MPALibLogger.logDebug("Removing tag " + tagName);
                                 renderTag.removeTag(tagName);
                             } else {
-                                MuseLogger.logDebug("Adding tag " + tagName + " : " + tagData);
+                                MPALibLogger.logDebug("Adding tag " + tagName + " : " + tagData);
                                 renderTag.setTag(tagName, tagData);
                             }
                         }

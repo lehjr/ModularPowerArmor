@@ -1,8 +1,12 @@
 package net.machinemuse.powersuits.powermodule.mining_enhancement;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.*;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -27,7 +31,7 @@ import java.util.ArrayList;
 public class AOEPickUpgradeModule extends PowerModuleBase implements IMiningEnhancementModule {
     public AOEPickUpgradeModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.solenoid, 1));
         //ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Item.diamond, 3));
 
         addBasePropertyDouble(MPSModuleConstants.AOE_ENERGY_CONSUMPTION, 500, "RF");
@@ -111,7 +115,7 @@ public class AOEPickUpgradeModule extends PowerModuleBase implements IMiningEnha
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT;
+        return EnumModuleCategory.MINING_ENHANCEMENT;
     }
 
     @Override

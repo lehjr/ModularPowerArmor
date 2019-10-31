@@ -1,22 +1,21 @@
 package net.machinemuse.powersuits.client.event;
 
-import net.machinemuse.numina.client.render.MuseIconUtils;
-import net.machinemuse.numina.client.render.MuseRenderer;
-import net.machinemuse.numina.client.render.MuseTextureUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.math.geometry.DrawableMuseRect;
+import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
+import com.github.lehjr.mpalib.client.render.IconUtils;
+import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.client.render.TextureUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.math.Colour;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import net.machinemuse.powersuits.client.model.helper.ModelHelper;
+import net.machinemuse.powersuits.client.gui.clickable.ClickableKeybinding;
+import net.machinemuse.powersuits.client.gui.clickable.ClickableModule;
+import net.machinemuse.powersuits.client.model.helper.MPSModelHelper;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
-import net.machinemuse.powersuits.control.KeybindManager;
-import net.machinemuse.powersuits.gui.tinker.clickable.ClickableKeybinding;
-import net.machinemuse.powersuits.gui.tinker.clickable.ClickableModule;
+import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderEventHandler {
     private static final MPSConfig config = MPSConfig.INSTANCE;
     private static boolean ownFly;
-    private final DrawableMuseRect frame = new DrawableMuseRect(config.keybindHUDx(), config.keybindHUDy(), config.keybindHUDx() + (double) 16, config.keybindHUDy() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
+    private final DrawableRect frame = new DrawableRect(config.keybindHUDx(), config.keybindHUDy(), config.keybindHUDx() + (double) 16, config.keybindHUDy() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
     public RenderEventHandler() {
         this.ownFly = false;
@@ -42,7 +41,7 @@ public class RenderEventHandler {
     public void preTextureStitch(TextureStitchEvent.Pre event) {
         if (event.getMap().equals( Minecraft.getMinecraft().getTextureMapBlocks())) {
             MuseIcon.registerIcons(event.getMap());
-            ModelHelper.loadArmorModels(event.getMap());
+            MPSModelHelper.loadArmorModels(event.getMap());
         }
     }
 
@@ -110,21 +109,21 @@ public class RenderEventHandler {
             frame.setBottom(frame.top() + 16);
             for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
                 if (kb.displayOnHUD) {
-                    double stringwidth = MuseRenderer.getStringWidth(kb.getLabel());
+                    double stringwidth = Renderer.getStringWidth(kb.getLabel());
                     frame.setWidth(stringwidth + kb.getBoundModules().size() * 16);
                     frame.draw();
-                    MuseRenderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
+                    Renderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
                     double x = frame.left() + stringwidth;
                     for (ClickableModule module : kb.getBoundModules()) {
-                        MuseTextureUtils.pushTexture(MuseTextureUtils.TEXTURE_QUILT);
+                        TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
                         boolean active = false;
-                        for (ItemStack stack : MuseItemUtils.getModularItemsEquipped(player)) {
+                        for (ItemStack stack : ItemUtils.getLegacyModularItemsEquipped(player)) {
                             if (ModuleManager.INSTANCE.itemHasActiveModule(stack, module.getModule().getDataName()))
                                 active = true;
                         }
 
-                        MuseIconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
-                        MuseTextureUtils.popTexture();
+                        IconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
+                        TextureUtils.popTexture();
                         x += 16;
                     }
                     frame.setTop(frame.top() + 16);

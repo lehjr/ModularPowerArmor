@@ -2,8 +2,8 @@ package net.machinemuse.powersuits.item.tool;
 
 //import appeng.api.config.AccessRestriction;
 
+import com.github.lehjr.mpalib.legacy.energy.IElectricItem;
 import com.google.common.collect.Sets;
-import net.machinemuse.numina.capabilities.energy.adapter.IMuseElectricItem;
 import net.machinemuse.powersuits.item.IModularItemBase;
 import net.machinemuse.powersuits.utils.MuseCommonStrings;
 import net.minecraft.block.Block;
@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Ported to Java by lehjr on 11/4/16.
  */
-public class MPSItemElectricTool extends ItemTool implements IModularItemBase, IMuseElectricItem {
+public class MPSItemElectricTool extends ItemTool implements IModularItemBase, IElectricItem {
     public static final Set<Block> blocksEffectiveOn = Sets.newHashSet(new Block[]{
             Blocks.COBBLESTONE, Blocks.DOUBLE_STONE_SLAB, Blocks.STONE_SLAB, Blocks.STONE_SLAB2, Blocks.STONE, Blocks.SANDSTONE,
             Blocks.MOSSY_COBBLESTONE, Blocks.IRON_ORE, Blocks.IRON_BLOCK, Blocks.COAL_ORE, Blocks.GOLD_BLOCK, Blocks.GOLD_ORE,

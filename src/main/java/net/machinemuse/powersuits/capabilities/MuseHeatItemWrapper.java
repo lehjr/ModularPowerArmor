@@ -1,10 +1,9 @@
 package net.machinemuse.powersuits.capabilities;
 
-import net.machinemuse.numina.capabilities.heat.HeatStorage;
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.IModuleManager;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.heat.HeatStorage;
+import com.github.lehjr.mpalib.legacy.module.IModuleManager;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -18,7 +17,7 @@ public class MuseHeatItemWrapper extends HeatStorage implements INBTSerializable
     double baseMaxHeat;
 
     public MuseHeatItemWrapper(@Nonnull ItemStack container, double baseMaxHeat, IModuleManager moduleManagerIn) {
-        super(moduleManagerIn.getOrSetModularPropertyDouble(container, NuminaNBTConstants.MAXIMUM_HEAT) + baseMaxHeat);
+        super(moduleManagerIn.getOrSetModularPropertyDouble(container, MPALIbConstants.MAXIMUM_HEAT) + baseMaxHeat);
         this.container = container;
         this.moduleManager = moduleManagerIn;
         this.baseMaxHeat = baseMaxHeat;
@@ -31,12 +30,12 @@ public class MuseHeatItemWrapper extends HeatStorage implements INBTSerializable
         double heatReceived = super.receiveHeat(heatProvided, simulate);
         if (!simulate && heatReceived > 0) {
             NBTTagCompound nbt = serializeNBT();
-            if (nbt.hasKey(NuminaNBTConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
-                heat = nbt.getDouble(NuminaNBTConstants.CURRENT_HEAT);
+            if (nbt.hasKey(MPALIbConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
+                heat = nbt.getDouble(MPALIbConstants.CURRENT_HEAT);
             else
                 heat = 0;
-            capacity = maxExtract = maxReceive = nbt.getDouble(NuminaNBTConstants.MAXIMUM_HEAT);
-            MuseItemUtils.setDoubleOrRemove(container, NuminaNBTConstants.CURRENT_HEAT, heat);
+            capacity = maxExtract = maxReceive = nbt.getDouble(MPALIbConstants.MAXIMUM_HEAT);
+            NBTUtils.setModularItemDoubleOrRemove(container, MPALIbConstants.CURRENT_HEAT, heat);
         }
         return heatReceived;
     }
@@ -48,25 +47,25 @@ public class MuseHeatItemWrapper extends HeatStorage implements INBTSerializable
         double heatExtracted = super.extractHeat(heatRequested, simulate);
         if (!simulate) {
             NBTTagCompound nbt = serializeNBT();
-            if (nbt.hasKey(NuminaNBTConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
-                heat = nbt.getDouble(NuminaNBTConstants.CURRENT_HEAT);
+            if (nbt.hasKey(MPALIbConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
+                heat = nbt.getDouble(MPALIbConstants.CURRENT_HEAT);
             else
                 heat = 0;
-            capacity = maxExtract = maxReceive = nbt.getDouble(NuminaNBTConstants.MAXIMUM_HEAT);
-            MuseItemUtils.setDoubleOrRemove(container, NuminaNBTConstants.CURRENT_HEAT, heat);
+            capacity = maxExtract = maxReceive = nbt.getDouble(MPALIbConstants.MAXIMUM_HEAT);
+            NBTUtils.setModularItemDoubleOrRemove(container, MPALIbConstants.CURRENT_HEAT, heat);
         }
         return heatExtracted;
     }
 
     public void updateFromNBT() {
-        NBTTagCompound itemNBT = MuseNBTUtils.getMuseItemTag(container);
+        NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(container);
         NBTTagCompound outNBT = new NBTTagCompound();
-        capacity = maxExtract = maxReceive = moduleManager.getOrSetModularPropertyDouble(container, NuminaNBTConstants.MAXIMUM_HEAT) + baseMaxHeat;
-        heat = Math.round(MuseItemUtils.getDoubleOrZero(itemNBT, NuminaNBTConstants.CURRENT_HEAT));
+        capacity = maxExtract = maxReceive = moduleManager.getOrSetModularPropertyDouble(container, MPALIbConstants.MAXIMUM_HEAT) + baseMaxHeat;
+        heat = Math.round(NBTUtils.getDoubleOrZero(itemNBT, MPALIbConstants.CURRENT_HEAT));
 
-        outNBT.setDouble(NuminaNBTConstants.MAXIMUM_HEAT, capacity);
+        outNBT.setDouble(MPALIbConstants.MAXIMUM_HEAT, capacity);
         if (heat > 0)
-            outNBT.setDouble(NuminaNBTConstants.CURRENT_HEAT, heat);
+            outNBT.setDouble(MPALIbConstants.CURRENT_HEAT, heat);
         deserializeNBT(outNBT);
     }
 
@@ -75,17 +74,17 @@ public class MuseHeatItemWrapper extends HeatStorage implements INBTSerializable
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         if (heat > 0)
-            nbt.setDouble(NuminaNBTConstants.CURRENT_HEAT, heat);
-        nbt.setDouble(NuminaNBTConstants.MAXIMUM_HEAT, capacity);
+            nbt.setDouble(MPALIbConstants.CURRENT_HEAT, heat);
+        nbt.setDouble(MPALIbConstants.MAXIMUM_HEAT, capacity);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(final NBTTagCompound nbt) {
-        if (nbt.hasKey(NuminaNBTConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
-            heat = nbt.getDouble(NuminaNBTConstants.CURRENT_HEAT);
+        if (nbt.hasKey(MPALIbConstants.CURRENT_HEAT, Constants.NBT.TAG_DOUBLE))
+            heat = nbt.getDouble(MPALIbConstants.CURRENT_HEAT);
         else
             heat = 0;
-        capacity = maxExtract = maxReceive = nbt.getDouble(NuminaNBTConstants.MAXIMUM_HEAT);
+        capacity = maxExtract = maxReceive = nbt.getDouble(MPALIbConstants.MAXIMUM_HEAT);
     }
 }

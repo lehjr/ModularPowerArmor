@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.client.render.modelspec;
 
+import com.github.lehjr.forge.obj.MPALibOBJModel;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.client.render.modelspec.*;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.string.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.client.model.obj.MuseOBJModel;
-import net.machinemuse.numina.client.render.modelspec.*;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.string.MuseStringUtils;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -87,10 +87,10 @@ public enum ModelSpecXMLReader {
                             boolean isDefault = (eElement.hasAttribute("default") ? Boolean.parseBoolean(eElement.getAttribute("default")) : false);
 
                             switch (specType) {
-                                case WIELDABLE:
+                                case HANDHELD:
                                     // only allow custom models if allowed by config
 //                                    if (isDefault || MPSConfig.INSTANCE.allowCustomPowerFistModels())
-                                    parseModelSpec(specNode, map, EnumSpecType.WIELDABLE, specName, isDefault);
+                                    parseModelSpec(specNode, map, EnumSpecType.HANDHELD, specName, isDefault);
                                     break;
 
                                 case ARMOR_MODEL:
@@ -142,7 +142,7 @@ public enum ModelSpecXMLReader {
      * Biggest difference between the ModelSpec for Armor vs PowerFist is that the armor models don't need item camera transforms
      */
     public static void parseModelSpec(Node specNode, @Nullable TextureMap map, EnumSpecType specType, String specName, boolean isDefault) {
-        NodeList models = specNode.getOwnerDocument().getElementsByTagName(ModelSpecTags.TAG_MODEL);
+        NodeList models = specNode.getOwnerDocument().getElementsByTagName(MPALIbConstants.TAG_MODEL);
         java.util.List<String> textures = new ArrayList<>();
         IModelState modelState = null;
 
@@ -175,9 +175,9 @@ public enum ModelSpecXMLReader {
                             modelState = TRSRTransformation.identity();
                     }
 
-                    MuseOBJModel.MuseOBJBakedModel bakedModel = ModelRegistry.getInstance().loadBakedModel(new ResourceLocation(modelLocation), modelState);
+                    MPALibOBJModel.MPALibOBJBakedModel bakedModel = ModelRegistry.getInstance().loadBakedModel(new ResourceLocation(modelLocation), modelState);
                     // ModelSpec stuff
-                    if (bakedModel != null && bakedModel instanceof MuseOBJModel.MuseOBJBakedModel) {
+                    if (bakedModel != null && bakedModel instanceof MPALibOBJModel.MPALibOBJBakedModel) {
                         ModelSpec modelspec = new ModelSpec(bakedModel, modelState, specName, isDefault, specType);
 
                         NodeList bindingNodeList = ((Element) modelNode).getElementsByTagName("binding");
@@ -185,17 +185,17 @@ public enum ModelSpecXMLReader {
                             for (int k = 0; k < bindingNodeList.getLength(); k++) {
                                 Node bindingNode = bindingNodeList.item(k);
                                 SpecBinding binding = getBinding(bindingNode);
-                                NodeList partNodeList = ((Element) bindingNode).getElementsByTagName(ModelSpecTags.TAG_PART);
+                                NodeList partNodeList = ((Element) bindingNode).getElementsByTagName(MPALIbConstants.TAG_PART);
                                 for (int j = 0; j < partNodeList.getLength(); j++) {
                                     getModelPartSpec(modelspec, partNodeList.item(j), binding);
                                 }
                             }
                         }
 
-                        ModelRegistry.getInstance().put(MuseStringUtils.extractName(modelLocation), modelspec);
+                        ModelRegistry.getInstance().put(StringUtils.extractName(modelLocation), modelspec);
 
                     } else {
-                        MuseLogger.logError("Model file " + modelLocation + " not found! D:");
+                        MPALibLogger.logError("Model file " + modelLocation + " not found! D:");
                     }
                 }
             }
@@ -213,14 +213,16 @@ public enum ModelSpecXMLReader {
         Colour colour = partSpecElement.hasAttribute("defaultColor") ?
                 parseColour(partSpecElement.getAttribute("defaultColor")) : Colour.WHITE;
 
-        if (colour.a == 0)
+        if (colour.a == 0) {
             colour = colour.withAlpha(1.0);
+        }
 
-        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EntityEquipmentSlot.Type.ARMOR))
+        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EntityEquipmentSlot.Type.ARMOR)) {
             textureSpec.put(slot.getName(),
                     new TexturePartSpec(textureSpec,
                             new SpecBinding(null, slot, "all"),
                             textureSpec.addColourIfNotExist(colour), slot.getName(), fileLocation));
+        }
     }
 
     /**

@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.powermodule.vision;
 
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -21,14 +21,14 @@ import net.minecraft.item.ItemStack;
 public class BinocularsModule extends PowerModuleBase implements IToggleableModule {
     public BinocularsModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.laserHologram, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.laserHologram, 1));
         addBasePropertyDouble(MPSModuleConstants.FOV, 0.5);
         addTradeoffPropertyDouble(MPSModuleConstants.FIELD_OF_VIEW, MPSModuleConstants.FOV, 9.5, "%");
     }
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_VISION;
+        return EnumModuleCategory.VISION;
     }
 
     @Override

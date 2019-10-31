@@ -1,12 +1,13 @@
 package net.machinemuse.powersuits.powermodule.weapon;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -29,8 +30,8 @@ import javax.annotation.Nonnull;
 public class RailgunModule extends PowerModuleBase implements IRightClickModule, IPlayerTickModule {
     public RailgunModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 6));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.hvcapacitor, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.solenoid, 6));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.hvcapacitor, 1));
         addBasePropertyDouble(MPSModuleConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
         addBasePropertyDouble(MPSModuleConstants.RAILGUN_ENERGY_COST, 5000, "RF");
         addBasePropertyDouble(MPSModuleConstants.RAILGUN_HEAT_EMISSION, 2, "");
@@ -41,7 +42,7 @@ public class RailgunModule extends PowerModuleBase implements IRightClickModule,
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_WEAPON;
+        return EnumModuleCategory.WEAPON;
     }
 
     @Override
@@ -77,12 +78,12 @@ public class RailgunModule extends PowerModuleBase implements IRightClickModule,
     public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         if (hand == EnumHand.MAIN_HAND) {
             double range = 64;
-            double timer = MuseItemUtils.getDoubleOrZero(itemStackIn, MPSModuleConstants.TIMER);
+            double timer = NBTUtils.getModularItemDoubleOrZero(itemStackIn, MPSModuleConstants.TIMER);
             double energyConsumption = getEnergyUsage(itemStackIn);
             if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption && timer == 0) {
                 ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
-                MuseItemUtils.setDoubleOrRemove(itemStackIn, MPSModuleConstants.TIMER, 10);
-                MuseHeatUtils.heatPlayer(playerIn, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.RAILGUN_HEAT_EMISSION));
+                NBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPSModuleConstants.TIMER, 10);
+                HeatUtils.heatPlayer(playerIn, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.RAILGUN_HEAT_EMISSION));
                 RayTraceResult hitMOP = MusePlayerUtils.doCustomRayTrace(playerIn.world, playerIn, true, range);
                 // TODO: actual railgun sound
                 worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
@@ -139,8 +140,8 @@ public class RailgunModule extends PowerModuleBase implements IRightClickModule,
 
     @Override
     public void onPlayerTickActive(EntityPlayer player, ItemStack stack) {
-        double timer = MuseItemUtils.getDoubleOrZero(stack, MPSModuleConstants.TIMER);
-        if (timer > 0) MuseItemUtils.setDoubleOrRemove(stack, MPSModuleConstants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
+        double timer = NBTUtils.getModularItemDoubleOrZero(stack, MPSModuleConstants.TIMER);
+        if (timer > 0) NBTUtils.setModularItemDoubleOrRemove(stack, MPSModuleConstants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
     }
 
     @Override

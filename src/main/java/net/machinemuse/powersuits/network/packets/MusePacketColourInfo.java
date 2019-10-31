@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -58,14 +58,14 @@ public class MusePacketColourInfo implements IMessage {
 
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
                     if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-                        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-                        NBTTagCompound renderTag = itemTag.getCompoundTag(ModelSpecTags.TAG_RENDER);
+                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+                        NBTTagCompound renderTag = itemTag.getCompoundTag(MPALIbConstants.TAG_RENDER);
                         if (renderTag == null) {
                             renderTag = new NBTTagCompound();
-                            itemTag.setTag(ModelSpecTags.TAG_RENDER, renderTag);
+                            itemTag.setTag(MPALIbConstants.TAG_RENDER, renderTag);
                         }
                         if (renderTag != null)
-                            renderTag.setIntArray(ModelSpecTags.TAG_COLOURS, tagData);
+                            renderTag.setIntArray(MPALIbConstants.TAG_COLOURS, tagData);
                     }
                 });
             }

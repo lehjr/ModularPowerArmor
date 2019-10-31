@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,15 +70,15 @@ public class MusePacketInstallModuleRequest implements IMessage {
                             player.sendMessage(new TextComponentString("Server has disallowed this module. Sorry!"));
                         } else {
                             NonNullList<ItemStack> cost = ModuleManager.INSTANCE.getInstallCost(moduleName);
-                            if ((!ModuleManager.INSTANCE.itemHasModule(stack, moduleName) && MuseItemUtils.hasInInventory(cost, player.inventory)) || player.capabilities.isCreativeMode) {
-                                MuseNBTUtils.removeMuseValuesTag(stack);
+                            if ((!ModuleManager.INSTANCE.itemHasModule(stack, moduleName) && ItemUtils.hasInInventory(cost, player.inventory)) || player.capabilities.isCreativeMode) {
+                                NBTUtils.removeMuseValuesTag(stack);
                                 ModuleManager.INSTANCE.itemAddModule(stack, moduleType);
                                 for (ItemStack stackInCost : cost) {
                                     ElectricItemUtils.givePlayerEnergy(player, MPSConfig.INSTANCE.rfValueOfComponent(stackInCost));
                                 }
 
                                 if (!player.capabilities.isCreativeMode) {
-                                    MuseItemUtils.deleteFromInventory(cost, inventory);
+                                    ItemUtils.deleteFromInventory(cost, inventory);
                                 }
                                 // use builtin handler
                                 player.inventoryContainer.detectAndSendChanges();

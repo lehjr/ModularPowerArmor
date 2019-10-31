@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.powermodule.movement;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IRightClickModule;
-import net.machinemuse.numina.player.NuminaPlayerUtils;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.player.PlayerUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -27,8 +27,8 @@ import javax.annotation.Nonnull;
 public class BlinkDriveModule extends PowerModuleBase implements IRightClickModule {
     public BlinkDriveModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.ionThruster, 1));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.fieldEmitter, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.ionThruster, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.fieldEmitter, 2));
 
         addBasePropertyDouble(MPSModuleConstants.BLINK_DRIVE_ENERGY_CONSUMPTION, 10000, "RF");
         addBasePropertyDouble(MPSModuleConstants.BLINK_DRIVE_RANGE, 5, "m");
@@ -38,7 +38,7 @@ public class BlinkDriveModule extends PowerModuleBase implements IRightClickModu
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MOVEMENT;
+        return EnumModuleCategory.MOVEMENT;
     }
 
     @Override
@@ -52,18 +52,18 @@ public class BlinkDriveModule extends PowerModuleBase implements IRightClickModu
         int range = (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.BLINK_DRIVE_RANGE);
         int energyConsumption = getEnergyUsage(itemStackIn);
         if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
-            NuminaPlayerUtils.resetFloatKickTicks(playerIn);
+            PlayerUtils.resetFloatKickTicks(playerIn);
             int amountDrained = ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
 
             worldIn.playSound(playerIn, playerIn.getPosition(), enderman_portal, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
-            MuseLogger.logDebug("Range: " + range);
+            MPALibLogger.logDebug("Range: " + range);
             RayTraceResult hitRayTrace = MusePlayerUtils.doCustomRayTrace(playerIn.world, playerIn, true, range);
 
-            MuseLogger.logDebug("Hit:" + hitRayTrace);
+            MPALibLogger.logDebug("Hit:" + hitRayTrace);
             MusePlayerUtils.teleportEntity(playerIn, hitRayTrace);
             worldIn.playSound(playerIn, playerIn.getPosition(), enderman_portal, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
 
-            MuseLogger.logDebug("blink drive anount drained: " + amountDrained);
+            MPALibLogger.logDebug("blink drive anount drained: " + amountDrained);
             return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
         }
         return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);

@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.client.render.entity;
 
-import net.machinemuse.numina.client.render.MuseRenderer;
-import net.machinemuse.numina.client.render.RenderState;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.math.geometry.DrawableMuseCircle;
+import com.github.lehjr.mpalib.client.gui.geometry.DrawableCircle;
+import com.github.lehjr.mpalib.client.render.RenderState;
+import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.math.Colour;
 import net.machinemuse.powersuits.entity.EntityPlasmaBolt;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -17,25 +17,25 @@ import static net.minecraft.client.renderer.block.model.ItemCameraTransforms.Tra
 
 public class EntityRendererPlasmaBolt extends MuseEntityRenderer<EntityPlasmaBolt> {
     public static DoubleBuffer unrotatebuffer;
-    protected static DrawableMuseCircle circle1;
-    protected static DrawableMuseCircle circle2;
-    protected static DrawableMuseCircle circle3;
-    protected static DrawableMuseCircle circle4;
+    protected static DrawableCircle circle1;
+    protected static DrawableCircle circle2;
+    protected static DrawableCircle circle3;
+    protected static DrawableCircle circle4;
 
     public EntityRendererPlasmaBolt(RenderManager renderManager) {
         super(renderManager);
         Colour c1 = new Colour(.3, .3, 1, 0.3);
-        circle1 = new DrawableMuseCircle(c1, c1);
+        circle1 = new DrawableCircle(c1, c1);
         c1 = new Colour(.3, .3, 1, 0.6);
-        circle2 = new DrawableMuseCircle(c1, c1);
+        circle2 = new DrawableCircle(c1, c1);
         c1 = new Colour(.3, .3, 1, 1);
-        circle3 = new DrawableMuseCircle(c1, c1);
-        circle4 = new DrawableMuseCircle(c1, new Colour(1, 1, 1, 1));
+        circle3 = new DrawableCircle(c1, c1);
+        circle4 = new DrawableCircle(c1, new Colour(1, 1, 1, 1));
     }
 
     public static void doRender(double size) {
         GL11.glPushMatrix();
-        MuseRenderer.unRotate();
+        Renderer.unRotate();
         double scale = size / 16.0;
         GL11.glScaled(scale, scale, scale);
         int millisPerCycle = 500;
@@ -51,7 +51,7 @@ public class EntityRendererPlasmaBolt extends MuseEntityRenderer<EntityPlasmaBol
         for (int i = 0; i < 3; i++) {
             double angle1 = (Math.random() * 2 * Math.PI);
             double angle2 = (Math.random() * 2 * Math.PI);
-            MuseRenderer.drawLightning(Math.cos(angle1) * 0.5, Math.sin(angle1) * 0.5, 0, Math.cos(angle2) * 5, Math.sin(angle2) * 5, 1,
+            Renderer.drawLightning(Math.cos(angle1) * 0.5, Math.sin(angle1) * 0.5, 0, Math.cos(angle2) * 5, Math.sin(angle2) * 5, 1,
                     new Colour(1, 1, 1, 0.9));
         }
         RenderState.glowOff();

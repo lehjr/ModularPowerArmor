@@ -1,14 +1,14 @@
 package net.machinemuse.powersuits.item;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.capabilities.energy.adapter.IMuseElectricItem;
-import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
-import net.machinemuse.numina.client.render.modelspec.TexturePartSpec;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.module.IModuleManager;
-import net.machinemuse.numina.string.MuseStringUtils;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
+import com.github.lehjr.mpalib.client.render.modelspec.TexturePartSpec;
+import com.github.lehjr.mpalib.legacy.energy.IElectricItem;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.legacy.module.IModuleManager;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * <p>
  * Ported to Java by lehjr on 11/4/16.
  */
-public interface IModularItemBase extends IModularItem, IMuseElectricItem {
+public interface IModularItemBase extends IModularItem, IElectricItem {
     @Override
     default double getMaxBaseHeat(@Nonnull ItemStack itemStack) {
         return MPSConfig.INSTANCE.getBaseMaxHeat(itemStack);
@@ -33,22 +33,22 @@ public interface IModularItemBase extends IModularItem, IMuseElectricItem {
     default Colour getColorFromItemStack(@Nonnull ItemStack stack) {
         try {
             NBTTagCompound renderTag = MPSNBTUtils.getMuseRenderTag(stack);
-            if (renderTag.hasKey(ModelSpecTags.NBT_TEXTURESPEC_TAG)) {
-                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompoundTag(ModelSpecTags.NBT_TEXTURESPEC_TAG));
-                NBTTagCompound specTag = renderTag.getCompoundTag(ModelSpecTags.NBT_TEXTURESPEC_TAG);
+            if (renderTag.hasKey(MPALIbConstants.NBT_TEXTURESPEC_TAG)) {
+                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompoundTag(MPALIbConstants.NBT_TEXTURESPEC_TAG));
+                NBTTagCompound specTag = renderTag.getCompoundTag(MPALIbConstants.NBT_TEXTURESPEC_TAG);
                 int index = partSpec.getColourIndex(specTag);
-                int[] colours = renderTag.getIntArray(ModelSpecTags.TAG_COLOURS);
+                int[] colours = renderTag.getIntArray(MPALIbConstants.TAG_COLOURS);
                 if (colours.length > index)
                     return new Colour(colours[index]);
             }
         } catch (Exception e) {
-            MuseLogger.logException("something failed here: ", e);
+            MPALibLogger.logException("something failed here: ", e);
         }
         return Colour.WHITE;
     }
 
     default String formatInfo(String string, double value) {
-        return string + '\t' + MuseStringUtils.formatNumberShort(value);
+        return string + '\t' + StringUtils.formatNumberShort(value);
     }
 
     @Override

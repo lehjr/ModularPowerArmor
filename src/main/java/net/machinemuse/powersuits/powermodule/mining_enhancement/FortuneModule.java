@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.powermodule.mining_enhancement;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IEnchantmentModule;
-import net.machinemuse.numina.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IEnchantmentModule;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;

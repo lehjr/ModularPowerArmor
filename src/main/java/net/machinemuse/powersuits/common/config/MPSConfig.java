@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.common.config;
 
+import com.github.lehjr.mpalib.basemod.MPALib;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.machinemuse.numina.basemod.Numina;
-import net.machinemuse.numina.misc.ModCompatibility;
-import net.machinemuse.numina.module.EnumModuleCategory;
 import net.machinemuse.powersuits.common.MPSCreativeTab;
 import net.machinemuse.powersuits.item.ItemComponent;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorBoots;
@@ -58,7 +58,7 @@ public enum MPSConfig {
      */
     @Nullable
     public static File getConfigFolder() {
-        return Numina.configDir;
+        return MPALib.configDir;
     }
 
     @Nullable
@@ -199,37 +199,37 @@ public enum MPSConfig {
      */
     public static int getMaxModulesOfType(EnumModuleCategory category) {
         switch (category) {
-            case CATEGORY_ARMOR:
+            case ARMOR:
                 return getServerSettings() != null ? getServerSettings().maxArmorModules : MPSSettings.limits.maxArmorModules;
 
-            case CATEGORY_ENERGY_STORAGE:
+            case ENERGY_STORAGE:
                 return getServerSettings() != null ? getServerSettings().maxEnergyStorageModules : MPSSettings.limits.maxEnergyStorageModules;
 
-            case CATEGORY_ENERGY_GENERATION:
+            case ENERGY_GENERATION:
                 return getServerSettings() != null ? getServerSettings().maxEnergyGenModules : MPSSettings.limits.maxEnergyGenModules;
 
-            case CATEGORY_TOOL:
+            case TOOL:
                 return getServerSettings() != null ? getServerSettings().maxToolModules : MPSSettings.limits.maxToolModules;
 
-            case CATEGORY_WEAPON:
+            case WEAPON:
                 return getServerSettings() != null ? getServerSettings().maxWeaponModules : MPSSettings.limits.maxWeaponModules;
 
-            case CATEGORY_MOVEMENT:
+            case MOVEMENT:
                 return getServerSettings() != null ? getServerSettings().maxMovementModules : MPSSettings.limits.maxMovementModules;
 
-            case CATEGORY_COSMETIC:
+            case COSMETIC:
                 return getServerSettings() != null ? getServerSettings().maxCosmeticModules : MPSSettings.limits.maxCosmeticModules;
 
-            case CATEGORY_VISION:
+            case VISION:
                 return getServerSettings() != null ? getServerSettings().maxVisionModules : MPSSettings.limits.maxVisionModules;
 
-            case CATEGORY_ENVIRONMENTAL:
+            case ENVIRONMENTAL:
                 return getServerSettings() != null ? getServerSettings().maxEnvironmentalModules : MPSSettings.limits.maxEnvironmentalModules;
 
-            case CATEGORY_SPECIAL:
+            case SPECIAL:
                 return getServerSettings() != null ? getServerSettings().maxSpecialModules : MPSSettings.limits.maxSpecialModules;
 
-            case CATEGORY_MINING_ENHANCEMENT:
+            case MINING_ENHANCEMENT:
                 return getServerSettings() != null ? getServerSettings().maxMiningEnhancementModules : MPSSettings.limits.maxMiningEnhancementModules;
 
             default:

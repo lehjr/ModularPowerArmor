@@ -1,5 +1,6 @@
 package net.machinemuse.powersuits.common;
 
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.common.proxy.CommonProxy;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -11,9 +12,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import javax.annotation.Nonnull;
 
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
-import static net.machinemuse.powersuits.common.ModularPowersuits.VERSION;
-
 /**
  * Modular Powersuits
  *
@@ -21,12 +19,10 @@ import static net.machinemuse.powersuits.common.ModularPowersuits.VERSION;
  * <p>
  * Ported to Java by lehjr on 11/14/16.
  */
-@Mod(modid = MODID, version = VERSION, dependencies = "required-after:numina@[@numina_version@,)")
+@Mod(modid = MPSModConstants.MODID, name = MPSModConstants.NAME, version = MPSModConstants.VERSION, dependencies = "required-after:mpalib@[@mpalib_version@,)")
 public enum ModularPowersuits {
     INSTANCE;
 
-    public static final String MODID = "powersuits";
-    public static final String VERSION = "@VERSION@";
     @SidedProxy(clientSide = "net.machinemuse.powersuits.common.proxy.ClientProxy", serverSide = "net.machinemuse.powersuits.common.proxy.CommonProxy")
     public static CommonProxy proxy;
     public static Configuration config = null;

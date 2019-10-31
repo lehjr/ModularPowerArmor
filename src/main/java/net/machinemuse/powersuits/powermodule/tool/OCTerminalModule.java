@@ -8,7 +8,7 @@ package net.machinemuse.powersuits.powermodule.tool;// package andrew.powersuits
 // import net.machinemuse.powersuits.item.ItemComponent;
 // import net.machinemuse.powersuits.powermodule.PowerModuleBase;
 // import net.machinemuse.powersuits.utils.MuseCommonStrings;
-// import net.machinemuse.numina.utils.item.MuseItemUtils;
+// import net.machinemuse.numina.utils.item.ItemUtils;
 // import net.minecraft.entity.player.EntityPlayer;
 // import net.minecraft.entity.player.EntityPlayerMP;
 // import net.minecraft.item.ItemStack;
@@ -49,14 +49,14 @@ package net.machinemuse.powersuits.powermodule.tool;// package andrew.powersuits
 //
 // public OCTerminalModule(((EnumModuleTarget moduleTarget))) {
 //         super(validItems);
-//         addInstallCost(MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 4));
+//         addInstallCost(ItemUtils.copyAndResize(ItemComponent.controlCircuit, 4));
 //         terminal = API.items.get("terminal").createItemStack(1);
 //         addInstallCost(terminal);
 // }
 //
 // @Override
 // public String getCategory() {
-//         return MuseCommonStrings.CATEGORY_TOOL;
+//         return MuseCommonStrings.TOOL;
 // }
 //
 // @Override

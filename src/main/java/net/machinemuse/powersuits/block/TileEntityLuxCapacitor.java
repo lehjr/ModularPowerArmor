@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.block;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.math.Colour;
-import net.machinemuse.numina.tileentity.MuseTileEntity;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-public class TileEntityLuxCapacitor extends MuseTileEntity {
+public class TileEntityLuxCapacitor extends MPALibTileEntity {
     private Colour color;
 
     public TileEntityLuxCapacitor() {
@@ -34,7 +34,7 @@ public class TileEntityLuxCapacitor extends MuseTileEntity {
         if (nbt.hasKey("c")) {
             color = new Colour(nbt.getInteger("c"));
         } else {
-            MuseLogger.logDebug("No NBT found! D:");
+            MPALibLogger.logDebug("No NBT found! D:");
         }
     }
 

@@ -1,7 +1,7 @@
 package net.machinemuse.powersuits.powermodule.environmental;
 
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -27,7 +27,7 @@ public class ApiaristArmorModule extends PowerModuleBase {
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_ENVIRONMENTAL;
+        return EnumModuleCategory.ENVIRONMENTAL;
     }
 
     @Override

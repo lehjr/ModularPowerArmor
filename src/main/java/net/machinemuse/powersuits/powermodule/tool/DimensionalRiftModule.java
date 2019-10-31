@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.powermodule.tool;
 
-
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IRightClickModule;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -17,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -28,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
 
 import javax.annotation.Nonnull;
-
-import static net.machinemuse.numina.constants.NuminaNBTConstants.TAG_ONLINE;
 
 
 /**
@@ -43,16 +40,16 @@ public class DimensionalRiftModule extends PowerModuleBase implements IRightClic
 
     public DimensionalRiftModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
         addBasePropertyDouble(MPSModuleConstants.HEAT_GENERATION, 55);
         addBasePropertyDouble(MPSModuleConstants.ENERGY_CONSUMPTION, 200000);
-        this.defaultTag.setBoolean(TAG_ONLINE, false);
+        this.defaultTag.setBoolean(MPALIbConstants.TAG_ONLINE, false);
     }
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_TOOL;
+        return EnumModuleCategory.TOOL;
     }
 
     @Override
@@ -75,7 +72,7 @@ public class DimensionalRiftModule extends PowerModuleBase implements IRightClic
             int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
             if (playerEnergy >= energyConsumption) {
                 ElectricItemUtils.drainPlayerEnergy(player, getEnergyUsage(itemStackIn));
-                MuseHeatUtils.heatPlayer(player, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.HEAT_GENERATION));
+                HeatUtils.heatPlayer(player, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStackIn, MPSModuleConstants.HEAT_GENERATION));
                 return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
             }
         }

@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.mining_enhancement;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IEnchantmentModule;
-import net.machinemuse.numina.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IEnchantmentModule;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -34,8 +34,8 @@ public class SilkTouchModule extends PowerModuleBase implements IEnchantmentModu
         book.addEnchantment(Enchantments.SILK_TOUCH, 1);
 
 //        ModuleManager.INSTANCE.addInstallCost(getDataName(), book);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.servoMotor, 4));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.controlCircuit, 12));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 4));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 12));
 
         addBasePropertyDouble(MPSModuleConstants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
     }
@@ -72,7 +72,7 @@ public class SilkTouchModule extends PowerModuleBase implements IEnchantmentModu
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MINING_ENHANCEMENT;
+        return EnumModuleCategory.MINING_ENHANCEMENT;
     }
 
     @Override

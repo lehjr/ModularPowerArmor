@@ -1,6 +1,6 @@
 package net.machinemuse.powersuits.capabilities;
 
-import net.machinemuse.numina.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -40,7 +40,7 @@ public class ItemHandlerPowerFist extends ItemStackHandler {
     }
 
     public void updateFromNBT() {
-        final NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(container);
+        final NBTTagCompound itemTag = NBTUtils.getMuseItemTag(container);
 
         // TODO: edit to hold other things like emulated tools
         if (itemTag != null && itemTag.hasKey(TAG_ITEMS, Constants.NBT.TAG_COMPOUND)) {
@@ -59,7 +59,7 @@ public class ItemHandlerPowerFist extends ItemStackHandler {
     @Override
     protected void onContentsChanged(final int slot) {
         super.onContentsChanged(slot);
-        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(container);
+        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(container);
         itemTag.setTag(TAG_ITEMS, serializeNBT());
     }
 }

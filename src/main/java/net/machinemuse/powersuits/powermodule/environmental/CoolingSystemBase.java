@@ -1,11 +1,11 @@
 package net.machinemuse.powersuits.powermodule.environmental;
 
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;
 import net.machinemuse.powersuits.utils.modulehelpers.FluidUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,11 +24,11 @@ public abstract class CoolingSystemBase extends PowerModuleBase implements IPlay
     @Override
     public void onPlayerTickActive(EntityPlayer player, ItemStack itemStack) {
         if (!player.world.isRemote) {
-            double currentHeat = MuseHeatUtils.getPlayerHeat(player);
+            double currentHeat = HeatUtils.getPlayerHeat(player);
             if (currentHeat <= 0)
                 return;
 
-            double maxHeat = MuseHeatUtils.getPlayerMaxHeat(player);
+            double maxHeat = HeatUtils.getPlayerMaxHeat(player);
             FluidUtils fluidUtils = new FluidUtils(player, itemStack, this.getDataName());
             double fluidEfficiencyBoost = fluidUtils.getCoolingEfficiency();
 
@@ -41,7 +41,7 @@ public abstract class CoolingSystemBase extends PowerModuleBase implements IPlay
 
 //                    System.out.println("cooling normally");
 
-                    coolJoules = MuseHeatUtils.coolPlayer(player, coolJoules);
+                    coolJoules = HeatUtils.coolPlayer(player, coolJoules);
 
                     ElectricItemUtils.drainPlayerEnergy(player,
                             (int) (coolJoules * getEnergyConsumption(itemStack)));
@@ -58,13 +58,13 @@ public abstract class CoolingSystemBase extends PowerModuleBase implements IPlay
                 // if system has enough fluid using this "very special" formula
                 if (fluidLevel >= (int) (fluidEfficiencyBoost * overheatAmount)) {
                     fluidUtils.drain((int) (fluidEfficiencyBoost * overheatAmount));
-                    MuseHeatUtils.coolPlayer(player, overheatAmount + 1);
+                    HeatUtils.coolPlayer(player, overheatAmount + 1);
                     usedEmergencyCooling = true;
 
                     // sacrifice whatever fluid is in the system
                 } else if (fluidLevel > 0) {
                     fluidUtils.drain(fluidLevel);
-                    MuseHeatUtils.coolPlayer(player, fluidEfficiencyBoost * fluidLevel);
+                    HeatUtils.coolPlayer(player, fluidEfficiencyBoost * fluidLevel);
                     usedEmergencyCooling = true;
                 }
 
@@ -91,7 +91,7 @@ public abstract class CoolingSystemBase extends PowerModuleBase implements IPlay
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_ENVIRONMENTAL;
+        return EnumModuleCategory.ENVIRONMENTAL;
     }
 
     @Override

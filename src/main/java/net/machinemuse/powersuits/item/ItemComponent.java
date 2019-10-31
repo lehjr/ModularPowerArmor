@@ -1,6 +1,7 @@
 package net.machinemuse.powersuits.item;
 
-import net.machinemuse.numina.string.MuseStringUtils;
+import com.github.lehjr.mpalib.string.StringUtils;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.utils.MuseCommonStrings;
 import net.minecraft.client.resources.I18n;
@@ -13,11 +14,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
 
 public class ItemComponent extends Item {
     public static Map<Integer, String> names = new HashMap<>();
@@ -49,7 +49,7 @@ public class ItemComponent extends Item {
         this.maxStackSize = 64;
 
         this.setRegistryName(regName);
-        this.setTranslationKey(new StringBuilder(MODID).append(".").append("powerArmorComponent").toString());
+        this.setTranslationKey(new StringBuilder(MPSModConstants.MODID).append(".").append("powerArmorComponent").toString());
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
@@ -72,10 +72,10 @@ public class ItemComponent extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> currentTipList, ITooltipFlag flagIn) {
         if (MPSConfig.INSTANCE.doAdditionalInfo()) {
             String message = I18n.format("tooltip.powersuits.componentTooltip");
-            message = MuseStringUtils.wrapMultipleFormatTags(message, MuseStringUtils.FormatCodes.Grey, MuseStringUtils.FormatCodes.Italic);
+            message = StringUtils.wrapMultipleFormatTags(message, StringUtils.FormatCodes.Grey, StringUtils.FormatCodes.Italic);
             currentTipList.add(message);
             String description = I18n.format(getTranslationKey(stack) + ".desc");
-            currentTipList.addAll(MuseStringUtils.wrapStringToLength(description, 30));
+            currentTipList.addAll(Arrays.asList(StringUtils.wordUtilsWrap(description, 30)));
         } else {
             currentTipList.add(MuseCommonStrings.additionalInfoInstructions());
         }

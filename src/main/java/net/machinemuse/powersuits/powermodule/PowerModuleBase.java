@@ -1,8 +1,9 @@
 package net.machinemuse.powersuits.powermodule;
 
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.numina.nbt.propertymodifier.*;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.nbt.propertymodifier.*;
 import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.common.config.MPSConfig;
@@ -18,8 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static net.machinemuse.numina.constants.NuminaNBTConstants.TAG_ONLINE;
-
 public abstract class PowerModuleBase implements IPowerModule {
     protected static Map<String, String> units = new HashMap<>();
     protected Map<String, List<IPropertyModifier>> propertyModifiers;
@@ -31,7 +30,7 @@ public abstract class PowerModuleBase implements IPowerModule {
         this.moduleTarget = moduleTargetIn;
         this.propertyModifiers = new HashMap();
         this.defaultTag = new NBTTagCompound();
-        this.defaultTag.setBoolean(TAG_ONLINE, true);
+        this.defaultTag.setBoolean(MPALIbConstants.TAG_ONLINE, true);
         this.isAllowed = MPSConfig.INSTANCE.getModuleAllowedorDefault(dataNameIn, true);
         addBasePropertyDouble(MPSModuleConstants.SLOT_POINTS, 1);
     }
@@ -40,7 +39,7 @@ public abstract class PowerModuleBase implements IPowerModule {
         this.moduleTarget = moduleTargetIn;
         this.propertyModifiers = new HashMap();
         this.defaultTag = new NBTTagCompound();
-        this.defaultTag.setBoolean(TAG_ONLINE, true);
+        this.defaultTag.setBoolean(MPALIbConstants.TAG_ONLINE, true);
         this.isAllowed = MPSConfig.INSTANCE.getModuleAllowedorDefault(getDataName(), true);
         addBasePropertyDouble(MPSModuleConstants.SLOT_POINTS, 1);
     }

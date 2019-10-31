@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.common.config;
 
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.machinemuse.numina.basemod.MuseLogger;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -119,14 +119,14 @@ public class CosmeticPresetSaveLoad {
                                 Files.copy(selectedPath, target);//, StandardCopyOption.REPLACE_EXISTING);
                         } catch(Exception e) {
                             // FIXME
-                            MuseLogger.logException("Exception here: ", e);
+                            MPALibLogger.logException("Exception here: ", e);
                         }
                     }
                     return FileVisitResult.CONTINUE;
                 }
             });
         } catch (Exception e) {
-            MuseLogger.logException("Something happened here: ", e);
+            MPALibLogger.logException("Something happened here: ", e);
         }
     }
 
@@ -176,14 +176,14 @@ public class CosmeticPresetSaveLoad {
                 Files.createDirectories(directory);
             } catch(Exception e) {
                 // FIXME
-                MuseLogger.logException("Exception here: ", e); // debugging during development
+                MPALibLogger.logException("Exception here: ", e); // debugging during development
             }
 
             // final complete path
             Path fullPath = Paths.get(directory.toString(), nameIn + "." + EXTENSION);
             Files.write(fullPath, byteArray);
         } catch(Exception e) {
-            MuseLogger.logException("Failed to saveButton preset: ", e);
+            MPALibLogger.logException("Failed to saveButton preset: ", e);
             return false;
         }
         return true;

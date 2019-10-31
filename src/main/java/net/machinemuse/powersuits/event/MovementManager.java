@@ -1,17 +1,17 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.numina.client.sound.Musique;
-import net.machinemuse.numina.config.NuminaConfig;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.player.NuminaPlayerUtils;
+import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.config.MPALibConfig;
+import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.math.MathUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.player.PlayerUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
-import net.machinemuse.powersuits.control.PlayerMovementInputWrapper;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -22,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -70,7 +69,7 @@ public class MovementManager {
         // player walking speed: 0.10000000149011612
         // player sprintint speed: 0.13000001
         double additive = multiplier * (player.isSprinting() ? 0.13 : 0.1)/2;
-        NBTTagCompound itemNBT = MuseNBTUtils.getNBTTag(itemStack);
+        NBTTagCompound itemNBT = NBTUtils.getNBTTag(itemStack);
         boolean hasAttribute = false;
         if (itemNBT.hasKey("AttributeModifiers", Constants.NBT.TAG_LIST)) {
             NBTTagList nbttaglist = itemNBT.getTagList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
@@ -185,12 +184,12 @@ public class MovementManager {
             player.motionX *= ratio;
             player.motionZ *= ratio;
         }
-        NuminaPlayerUtils.resetFloatKickTicks(player);
+        PlayerUtils.resetFloatKickTicks(player);
         return thrustUsed;
     }
 
     public static double computePlayerVelocity(EntityPlayer entityPlayer) {
-        return MuseMathUtils.pythag(entityPlayer.motionX, entityPlayer.motionY, entityPlayer.motionZ);
+        return MathUtils.pythag(entityPlayer.motionX, entityPlayer.motionY, entityPlayer.motionZ);
     }
 
     @SubscribeEvent
@@ -204,7 +203,7 @@ public class MovementManager {
                 double jumpAssist = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.JUMP_MULTIPLIER) * 2;
                 double drain = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.JUMP_ENERGY_CONSUMPTION);
                 int avail = ElectricItemUtils.getPlayerEnergy(player);
-                if ((FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) && NuminaConfig.useSounds()) {
+                if ((FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) && MPALibConfig.useSounds()) {
                     Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
                 }
                 if (drain < avail) {
@@ -232,10 +231,10 @@ public class MovementManager {
             if (!boots.isEmpty()) {
                 if (ModuleManager.INSTANCE.itemHasActiveModule(boots, MPSModuleConstants.MODULE_SHOCK_ABSORBER__DATANAME)) {
                     double distanceAbsorb =
-                            MuseMathUtils.clampDouble(event.getDistance() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, MPSModuleConstants.SHOCK_ABSORB_MULTIPLIER),
+                            MathUtils.clampDouble(event.getDistance() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, MPSModuleConstants.SHOCK_ABSORB_MULTIPLIER),
                             0, event.getDistance());
 
-                    if (player.world.isRemote && NuminaConfig.useSounds()) {
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
 

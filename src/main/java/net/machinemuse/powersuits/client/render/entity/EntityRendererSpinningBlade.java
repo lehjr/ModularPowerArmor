@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.client.render.entity;
 
-import net.machinemuse.numina.client.render.MuseTextureUtils;
+import com.github.lehjr.mpalib.client.render.TextureUtils;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.api.constants.MPSResourceConstants;
-import net.machinemuse.powersuits.common.ModularPowersuits;
 import net.machinemuse.powersuits.entity.EntitySpinningBlade;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +15,7 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<EntitySpinni
 
     @Override
     protected ResourceLocation getEntityTexture(EntitySpinningBlade entity) {
-        return new ResourceLocation(ModularPowersuits.MODID, "modules/spinningblade.png");
+        return new ResourceLocation(MPSModConstants.MODID, "modules/spinningblade.png");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<EntitySpinni
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);
-        MuseTextureUtils.pushTexture(MPSResourceConstants.TEXTURE_PREFIX + "modules/spinningblade.png");
+        TextureUtils.pushTexture(MPSResourceConstants.TEXTURE_PREFIX + "modules/spinningblade.png");
         GL11.glTranslated(x, y, z);
         double motionscale = Math.sqrt(entity.motionZ * entity.motionZ + entity.motionX * entity.motionX);
         GL11.glRotatef(90, 1, 0, 0);
@@ -44,7 +44,7 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<EntitySpinni
         GL11.glVertex3d(1, -1, 0);
 
         GL11.glEnd();
-        MuseTextureUtils.popTexture();
+        TextureUtils.popTexture();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }

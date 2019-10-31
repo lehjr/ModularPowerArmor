@@ -3,6 +3,16 @@ package net.machinemuse.powersuits.item.tool;
 import appeng.api.implementations.items.IAEWrench;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
+import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.google.common.collect.Multimap;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -10,16 +20,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import crazypants.enderio.api.tool.ITool;
 import forestry.api.arboriculture.IToolGrafter;
 import mekanism.api.IMekWrench;
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.IModeChangingItem;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.IBlockBreakingModule;
-import net.machinemuse.numina.module.IMiningEnhancementModule;
-import net.machinemuse.numina.module.IPowerModule;
-import net.machinemuse.numina.module.IRightClickModule;
+import net.machinemuse.powersuits.api.constants.MPSModConstants;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.capabilities.MPSCapProvider;
 import net.machinemuse.powersuits.common.ModuleManager;
@@ -47,8 +48,6 @@ import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static net.machinemuse.powersuits.common.ModularPowersuits.MODID;
 
 //import mods.railcraft.api.core.items.IToolCrowbar;
 
@@ -88,7 +87,7 @@ public class ItemPowerFist extends MPSItemElectricTool
     public ItemPowerFist(String regName) {
         super(0.0f, 0.0f, ToolMaterial.IRON); // FIXME
         this.setRegistryName(regName);
-        this.setTranslationKey(new StringBuilder(MODID).append(".").append("powerFist").toString());
+        this.setTranslationKey(new StringBuilder(MPSModConstants.MODID).append(".").append("powerFist").toString());
         this.setMaxStackSize(1);
         this.setMaxDamage(0);
         this.setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
@@ -321,7 +320,7 @@ public class ItemPowerFist extends MPSItemElectricTool
     public float getSaplingModifier(ItemStack stack, World world, EntityPlayer player, BlockPos pos) {
         if (ModuleManager.INSTANCE.itemHasActiveModule(stack, MPSModuleConstants.MODULE_GRAFTER__DATANAME)) {
             ElectricItemUtils.drainPlayerEnergy(player, (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.GRAFTER_ENERGY_CONSUMPTION));
-            MuseHeatUtils.heatPlayer(player, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.GRAFTER_HEAT_GENERATION));
+            HeatUtils.heatPlayer(player, ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.GRAFTER_HEAT_GENERATION));
             return 100.0f;
         }
         return 0.0f;
@@ -460,7 +459,7 @@ public class ItemPowerFist extends MPSItemElectricTool
 
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
-        int capacity = (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, NuminaNBTConstants.MAXIMUM_ENERGY);
+        int capacity = (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPALIbConstants.MAXIMUM_ENERGY);
         if (capacity > 0)
             return true;
         return false;
@@ -468,8 +467,8 @@ public class ItemPowerFist extends MPSItemElectricTool
 
     @Override
     public double getDurabilityForDisplay(final ItemStack stack) {
-        int capacity = (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, NuminaNBTConstants.MAXIMUM_ENERGY);
-        int energy = Math.min(capacity, (int) Math.round(MuseItemUtils.getDoubleOrZero(stack, NuminaNBTConstants.CURRENT_ENERGY)));
+        int capacity = (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPALIbConstants.MAXIMUM_ENERGY);
+        int energy = Math.min(capacity, (int) Math.round(NBTUtils.getModularItemDoubleOrZero(stack, MPALIbConstants.CURRENT_ENERGY)));
         return 1 - energy / (float) capacity;
     }
 

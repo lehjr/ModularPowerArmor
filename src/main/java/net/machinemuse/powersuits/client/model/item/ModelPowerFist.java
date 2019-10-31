@@ -1,20 +1,20 @@
 package net.machinemuse.powersuits.client.model.item;
 
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
+import com.github.lehjr.mpalib.client.render.modelspec.ModelSpec;
+import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
 import com.google.common.collect.ImmutableList;
-import net.machinemuse.numina.client.model.helper.ModelTransformCalibration;
-import net.machinemuse.numina.client.model.helper.MuseModelHelper;
-import net.machinemuse.numina.client.render.modelspec.ModelPartSpec;
-import net.machinemuse.numina.client.render.modelspec.ModelRegistry;
-import net.machinemuse.numina.client.render.modelspec.ModelSpec;
-import net.machinemuse.numina.client.render.modelspec.PartSpecBase;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.math.Colour;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.ModelBakeEventHandler;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.item.IModularItemBase;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
-import net.machinemuse.powersuits.utils.nbt.NBTTagAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -116,7 +116,7 @@ public class ModelPowerFist implements IBakedModel {
 
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 
-        int[] colours = renderSpec != null ? renderSpec.getIntArray(ModelSpecTags.TAG_COLOURS) : new int[0];
+        int[] colours = renderSpec != null ? renderSpec.getIntArray(MPALIbConstants.TAG_COLOURS) : new int[0];
 
         Colour partColor;
         TRSRTransformation transform;
@@ -144,7 +144,7 @@ public class ModelPowerFist implements IBakedModel {
 
                         if ((!isFiring && (itemState.equals("all") || itemState.equals("normal"))) ||
                                 (isFiring && (itemState.equals("all") || itemState.equals("firing"))))
-                            builder.addAll(MuseModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
+                            builder.addAll(ModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
                     }
                 }
             }

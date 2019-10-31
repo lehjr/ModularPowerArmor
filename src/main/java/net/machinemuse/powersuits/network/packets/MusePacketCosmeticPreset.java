@@ -1,10 +1,10 @@
 package net.machinemuse.powersuits.network.packets;
 
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
-import net.machinemuse.numina.constants.ModelSpecTags;
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
-import net.machinemuse.numina.network.MuseByteBufferUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -52,9 +52,9 @@ public class MusePacketCosmeticPreset implements IMessage {
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
 
                     if (presetName != null && stack.getItem() instanceof IModularItem) {
-                        NBTTagCompound itemTag = MuseNBTUtils.getMuseItemTag(stack);
-                        itemTag.removeTag(ModelSpecTags.TAG_RENDER);
-                        itemTag.setString(ModelSpecTags.TAG_COSMETIC_PRESET, presetName);
+                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+                        itemTag.removeTag(MPALIbConstants.TAG_RENDER);
+                        itemTag.setString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
                     }
                 });
             }

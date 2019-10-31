@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.capabilities;
 
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.legacy.module.IModuleManager;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.google.common.collect.Lists;
-import net.machinemuse.numina.constants.NuminaNBTConstants;
-import net.machinemuse.numina.module.IModuleManager;
-import net.machinemuse.numina.nbt.MuseNBTUtils;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -163,7 +163,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
     }
 
     public void updateFromNBT() {
-        NBTTagCompound itemNBT = MuseNBTUtils.getMuseItemTag(container);
+        NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(container);
         if (itemNBT != null) {
             for (ArmorTank tank : allHandlers) {
                 if (moduleManager.itemHasModule(container, tank.moduleDataName)) {
@@ -245,7 +245,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
         @Nullable
         @Override
         public NBTTagCompound getModuleTag() {
-            NBTTagCompound nbt = MuseNBTUtils.getMuseItemTag(container);
+            NBTTagCompound nbt = NBTUtils.getMuseItemTag(container);
             return (NBTTagCompound) nbt.getTag(moduleDataName);
         }
 
@@ -261,7 +261,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
 
         public NBTTagCompound writeToModuleTag(NBTTagCompound nbt) {
             NBTTagCompound fluidTag = this.writeToNBT(new NBTTagCompound());
-            nbt.setTag(NuminaNBTConstants.FLUID_NBT_KEY, fluidTag);
+            nbt.setTag(MPALIbConstants.FLUID_NBT_KEY, fluidTag);
             return nbt;
         }
 
@@ -274,7 +274,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
         }
 
         public FluidTank readFromModuleTag(NBTTagCompound nbt) {
-            NBTTagCompound fluidTag = nbt.getCompoundTag(NuminaNBTConstants.FLUID_NBT_KEY);
+            NBTTagCompound fluidTag = nbt.getCompoundTag(MPALIbConstants.FLUID_NBT_KEY);
             if (fluidTag != null)
                 return this.readFromNBT(fluidTag);
             return this;
@@ -282,7 +282,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
 
         @Override
         protected void onContentsChanged() {
-            NBTTagCompound itemNBT = MuseNBTUtils.getMuseItemTag(container);
+            NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(container);
             NBTTagCompound moduleTag = itemNBT.getCompoundTag(moduleDataName);
 
             if (moduleTag != null) {

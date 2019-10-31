@@ -1,9 +1,9 @@
 package net.machinemuse.powersuits.common;
 
-import net.machinemuse.numina.basemod.MuseLogger;
-import net.machinemuse.numina.misc.ModCompatibility;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPowerModule;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.powermodule.armor.DiamondPlatingModule;
 import net.machinemuse.powersuits.powermodule.armor.EnergyShieldModule;
@@ -31,8 +31,6 @@ import net.machinemuse.powersuits.powermodule.vision.NightVisionModule;
 import net.machinemuse.powersuits.powermodule.vision.ThaumGogglesModule;
 import net.machinemuse.powersuits.powermodule.weapon.*;
 
-import static net.machinemuse.numina.module.EnumModuleTarget.*;
-
 public class MPSModules {
     public static void addModule(IPowerModule module) {
         if (MPSConfig.INSTANCE.getModuleAllowedorDefault(module.getDataName(), true))
@@ -46,84 +44,84 @@ public class MPSModules {
     public static void loadPowerModules() {
         // FIXME: these need to be sorted
         /* Armor -------------------------------- */
-        addModule(new LeatherPlatingModule(ARMORONLY));
-        addModule(new IronPlatingModule(ARMORONLY));
-        addModule(new DiamondPlatingModule(ARMORONLY));
-        addModule(new EnergyShieldModule(ARMORONLY));
+        addModule(new LeatherPlatingModule(EnumModuleTarget.ARMORONLY));
+        addModule(new IronPlatingModule(EnumModuleTarget.ARMORONLY));
+        addModule(new DiamondPlatingModule(EnumModuleTarget.ARMORONLY));
+        addModule(new EnergyShieldModule(EnumModuleTarget.ARMORONLY));
 
         /* Cosmetic ----------------------------- */
-        addModule(new TransparentArmorModule(ARMORONLY));
+        addModule(new TransparentArmorModule(EnumModuleTarget.ARMORONLY));
 
 
         /* Energy ------------------------------- */
-        addModule(new BasicBatteryModule(ALLITEMS));
-        addModule(new AdvancedBatteryModule(ALLITEMS));
-        addModule(new EliteBatteryModule(ALLITEMS));
-        addModule(new UltimateBatteryModule(ALLITEMS));
+        addModule(new BasicBatteryModule(EnumModuleTarget.ALLITEMS));
+        addModule(new AdvancedBatteryModule(EnumModuleTarget.ALLITEMS));
+        addModule(new EliteBatteryModule(EnumModuleTarget.ALLITEMS));
+        addModule(new UltimateBatteryModule(EnumModuleTarget.ALLITEMS));
 
 
         /* Power Fist --------------------------- */
-        addModule(new AxeModule(TOOLONLY));
-        addModule(new PickaxeModule(TOOLONLY));
-        addModule(new DiamondPickUpgradeModule(TOOLONLY));
-        addModule(new ShovelModule(TOOLONLY));
-        addModule(new ShearsModule(TOOLONLY));
-        addModule(new HoeModule(TOOLONLY));
-        addModule(new LuxCapacitor(TOOLONLY));
-        addModule(new FieldTinkerModule(TOOLONLY));
-        addModule(new MeleeAssistModule(TOOLONLY));
-        addModule(new PlasmaCannonModule(TOOLONLY));
-        addModule(new RailgunModule(TOOLONLY));
-        addModule(new BladeLauncherModule(TOOLONLY));
-        addModule(new BlinkDriveModule(TOOLONLY));
-        addModule(new InPlaceAssemblerModule(TOOLONLY));
-        addModule(new LeafBlowerModule(TOOLONLY));
-        addModule(new FlintAndSteelModule(TOOLONLY));
-        addModule(new LightningModule(TOOLONLY));
-        addModule(new DimensionalRiftModule(TOOLONLY));
+        addModule(new AxeModule(EnumModuleTarget.TOOLONLY));
+        addModule(new PickaxeModule(EnumModuleTarget.TOOLONLY));
+        addModule(new DiamondPickUpgradeModule(EnumModuleTarget.TOOLONLY));
+        addModule(new ShovelModule(EnumModuleTarget.TOOLONLY));
+        addModule(new ShearsModule(EnumModuleTarget.TOOLONLY));
+        addModule(new HoeModule(EnumModuleTarget.TOOLONLY));
+        addModule(new LuxCapacitor(EnumModuleTarget.TOOLONLY));
+        addModule(new FieldTinkerModule(EnumModuleTarget.TOOLONLY));
+        addModule(new MeleeAssistModule(EnumModuleTarget.TOOLONLY));
+        addModule(new PlasmaCannonModule(EnumModuleTarget.TOOLONLY));
+        addModule(new RailgunModule(EnumModuleTarget.TOOLONLY));
+        addModule(new BladeLauncherModule(EnumModuleTarget.TOOLONLY));
+        addModule(new BlinkDriveModule(EnumModuleTarget.TOOLONLY));
+        addModule(new InPlaceAssemblerModule(EnumModuleTarget.TOOLONLY));
+        addModule(new LeafBlowerModule(EnumModuleTarget.TOOLONLY));
+        addModule(new FlintAndSteelModule(EnumModuleTarget.TOOLONLY));
+        addModule(new LightningModule(EnumModuleTarget.TOOLONLY));
+        addModule(new DimensionalRiftModule(EnumModuleTarget.TOOLONLY));
         // Mining Enhancements
-        addModule(new AOEPickUpgradeModule(TOOLONLY));
-        addModule(new AquaAffinityModule(TOOLONLY));
-        addModule(new FortuneModule(TOOLONLY));
-        addModule(new SilkTouchModule(TOOLONLY));
+        addModule(new AOEPickUpgradeModule(EnumModuleTarget.TOOLONLY));
+        addModule(new AquaAffinityModule(EnumModuleTarget.TOOLONLY));
+        addModule(new FortuneModule(EnumModuleTarget.TOOLONLY));
+        addModule(new SilkTouchModule(EnumModuleTarget.TOOLONLY));
 
 
         /* Helmet ------------------------------- */
-        addModule(new WaterElectrolyzerModule(HEADONLY));
-        addModule(new NightVisionModule(HEADONLY));
-        addModule(new BinocularsModule(HEADONLY));
-        addModule(new FlightControlModule(HEADONLY));
-        addModule(new SolarGeneratorModule(HEADONLY));
-        addModule(new AutoFeederModule(HEADONLY));
-        addModule(new ClockModule(HEADONLY));
-        addModule(new CompassModule(HEADONLY));
-        addModule(new AdvancedSolarGenerator(HEADONLY));
+        addModule(new WaterElectrolyzerModule(EnumModuleTarget.HEADONLY));
+        addModule(new NightVisionModule(EnumModuleTarget.HEADONLY));
+        addModule(new BinocularsModule(EnumModuleTarget.HEADONLY));
+        addModule(new FlightControlModule(EnumModuleTarget.HEADONLY));
+        addModule(new SolarGeneratorModule(EnumModuleTarget.HEADONLY));
+        addModule(new AutoFeederModule(EnumModuleTarget.HEADONLY));
+        addModule(new ClockModule(EnumModuleTarget.HEADONLY));
+        addModule(new CompassModule(EnumModuleTarget.HEADONLY));
+        addModule(new AdvancedSolarGenerator(EnumModuleTarget.HEADONLY));
 
 
         /* Chestplate --------------------------- */
-        addModule(new ParachuteModule(TORSOONLY));
-        addModule(new GliderModule(TORSOONLY));
-        addModule(new JetPackModule(TORSOONLY));
-        addModule(new InvisibilityModule(TORSOONLY));
-        addModule(new BasicCoolingSystemModule(TORSOONLY));
-        addModule(new MagnetModule(TORSOONLY));
-        addModule(new ThermalGeneratorModule(TORSOONLY));
-        addModule(new MobRepulsorModule(TORSOONLY));
-        addModule(new AdvancedCoolingSystem(TORSOONLY));
+        addModule(new ParachuteModule(EnumModuleTarget.TORSOONLY));
+        addModule(new GliderModule(EnumModuleTarget.TORSOONLY));
+        addModule(new JetPackModule(EnumModuleTarget.TORSOONLY));
+        addModule(new InvisibilityModule(EnumModuleTarget.TORSOONLY));
+        addModule(new BasicCoolingSystemModule(EnumModuleTarget.TORSOONLY));
+        addModule(new MagnetModule(EnumModuleTarget.TORSOONLY));
+        addModule(new ThermalGeneratorModule(EnumModuleTarget.TORSOONLY));
+        addModule(new MobRepulsorModule(EnumModuleTarget.TORSOONLY));
+        addModule(new AdvancedCoolingSystem(EnumModuleTarget.TORSOONLY));
         //addModule(new CoalGenerator(TORSOONLY)); //TODO: Finish
 
 
         /* Legs --------------------------------- */
-        addModule(new SprintAssistModule(LEGSONLY));
-        addModule(new JumpAssistModule(LEGSONLY));
-        addModule(new SwimAssistModule(LEGSONLY));
-        addModule(new KineticGeneratorModule(LEGSONLY));
-        addModule(new ClimbAssistModule(LEGSONLY));
+        addModule(new SprintAssistModule(EnumModuleTarget.LEGSONLY));
+        addModule(new JumpAssistModule(EnumModuleTarget.LEGSONLY));
+        addModule(new SwimAssistModule(EnumModuleTarget.LEGSONLY));
+        addModule(new KineticGeneratorModule(EnumModuleTarget.LEGSONLY));
+        addModule(new ClimbAssistModule(EnumModuleTarget.LEGSONLY));
 
 
         /* Feet --------------------------------- */
-        addModule(new JetBootsModule(FEETONLY));
-        addModule(new ShockAbsorberModule(FEETONLY));
+        addModule(new JetBootsModule(EnumModuleTarget.FEETONLY));
+        addModule(new ShockAbsorberModule(EnumModuleTarget.FEETONLY));
 
 
         /** Conditional loading ------------------------------------------------------------------- */
@@ -161,7 +159,7 @@ public class MPSModules {
             try {
                 addModule(new ChiselModule(EnumModuleTarget.TOOLONLY));
             } catch (Exception e) {
-                MuseLogger.logException("Couldn't add Chisel module", e);
+                MPALibLogger.logException("Couldn't add Chisel module", e);
             }
 
         // Applied Energistics

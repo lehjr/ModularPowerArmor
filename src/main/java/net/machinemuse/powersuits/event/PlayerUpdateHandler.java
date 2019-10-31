@@ -1,12 +1,12 @@
 package net.machinemuse.powersuits.event;
 
-import net.machinemuse.numina.client.sound.Musique;
-import net.machinemuse.numina.config.NuminaConfig;
-import net.machinemuse.numina.heat.MuseHeatUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.math.MuseMathUtils;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IPowerModule;
+import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.config.MPALibConfig;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.math.MathUtils;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmorBoots;
@@ -36,7 +36,7 @@ public class PlayerUpdateHandler {
             EntityPlayer player = (EntityPlayer) e.getEntity();
 
             // only MPS modular items in this list
-            List<ItemStack> modularItemsEquipped = MuseItemUtils.getModularItemsEquipped(player);
+            List<ItemStack> modularItemsEquipped = ItemUtils.getLegacyModularItemsEquipped(player);
 
 
 //            // FIXME: is this really nescessary... apparently it is
@@ -77,9 +77,9 @@ public class PlayerUpdateHandler {
             }
 
             // Sound update
-            if (player.world.isRemote && NuminaConfig.useSounds()) {
+            if (player.world.isRemote && MPALibConfig.useSounds()) {
                 if (modularItemsEquipped.size() > 0) {
-                    double velsq2 = MuseMathUtils.sumsq(player.motionX, player.motionY, player.motionZ) - 0.5;
+                    double velsq2 = MathUtils.sumsq(player.motionX, player.motionY, player.motionZ) - 0.5;
                     if (player.isAirBorne && velsq2 > 0) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GLIDER, SoundCategory.PLAYERS, (float) (velsq2 / 3), 1.0f, true);
                     } else {
@@ -100,22 +100,22 @@ public class PlayerUpdateHandler {
             }
 
             // Done this way so players can let their stuff cool in their inventory without having to equip it.
-            List<ItemStack> modularItemsInInventory = MuseItemUtils.getModularItemsInInventory(player);
+            List<ItemStack> modularItemsInInventory = ItemUtils.getLegacyModularItemsInInventory(player);
             if (modularItemsInInventory.size() > 0) {
                 // Heat update
-                double currHeat = MuseHeatUtils.getPlayerHeat(player);
+                double currHeat = HeatUtils.getPlayerHeat(player);
                 if (currHeat >= 0 && !player.world.isRemote) { // only apply serverside so change is not applied twice
                     double coolPlayerAmount = MusePlayerUtils.getPlayerCoolingBasedOnMaterial(player) * 0.55;  // cooling value adjustment. Too much or too little cooling makes the heat system useless.
 
                     // cooling value adjustment. Too much or too little cooling makes the heat system useless.
 
                     if (coolPlayerAmount > 0)
-                        MuseHeatUtils.coolPlayer(player, coolPlayerAmount);
+                        HeatUtils.coolPlayer(player, coolPlayerAmount);
 
-                    double maxHeat = MuseHeatUtils.getPlayerMaxHeat(player);
+                    double maxHeat = HeatUtils.getPlayerMaxHeat(player);
 
                     if (currHeat > maxHeat) {
-                        player.attackEntityFrom(MuseHeatUtils.overheatDamage, (float) (Math.sqrt(currHeat - maxHeat)/* was (int) */ / 4));
+                        player.attackEntityFrom(HeatUtils.overheatDamage, (float) (Math.sqrt(currHeat - maxHeat)/* was (int) */ / 4));
                         player.setFire(1);
                     } else {
                         player.extinguish();

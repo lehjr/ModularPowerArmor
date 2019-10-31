@@ -1,18 +1,18 @@
 package net.machinemuse.powersuits.powermodule.movement;
 
-import net.machinemuse.numina.client.sound.Musique;
-import net.machinemuse.numina.config.NuminaConfig;
-import net.machinemuse.numina.energy.ElectricItemUtils;
-import net.machinemuse.numina.item.MuseItemUtils;
-import net.machinemuse.numina.module.EnumModuleCategory;
-import net.machinemuse.numina.module.EnumModuleTarget;
-import net.machinemuse.numina.module.IPlayerTickModule;
-import net.machinemuse.numina.module.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.config.MPALibConfig;
+import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.event.MuseIcon;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.ModuleManager;
-import net.machinemuse.powersuits.control.PlayerMovementInputWrapper;
 import net.machinemuse.powersuits.event.MovementManager;
 import net.machinemuse.powersuits.item.ItemComponent;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -24,15 +24,15 @@ import net.minecraft.util.SoundCategory;
 public class SwimAssistModule extends PowerModuleBase implements IToggleableModule, IPlayerTickModule {
     public SwimAssistModule(EnumModuleTarget moduleTarget) {
         super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.ionThruster, 1));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), MuseItemUtils.copyAndResize(ItemComponent.solenoid, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.ionThruster, 1));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.solenoid, 2));
         addTradeoffPropertyDouble(MPSModuleConstants.THRUST, MPSModuleConstants.SWIM_BOOST_ENERGY_CONSUMPTION, 1000, "RF");
         addTradeoffPropertyDouble(MPSModuleConstants.THRUST, MPSModuleConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
     }
 
     @Override
     public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.CATEGORY_MOVEMENT;
+        return EnumModuleCategory.MOVEMENT;
     }
 
     @Override
@@ -58,22 +58,22 @@ public class SwimAssistModule extends PowerModuleBase implements IToggleableModu
                 double swimAssistRate = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(item, MPSModuleConstants.SWIM_BOOST_AMOUNT) * 0.05 * moveRatio;
                 double swimEnergyConsumption = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(item, MPSModuleConstants.SWIM_BOOST_ENERGY_CONSUMPTION);
                 if (swimEnergyConsumption < ElectricItemUtils.getPlayerEnergy(player)) {
-                    if (player.world.isRemote && NuminaConfig.useSounds()) {
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
                     }
                     MovementManager.thrust(player, swimAssistRate, true);
                 } else {
-                    if (player.world.isRemote && NuminaConfig.useSounds()) {
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
                         Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                     }
                 }
             } else {
-                if (player.world.isRemote && NuminaConfig.useSounds()) {
+                if (player.world.isRemote && MPALibConfig.useSounds()) {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                 }
             }
         } else {
-            if (player.world.isRemote && NuminaConfig.useSounds()) {
+            if (player.world.isRemote && MPALibConfig.useSounds()) {
                 Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
             }
         }
@@ -81,7 +81,7 @@ public class SwimAssistModule extends PowerModuleBase implements IToggleableModu
 
     @Override
     public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-        if (player.world.isRemote && NuminaConfig.useSounds()) {
+        if (player.world.isRemote && MPALibConfig.useSounds()) {
             Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_SWIM_ASSIST);
         }
     }

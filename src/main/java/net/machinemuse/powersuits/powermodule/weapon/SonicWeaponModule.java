@@ -28,7 +28,7 @@
 //
 //    @Override
 //    public String getCategory() {
-//        return MuseCommonStrings.CATEGORY_WEAPON;
+//        return MuseCommonStrings.WEAPON;
 //    }
 //
 //    @Override

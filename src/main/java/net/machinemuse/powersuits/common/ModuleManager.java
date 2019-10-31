@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.common;
 
-import net.machinemuse.numina.item.IModularItem;
-import net.machinemuse.numina.module.IModuleManager;
-import net.machinemuse.numina.module.IPowerModule;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.legacy.module.IModuleManager;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.item.armor.*;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
