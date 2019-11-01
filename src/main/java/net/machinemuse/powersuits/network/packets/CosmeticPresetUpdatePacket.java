@@ -19,16 +19,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MusePacketCosmeticPresetUpdate implements IMessage {
+public class CosmeticPresetUpdatePacket implements IMessage {
     ResourceLocation registryName;
     String name;
     NBTTagCompound cosmeticSettings;
 
-    public MusePacketCosmeticPresetUpdate() {
+    public CosmeticPresetUpdatePacket() {
 
     }
 
-    public MusePacketCosmeticPresetUpdate(ResourceLocation registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {
+    public CosmeticPresetUpdatePacket(ResourceLocation registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {
         this.registryName = registryNameIn;
         this.name = nameIn;
         this.cosmeticSettings = cosmeticSettingsIn;
@@ -48,9 +48,9 @@ public class MusePacketCosmeticPresetUpdate implements IMessage {
         MuseByteBufferUtils.writeCompressedNBT(buf, cosmeticSettings);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketCosmeticPresetUpdate, IMessage> {
+    public static class Handler implements IMessageHandler<CosmeticPresetUpdatePacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketCosmeticPresetUpdate message, MessageContext ctx) {
+        public IMessage onMessage(CosmeticPresetUpdatePacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 boolean allowCosmeticPresetCreation;
                 final EntityPlayerMP player = ctx.getServerHandler().player;
@@ -71,7 +71,7 @@ public class MusePacketCosmeticPresetUpdate implements IMessage {
                         MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
                         if (settings != null) {
                             settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
-                            MPSPackets.sendToAll(new MusePacketCosmeticPresetUpdate(registryName, name, cosmeticSettings));
+                            MPSPackets.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
                         } else {
                             MPSSettings.cosmetics.updateCosmeticInfo(registryName, name, cosmeticSettings);
                         }

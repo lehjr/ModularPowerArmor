@@ -15,7 +15,7 @@ import net.machinemuse.powersuits.client.gui.clickable.ClickableTinkerSlider;
 import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketTweakRequestDouble;
+import net.machinemuse.powersuits.network.packets.TweakRequestDoublePacket;
 import net.machinemuse.powersuits.powermodule.PowerModuleBase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -162,7 +162,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
             ClickableItem item = itemTarget.getSelectedItem();
             IPowerModule module = moduleTarget.getSelectedModule().getModule();
             MPSPackets.sendToServer(
-                    new MusePacketTweakRequestDouble(player, item.inventorySlot, module.getDataName(), selectedSlider.id(), selectedSlider.getValue()));
+                    new TweakRequestDoublePacket(item.inventorySlot, module.getDataName(), selectedSlider.id(), selectedSlider.getValue()));
         }
         if (button == 0) {
             selectedSlider = null;

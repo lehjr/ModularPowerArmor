@@ -23,17 +23,15 @@ import java.util.Objects;
  * <p>
  * Ported to Java by lehjr on 11/14/16.
  */
-public class MusePacketCosmeticInfo implements IMessage {
-    EntityPlayer player;
+public class CosmeticInfoPacket implements IMessage {
     int itemSlot;
     String tagName;
     NBTTagCompound tagData;
 
-    public MusePacketCosmeticInfo(){
+    public CosmeticInfoPacket(){
     }
 
-    public MusePacketCosmeticInfo(EntityPlayer player, int itemSlot, String tagName, NBTTagCompound tagData) {
-        this.player = player;
+    public CosmeticInfoPacket(int itemSlot, String tagName, NBTTagCompound tagData) {
         this.itemSlot = itemSlot;
         this.tagName = tagName;
         this.tagData = tagData;
@@ -53,9 +51,9 @@ public class MusePacketCosmeticInfo implements IMessage {
         MuseByteBufferUtils.writeCompressedNBT(buf, tagData);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketCosmeticInfo, IMessage> {
+    public static class Handler implements IMessageHandler<CosmeticInfoPacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketCosmeticInfo message, MessageContext ctx) {
+        public IMessage onMessage(CosmeticInfoPacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {

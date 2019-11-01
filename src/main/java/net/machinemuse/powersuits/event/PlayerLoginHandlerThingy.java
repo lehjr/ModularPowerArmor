@@ -3,7 +3,7 @@ package net.machinemuse.powersuits.event;
 import net.machinemuse.powersuits.common.config.MPSSettings;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MPSPacketConfig;
+import net.machinemuse.powersuits.network.packets.ConfigPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -25,7 +25,7 @@ public final class PlayerLoginHandlerThingy {
         // dedidated server or multiplayer game
         if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
             // sync config settings between client and server
-            MPSPackets.sendTo(new MPSPacketConfig(), (EntityPlayerMP) player);
+            MPSPackets.sendTo(new ConfigPacket(), (EntityPlayerMP) player);
         } else {
             MPSSettings.loadCustomInstallCosts();
         }

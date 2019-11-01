@@ -1,8 +1,8 @@
 package net.machinemuse.powersuits.common;
 
 import net.machinemuse.powersuits.client.gui.tinker.cosmetic.CosmeticGui;
-import net.machinemuse.powersuits.client.gui.crafting.PortableCraftingContainer;
-import net.machinemuse.powersuits.client.gui.crafting.PortableCraftingGui;
+import net.machinemuse.powersuits.client.gui.crafting.MPSCraftingContainer;
+import net.machinemuse.powersuits.client.gui.crafting.MPSCraftingGui;
 import net.machinemuse.powersuits.client.gui.keybind.KeyConfigGui;
 import net.machinemuse.powersuits.client.gui.modeselection.GuiModeSelector;
 import net.machinemuse.powersuits.client.gui.tinker.module.TinkerTableGui;
@@ -34,7 +34,7 @@ public enum MPSGuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 3)
-            return new PortableCraftingContainer(player.inventory, world, new BlockPos(x, y, z));
+            return new MPSCraftingContainer(player.inventory, world, new BlockPos(x, y, z));
         if (ID == 5) {
             return new ScannerContainer(player, getPlayerHand(player));
         }
@@ -53,7 +53,7 @@ public enum MPSGuiHandler implements IGuiHandler {
             case 2:
                 return new CosmeticGui(player, x, y, z);
             case 3:
-                return new PortableCraftingGui(player.inventory, world, new BlockPos(x, y, z));
+                return new MPSCraftingGui(player.inventory, world, new BlockPos(x, y, z));
             case 4:
                 return new GuiModeSelector(player);
             case 5:

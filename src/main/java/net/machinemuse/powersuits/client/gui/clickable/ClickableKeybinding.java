@@ -10,7 +10,7 @@ import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.client.control.KeybindManager;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketToggleRequest;
+import net.machinemuse.powersuits.network.packets.ToggleRequestPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
@@ -73,7 +73,7 @@ public class ClickableKeybinding extends ClickableButton {
                 player.sendMessage(new TextComponentString("Toggled " + module.getModule().getDataName() + valstring));
             }
             ModuleManager.INSTANCE.toggleModuleForPlayer(player, module.getModule().getDataName(), toggleval);
-            MPSPackets.sendToServer(new MusePacketToggleRequest(player, module.getModule().getDataName(), toggleval));
+            MPSPackets.sendToServer(new ToggleRequestPacket(module.getModule().getDataName(), toggleval));
         }
         toggleval = !toggleval;
     }

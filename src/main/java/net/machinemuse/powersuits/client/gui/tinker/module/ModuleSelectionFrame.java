@@ -44,7 +44,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         }
         if (target.getSelectedItem() != null) {
             if (lastItem != target.getSelectedItem()) {
-                loadModules();
+                loadModules(false);
             }
             this.totalsize = 0;
             for (ModuleSelectionSubFrame frame : categories.values()) {
@@ -87,7 +87,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         }
     }
 
-    public void loadModules() {
+    public void loadModules(boolean preserveSelected) {
         this.lastPosition = null;
         ClickableItem selectedItem = target.getSelectedItem();
         if (selectedItem != null) {

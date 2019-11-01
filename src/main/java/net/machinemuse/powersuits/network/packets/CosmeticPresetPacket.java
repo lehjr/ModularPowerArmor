@@ -14,58 +14,45 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-/**
- * Author: MachineMuse (Claire Semple)
- * Created: 12:28 PM, 5/6/13
- * <p>
- * Ported to Java by lehjr on 11/14/16.
- */
-public class MusePacketColourInfo implements IMessage {
-    EntityPlayer player;
+public class CosmeticPresetPacket implements IMessage {
     int itemSlot;
-    int[] tagData;
+    String presetName;
 
-    public MusePacketColourInfo() {
-
+    public CosmeticPresetPacket() {
     }
 
-    public MusePacketColourInfo(EntityPlayer player, int itemSlot, int[] tagData) {
-        this.player = player;
+    public CosmeticPresetPacket(int itemSlot, String presetName) {
         this.itemSlot = itemSlot;
-        this.tagData = tagData;
+        this.presetName = presetName;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.itemSlot = buf.readInt();
-        this.tagData = MuseByteBufferUtils.readIntArray(buf);
+        itemSlot = buf.readInt();
+        presetName = MuseByteBufferUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(itemSlot);
-        MuseByteBufferUtils.writeIntArray(buf, tagData);
+        MuseByteBufferUtils.writeUTF8String(buf, presetName);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketColourInfo, IMessage> {
+    public static class Handler implements IMessageHandler<CosmeticPresetPacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketColourInfo message, MessageContext ctx) {
+        public IMessage onMessage(CosmeticPresetPacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {
-                    int itemSlot = message.itemSlot;
-                    int[] tagData = message.tagData;
 
+                    int itemSlot = message.itemSlot;
+                    String presetName = message.presetName;
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
-                    if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
+
+                    if (presetName != null && stack.getItem() instanceof IModularItem) {
                         NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
-                        NBTTagCompound renderTag = itemTag.getCompoundTag(MPALIbConstants.TAG_RENDER);
-                        if (renderTag == null) {
-                            renderTag = new NBTTagCompound();
-                            itemTag.setTag(MPALIbConstants.TAG_RENDER, renderTag);
-                        }
-                        if (renderTag != null)
-                            renderTag.setIntArray(MPALIbConstants.TAG_COLOURS, tagData);
+                        itemTag.removeTag(MPALIbConstants.TAG_RENDER);
+                        itemTag.setString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
                     }
                 });
             }

@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * Sync settings between server and client
  */
-public class MPSPacketConfig implements IMessage {
-    public MPSPacketConfig() {
+public class ConfigPacket implements IMessage {
+    public ConfigPacket() {
 
     }
 
@@ -30,9 +30,9 @@ public class MPSPacketConfig implements IMessage {
         MPSConfig.INSTANCE.getServerSettings().writeToBuffer(buf);
     }
 
-    public static class Handler implements IMessageHandler<MPSPacketConfig, IMessage> {
+    public static class Handler implements IMessageHandler<ConfigPacket, IMessage> {
         @Override
-        public IMessage onMessage(MPSPacketConfig message, MessageContext ctx) {
+        public IMessage onMessage(ConfigPacket message, MessageContext ctx) {
             return null;
         }
     }

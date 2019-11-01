@@ -16,7 +16,7 @@ import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketCosmeticInfo;
+import net.machinemuse.powersuits.network.packets.CosmeticInfoPacket;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -185,7 +185,7 @@ public class PartSpecManipSubFrame {
                 if (oldindex >= index && oldindex > 0) {
                     spec.setColourIndex(tagdata, oldindex - 1);
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPSPackets.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
                 }
             }
         }
@@ -272,7 +272,7 @@ public class PartSpecManipSubFrame {
                     else
                         tagname = ModelRegistry.getInstance().makeName(spec);
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, this.getSelectedItem().inventorySlot, tagname, new NBTTagCompound()));
+                        MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new NBTTagCompound()));
                     this.updateItems();
                     return true;
                 }
@@ -287,7 +287,7 @@ public class PartSpecManipSubFrame {
                     if (spec instanceof ModelPartSpec)
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, this.getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
                     this.updateItems();
                     return true;
                 }
@@ -299,7 +299,7 @@ public class PartSpecManipSubFrame {
                         tagdata = this.getOrMakeSpecTag(spec);
                         ((ModelPartSpec) spec).setGlow(tagdata, true);
                         if (player.world.isRemote)
-                            MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, this.getSelectedItem().inventorySlot, tagname, tagdata));
+                            MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
                         this.updateItems();
                         return true;
                     }
@@ -323,7 +323,7 @@ public class PartSpecManipSubFrame {
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
             if (player.world.isRemote) {
-                MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, this.getSelectedItem().inventorySlot, tagname, tagdata));
+                MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
             }
             return true;
         }

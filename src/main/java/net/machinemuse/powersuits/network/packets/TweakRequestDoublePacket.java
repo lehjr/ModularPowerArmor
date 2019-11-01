@@ -13,18 +13,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MusePacketTweakRequestDouble implements IMessage {
-    EntityPlayer player;
+public class TweakRequestDoublePacket implements IMessage {
     int itemSlot;
     String moduleName;
     String tweakName;
     double tweakValue;
 
-    public MusePacketTweakRequestDouble() {
+    public TweakRequestDoublePacket() {
     }
 
-    public MusePacketTweakRequestDouble(EntityPlayer player, int itemSlot, String moduleName, String tweakName, double tweakValue) {
-        this.player = player;
+    public TweakRequestDoublePacket(int itemSlot, String moduleName, String tweakName, double tweakValue) {
         this.itemSlot = itemSlot;
         this.moduleName = moduleName;
         this.tweakName = tweakName;
@@ -47,9 +45,9 @@ public class MusePacketTweakRequestDouble implements IMessage {
         buf.writeDouble(this.tweakValue);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketTweakRequestDouble, IMessage> {
+    public static class Handler implements IMessageHandler<TweakRequestDoublePacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketTweakRequestDouble message, MessageContext ctx) {
+        public IMessage onMessage(TweakRequestDoublePacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {

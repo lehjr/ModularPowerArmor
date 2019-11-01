@@ -11,7 +11,7 @@ import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketCosmeticPreset;
+import net.machinemuse.powersuits.network.packets.CosmeticPresetPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -88,7 +88,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
         // change the render tag to this ... keep in mind that the render tag for these are just a key to read from the config file
         if(super.hitbox(x, y) && this.getSelectedItem() != null) {
             if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, this.getSelectedItem().inventorySlot, this.name));
+                MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, this.name));
             }
             return true;
         }

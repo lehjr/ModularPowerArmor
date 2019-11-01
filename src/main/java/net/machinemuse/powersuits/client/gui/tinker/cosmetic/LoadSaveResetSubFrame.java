@@ -20,9 +20,9 @@ import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.item.tool.ItemPowerFist;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketCosmeticInfo;
-import net.machinemuse.powersuits.network.packets.MusePacketCosmeticPreset;
-import net.machinemuse.powersuits.network.packets.MusePacketCosmeticPresetUpdate;
+import net.machinemuse.powersuits.network.packets.CosmeticInfoPacket;
+import net.machinemuse.powersuits.network.packets.CosmeticPresetPacket;
+import net.machinemuse.powersuits.network.packets.CosmeticPresetUpdatePacket;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
@@ -219,9 +219,9 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                 BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(itemStack);
                 if (presetMap.containsValue(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER))) {
                     String name = presetMap.inverse().get(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER));
-                    MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, clickie.inventorySlot, name));
+                    MPSPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, name));
                 } else
-                    MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, clickie.inventorySlot, "Default"));
+                    MPSPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, "Default"));
             }
         }
     }
@@ -302,7 +302,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                                 if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                                     // get the render tag for the item
                                     NBTTagCompound nbt = MPSNBTUtils.getMuseRenderTag(itemStack).copy();
-                                    MPSPackets.sendToServer(new MusePacketCosmeticPresetUpdate(itemStack.getItem().getRegistryName(), name, nbt));
+                                    MPSPackets.sendToServer(new CosmeticPresetUpdatePacket(itemStack.getItem().getRegistryName(), name, nbt));
                                 }
                             }
                         } else {
@@ -314,12 +314,12 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                     } else if (resetButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                             NBTTagCompound nbt = getDefaultPreset(itemSelector.getSelectedItem().getItem());
-                            MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                            MPSPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                         }
                         // cancel creation
                     } else if (loadButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                            MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, this.getSelectedItem().inventorySlot, "Default"));
+                            MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                         }
                         isEditing = false;
                     }
@@ -328,18 +328,18 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                             isEditing = true;
                             NBTTagCompound nbt = MPSNBTUtils.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
-                            MPSPackets.sendToServer(new MusePacketCosmeticInfo(Minecraft.getMinecraft().player, this.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                            MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                         }
                     } else if (resetButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                            MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, this.getSelectedItem().inventorySlot, "Default"));
+                            MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                         }
                     }
                 }
             } else {
                 if (resetButton.hitBox(x, y)) {
                     if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                        MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getMinecraft().player, this.getSelectedItem().inventorySlot, "Default"));
+                        MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                     }
                 }
             }
@@ -348,7 +348,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
             if (resetButton.hitBox(x, y)) {
                 if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                     NBTTagCompound nbt = DefaultModelSpec.makeModelPrefs(itemSelector.getSelectedItem().getItem());
-                    MPSPackets.sendToServer(new MusePacketCosmeticInfo(player, itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                    MPSPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                 }
             }
         }

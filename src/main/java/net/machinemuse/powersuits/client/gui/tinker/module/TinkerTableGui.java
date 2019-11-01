@@ -47,13 +47,11 @@ public class TinkerTableGui extends ContainerlessGui {
 
     public TinkerTableGui(EntityPlayer player, int x, int y, int z) {
         this.player = (EntityPlayerSP) player;
-        ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
-        this.xSize = Math.min(screen.getScaledWidth() - 50, 500);
-        this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
-
         this.worldx = x;
         this.worldy = y;
         this.worldz = z;
+
+        rescale();
 
         // setup all frames here, since they are no longer recreated in the initGUI section
 
@@ -100,7 +98,18 @@ public class TinkerTableGui extends ContainerlessGui {
 
         tabFrame = new TabSelectFrame(player, 0, worldx, worldy, worldz);
         frames.add(tabFrame);
+
+        itemSelectFrame.setDoOnNewSelect(doThis-> {
+            moduleSelectFrame.loadModules(false);
+        });
     }
+
+    public void rescale() {
+        ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
+        this.setXSize(Math.min(screen.getScaledWidth() - 50, 500));
+        this.setYSize(Math.min(screen.getScaledHeight() - 50, 300));
+    }
+
 
     /**
      * Add the buttons (and other controls) to the screen.
@@ -108,6 +117,8 @@ public class TinkerTableGui extends ContainerlessGui {
     @Override
     public void initGui() {
         super.initGui();
+        rescale();
+        backgroundRect.setTargetDimensions(absX(-1), absY(-1), absX(1), absY(1));
 
         itemSelectFrame.init(absX(-0.95F), absY(-0.95F), absX(-0.78F), absY(0.95F));
         statsFrame.init(absX(0f), absY(-0.9f), absX(0.95f), absY(-0.3f));

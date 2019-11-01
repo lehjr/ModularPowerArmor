@@ -15,8 +15,8 @@ import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.ModuleManager;
 import net.machinemuse.powersuits.common.config.MPSConfig;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketInstallModuleRequest;
-import net.machinemuse.powersuits.network.packets.MusePacketSalvageModuleRequest;
+import net.machinemuse.powersuits.network.packets.InstallModuleRequestPacket;
+import net.machinemuse.powersuits.network.packets.SalvageModuleRequestPacket;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,8 +60,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
             if (player.capabilities.isCreativeMode || ItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)) {
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.BLOCKS, 1, null);
                 // Now send request to server to make it legit
-                MPSPackets.sendToServer(new MusePacketInstallModuleRequest(
-                        player,
+                MPSPackets.sendToServer(new InstallModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }
@@ -76,8 +75,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
 
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER,  1, player.getPosition());
                 IPowerModule module = targetModule.getSelectedModule().getModule();
-                MPSPackets.sendToServer(new MusePacketSalvageModuleRequest(
-                        player,
+                MPSPackets.sendToServer(new SalvageModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }

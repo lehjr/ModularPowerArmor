@@ -42,9 +42,8 @@ public class CosmeticGui extends ContainerlessGui {
         this.worldx = worldx;
         this.worldy = worldy;
         this.worldz = worldz;
-        ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
-        this.xSize = Math.min(screen.getScaledWidth() - 50, 500);
-        this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
+
+        rescale();
 
         usingCosmeticPresets = !MPSConfig.INSTANCE.useLegacyCosmeticSystem();
         if (usingCosmeticPresets) {
@@ -125,13 +124,20 @@ public class CosmeticGui extends ContainerlessGui {
         frames.add(tabFrame);
     }
 
+    public void rescale() {
+        ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
+        this.setXSize(Math.min(screen.getScaledWidth() - 50, 500));
+        this.setYSize(Math.min(screen.getScaledHeight() - 50, 300));
+    }
+
     /**
      * Add the buttons (and other controls) to the screen.
      */
     @Override
     public void initGui() {
         super.initGui();
-
+        rescale();
+        backgroundRect.setTargetDimensions(absX(-1), absY(-1), absX(1), absY(1));
         itemSelect.init(absX(-0.95F), absY(-0.95F), absX(-0.78F), absY(-0.025F));
         renderframe.init(absX(-0.75F), absY(-0.95f), absX(0.15F), absY(-0.025f));
         colourpicker.init(absX(0.18f), absY(-0.95f), absX(0.95f), absY(-0.27f));

@@ -10,16 +10,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MusePacketToggleRequest implements IMessage {
-    EntityPlayer player;
+public class ToggleRequestPacket implements IMessage {
     String module;
     Boolean active;
 
-    public MusePacketToggleRequest() {
+    public ToggleRequestPacket() {
     }
 
-    public MusePacketToggleRequest(EntityPlayer player, String module, Boolean active) {
-        this.player = player;
+    public ToggleRequestPacket(String module, Boolean active) {
         this.module = module;
         this.active = active;
     }
@@ -36,9 +34,9 @@ public class MusePacketToggleRequest implements IMessage {
         buf.writeBoolean(active);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketToggleRequest,IMessage> {
+    public static class Handler implements IMessageHandler<ToggleRequestPacket,IMessage> {
         @Override
-        public IMessage onMessage(MusePacketToggleRequest message, MessageContext ctx) {
+        public IMessage onMessage(ToggleRequestPacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {

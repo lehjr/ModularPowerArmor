@@ -30,17 +30,15 @@ import net.minecraftforge.items.ItemHandlerHelper;
  * <p>
  * Ported to Java by lehjr on 11/14/16.
  */
-public class MusePacketSalvageModuleRequest implements IMessage {
-    EntityPlayer player;
+public class SalvageModuleRequestPacket implements IMessage {
     int itemSlot;
     String moduleName;
 
-    public MusePacketSalvageModuleRequest() {
+    public SalvageModuleRequestPacket() {
 
     }
 
-    public MusePacketSalvageModuleRequest(EntityPlayer player, int itemSlot, String moduleName) {
-        this.player = player;
+    public SalvageModuleRequestPacket(int itemSlot, String moduleName) {
         this.itemSlot = itemSlot;
         this.moduleName = moduleName;
     }
@@ -57,9 +55,9 @@ public class MusePacketSalvageModuleRequest implements IMessage {
         MuseByteBufferUtils.writeUTF8String(buf, moduleName);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketSalvageModuleRequest, IMessage> {
+    public static class Handler implements IMessageHandler<SalvageModuleRequestPacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketSalvageModuleRequest message, MessageContext ctx) {
+        public IMessage onMessage(SalvageModuleRequestPacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {

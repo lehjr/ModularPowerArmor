@@ -7,6 +7,8 @@ import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import net.machinemuse.powersuits.client.sound.SoundDictionary;
 import net.machinemuse.powersuits.common.ModularPowersuits;
+import net.machinemuse.powersuits.network.MPSPackets;
+import net.machinemuse.powersuits.network.packets.CraftingGuiServerSidePacket;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -70,6 +72,8 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
         if (exclude != 3) {
             button = new ClickableButton(I18n.format("container.crafting"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
+                MPSPackets.sendToServer(new CraftingGuiServerSidePacket());
+
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
                 player.openGui(ModularPowersuits.getInstance(), 3, player.world, worldx, worldy, worldz);
             });

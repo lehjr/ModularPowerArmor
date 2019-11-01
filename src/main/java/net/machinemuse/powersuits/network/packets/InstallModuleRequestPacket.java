@@ -28,16 +28,14 @@ import net.minecraftforge.fml.relauncher.Side;
  *
  * Ported to Java by lehjr on 11/14/16.
  */
-public class MusePacketInstallModuleRequest implements IMessage {
-    EntityPlayer player;
+public class InstallModuleRequestPacket implements IMessage {
     int itemSlot;
     String moduleName;
 
-    public MusePacketInstallModuleRequest() {
+    public InstallModuleRequestPacket() {
     }
 
-    public MusePacketInstallModuleRequest(EntityPlayer player, int itemSlot, String moduleName) {
-        this.player = player;
+    public InstallModuleRequestPacket(int itemSlot, String moduleName) {
         this.itemSlot = itemSlot;
         this.moduleName = moduleName;
     }
@@ -54,9 +52,9 @@ public class MusePacketInstallModuleRequest implements IMessage {
         MuseByteBufferUtils.writeUTF8String(buf, moduleName);
     }
 
-    public static class Handler implements IMessageHandler<MusePacketInstallModuleRequest, IMessage> {
+    public static class Handler implements IMessageHandler<InstallModuleRequestPacket, IMessage> {
         @Override
-        public IMessage onMessage(MusePacketInstallModuleRequest message, MessageContext ctx) {
+        public IMessage onMessage(InstallModuleRequestPacket message, MessageContext ctx) {
             if (ctx.side == Side.SERVER) {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {

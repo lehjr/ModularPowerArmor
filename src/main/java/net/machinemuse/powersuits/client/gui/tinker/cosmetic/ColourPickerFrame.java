@@ -17,7 +17,7 @@ import net.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import net.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import net.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import net.machinemuse.powersuits.network.MPSPackets;
-import net.machinemuse.powersuits.network.packets.MusePacketColourInfo;
+import net.machinemuse.powersuits.network.packets.ColourInfoPacket;
 import net.machinemuse.powersuits.utils.nbt.MPSNBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -126,7 +126,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             }
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             if (player.world.isRemote) {
-                MPSPackets.sendToServer(new MusePacketColourInfo(player, this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
+                MPSPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
             }
             return (NBTTagIntArray) renderSpec.getTag(MPALIbConstants.TAG_COLOURS);
         }
@@ -140,7 +140,7 @@ public class ColourPickerFrame extends ScrollableFrame {
         renderSpec.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(intList));
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player.world.isRemote) {
-            MPSPackets.sendToServer(new MusePacketColourInfo(player, this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
+            MPSPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
         }
         return (NBTTagIntArray) renderSpec.getTag(MPALIbConstants.TAG_COLOURS);
     }
@@ -180,7 +180,7 @@ public class ColourPickerFrame extends ScrollableFrame {
 
                     EntityPlayerSP player = Minecraft.getMinecraft().player;
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketColourInfo(player, itemSelector.getSelectedItem().inventorySlot, colours()));
+                        MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, colours()));
                 }
                 // this just sets up the sliders on selecting an item
             } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
@@ -297,7 +297,7 @@ public class ColourPickerFrame extends ScrollableFrame {
 
                     EntityPlayerSP player = Minecraft.getMinecraft().player;
                     if (player.world.isRemote)
-                        MPSPackets.sendToServer(new MusePacketColourInfo(player, itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
+                        MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
                 }
                 return true;
             }

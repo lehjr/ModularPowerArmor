@@ -16,15 +16,16 @@ public class MPSPackets {
     public static void registerMPSPackets() {
         int i = 0;
 
-        INSTANCE.registerMessage(MPSPacketConfig.Handler.class, MPSPacketConfig.class, i++, Side.CLIENT);
-        INSTANCE.registerMessage(MusePacketInstallModuleRequest.Handler.class, MusePacketInstallModuleRequest.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketSalvageModuleRequest.Handler.class, MusePacketSalvageModuleRequest.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketColourInfo.Handler.class, MusePacketColourInfo.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketCosmeticInfo.Handler.class, MusePacketCosmeticInfo.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketToggleRequest.Handler.class, MusePacketToggleRequest.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketTweakRequestDouble.Handler.class, MusePacketTweakRequestDouble.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketCosmeticPresetUpdate.Handler.class, MusePacketCosmeticPresetUpdate.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(MusePacketCosmeticPreset.Handler.class, MusePacketCosmeticPreset.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(ConfigPacket.Handler.class, ConfigPacket.class, i++, Side.CLIENT);
+        INSTANCE.registerMessage(InstallModuleRequestPacket.Handler.class, InstallModuleRequestPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(SalvageModuleRequestPacket.Handler.class, SalvageModuleRequestPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(ColourInfoPacket.Handler.class, ColourInfoPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(CosmeticInfoPacket.Handler.class, CosmeticInfoPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(ToggleRequestPacket.Handler.class, ToggleRequestPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(TweakRequestDoublePacket.Handler.class, TweakRequestDoublePacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(CosmeticPresetUpdatePacket.Handler.class, CosmeticPresetUpdatePacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(CosmeticPresetPacket.Handler.class, CosmeticPresetPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(CraftingGuiServerSidePacket.Handler.class, CraftingGuiServerSidePacket.class, i++, Side.SERVER);
     }
 
     public static void sendTo(IMessage message, EntityPlayerMP player) {

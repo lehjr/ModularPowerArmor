@@ -143,6 +143,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
                 lastItemSlot = selectedItemStack;
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.BLOCKS, 1, null);
                 selectedItemStack = i;
+                onSelected();
                 break;
             } else {
                 i++;
@@ -167,5 +168,27 @@ public class ItemSelectionFrame extends ScrollableFrame {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Sets code to be executed when a new item is selected
+     * @param doThisIn
+     */
+    OnSelectNewItem doThis;
+    public void setDoOnNewSelect(OnSelectNewItem doThisIn) {
+        doThis = doThisIn;
+    }
+
+    /**
+     * runs preset code when new item is selected
+     */
+    void onSelected() {
+        if(this.doThis != null) {
+            this.doThis.onSelected(this);
+        }
+    }
+
+    public interface OnSelectNewItem {
+        void onSelected(ItemSelectionFrame doThis);
     }
 }
