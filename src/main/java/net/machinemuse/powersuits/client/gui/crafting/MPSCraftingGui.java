@@ -142,10 +142,17 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
                 backgroundRect.finalTop() + 16 + 3 * slotHeight);
 
         result.setLeft(result.left() + moveAmmount);
+
         arrow.setLeft(arrow.left() + moveAmmount);
+
         recipeBookButton.setLeft(recipeBookButton.left() + moveAmmount);
-        tabSelectFrame.init((recipeBookGui.isVisible() ? recipeBookGui.xOffset : guiLeft),
-                getGuiTop(), getGuiLeft() + getXSize(), getGuiTop() + getYSize());
+
+        tabSelectFrame.init(
+                (recipeBookGui.isVisible() ? recipeBookGui.xOffset : guiLeft),
+                absY(-1.05F),
+                absX(0.95F),
+                absY(-0.95f)
+        );
     }
 
     /**
@@ -188,8 +195,13 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
             Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, player.getPosition());
             inventorySlots.transferStackInSlot(player, 0);
         });
-        tabSelectFrame.init((recipeBookGui.isVisible() ? recipeBookGui.xOffset : guiLeft),
-                getGuiTop(), getGuiLeft() + getXSize(), getGuiTop() + getYSize());
+
+        tabSelectFrame.init(
+                (recipeBookGui.isVisible() ? recipeBookGui.xOffset : guiLeft),
+                absY(-1.05F),
+                absX(0.95F),
+                absY(-0.95f)
+        );
 
         recipeBookButton.setTargetDimensions(new Point2D(getGuiLeft() + 5, this.height / 2 - 49), new Point2D(18, 20));
         recipeBookButton.setOnPressed((button)-> {
@@ -222,20 +234,22 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
         this.drawDefaultBackground();
         drawRectangularBackground();
         update(mouseX, mouseY);
-        if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
-            this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-            this.recipeBookGui.render(mouseX, mouseY, partialTicks);
-        } else {
-            this.recipeBookGui.render(mouseX, mouseY, partialTicks);
+        if (backgroundRect.width() == getXSize()) {
+            if (this.recipeBookGui.isVisible() && this.widthTooNarrow) {
+                this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+                this.recipeBookGui.render(mouseX, mouseY, partialTicks);
+            } else {
+                this.recipeBookGui.render(mouseX, mouseY, partialTicks);
 
-            renderFrames(mouseX, mouseY, partialTicks);
-            super.drawScreen(mouseX, mouseY, partialTicks);
-            this.recipeBookGui.renderGhostRecipe(this.guiLeft, this.guiTop, true, partialTicks);
+                renderFrames(mouseX, mouseY, partialTicks);
+                super.drawScreen(mouseX, mouseY, partialTicks);
+                this.recipeBookGui.renderGhostRecipe(this.guiLeft, this.guiTop, true, partialTicks);
+            }
+            tabSelectFrame.render(mouseX, mouseY, partialTicks);
+            this.renderHoveredToolTip(mouseX, mouseY);
+            this.recipeBookGui.renderTooltip(this.guiLeft, this.guiTop, mouseX, mouseY);
         }
-        this.renderHoveredToolTip(mouseX, mouseY);
-        this.recipeBookGui.renderTooltip(this.guiLeft, this.guiTop, mouseX, mouseY);
     }
-
 
     // new
     public void update(double x, double y) {

@@ -26,7 +26,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 
 public class ModuleTweakFrame extends ScrollableFrame {
-    protected static double SCALERATIO = 0.75;
+//    protected static double SCALERATIO = 0.75;
     protected static int margin = 4;
     protected ItemSelectionFrame itemTarget;
     protected ModuleSelectionFrame moduleTarget;
@@ -43,7 +43,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
             Colour insideColour,
             ItemSelectionFrame itemTarget,
             ModuleSelectionFrame moduleTarget) {
-        super(topleft.times(1 / SCALERATIO), bottomright.times(1 / SCALERATIO), borderColour, insideColour);
+        super(topleft, bottomright, borderColour, insideColour);
         this.itemTarget = itemTarget;
         this.moduleTarget = moduleTarget;
         this.player = player;
@@ -56,7 +56,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
 
     @Override
     public void update(double mousex, double mousey) {
-        mousex /= SCALERATIO;
+//        mousex /= SCALERATIO;
         if (itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
             ItemStack stack = itemTarget.getSelectedItem().getItem();
             IPowerModule module = moduleTarget.getSelectedModule().getModule();
@@ -78,8 +78,8 @@ public class ModuleTweakFrame extends ScrollableFrame {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (sliders != null) {
-            GL11.glPushMatrix();
-            GL11.glScaled(SCALERATIO, SCALERATIO, SCALERATIO);
+//            GL11.glPushMatrix();
+//            GL11.glScaled(SCALERATIO, SCALERATIO, SCALERATIO);
             super.render(mouseX, mouseY, partialTicks);
             Renderer.drawCenteredString("Tinker", (border.left() + border.right()) / 2, border.top() + 2);
             for (ClickableTinkerSlider slider : sliders) {
@@ -101,7 +101,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 nexty += 9 * namesList.size() + 1;
 
             }
-            GL11.glPopMatrix();
+//            GL11.glPopMatrix();
         }
     }
 
@@ -143,8 +143,8 @@ public class ModuleTweakFrame extends ScrollableFrame {
 
     @Override
     public void onMouseDown(double x, double y, int button) {
-        x /= SCALERATIO;
-        y /= SCALERATIO;
+//        x /= SCALERATIO;
+//        y /= SCALERATIO;
         if (button == 0) {
             if (sliders != null) {
                 for (ClickableTinkerSlider slider : sliders) {
