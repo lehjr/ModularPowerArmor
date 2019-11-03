@@ -267,12 +267,7 @@ public class PartSpecManipSubFrame {
             switch (columnNumber) {
                 // removes the associated tag from the render tag making the part not isEnabled
                 case 0: {
-                    if (spec instanceof TexturePartSpec) {
-                        tagname = MPALIbConstants.NBT_TEXTURESPEC_TAG;
-                    } else {
-                        tagname = ModelRegistry.getInstance().makeName(spec);
-                    }
-
+                    tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
                     MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
 
                     this.updateItems();
@@ -281,11 +276,7 @@ public class PartSpecManipSubFrame {
 
                 // set part to isEnabled
                 case 1: {
-                    if (spec instanceof TexturePartSpec) {
-                        tagname = MPALIbConstants.NBT_TEXTURESPEC_TAG;
-                    } else {
-                        tagname = ModelRegistry.getInstance().makeName(spec);
-                    }
+                    tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
                     tagdata = this.getOrMakeSpecTag(spec);
                     if (spec instanceof ModelPartSpec) {
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
@@ -317,13 +308,7 @@ public class PartSpecManipSubFrame {
             int lineNumber = (int) ((y - this.border.top() - 8) / 8);
             int columnNumber = (int) ((x - this.border.left() - 28) / 8);
             PartSpecBase spec = partSpecs.get(Math.max(Math.min(lineNumber, partSpecs.size() - 1), 0));
-
-            if (spec instanceof TexturePartSpec) {
-                tagname = MPALIbConstants.NBT_TEXTURESPEC_TAG;
-            } else {
-                tagname = ModelRegistry.getInstance().makeName(spec);
-            }
-
+            tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
             MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));

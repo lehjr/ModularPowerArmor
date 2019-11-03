@@ -77,8 +77,6 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     public List<PartSpecManipSubFrame> getModelframes() {
-        System.out.println("getting fames");
-
         List<PartSpecManipSubFrame> modelframesList = new ArrayList<>();
         Iterable<SpecBase> specCollection = ModelRegistry.getInstance().getSpecs();
         PartSpecManipSubFrame prev = null;

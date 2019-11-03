@@ -43,31 +43,31 @@ public class CosmeticPresetSaveLoad {
         // sub folder based on the item id
         String subfolder = item.getRegistryName().getPath();
 
-//        // path with subfolder
-//        Path directory = Paths.get(MPSConfig.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
-//        if (Files.exists(directory))
-//            try {
-//                Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), 1, new SimpleFileVisitor<Path>() {
-//                    @Override
-//                    public FileVisitResult visitFile(Path selectedPath, BasicFileAttributes attrs) throws IOException {
-//                        if (selectedPath.getFileName().toString().endsWith("." + EXTENSION)) {
-//                            String name = selectedPath.getFileName().toString().replaceFirst("[.][^.]+$", "");
-//                            CompoundNBT nbt = CompressedStreamTools.readCompressed(Files.newInputStream(selectedPath));
-//
-//                            if (nbt != null && name != null && !name.isEmpty()) {
-////                            if (retmap.containsKey("id"))
-////                                System.out.println("MAP ALREADY HAS KEY");
-////                            if (retmap.containsValue(nbt))
-////                                System.out.println("MAP ALREADY HAS VALUE");
-//                                retmap.put(name, nbt);
-//                            }
-//                        }
-//                        return FileVisitResult.CONTINUE;
-//                    }
-//                });
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+        // path with subfolder
+        Path directory = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
+        if (Files.exists(directory))
+            try {
+                Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), 1, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path selectedPath, BasicFileAttributes attrs) throws IOException {
+                        if (selectedPath.getFileName().toString().endsWith("." + EXTENSION)) {
+                            String name = selectedPath.getFileName().toString().replaceFirst("[.][^.]+$", "");
+                            CompoundNBT nbt = CompressedStreamTools.readCompressed(Files.newInputStream(selectedPath));
+
+                            if (nbt != null && name != null && !name.isEmpty()) {
+                            if (retmap.containsKey("id"))
+                                System.out.println("MAP ALREADY HAS KEY");
+                            if (retmap.containsValue(nbt))
+                                System.out.println("MAP ALREADY HAS VALUE");
+                                retmap.put(name, nbt);
+                            }
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         if (retmap.isEmpty()) {
             copyPresetsFromJar();
             return loadPresetsForItem(item, count + 1);
