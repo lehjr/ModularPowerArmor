@@ -1,0 +1,23 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "modularpowerarmor:mps_shaped",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "blockCoal"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "componentCarbonMyofiber"
+  }
+}

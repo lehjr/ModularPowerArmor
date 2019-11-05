@@ -1,26 +1,19 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
 import com.github.lehjr.mpalib.client.render.TextureUtils;
-import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
-
-public class EntityRendererSpinningBlade extends MPALibEntityRenderer<SpinningBladeEntity> {
-    public EntityRendererSpinningBlade(EntityRendererManager renderManager) {
+public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBladeEntity> {
+    public EntityRendererSpinningBlade(RenderManager renderManager) {
         super(renderManager);
     }
 
-    public static final ResourceLocation textureLocation = new ResourceLocation(MPAConstants.TEXTURE_PREFIX + "item/module/weapon/spinningblade.png");
-
-    @Nullable
     @Override
     protected ResourceLocation getEntityTexture(SpinningBladeEntity entity) {
-        return textureLocation;
+        return new ResourceLocation(Constants.MODID, "modules/spinningblade.png");
     }
 
     @Override
@@ -28,12 +21,12 @@ public class EntityRendererSpinningBlade extends MPALibEntityRenderer<SpinningBl
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);
-        TextureUtils.pushTexture(getEntityTexture(entity));
+        TextureUtils.pushTexture(ResourceConstants.TEXTURE_PREFIX + "modules/spinningblade.png");
         GL11.glTranslated(x, y, z);
-        double motionscale = Math.sqrt(entity.getMotion().z * entity.getMotion().z +entity.getMotion().x * entity.getMotion().x);
+        double motionscale = Math.sqrt(entity.motionZ * entity.motionZ + entity.motionX * entity.motionX);
         GL11.glRotatef(90, 1, 0, 0);
-        GL11.glRotatef(-entity.rotationPitch, (float) (entity.getMotion().z /
-                motionscale), 0.0f, (float) (- entity.getMotion().x / motionscale));
+        GL11.glRotatef(-entity.rotationPitch, (float) (entity.motionZ /
+                motionscale), 0.0f, (float) (-entity.motionX / motionscale));
         int time = (int) System.currentTimeMillis() % 360;
         GL11.glRotatef(time / 2, 0, 0, 1);
         double scale = 0.5;

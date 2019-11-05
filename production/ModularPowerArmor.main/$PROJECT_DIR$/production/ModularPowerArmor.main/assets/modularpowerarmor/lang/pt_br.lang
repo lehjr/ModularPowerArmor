@@ -1,0 +1,566 @@
+
+itemGroup.modularpowerarmor=Exotrajes Modulares
+
+tile.modularpowerarmor.luxCapacitor.name=Capacitor Prismático
+tile.modularpowerarmor.tinkerTable.name=Mesa de Ajustes para Exotrajes
+
+item.modularpowerarmor.powerArmorBoots.name=Botas do Exotraje
+item.modularpowerarmor.powerArmorLeggings.name=Pernas do Exotraje
+item.modularpowerarmor.powerArmorChestplate.name=Peitoral do Exotraje
+item.modularpowerarmor.powerArmorHelmet.name=Capacete do Exotraje
+item.modularpowerarmor.powerFist.name=Mãos Cibernéticas
+
+# Components
+item.modularpowerarmor.powerArmorComponent.componentWiring.name=Fiação
+item.modularpowerarmor.powerArmorComponent.componentWiring.desc=Um tipo especial de fiação com alta capacidade e precisão voltaica, necessária para a eletrônica sensível na blindagem de potência.
+item.modularpowerarmor.powerArmorComponent.componentSolenoid.name=Solenoide
+item.modularpowerarmor.powerArmorComponent.componentSolenoid.desc=Os fios enrolados em torno de um núcleo ferromagnético produzem um eletroímã básico.
+item.modularpowerarmor.powerArmorComponent.componentServo.name=Servomotor
+item.modularpowerarmor.powerArmorComponent.componentServo.desc=Um tipo especial de motor que usa um sinal modulado por pulsos para executar movimentos muito precisos.
+item.modularpowerarmor.powerArmorComponent.componentGliderWing.name=Asa de Planador
+item.modularpowerarmor.powerArmorComponent.componentGliderWing.desc=Uma asa aerodinâmica leve com um eletroímã para rápida implantação e retração.
+item.modularpowerarmor.powerArmorComponent.componentIonThruster.name=Propulsor Iónico
+item.modularpowerarmor.powerArmorComponent.componentIonThruster.desc=Essencialmente um acelerador de partículas em miniatura. Acelera os íons até a velocidade de quase luz para produzir empuxo.
+item.modularpowerarmor.powerArmorComponent.componentLVCapacitor.name=Capacitor de Baixa Voltagem
+item.modularpowerarmor.powerArmorComponent.componentLVCapacitor.desc=Um capacitor simples pode armazenar e descarregar pequenas quantidades de energia rapidamente.
+item.modularpowerarmor.powerArmorComponent.componentMVCapacitor.name=Capacitor de Média Voltagem
+item.modularpowerarmor.powerArmorComponent.componentMVCapacitor.desc=Um capacitor mais avançado que pode armazenar mais energia em voltagens mais altas.
+item.modularpowerarmor.powerArmorComponent.componentHVCapacitor.name=Capacitor de Alta Voltagem
+item.modularpowerarmor.powerArmorComponent.componentHVCapacitor.desc=Um dispositivo de cristal sintético que pode armazenar e liberar grandes quantidades de energia.
+item.modularpowerarmor.powerArmorComponent.componentEVCapacitor.name=Capacitor EV
+item.modularpowerarmor.powerArmorComponent.componentEVCapacitor.desc=O dispositivo de armazenamento de energia mais avançado já criado. Agora, 15% menos probabilidade de explodir aleatoriamente!
+item.modularpowerarmor.powerArmorComponent.componentParachute.name=Paraquedas
+item.modularpowerarmor.powerArmorComponent.componentParachute.desc=Um simples pára-quedas reutilizável que pode ser instalado e recuperado no ar.
+item.modularpowerarmor.powerArmorComponent.componentPlatingIron.name=Blindagem Básica
+item.modularpowerarmor.powerArmorComponent.componentPlatingIron.desc=Algumas placas blindadas de metal cuidadosamente arranjadas.
+item.modularpowerarmor.powerArmorComponent.componentPlatingDiamond.name=Blindagem Avançada
+item.modularpowerarmor.powerArmorComponent.componentPlatingDiamond.desc=Algumas placas de blindagem cuidadosamente arranjadas de um material raro e mais forte.
+item.modularpowerarmor.powerArmorComponent.componentFieldEmitter.name=Emissor de Campo de Força
+item.modularpowerarmor.powerArmorComponent.componentFieldEmitter.desc=Um dispositivo avançado que manipula diretamente campos eletromagnéticos e gravitacionais em uma área.
+item.modularpowerarmor.powerArmorComponent.componentLaserEmitter.name=Emissor de Holograma
+item.modularpowerarmor.powerArmorComponent.componentLaserEmitter.desc=Uma matriz laser multicolorida que pode alterar a aparência de algo barato.
+item.modularpowerarmor.powerArmorComponent.componentCarbonMyofiber.name=Miofibra de Carbono
+item.modularpowerarmor.powerArmorComponent.componentCarbonMyofiber.desc=Um pequeno feixe de fibras de carbono, refinadas para uso em músculos artificiais.
+item.modularpowerarmor.powerArmorComponent.componentControlCircuit.name=Circuito de Controle
+item.modularpowerarmor.powerArmorComponent.componentControlCircuit.desc=Um microcontrolador de rede simples para coordenar um componente individual.
+item.modularpowerarmor.powerArmorComponent.componentMyofiberGel.name=Gel de Miofibra
+item.modularpowerarmor.powerArmorComponent.componentMyofiberGel.desc=Uma pasta espessa e condutora, perfeita para encaixar entre miofibras em um músculo artificial.
+item.modularpowerarmor.powerArmorComponent.componentArtificialMuscle.name=Músculo Artificial
+item.modularpowerarmor.powerArmorComponent.componentArtificialMuscle.desc=Um músculo elétrico artificial com menos amplitude de movimento que o músculo humano, mas ordens de grandeza maior.
+item.modularpowerarmor.powerArmorComponent.componentSolarPanel.name=Painel Solar
+item.modularpowerarmor.powerArmorComponent.componentSolarPanel.desc=Um dispositivo sensível à luz que irá gerar eletricidade a partir do sol.
+item.modularpowerarmor.powerArmorComponent.componentMagnet.name=Magnético
+item.modularpowerarmor.powerArmorComponent.componentMagnet.desc=Um dispositivo metálico que gera um campo magnético que puxa itens para o jogador.
+item.modularpowerarmor.powerArmorComponent.componentComputerChip.name=Chip de Computador
+item.modularpowerarmor.powerArmorComponent.componentComputerChip.desc=Um circuito de controle atualizado que contém uma CPU que é capaz de cálculos mais avançados.
+item.modularpowerarmor.powerArmorComponent.componentRubberHose.name=Mangueira Isolada de Borracha
+item.modularpowerarmor.powerArmorComponent.componentRubberHose.desc=Uma mangueira de borracha fortemente isolada capaz de suportar calor ou frio extremos
+
+# Fluids
+fluid.liquid_nitrogen=nitrogênio líquido
+
+# NBTTags used as labels
+modularpowerarmor.tradeoff.slotPoints=Pontos de Slot;
+modularpowerarmor.tradeoff.armorPoints=Pontos de Armadura
+modularpowerarmor.tradeoff.armorPhysical=Armadura (Física)
+modularpowerarmor.tradeoff.armorEnergy=Armadura (Energia)
+modularpowerarmor.tradeoff.armorEnergyPerDamage=Energia por dano
+modularpowerarmor.tradeoff.fieldStrength=Força do Campo
+modularpowerarmor.tradeoff.heatGeneration=Geração de Calor
+modularpowerarmor.tradeoff.energyPerBlock=Energia por bloco por segundo
+modularpowerarmor.tradeoff.movementResistance=Resistência ao Movimento
+modularpowerarmor.tradeoff.energyGenerated=Energia Gerada
+modularpowerarmor.tradeoff.daytimeHeatGen=Geração de calor durante o dia
+modularpowerarmor.tradeoff.nightTimeHeatGen=Geração de Calor Noturna
+modularpowerarmor.tradeoff.daytimeEnergyGen=Geração diurna de energia
+modularpowerarmor.tradeoff.nightTimeEnergyGen=Geração de Energia Noturna
+modularpowerarmor.tradeoff.thermalEnergyGen=Geração de Energia
+modularpowerarmor.tradeoff.apiaristArmorEnergyCon=Consumo de Energia da Armadura Apiarista
+modularpowerarmor.tradeoff.eatingEnergyCon=Consumir Consumo de Energia
+modularpowerarmor.tradeoff.autoFeederEfficiency=Eficiência do alimentador automático
+modularpowerarmor.tradeoff.basicCoolingPower=Poder de resfriamento básico
+modularpowerarmor.tradeoff.coolingBonus=Bônus de resfriamento
+modularpowerarmor.tradeoff.coolingSystemEnergyCon=Consumo de energia do sistema de resfriamento
+modularpowerarmor.tradeoff.repulsorEnergyCon=Consumo de Energia Repulsor
+modularpowerarmor.tradeoff.advCoolSysEnergyCon=Consumo de energia do sistema de arrefecimento avançado
+modularpowerarmor.tradeoff.joltEnergy=Energia de sacudir
+modularpowerarmor.tradeoff.blinkDriveEnergyCon=Consumo de Energia do Drive de Blink
+modularpowerarmor.tradeoff.blinkDriveRange=Blink Drive Range
+modularpowerarmor.tradeoff.yLookRatio=relação Y-look
+modularpowerarmor.tradeoff.jetBootsEnergyCon=Consumo de Energia de Jetboots
+modularpowerarmor.tradeoff.jetbootsThrust=Empurrar as picapes
+modularpowerarmor.tradeoff.jetpackEnergyCon=Consumo de energia a jato
+modularpowerarmor.tradeoff.jetpackThrust=Empuxo por jato
+modularpowerarmor.tradeoff.jumpEnergyCon=Pular o consumo de energia
+modularpowerarmor.tradeoff.jumpBoost=Aumentar o salto
+modularpowerarmor.tradeoff.jumpExhaustComp=Compensação por Exaustão de Salto
+modularpowerarmor.tradeoff.distanceRed=Redução de Distância
+modularpowerarmor.tradeoff.impactEnergyCon=Impacto no Consumo de Energia
+modularpowerarmor.tradeoff.sprintEnergyCon=Consumo de Energia da Sprint
+modularpowerarmor.tradeoff.sprintSpeedMult=Multiplicador de Velocidade de Sprint
+modularpowerarmor.tradeoff.sprintExComp=Compensação por Exaustão de Sprint
+modularpowerarmor.tradeoff.walkingEnergyCon=Consumo de energia ambulante
+modularpowerarmor.tradeoff.walkingSpeedMult=Multiplicador de velocidade ambulante
+modularpowerarmor.tradeoff.underwaterMovBoost=Impulso de movimento subaquático
+modularpowerarmor.tradeoff.swimBoostEnergyCon=Swim aumenta o consumo de energia
+modularpowerarmor.tradeoff.energyCon=Consumo de energia
+modularpowerarmor.tradeoff.magnetRadius=Raio do Ímã
+modularpowerarmor.tradeoff.fieldOfView=Campo de visão
+modularpowerarmor.tradeoff.fOVMult=Multiplicador de FOV
+modularpowerarmor.tradeoff.underWaterEnergyCon=Consumo de energia subaquática
+modularpowerarmor.tradeoff.underWaterHarvSpeed=Velocidade de Colheita Subaquática
+modularpowerarmor.tradeoff.axeEnergyCon=Consumo de energia do machado
+modularpowerarmor.tradeoff.axeHarvSpd=Velocidade de colheita do machado
+modularpowerarmor.tradeoff.chiselHarvSpd=Velocidade de Colheita do Cinzel
+modularpowerarmor.tradeoff.chiselEnergyCon=Consumo de Energia do Cinzel
+modularpowerarmor.tradeoff.ignitEnergyCon=Consumo de energia de ignição
+modularpowerarmor.tradeoff.grafterEnergyCon=Consumo de energia do grafador
+modularpowerarmor.tradeoff.grafterHeatGen=Geração de Calor Grafter
+modularpowerarmor.tradeoff.hoeEnergyCon=Consumo de energia de enxada
+modularpowerarmor.tradeoff.hoeSearchRad=Raio de pesquisa do Hoe
+modularpowerarmor.tradeoff.luxCapEnergyCon=Lux Consumo de Energia do Capacitor
+modularpowerarmor.tradeoff.luxCapRed=Lux Capacitor Vermelho Matiz
+modularpowerarmor.tradeoff.luxCapGreen=Lux Capacitor Verde Matiz
+modularpowerarmor.tradeoff.luxCapBlue=Lux Capacitor Azul Matiz
+modularpowerarmor.tradeoff.pickHarvSpd=Velocidade de Colheita de Picareta
+modularpowerarmor.tradeoff.pickaxeEnergyCon=Consumo de energia de picareta
+modularpowerarmor.tradeoff.scoopHarSpd=Velocidade de Colheita da Colher
+modularpowerarmor.tradeoff.scoopEnergyCon=Consumo de energia de colher
+modularpowerarmor.tradeoff.shearEnergyCon=Consumo de Energia de Corte
+modularpowerarmor.tradeoff.shearHarvSpd=Corta a Velocidade da Colheita
+modularpowerarmor.tradeoff.shovelHarvSpd=Velocidade de Colheita da Pá
+modularpowerarmor.tradeoff.shovelEnergyCon=Consumo de energia da pá
+modularpowerarmor.tradeoff.spinBladeEnergyCon=Consumo de energia da lâmina giratória
+modularpowerarmor.tradeoff.spinBladeDam=Dano da Lâmina Giratória
+modularpowerarmor.tradeoff.heatEmission=Emissão de calor
+modularpowerarmor.tradeoff.punchEnergyCon=Consumo de Energia do Perfurador
+modularpowerarmor.tradeoff.meleeDamage=Dano Corpo a Corpo
+modularpowerarmor.tradeoff.meleeKnockback=Empurrão Corpo a Corpo
+modularpowerarmor.tradeoff.plasmaEnergyPerTick=Energia Plasma por Carrapato
+modularpowerarmor.tradeoff.plasmaDamage=Dano de Plasma a Carga Completa
+modularpowerarmor.tradeoff.plasmaExplosiveness=Explosividade no plasma
+modularpowerarmor.tradeoff.railgunTotalImpulse=Impulso Total da Canhoneira
+modularpowerarmor.tradeoff.railgunEnergyCost=Custo de Energia Railgun
+modularpowerarmor.tradeoff.railgunHeatEm=Emissão de Calor Railgun
+modularpowerarmor.tradeoff.power=Poder
+modularpowerarmor.tradeoff.voltage=Voltagem
+modularpowerarmor.tradeoff.impact=Impacto
+modularpowerarmor.tradeoff.carryThrough=Transferência
+modularpowerarmor.tradeoff.amperage=Amperagem
+modularpowerarmor.tradeoff.creeper=Trepadeira
+modularpowerarmor.tradeoff.advancedCoolingPower=Poder de resfriamento avançado
+modularpowerarmor.tradeoff.overclock=Overclock
+modularpowerarmor.tradeoff.thrust=Impulso
+modularpowerarmor.tradeoff.range=Range
+modularpowerarmor.tradeoff.radius=Raio
+modularpowerarmor.tradeoff.efficiency=Eficiência
+modularpowerarmor.tradeoff.red=Vermelho
+modularpowerarmor.tradeoff.green=verde
+modularpowerarmor.tradeoff.blue=Azul
+modularpowerarmor.tradeoff.alpha=Alpha
+modularpowerarmor.tradeoff.sprintAssist=Assistente de Sprint
+modularpowerarmor.tradeoff.compensation=Remuneração
+modularpowerarmor.tradeoff.walkingAssist=Assistente de Caminhada
+modularpowerarmor.tradeoff.vertically=Verticalidade
+modularpowerarmor.tradeoff.maxEnergy=Energia Máxima
+modularpowerarmor.tradeoff.maxHeat=Calor Máximo
+modularpowerarmor.tradeoff.aoeEnergyCon=Consumo de Energia AoE
+modularpowerarmor.tradeoff.aoeMiningDiameter=Diâmetro de Mineração AoE
+modularpowerarmor.tradeoff.silkTouchEnCon=Consumo de energia do toque de seda
+modularpowerarmor.tradeoff.diameter=Diâmetro
+modularpowerarmor.tradeoff.enchLevel=Nível de Encantamento
+modularpowerarmor.tradeoff.fortuneEnCon=Consumo de energia da fortuna
+modularpowerarmor.tradeoff.fortuneLevel=Nível de fortuna
+
+
+# Armor
+module.modularpowerarmor.leatherPlating.name=Revestimento de couro
+module.modularpowerarmor.leatherPlating.desc=O revestimento de couro é leve, mas oferece um pouco de proteção.
+module.modularpowerarmor.ironPlating.name=Chapeamento de Ferro
+module.modularpowerarmor.ironPlating.desc=Chapeamento de ferro é pesado, mas oferece proteção um pouco mais.
+module.modularpowerarmor.diamondPlating.name=Blindagem de Diamante
+module.modularpowerarmor.diamondPlating.desc=As Placas melhoradas são mais leves, mais resistentes e protegem mais do que as placas simples, mas são muito mais difíceis de serem construídas.
+module.modularpowerarmor.energyShield.name=Campo de Energia
+module.modularpowerarmor.energyShield.desc=Esse sistema de proteção é extremamente leve, mas consome energia.
+
+# Cosmetic
+module.modularpowerarmor.transparentArmor.name=Armadura Transparente
+module.modularpowerarmor.transparentArmor.desc=Faz com que o exotraje fique completamente transparente, assim você pode mostrar a sua skin para todos sem perder a proteção.
+
+# Energy
+module.modularpowerarmor.basicBattery.name=Bateria Básica
+module.modularpowerarmor.basicBattery.desc=Integra uma bateria a um item para fazer com que ele seja capaz de armazenar energia.
+module.modularpowerarmor.advancedBattery.name=Bateria Avançada
+module.modularpowerarmor.advancedBattery.desc=Integra uma bateria avançada para armazenar ainda mais energia.
+module.modularpowerarmor.eliteBattery.name=Bateria Superior
+module.modularpowerarmor.eliteBattery.desc=Integra uma bateria superior para armazenar uma quantidade absurda de energia.
+module.modularpowerarmor.ultimateBattery.name=Bateria Ultimate
+module.modularpowerarmor.ultimateBattery.desc=Dispositivo de armazenamento de energia high-end experimental, agora com quase nenhuma chance de explodir (pensamos). Apesar dos rumores desagradáveis, não é baseado em tecnologia alienígena roubada.
+module.modularpowerarmor.solarGenerator.name=Gerador Solar
+module.modularpowerarmor.solarGenerator.desc=Deixe o sol potencializar suas aventuras.
+module.modularpowerarmor.advSolarGenerator.name=Gerador Solar de Alta Eficiência
+module.modularpowerarmor.advSolarGenerator.desc=Um gerador solar com 3 vezes a geração de energia do gerador solar padrão.
+module.modularpowerarmor.coalGenerator.name=Gerador de Carvão
+module.modularpowerarmor.coalGenerator.desc=Gerar energia com combustíveis sólidos
+module.modularpowerarmor.kineticGenerator.name=Gerador Cinético
+module.modularpowerarmor.kineticGenerator.desc=Gere poder com seu movimento.
+module.modularpowerarmor.thermalGenerator.name=Gerador Térmico
+module.modularpowerarmor.thermalGenerator.desc=Gerar energia a partir de quantidades extremas de calor.
+
+# Environmental
+module.modularpowerarmor.airtightSeal.name=Vedação Hermética
+module.modularpowerarmor.airtightSeal.desc=Sele o processo contra atmosferas hostis para se aventurar em outros planetas.
+module.modularpowerarmor.apiaristArmor.name=Armadura para Apicultor
+module.modularpowerarmor.apiaristArmor.desc=Um conjunto de armaduras florestais apicultor integrado em sua armadura.
+module.modularpowerarmor.hazmat.name=Proteção contra Radiação
+module.modularpowerarmor.hazmat.desc=Proteja-se da eletricidade e envenenamento por radiação. * Deve estar em cada peça para 100% de proteção *
+module.modularpowerarmor.autoFeeder.name=Alimentador automático
+module.modularpowerarmor.autoFeeder.desc=Sempre que você estiver com fome, este módulo irá pegar o item alimentar mais à esquerda do seu inventário e alimentá-lo para você, armazenando o restante para mais tarde.
+module.modularpowerarmor.basicCoolingSystem.name=Sistema básico de resfriamento
+module.modularpowerarmor.basicCoolingSystem.desc=Resfria os módulos de produção de calor mais rapidamente.
+module.modularpowerarmor.advancedCoolingSystem.name=Sistema de Arrefecimento Avançado
+module.modularpowerarmor.advancedCoolingSystem.desc=Resfria os módulos de produção de calor ainda mais rapidamente que o sistema de resfriamento padrão.
+module.modularpowerarmor.mobRepulsor.name=Mob Repulsor
+module.modularpowerarmor.mobRepulsor.desc=Empurra os mobs para longe de você quando ativado, mas constantemente drena energia. É altamente recomendável que você defina este módulo para um keybind por causa do alto consumo de energia.
+module.modularpowerarmor.waterElectrolyzer.name=Eletrolisador de Água
+module.modularpowerarmor.waterElectrolyzer.desc=Quando você ficar sem ar embaixo d'água, este módulo irá eletrolisar a água ao seu redor, criando uma bolha com oxigênio dentro.
+
+# Movement
+module.modularpowerarmor.blinkDrive.name=Mecanismo de Dobra Espacial
+module.modularpowerarmor.blinkDrive.desc=Vá de um ponto A para um ponto C através de um ponto B, onde o ponto B é uma dobra no espaço-tempo.
+module.modularpowerarmor.climbAssist.name=Assistente de Escalagem
+module.modularpowerarmor.climbAssist.desc=Um par dedicado de servomotores lhe permitem subir elevações de até 1 metro, sem nenhum esforço adicional.
+module.modularpowerarmor.flightControl.name=Controle de Voo
+module.modularpowerarmor.flightControl.desc=Um circuito de controle integrado construído para lhe ajudar a voar melhor. Pressione Z (tecla substituível) para descer.
+module.modularpowerarmor.glider.name=Planador
+module.modularpowerarmor.glider.desc=Anexe asas ao seu peitoral para transformar inércia vertical em inércia horizontal. Agache enquanto estiver em queda para ativar.
+module.modularpowerarmor.jetBoots.name=Botas a Jato
+module.modularpowerarmor.jetBoots.desc=Botas com propulsores integrados. Não são tão potentes quanto os propulsores à jato, mas eles são potentes o suficiente para lhe tirar do chão.
+module.modularpowerarmor.jetpack.name=Propulsor a Jato
+module.modularpowerarmor.jetpack.desc=Um par de propulsores a jato permitem que você se desloque para cima infinitamente, ou pelo menos até acabar a energia.
+module.modularpowerarmor.jumpAssist.name=Assistente de Salto
+module.modularpowerarmor.jumpAssist.desc=Outro conjunto de servomotores para lhe ajudar a pular mais alto.
+module.modularpowerarmor.parachute.name=Paraquedas
+module.modularpowerarmor.parachute.desc=Adiciona um paraquedas para fazer um pouso suave. Ativado ao agachar enquanto estiver no ar.
+module.modularpowerarmor.shockAbsorber.name=Amortecedores
+module.modularpowerarmor.shockAbsorber.desc=Com alguns servomotores, molas, amortecedores e alguns acolchoamentos, você pode negar parte do impacto de queda.
+module.modularpowerarmor.sprintAssist.name=Assistente de Corrida
+module.modularpowerarmor.sprintAssist.desc=Um conjunto de servomotores lhe ajuda a correr e andar mais rapidamente.
+module.modularpowerarmor.swimAssist.name=Impulso de Natação
+module.modularpowerarmor.swimAssist.desc=Encaixando um propulsor de íon para uso subaquático, você pode nadar mais rápido embaixo d'água.
+
+# Special
+module.modularpowerarmor.clock.name=Relógio
+module.modularpowerarmor.clock.desc=Um relógio na corrida que mostra o tempo, não importa onde você esteja. Pode ser digitado por keybinds.
+module.modularpowerarmor.compass.name=Compass
+module.modularpowerarmor.compass.desc=Uma bússola que mostra sua direção, não importa onde você esteja. Pode ser digitado por keybinds.
+module.modularpowerarmor.invisibility.name=Camuflagem Ativa
+module.modularpowerarmor.invisibility.desc=Dobra a luz ao seu redor para lhe deixar quase imperceptível.
+module.modularpowerarmor.magnet.name=Magnético
+module.modularpowerarmor.magnet.desc=Gera um campo magnético forte o suficiente para atrair itens para o jogador. AVISO: Este módulo drena a energia continuamente. Desligue quando não for necessário. (Menu Keybind: k)
+
+# Vision
+module.modularpowerarmor.binoculars.name=Binóculos
+module.modularpowerarmor.binoculars.desc=Com os problemas que recentemente vêm assolando o OptiFine, você decidiu construir um par de binóculos para poder enxergar objetos distantes.
+module.modularpowerarmor.nightVision.name=Visão Noturna
+module.modularpowerarmor.nightVision.desc=Um par de lentes com visão melhorada para lhe ajudar a enxergar durante a noite ou embaixo d'água.
+module.modularpowerarmor.aurameter.name=Medidor de Aura
+module.modularpowerarmor.aurameter.desc=Conecte alguns óculos Thaumic para tê-los embutidos no seu capacete. (Não dá desconto de uso Vis)
+
+# Tools
+module.modularpowerarmor.aoePickUpgrade.name=Upgrade de broca diamantada
+module.modularpowerarmor.aoePickUpgrade.desc=Uma atualização que permitirá que o módulo da picareta mine uma área de blocos de 3x3
+module.modularpowerarmor.madModule.name=Vein Miner
+module.modularpowerarmor.madModule.desc=A Vein miner powered by Mekanism's Atomic Disasemmber
+module.modularpowerarmor.fortuneModule.name=Fortune Enchantment
+module.modularpowerarmor.fortuneModule.desc=A module that provides the fortune enchantment.
+module.modularpowerarmor.silk_touch.name=Silk Touch Enchantment
+module.modularpowerarmor.silk_touch.desc=A module that provides the Silk Touch enchantment
+
+module.modularpowerarmor.appengECWirelessFluid.name=Terminal de fluido sem fio ExtraCells
+module.modularpowerarmor.appengECWirelessFluid.desc=Um terminal de fluido sem fio da Applied Energistics ExtraCells integrado à sua ferramenta elétrica.
+module.modularpowerarmor.appengWireless.name=Terminal Sem Fio AppEng
+module.modularpowerarmor.appengWireless.desc=Um terminal sem fio da Applied Energistics integrado à sua ferramenta elétrica.
+module.modularpowerarmor.aquaAffinity.name=Melhoria - Impermeabilidade
+module.modularpowerarmor.aquaAffinity.desc=Faz com que a sua mão cibernética não seja contida pela pressão da água, fazendo com que a velocidade de operação dela seja a mesma, não importando se estiver embaixo d'água ou ao ar livre.
+module.modularpowerarmor.axe.name=Módulo - Machado
+module.modularpowerarmor.axe.desc=Machados são mais usados para cortar árvores.
+module.modularpowerarmor.chisel.name=Cinzel
+module.modularpowerarmor.chisel.desc=Isso não permitirá que você esculpe blocos, mas pelo menos permitirá que você os colha.
+module.modularpowerarmor.diamondPickUpgrade.name=Melhoria - Broca de Diamante
+module.modularpowerarmor.diamondPickUpgrade.desc=Adicione ponteiras de diamante ao seu módulo de picareta para poder quebrar blocos de Obsidiana (REQUER O MÓDULO DE PICARETA PARA FUNCIONAR)
+module.modularpowerarmor.dimRiftGen.name=Gerador de lágrima dimensional
+module.modularpowerarmor.dimRiftGen.desc=Gere um rasgo no espaço-tempo contínuo que irá teletransportar o jogador para suas coordenadas relativas no submundo ou no mundo superior.
+module.modularpowerarmor.fieldTinkerer.name=Módulo de Ajuste Remoto
+module.modularpowerarmor.fieldTinkerer.desc=Você não consegue memorizar por completo os diagramas, mas você pode pelo menos ser capaz de ajustar seus módulos ao seus gostos sem precisar da Corporação Inspiration™ LTDA.
+module.modularpowerarmor.flintAndSteel.name=Flint e Aço
+module.modularpowerarmor.flintAndSteel.desc=Um ignitor portátil que cria fogo através do poder da energia.
+module.modularpowerarmor.grafter.name=Enxertador
+module.modularpowerarmor.grafter.desc=Um enxerto florestal integrado à sua ferramenta elétrica.
+module.modularpowerarmor.hoe.name=Motocultivadora
+module.modularpowerarmor.hoe.desc=Uma forma de lavrar automatizada para criar grandes campos de plantação de uma só vez.
+module.modularpowerarmor.leafBlower.name=Soprador de folhas
+module.modularpowerarmor.leafBlower.desc=Crie uma torrente de ar para derrubar plantas do solo e deixar as árvores.
+module.modularpowerarmor.luxCapacitor.name=Capacitor de Luz
+module.modularpowerarmor.luxCapacitor.desc=Com isso, você pode lançar luzes bastante atrativas a uma superfície.
+module.modularpowerarmor.mffsFieldTeleporter.name=Campo Teleportador MFFS
+module.modularpowerarmor.mffsFieldTeleporter.desc=Uma ferramenta que permite que você se teleporte através dos campos de força MFFS que você possui, se você tiver energia suficiente.
+module.modularpowerarmor.madmodule.modularpowerarmor.name=Mineiro Veia
+module.modularpowerarmor.madmodule.modularpowerarmor.desc=Um mineiro de minério alimentado por um Mekanism Atomic Disassembler
+module.modularpowerarmor.ocTerminal.name=Fixme
+module.modularpowerarmor.ocTerminal.desc=Fixme
+module.modularpowerarmor.portableCraftingTable.name=Assembler In-loco
+module.modularpowerarmor.portableCraftingTable.desc=Uma grade de criação maior, em movimento.
+module.modularpowerarmor.omniProbe.name=Protótipo OmniProbe
+module.modularpowerarmor.omniProbe.desc=Um protótipo de sonda multiuso integrado à sua ferramenta elétrica.
+module.modularpowerarmor.omniwrench.name=Protótipo de Chave Universal
+module.modularpowerarmor.omniwrench.desc=Uma chave que pode interagir com (quase) qualquer mod.
+module.modularpowerarmor.oreScanner.name=Scanner de minério
+module.modularpowerarmor.oreScanner.desc=Uma maneira de ver quão valiosa é a terra ao seu redor.
+module.modularpowerarmor.cmPSD.name=Dispositivo Pessoal de Encolhimento
+module.modularpowerarmor.cmPSD.desc=Um dispositivo de encolhimento pessoal de máquinas compactas integrado à sua ferramenta elétrica.
+module.modularpowerarmor.pickaxe.name=Módulo - Picareta
+module.modularpowerarmor.pickaxe.desc=Picaretas são excelentes contra materiais resistentes, como pedras e minérios.
+module.modularpowerarmor.refinedStorageWirelessGrid.name=Módulo sem fio de armazenamento refinado
+module.modularpowerarmor.refinedStorageWirelessGrid.desc=Um módulo para se conectar a um sistema de armazenamento refinado
+module.modularpowerarmor.scoop.name=Colher
+module.modularpowerarmor.scoop.desc=Uma colher de silvicultura integrada em sua ferramenta elétrica.
+module.modularpowerarmor.shears.name=Tesoura
+module.modularpowerarmor.shears.desc=Útil para cortar folhas, lã e fatiar creepers.
+module.modularpowerarmor.shovel.name=Módulo - Pá
+module.modularpowerarmor.shovel.desc=Pás são boas em materiais suaves, como areia e terra.
+module.modularpowerarmor.treetap.name=Torneira da árvore
+module.modularpowerarmor.treetap.desc=Um trampolim IC2 integrado na sua ferramenta elétrica.
+
+# Weapons
+module.modularpowerarmor.bladeLauncher.name=Blade Launcher
+module.modularpowerarmor.bladeLauncher.desc=Launches a spinning blade of death (or shearing).
+module.modularpowerarmor.lightningSummoner.name=Lightning Summoner
+module.modularpowerarmor.lightningSummoner.desc=Allows you to summon lightning for a large energy cost.
+module.modularpowerarmor.meleeAssist.name=Melee Assist
+module.modularpowerarmor.meleeAssist.desc=A much simpler addon, makes your powertool punches hit harder.
+module.modularpowerarmor.plasmaCannon.name=Plasma Cannon
+module.modularpowerarmor.plasmaCannon.desc=Use electrical arcs in a containment field to superheat air to a plasma and launch it at enemies.
+module.modularpowerarmor.railgun.name=Railgun
+module.modularpowerarmor.railgun.desc=An assembly which accelerates a projectile to supersonic speeds using magnetic force. Heavy recoil.
+
+# GUI
+gui.modularpowerarmor.noModulesFound.line1=No Modular Powersuit items
+gui.modularpowerarmor.noModulesFound.line2=found in inventory. Make some!
+gui.modularpowerarmor.red=Red
+gui.modularpowerarmor.green=Green
+gui.modularpowerarmor.blue=Blue
+gui.modularpowerarmor.install=Install
+gui.modularpowerarmor.salvage=Salvage
+gui.modularpowerarmor.newKeybind=New
+gui.modularpowerarmor.trashKeybind=Trash
+gui.modularpowerarmor.pressKey=Press Key
+gui.modularpowerarmor.keybindInstructions1=Use 'new' to bind new keys.
+gui.modularpowerarmor.keybindInstructions2=Drag and drop modules to bind them to keys.
+gui.modularpowerarmor.keybindInstructions3=Drop keys on 'trash' to unbind them.
+gui.modularpowerarmor.keybindInstructions4=Right-click keybinds to add them to the HUD.
+gui.modularpowerarmor.keybindTaken=Taken!
+gui.modularpowerarmor.tab.tinker=Tinker
+gui.modularpowerarmor.tab.keybinds=Keybinds
+gui.modularpowerarmor.tab.visual=Visual
+gui.modularpowerarmor.equippedTotals=Equipped Totals
+gui.modularpowerarmor.energyStorage=Energy Storage
+gui.modularpowerarmor.armor=Armor
+gui.modularpowerarmor.slotpoints=Slot Points
+gui.modularpowerarmor.load=Load
+gui.modularpowerarmor.save=Save
+gui.modularpowerarmor.reset=Reset
+gui.modularpowerarmor.cancel=Cancel
+gui.modularpowerarmor.colourPrefix=Color:
+gui.modularpowerarmor.saveAs=Save as:
+gui.modularpowerarmor.new=New
+gui.modularpowerarmor.savesuccessful=Save Successful
+
+
+# Toooltips
+tooltip.modularpowerarmor.pressShift=Press SHIFT for more information.
+tooltip.modularpowerarmor.componentTooltip=For use in Tinker Table.
+tooltip.modularpowerarmor.changeModes=Change modes: Press and hold the number of the hotbar slot the PowerFist is in.
+tooltip.modularpowerarmor.energy=Energy:
+tooltip.modularpowerarmor.noModules=No installed modules! This item is useless until you add some modules at a Tinker Table.
+tooltip.modularpowerarmor.installedModules=Installed Modules:
+tooltip.modularpowerarmor.mode=Mode:
+
+# Default Model Helm
+model.mps_helm.modelName=MPS Helm
+model.mps_helm.helm_main.partName=Helmet
+model.mps_helm.visor.partName=Visor
+model.mps_helm.helm_tubes.partName=Tubes
+model.mps_helm.helm_tube_entry2.partName=Right Tube Entry
+model.mps_helm.helm_tube_entry1.partName=Left Tube Entry
+
+# Default Model Chestplate
+model.mps_chest.modelName=MPS Chestplate
+model.mps_chest.backpack.partName=Backpack
+model.mps_chest.polySurface36.partName=Accessory
+model.mps_chest.belt.partName=Belt
+model.mps_chest.chest_padding.partName=Chest Padding
+model.mps_chest.crystal_belt.partName=Belt Crystal
+model.mps_chest.chest_main.partName=Chest Plating
+
+# Default Model Jetpack
+model.jetpack.modelName=MPS Jetpack
+model.jetpack.default.partName=Main
+model.jetpack.jetpack5.partName=Secondary
+model.jetpack.jetpack_glow.partName=Lights
+
+# Default Model Arms
+model.mps_arms.modelName=MPS Arms
+model.mps_arms.crystal_shoulder_2.partName=Right Shoulder Crystal
+model.mps_arms.arms3.partName=Right Arm
+model.mps_arms.crystal_shoulder_1.partName=Left Shoulder Crystal
+model.mps_arms.arms2.partName=Left Arm
+
+# Default Model Pantaloons
+model.mps_pantaloons.modelName=MPS Pantaloons
+model.mps_pantaloons.leg2.partName=Left Leg
+model.mps_pantaloons.leg1.partName=Right Leg
+
+# Default Model Boots
+model.mps_boots.modelName=MPS Boots
+model.mps_boots.boots1.partName=Right Boot
+model.mps_boots.boots2.partName=Left Boot
+
+# Armor Model 2
+model.armor2.modelName=Armor 2
+model.armor2.helmetglow1.partName=Helmet Tubes and Visor
+model.armor2.helmetmain.partName=Helmet
+model.armor2.chestgray.partName=Chest Base
+model.armor2.chestmain.partName=Front Chest Protection
+model.armor2.chestback1.partName=Back Chest Protection
+model.armor2.chestglowfront.partName=Frontal Power Crystal
+model.armor2.chestglowback.partName=Spinal Power Crystals
+model.armor2.armglow1.partName=Shoulder Light
+model.armor2.armmain1.partName=Arm and Shoulder Protection
+model.armor2.armgray1.partName=Arm Base
+model.armor2.armglow.partName=Shoulder Light
+model.armor2.armmain.partName=Arm and Shoulder Protection
+model.armor2.armgray.partName=Arm Base
+model.armor2.leggray.partName=Left Leg Base
+model.armor2.legbit.partName=Left Leg Protection
+model.armor2.legglow.partName=Left Leg Light
+model.armor2.leggray1.partName=Right Leg Base
+model.armor2.legbit1.partName=Right Leg Protection
+model.armor2.legglow1.partName=Right Leg Light
+model.armor2.bootmain1.partName=Right Boot
+model.armor2.bootglow1.partName=Right Boot Glow
+model.armor2.bootmain.partName=Left Boot
+model.armor2.bootglow.partName=Left Boot Glow
+
+
+textureSpec.default_armorskin.specName=Default Armor Skin
+textureSpec.head.partName=Head
+textureSpec.chest.partName=Chest
+textureSpec.legs.partName=Legs
+textureSpec.feet.partName=Feet
+
+textureSpec.citizenjoe_armorskin.specName=Citizen Joe Armor Skin
+
+
+# PowerFist main model
+model.powerfist.modelName=Power Fist Right Hand
+model.powerfist.mainarm.partName=Main Arm
+model.powerfist.armorright.partName=Armor Right
+model.powerfist.armorleft.partName=Armor Left
+model.powerfist.wristtopright.partName=Wrist Top Right
+model.powerfist.wristtopleft.partName=Wrist Top Left
+model.powerfist.wristbottomright.partName=Wrist Bottom Right
+model.powerfist.wristbottomleft.partName=Wrist Bottom Left
+model.powerfist.fingerguard.partName=Finger Guard
+model.powerfist.crystalholder.partName=Crystal Holder
+model.powerfist.crystal.partName=Crystal
+model.powerfist.supportright1.partName=Support Right 1
+model.powerfist.supportright2.partName=Support Right 2
+model.powerfist.supportright3.partName=Support Right 3
+model.powerfist.supportright4.partName=Support Right 4
+model.powerfist.supportright5.partName=Support Right 5
+model.powerfist.supportbaseright.partName=Support Base Right
+model.powerfist.palm.partName=Palm
+model.powerfist.supportbaseleft.partName=Support Base Left
+model.powerfist.supportleftfront.partName=Support Left Front
+model.powerfist.supportrightfront.partName=Support Right Front
+model.powerfist.supportleft1.partName=Support Left 1
+model.powerfist.supportleft2.partName=Support Left 2
+model.powerfist.supportleft3.partName=Support Left 3
+model.powerfist.supportleft4.partName=Support Left 4
+model.powerfist.supportleft5.partName=Support Left 5
+
+model.powerfist_fingers_normal.modelName=Power Fist Fingers Normal Pose
+model.powerfist_fingers_normal.index1.partName=Index 1
+model.powerfist_fingers_normal.index2.partName= Index 2
+model.powerfist_fingers_normal.middlefinger1.partName=Middle Finger 1
+model.powerfist_fingers_normal.middlefinger2.partName=Middle Finger 2
+model.powerfist_fingers_normal.ringfinger1.partName=Ring Finger 1
+model.powerfist_fingers_normal.ringfinger2.partName=Ring Finger 2
+model.powerfist_fingers_normal.pinky1.partName=Pinky 1
+model.powerfist_fingers_normal.pinky2.partName=Pinky 2
+model.powerfist_fingers_normal.thumb1.partName=Thumb 1
+model.powerfist_fingers_normal.thumb2.partName=Thumb 2
+
+model.powerfist_fingers_firing.modelName=Power Fist Fingers Firing Pose
+model.powerfist_fingers_firing.index1.partName=Index 1
+model.powerfist_fingers_firing.index2.partName= Index 2
+model.powerfist_fingers_firing.middlefinger1.partName=Middle Finger 1
+model.powerfist_fingers_firing.middlefinger2.partName=Middle Finger 2
+model.powerfist_fingers_firing.ringfinger1.partName=Ring Finger 1
+model.powerfist_fingers_firing.ringfinger2.partName=Ring Finger 2
+model.powerfist_fingers_firing.pinky1.partName=Pinky 1
+model.powerfist_fingers_firing.pinky2.partName=Pinky 2
+model.powerfist_fingers_firing.thumb1.partName=Thumb 1
+model.powerfist_fingers_firing.thumb2.partName=Thumb 2
+
+model.powerfist_left.modelName=Power Fist Left Hand
+model.powerfist_left.mainarm.partName=Main Arm
+model.powerfist_left.armorright.partName=Armor Right
+model.powerfist_left.armorleft.partName=Armor Left
+model.powerfist_left.wristtopright.partName=Wrist Top Right
+model.powerfist_left.wristtopleft.partName=Wrist Top Left
+model.powerfist_left.wristbottomright.partName=Wrist Bottom Right
+model.powerfist_left.wristbottomleft.partName=Wrist Bottom Left
+model.powerfist_left.fingerguard.partName=Finger Guard
+model.powerfist_left.crystalholder.partName=Crystal Holder
+model.powerfist_left.crystal.partName=Crystal
+model.powerfist_left.supportright1.partName=Support Right 1
+model.powerfist_left.supportright2.partName=Support Right 2
+model.powerfist_left.supportright3.partName=Support Right 3
+model.powerfist_left.supportright4.partName=Support Right 4
+model.powerfist_left.supportright5.partName=Support Right 5
+model.powerfist_left.supportbaseright.partName=Support Base Right
+model.powerfist_left.palm.partName=Palm
+model.powerfist_left.supportbaseleft.partName=Support Base Left
+model.powerfist_left.supportleftfront.partName=Support Left Front
+model.powerfist_left.supportrightfront.partName=Support Right Front
+model.powerfist_left.supportleft1.partName=Support Left 1
+model.powerfist_left.supportleft2.partName=Support Left 2
+model.powerfist_left.supportleft3.partName=Support Left 3
+model.powerfist_left.supportleft4.partName=Support Left 4
+model.powerfist_left.supportleft5.partName=Support Left 5
+
+model.powerfist_fingers_normal_left.modelName=Power Fist Left Fingers Normal Pose
+model.powerfist_fingers_normal_left.index1.partName=Index 1
+model.powerfist_fingers_normal_left.index2.partName= Index 2
+model.powerfist_fingers_normal_left.middlefinger1.partName=Middle Finger 1
+model.powerfist_fingers_normal_left.middlefinger2.partName=Middle Finger 2
+model.powerfist_fingers_normal_left.ringfinger1.partName=Ring Finger 1
+model.powerfist_fingers_normal_left.ringfinger2.partName=Ring Finger 2
+model.powerfist_fingers_normal_left.pinky1.partName=Pinky 1
+model.powerfist_fingers_normal_left.pinky2.partName=Pinky 2
+model.powerfist_fingers_normal_left.thumb1.partName=Thumb 1
+model.powerfist_fingers_normal_left.thumb2.partName=Thumb 2
+
+model.powerfist_fingers_firing_left.modelName=Power Fist Left Fingers Firing Pose
+model.powerfist_fingers_firing_left.index1.partName=Index 1
+model.powerfist_fingers_firing_left.index2.partName= Index 2
+model.powerfist_fingers_firing_left.middlefinger1.partName=Middle Finger 1
+model.powerfist_fingers_firing_left.middlefinger2.partName=Middle Finger 2
+model.powerfist_fingers_firing_left.ringfinger1.partName=Ring Finger 1
+model.powerfist_fingers_firing_left.ringfinger2.partName=Ring Finger 2
+model.powerfist_fingers_firing_left.pinky1.partName=Pinky 1
+model.powerfist_fingers_firing_left.pinky2.partName=Pinky 2
+model.powerfist_fingers_firing_left.thumb1.partName=Thumb 1
+model.powerfist_fingers_firing_left.thumb2.partName=Thumb 2

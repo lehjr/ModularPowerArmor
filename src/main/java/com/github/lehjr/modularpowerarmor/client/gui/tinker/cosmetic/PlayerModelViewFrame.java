@@ -1,20 +1,30 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
+import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
+import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.math.MathUtils;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import org.lwjgl.input.Mouse;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -23,8 +33,6 @@ import java.util.List;
  * Ported to Java by lehjr on 11/2/16.
  */
 public class PlayerModelViewFrame implements IGuiFrame {
-    Minecraft minecraft;
-
     ItemSelectionFrame itemSelector;
     DrawableRect border;
     double anchorx = 0;
@@ -44,45 +52,49 @@ public class PlayerModelViewFrame implements IGuiFrame {
     public PlayerModelViewFrame(ItemSelectionFrame itemSelector, Point2D topleft, Point2D bottomright, Colour borderColour, Colour insideColour) {
         this.itemSelector = itemSelector;
         this.border = new DrawableRect(topleft, bottomright, borderColour, insideColour);
-        this.minecraft = Minecraft.getInstance();
     }
 
     @Override
     public void init(double left, double top, double right, double bottom) {
-        border.setTargetDimensions(left, top, right, bottom);
+        this.border.setTargetDimensions(left, top, right, bottom);
+    }
+
+    public EntityEquipmentSlot getEquipmentSlot() {
+        ItemStack selectedItem = getSelectedItem().getItem();
+        if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor) {
+            return ((ItemPowerArmor) selectedItem.getItem()).armorType;
+        }
+
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+        ItemStack heldItem = player.getHeldItemOffhand();
+
+        if (!heldItem.isEmpty() && Objects.equals(selectedItem, heldItem) /*ItemUtils.stackEqualExact(selectedItem, heldItem)*/) {
+            return EntityEquipmentSlot.OFFHAND;
+        }
+        return EntityEquipmentSlot.MAINHAND;
     }
 
     ClickableItem getSelectedItem() {
         return itemSelector.getSelectedItem();
     }
 
+    NBTTagCompound getRenderTag() {
+        return MPSNBTUtils.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
+    }
+
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
+    public void onMouseDown(double x, double y, int button) {
         if (border.containsPoint(x, y)) {
             dragging = button;
             anchorx = x;
             anchory = y;
-            return true;
         }
-        return false;
     }
 
     @Override
-    public boolean mouseReleased(double x, double y, int button) {
-        if (border.containsPoint(x, y)) {
-            dragging = -1;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mousex, double mousey, double dWheel) {
-        if (border.containsPoint(mousex, mousey)) { // broken
-            zoom += dWheel * 2;
-            return true;
-        }
-        return false;
+    public void onMouseUp(double x, double y, int button) {
+        dragging = -1;
     }
 
     @Override
@@ -95,6 +107,12 @@ public class PlayerModelViewFrame implements IGuiFrame {
             this.oldMouseY = this.mouseY;
         this.mouseY = (int) mousey;
 
+
+        if (border.containsPoint(mousex, mousey)) {
+            double dscroll = (lastdWheel - Mouse.getDWheel()) / 120;
+            zoom = zoom * Math.pow(1.1, dscroll);
+            lastdWheel = Mouse.getDWheel();
+        }
         double dx = mousex - anchorx;
         double dy = mousey - anchory;
         switch (dragging) {
@@ -118,56 +136,67 @@ public class PlayerModelViewFrame implements IGuiFrame {
     }
 
     @Override
-    public void render(int mouseX_, int mouseY_, float partialTicks)  {
+    public void render(int i, int i1, float v) {
+        Minecraft mc = Minecraft.getMinecraft();
         border.draw();
-        // set color to normal state
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        if (itemSelector.getSelectedItem() == null)
+            return;
+        if (getSelectedItem().getItem().getItem() instanceof ItemPowerArmor) {
+            ((IArmorModel) ArmorModelInstance.getInstance()).setRenderSpec(MPSNBTUtils.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot()));
+            ((IArmorModel) ArmorModelInstance.getInstance()).setVisibleSection(this.getEquipmentSlot());
+        } else if (getSelectedItem().getItem().getItem() instanceof ItemPowerFist) {
+            MPSNBTUtils.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
+        } else
+            return;
 
-        float mouseX = (float) (border.left() + 51) - this.oldMouseX;
-        float mouseY = (float) ((int) border.top() + 75 - 50) - this.oldMouseY;
+        // set color to normal state
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        float mouseX = (float) (border.finalLeft() + 51) - this.oldMouseX;
+        float mouseY = (float) ((int) border.finalTop() + 75 - 50) - this.oldMouseY;
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translated(border.centerx() + offsetx, border.centery() + offsety, 50.0F);
-        GlStateManager.scalef((float) (-zoom), (float) zoom, (float) zoom);
-        GlStateManager.rotatef(180.0F, 0.0F, 0.0F, 1.0F); // turn model right side up
+        GlStateManager.translate(border.centerx() + offsetx, border.centery() + offsety, 50.0F);
+        GlStateManager.scale((float) (-zoom), (float) zoom, (float) zoom);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F); // turn model right side up
 
-        float f = minecraft.player.renderYawOffset;
-        float f1 = minecraft.player.rotationYaw;
-        float f2 = minecraft.player.rotationPitch;
-        float f3 = minecraft.player.prevRotationYawHead;
-        float f4 = minecraft.player.rotationYawHead;
+        float f = mc.player.renderYawOffset;
+        float f1 = mc.player.rotationYaw;
+        float f2 = mc.player.rotationPitch;
+        float f3 = mc.player.prevRotationYawHead;
+        float f4 = mc.player.rotationYawHead;
         // XRotation with mouse look
-        GlStateManager.rotatef(-((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(-((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
 
-        GlStateManager.rotatef((float) rotx, 1, 0, 0);
-        GlStateManager.rotatef((float) roty, 0, 1, 0);
+        GlStateManager.rotate((float) rotx, 1, 0, 0);
+        GlStateManager.rotate((float) roty, 0, 1, 0);
 
-        minecraft.player.renderYawOffset = (float) Math.atan((double) (mouseX / 40.0F)) * 20.0F;
-        minecraft.player.rotationYaw = (float) Math.atan((double) (mouseX / 40.0F)) * 40.0F;
-        minecraft.player.rotationPitch = -((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F;
-        minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
-        minecraft.player.prevRotationYawHead = minecraft.player.rotationYaw;
-        GlStateManager.translatef(0.0F, 0.0F, 0.0F);
-        EntityRendererManager rendermanager = Minecraft.getInstance().getRenderManager();
+        mc.player.renderYawOffset = (float) Math.atan((double) (mouseX / 40.0F)) * 20.0F;
+        mc.player.rotationYaw = (float) Math.atan((double) (mouseX / 40.0F)) * 40.0F;
+        mc.player.rotationPitch = -((float) Math.atan((double) (mouseY / 40.0F))) * 20.0F;
+        mc.player.rotationYawHead = mc.player.rotationYaw;
+        mc.player.prevRotationYawHead = mc.player.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(minecraft.player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.renderEntity(mc.player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         rendermanager.setRenderShadow(true);
-        minecraft.player.renderYawOffset = f;
-        minecraft.player.rotationYaw = f1;
-        minecraft.player.rotationPitch = f2;
-        minecraft.player.prevRotationYawHead = f3;
-        minecraft.player.rotationYawHead = f4;
+        mc.player.renderYawOffset = f;
+        mc.player.rotationYaw = f1;
+        mc.player.rotationPitch = f2;
+        mc.player.prevRotationYawHead = f3;
+        mc.player.rotationYawHead = f4;
         GlStateManager.popMatrix();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
-        GlStateManager.disableTexture();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     @Override
-    public List<ITextComponent> getToolTip(int x, int y) {
+    public List<String> getToolTip(int x, int y) {
         return null;
     }
 }

@@ -1,157 +1,159 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+
+        maven {
+            url 'https://mvnrepository.com/artifact/org.json/json'
+        }
+
+        maven {
+            url 'https://mvnrepository.com/artifact/com.codesnippets4all/quick-json'
+        }
+
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
+apply plugin: 'net.minecraftforge.gradle.forge'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+//sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+//compileJava {
+//    sourceCompatibility = targetCompatibility = '1.8'
+//}
 
 def buildnumber = System.getenv("BUILD_NUMBER")
 def travisbuildnumber = (System.getenv("TRAVIS_BUILD_NUMBER") ?: -000).toInteger() + 00
 version = "${mod_version}.${buildnumber ?: travisbuildnumber}"
 group = group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ModularPowerArmor-${minecraft_version}"
+archivesBaseName = "${mod_name}-${minecraft_version}"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+def mpalib_version = (System.getenv("MPALIB_VERSION") ?: "${version}")
 
 repositories {
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-//    flatDir {
-//        dirs 'libs'
-//    }
-}
-
-minecraft {
-    mappings channel: "snapshot", version: "${project.mcp_version}".toString()
-// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    accessTransformer = file('src/main/resources/META-INF/mpalib_at.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
-            workingDirectory project.file('run').canonicalPath
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            ideaModule project.group + ".main"
-
-            mods {
-                powersuits {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run').canonicalPath
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            ideaModule project.group + ".main"
-
-            mods {
-                powersuits {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+    //url                                                           //dependencies
+    maven { url "http://dvs1.progwml6.com/files/maven" }            //JEI
+    maven { url = "http://maven.covers1624.net/" }                  //CoFH
+    maven { url = "http://maven.ic2.player.to" }                    //IC2 Forestry
+    maven { url = "http://maven.tterrag.com" }                      //EnderIO
+    maven { url = "http://maven2.tterrag.com" }                     //EnderIO
+    maven { url = 'http://maven.mcmoddev.com' }                     //TESLA API
+    maven { url = 'https://mod-buildcraft.com/maven/' }             //BuildCraft
+    maven { url = 'http://maven.cil.li/' }                          //Scannable
+    maven { url = 'https://repo.raoulvdberge.com/' }                //RefinedStorage
+    maven { url = 'http://maven.thiakil.com/' }                     //Mekanism
+    maven { url = "http://maven.blamejared.com" }                   //CraftTweaker - required by Mekanism
+    maven { url = 'https://minecraft.curseforge.com/api/maven/' }   //Thaumcraft
+    mavenCentral()
 }
 
 dependencies {
-    minecraft([
-            group  : "${project.forgegroup}",
-            name   : "forge",
-            version: "${project.minecraft_version}-${project.forge_version}"
-    ])
+    deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"                             // JEI
+    deobfCompile "cofh:RedstoneFlux:1.12-${rf_version}:universal"                                   // RF API
 
-    // compile against the JEI API but do not include it at runtime
-    // currently not actually using any JEI code, just using it as a matter of convienience for testing.
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    compile ("cofh:CoFHCore:${minecraft_version}-${cofhcore_version}:universal")                 //CoFH Core
+            { exclude group: 'mezz.jei' }//also using old outdated JEI reference
 
-    // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile "com.enderio.core:EnderCore:${minecraft_version}-${endercore_version}"              //Ender Core
+//    compileOnly "com.enderio.core:EnderCore:${minecraft_version}-${endercore_version}-core"              //Ender Core
+    deobfCompile "appeng:appliedenergistics2:${ae2api_version}"                                     //Applied Energetics 2
+    deobfCompile "net.industrial-craft:industrialcraft-2:${ic2_version}-ex112"                   //IC2 API
+    deobfCompile "net.sengir.forestry:forestry_${minecraft_version}:${forestry_version}"            //Forestry
+    deobfCompile "thaumcraft:Thaumcraft:1.12.2:${thaumcraft_version}"                               //Thaumcraft
+    deobfCompile "refinedstorage:refinedstorage:${refinedstorage_version}"                          //Refined Storage
+    compile "net.darkhax.tesla:Tesla-${minecraft_version}:${tesla_version}"                         //Tesla
+    compile "com.mod-buildcraft:buildcraft:${buildcraft_version}"                                   //BuildCraft
+    compile "li.cil.scannable:Scannable:MC${minecraft_version}-${scannable_version}"                //Scannable
+    compile fileTree(dir: '/libs', include: 'RenderPlayerAPI-1.12.1-1.0.jar')                    //RenderPlayerAPI
+    compile fileTree(dir: '/libs', include: 'ExtraCells-1.12.2-2.6.1a.jar')                      //ExtraCells
+//    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")                           //Mekanism
+//            { exclude group: 'mezz.jei' }//Mek has implemented a duplicated and out date JEI
+
+//    compileOnly ("com.enderio:EnderIO:${minecraft_version}-${enderio_version}")
+
+//    compileOnly ("com.enderio:EnderIO:${minecraft_version}-${enderio_version}:api")                 //EnderIO API
+//            { exclude group: "deobf.com.enderio.core"}//Another duplicated and (dirty words) dependency
+
+    //in fact,if you want run with EnderIO,you had to manually add EnderCore and EnderIO to your run/mods
+    //or you can help to add some lines below that can help the "runClient" works properly while also load EnderIO
+
+    compile group: 'com.google.guava', name: 'guava', version: '22.0'
+
+    //we need baubles at runtime
+    runtime "com.azanor:Baubles:${baubles_runtime_version}"
+
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20180813' // probably get rid of this
+    compile group: 'com.codesnippets4all', name: 'quick-json', version: '1.0.4'
+}
+
+minecraft {
+    version = minecraft_version + "-" + forge_version// + "-" + "1.10.0"
+    runDir = "run"
+    mappings = mcp_mappings
+    replace "@mpalib_version@", mpalib_version
+    replace "@VERSION@", project.version
+    useDepAts = true
+
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+
+    // Move access transformers to META-INF
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 jar {
     manifest {
-        attributes(["Specification-Title": "powersuits",
-                    "Specification-Vendor": "MachineMuse",
-                    "Specification-Version": "28.0", // We are version 1 of the modlauncher specification
-                    "Implementation-Title": project.name,
-                    "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"MachineMuse",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "FMLAT": "mpalib_at.cfg"
-        ],)
+        attributes 'FMLAT': 'mpalib_at.cfg'
     }
 }
 
-// Process resources on build
-processResources {
-	// This will ensure that this task is redone when the versions change.
-	inputs.property 'version', project.version
+//task devJar(type: Jar) {
+//    from sourceSets.main.output
+//    classifier = 'dev'
+//}
+//
+//artifacts {
+//    archives devJar
+//}
+//
 
-	// Replace stuff in mods.toml, nothing else
-	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-
-		// Replace version
-		expand 'version':project.version
-	}
-
-	// Copy everything else except the mods.toml
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
-	}
-}
-
-task devJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'dev'
-}
-
-artifacts {
-    archives devJar
-}
-
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact reobfArtifact
-        }
+apply plugin: 'idea'
+idea {
+    module {
+        inheritOutputDirs = true
     }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+}
+
+runClient {
+    jvmArgs "-Xmx3G"
 }

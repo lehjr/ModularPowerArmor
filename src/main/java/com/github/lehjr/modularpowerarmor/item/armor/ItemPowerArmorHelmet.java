@@ -1,104 +1,69 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
-import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
-import com.github.lehjr.mpalib.capabilities.heat.IHeatWrapper;
-import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.MPALibRangedWrapper;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.ModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
-import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
-import net.minecraft.inventory.EquipmentSlotType;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import forestry.api.core.IArmorNaturalist;
+import micdoodle8.mods.galacticraft.api.item.IBreathableArmor;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.common.Optional;
+import thaumcraft.api.items.IGoggles;
+import thaumcraft.api.items.IRevealer;
+import thaumcraft.api.items.IVisDiscountGear;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Ported to Java by lehjr on 10/26/16.
+ */
+@Optional.InterfaceList({
+        @Optional.Interface(iface = "forestry.api.core.IArmorNaturalist", modid = "forestry", striprefs = true),
+        @Optional.Interface(iface = "thaumcraft.api.items.IGoggles", modid = "thaumcraft", striprefs = true),
+        @Optional.Interface(iface = "thaumcraft.api.items.IRevealer", modid = "thaumcraft", striprefs = true),
+        @Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "thaumcraft", striprefs = true),
+        @Optional.Interface(iface = "micdoodle8.mods.galacticraft.api.item.IBreathableArmor", modid = "galacticraftcore", striprefs = true)
+})
+public class ItemPowerArmorHelmet extends ItemPowerArmor implements
+        IArmorNaturalist,
+        IVisDiscountGear,
+        IRevealer,
+        IGoggles,
+        IBreathableArmor {
+    public final EntityEquipmentSlot armorType;
 
-public class ItemPowerArmorHelmet extends ItemPowerArmor {
     public ItemPowerArmorHelmet(String regName) {
-        super(EquipmentSlotType.HEAD);
-        setRegistryName(regName);
+        super(regName, "powerArmorHelmet", 0, EntityEquipmentSlot.HEAD);
+        this.armorType = EntityEquipmentSlot.HEAD;
     }
 
-    @Nullable
+    @Optional.Method(modid = "forestry")
+    public boolean canSeePollination(final EntityPlayer player, final ItemStack helm, final boolean doSee) {
+        return ModuleManager.INSTANCE.itemHasActiveModule(helm, ModuleConstants.MODULE_APIARIST_ARMOR__DATANAME);
+    }
+
+    @Optional.Method(modid = "thaumcraft")
+    public boolean showIngamePopups(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+        return ModuleManager.INSTANCE.itemHasModule(itemStack, ModuleConstants.MODULE_THAUM_GOGGLES__DATANAME);
+    }
+
+    @Optional.Method(modid = "thaumcraft")
+    public boolean showNodes(ItemStack itemStack, EntityLivingBase entityLivingBase) {
+        return ModuleManager.INSTANCE.itemHasModule(itemStack, ModuleConstants.MODULE_THAUM_GOGGLES__DATANAME);
+    }
+
+    @Optional.Method(modid = "thaumcraft")
+    public int getVisDiscount(ItemStack itemStack, EntityPlayer entityPlayer) {
+        return ModuleManager.INSTANCE.itemHasModule(itemStack, ModuleConstants.MODULE_THAUM_GOGGLES__DATANAME) ? 5 : 0;
+    }
+
+    @Optional.Method(modid = "galacticraftcore")
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new PowerArmorCap(stack);
+    public boolean handleGearType(EnumGearType enumGearType) {
+        return enumGearType == EnumGearType.HELMET;
     }
 
-    class PowerArmorCap implements ICapabilityProvider {
-        ItemStack armor;
-        IModularItem modularItemCap;
-        IEnergyStorage energyStorage;
-        IHeatWrapper heatStorage;
-        IArmorModelSpecNBT modelSpec;
-        AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatHelmet());
-
-        public PowerArmorCap(@Nonnull ItemStack armor) {
-            this.armor = armor;
-            this.modularItemCap = new ModularItem(armor, 18) {{
-                /*
-                 * Limit only Armor, Energy Storage and Energy Generation
-                 *
-                 * This cuts down on overhead for accessing the most commonly used values
-                 */
-                Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
-                int i = 0;
-
-                rangedWrapperMap.put(EnumModuleCategory.ARMOR,new MPALibRangedWrapper(this, 0, 1));
-                rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE,new MPALibRangedWrapper(this, 1, 2));
-                rangedWrapperMap.put(EnumModuleCategory.ENERGY_GENERATION,new MPALibRangedWrapper(this, 2, 3));
-                rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
-                setRangedWrapperMap(rangedWrapperMap);
-            }};
-
-            this.energyStorage = this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
-            this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
-            this.modelSpec = new ArmorModelSpecNBT(armor);
-            this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
-        }
-
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == null) {
-                return LazyOptional.empty();
-            }
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-                modularItemCap.updateFromNBT();
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
-            }
-            if (cap == HeatCapability.HEAT) {
-                heatStorage.updateFromNBT();
-                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
-            }
-            if (cap == ModelSpecNBTCapability.RENDER) {
-                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
-            }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-        }
-
-        class EmptyEnergyWrapper extends EnergyStorage {
-            public EmptyEnergyWrapper() {
-                super(0);
-            }
-        }
-    }
+    @Optional.Method(modid = "galacticraftcore")
+    @Override
+    public boolean canBreathe(ItemStack itemStack, EntityPlayer entityPlayer, EnumGearType enumGearType) {
+        return ModuleManager.INSTANCE.itemHasModule(itemStack, ModuleConstants.MODULE_AIRTIGHT_SEAL__DATANAME);
+   }
 }

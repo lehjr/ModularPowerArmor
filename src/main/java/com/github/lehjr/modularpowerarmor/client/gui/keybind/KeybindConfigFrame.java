@@ -1,37 +1,28 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
-import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
+import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
+import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
-import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class KeybindConfigFrame implements IGuiFrame {
@@ -39,45 +30,49 @@ public class KeybindConfigFrame implements IGuiFrame {
     protected Set<ClickableModule> modules;
     protected IClickable selectedClickie;
     protected ClickableKeybinding closestKeybind;
-    protected PlayerEntity player;
+    protected EntityPlayer player;
+    Rect rect;
+    protected ContainerlessGui gui;
     protected boolean selecting;
     protected ClickableButton newKeybindButton;
     protected ClickableButton trashKeybindButton;
     protected long takenTime;
-    Rect rect;
 
-    public KeybindConfigFrame(Rect backgroundRect, PlayerEntity player) {
+    public KeybindConfigFrame(ContainerlessGui gui, EntityPlayer player) {
         modules = new HashSet();
         for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
             modules.addAll(kb.getBoundModules());
         }
-        this.rect = backgroundRect;
+        this.gui = gui;
+        rect = new Rect(0, 0, 0, 0);
+
         this.player = player;
-        Point2D center = rect.center();
-        newKeybindButton = new ClickableButton(new TranslationTextComponent("gui.modularpowerarmor.newKeybind"), center.plus(new Point2D(0, -8)), true);
-        trashKeybindButton = new ClickableButton(new TranslationTextComponent("gui.modularpowerarmor.trashKeybind"), center.plus(new Point2D(0, 8)), true);
+//
+        newKeybindButton = new ClickableButton(I18n.format("gui.modularpowerarmor.newKeybind"), new Point2D(0, 0), true);
+        trashKeybindButton = new ClickableButton(I18n.format("gui.modularpowerarmor.trashKeybind"), new Point2D(0, 0), true);
     }
 
     @Override
     public void init(double left, double top, double right, double bottom) {
+        rect.setTargetDimensions(left, top, right, bottom);
         newKeybindButton.move(rect.center().plus(new Point2D(0, -8)));
         trashKeybindButton.move(rect.center().plus(new Point2D(0, 8)));
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
+    public void onMouseDown(double x, double y, int button) {
         if (button == 0) {
             if (selectedClickie == null) {
                 for (ClickableModule module : modules) {
                     if (module.hitBox(x, y)) {
                         selectedClickie = module;
-                        return true;
+                        return;
                     }
                 }
                 for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                     if (keybind.hitBox(x, y)) {
                         selectedClickie = keybind;
-                        return true;
+                        return;
                     }
                 }
             }
@@ -88,68 +83,43 @@ public class KeybindConfigFrame implements IGuiFrame {
             for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                 if (keybind.hitBox(x, y)) {
                     keybind.toggleHUDState();
-                    return true;
+                    return;
                 }
             }
         } else if (button > 2) {
             int key = button - 100;
-
+//            if (KeyBinding.HASH.containsItem(key)) {
             if (keyBindingHelper.keyBindingHasKey(key)) {
                 takenTime = System.currentTimeMillis();
             }
+//            if (!KeyBinding.HASH.containsItem(key)) {
             if (!keyBindingHelper.keyBindingHasKey(key)) {
                 addKeybind(key, true);
-            } else if (ClientConfig.GENERAL_ALLOW_CONFLICTING_KEYBINDS.get()) {
+            } else if (MPSConfig.INSTANCE.allowConflictingKeybinds()) {
                 addKeybind(key, false);
             }
             selecting = false;
         }
-        return false;
     }
 
     public void refreshModules() {
-        NonNullList<ItemStack> installedModules = NonNullList.create();
-
-        for (EquipmentSlotType slot: EquipmentSlotType.values()) {
-            switch (slot.getSlotType()) {
-                case HAND:
-                    player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
-                            iModeChanging -> {
-                                if (iModeChanging instanceof IModeChangingItem)
-                                    installedModules.addAll(((IModularItem) iModeChanging).getInstalledModulesOfType(IToggleableModule.class));
-                            });
-                    break;
-
-                case ARMOR:
-                    if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-                        player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
-                                iModularItem -> {
-                                    if (iModularItem instanceof IModularItem)
-                                        installedModules.addAll(((IModularItem) iModularItem).getInstalledModulesOfType(IToggleableModule.class));
-                                });
-                    }
-            }
-        }
-
+        List<IPowerModule> installedModules = ModuleManager.INSTANCE.getPlayerInstalledModules(player);
         List<Point2D> points = GradientAndArcCalculator.pointsInLine(
                 installedModules.size(),
                 new Point2D(rect.finalLeft() + 10, rect.finalTop() + 10),
                 new Point2D(rect.finalLeft() + 10, rect.finalBottom() - 10));
         Iterator<Point2D> pointIterator = points.iterator();
-        for (ItemStack module : installedModules) {
-            if (!alreadyAdded(module)) {
-                ClickableModule clickie = new ClickableModule(module, pointIterator.next(), -1, EnumModuleCategory.NONE);
+        for (IPowerModule module : installedModules) {
+            if (module instanceof IToggleableModule && !alreadyAdded(module)) {
+                ClickableModule clickie = new ClickableModule(module, pointIterator.next());
                 modules.add(clickie);
             }
         }
     }
 
-    public boolean alreadyAdded(@Nonnull ItemStack module) {
-        if (module.isEmpty())
-            return false;
-
+    public boolean alreadyAdded(IPowerModule module) {
         for (ClickableModule clickie : modules) {
-            if (ItemStack.areItemsEqual(clickie.getModule(),module)) {
+            if (clickie.getModule().getDataName().equals(module.getDataName())) {
                 return true;
             }
         }
@@ -157,7 +127,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public boolean mouseReleased(double x, double y, int button) {
+    public void onMouseUp(double x, double y, int button) {
         if (button == 0) {
             if (selectedClickie != null && closestKeybind != null && selectedClickie instanceof ClickableModule) {
                 closestKeybind.bindModule((ClickableModule) selectedClickie);
@@ -165,17 +135,12 @@ public class KeybindConfigFrame implements IGuiFrame {
                 KeyBinding binding = ((ClickableKeybinding) selectedClickie).getKeyBinding();
                 keyBindingHelper.removeKey(binding);
 //                KeyBinding.HASH.removeObject(binding.getKeyCode());
-                keyBindingHelper.removeKey(binding);
+                keyBindingHelper.removeKey(binding.getKeyCode());
                 KeybindManager.getKeybindings().remove(selectedClickie);
             }
             selectedClickie = null;
         }
-        return false;
-    }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
-        return false;
     }
 
     @Override
@@ -259,7 +224,7 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY1, float partialTicks) {
         Point2D center = rect.center();
         RenderState.blendingOn();
         RenderState.on2D();
@@ -269,8 +234,8 @@ public class KeybindConfigFrame implements IGuiFrame {
             RenderState.blendingOff();
             return;
         }
-        newKeybindButton.render(mouseX, mouseY, partialTicks);
-        trashKeybindButton.render(mouseX, mouseY, partialTicks);
+        newKeybindButton.render(mouseX, mouseY1, partialTicks);
+        trashKeybindButton.render(mouseX, mouseY1, partialTicks);
         TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
         Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions1"), center.getX(), center.getY() + 40);
         Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions2"), center.getX(), center.getY() + 50);
@@ -281,10 +246,10 @@ public class KeybindConfigFrame implements IGuiFrame {
             Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindTaken"), pos.getX(), pos.getY());
         }
         for (ClickableModule module : modules) {
-            module.render(mouseX, mouseY, partialTicks);
+            module.render(mouseX, mouseY1, partialTicks);
         }
         for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
-            keybind.render(mouseX, mouseY, partialTicks);
+            keybind.render(mouseX, mouseY1, partialTicks);
         }
         if (selectedClickie != null && closestKeybind != null) {
             Renderer.drawLineBetween(selectedClickie, closestKeybind, Colour.YELLOW);
@@ -295,61 +260,45 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public List<ITextComponent> getToolTip(int x, int y) {
+    public List<String> getToolTip(int x, int y) {
         for (ClickableModule module : modules) {
             if (module.hitBox(x, y)) {
-                if (doAdditionalInfo()) {
+                if (MPSConfig.INSTANCE.doAdditionalInfo()) {
                     return module.getToolTip();
                 }
-                return Collections.singletonList(module.getLocalizedName());
+                return Collections.singletonList(module.getLocalizedName(module.getModule()));
             }
         }
         return null;
     }
 
-    public static boolean doAdditionalInfo() {
-        return false; //InputMappings.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
-    }
-
-
-
-
-
-
-
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-
-        int key = p_keyPressed_1_; // no idea which one to use here!!
-
+    public void handleKeyboard() {
         if (selecting) {
+            if (Keyboard.getEventKeyState()) {
+                int key = Keyboard.getEventKey();
 //                if (KeyBinding.HASH.containsItem(key)) {
-            if (keyBindingHelper.keyBindingHasKey(key)) {
-                takenTime = System.currentTimeMillis();
-            }
+                if (keyBindingHelper.keyBindingHasKey(key)) {
+                    takenTime = System.currentTimeMillis();
+                }
 //                if (!KeyBinding.HASH.containsItem(key)) {
-            if (!keyBindingHelper.keyBindingHasKey(key)) {
-                addKeybind(key, true);
-            } else if (ClientConfig.GENERAL_ALLOW_CONFLICTING_KEYBINDS.get()) {
-                addKeybind(key, false);
+                if (!keyBindingHelper.keyBindingHasKey(key)) {
+                    addKeybind(key, true);
+                } else if (MPSConfig.INSTANCE.allowConflictingKeybinds()) {
+                    addKeybind(key, false);
+                }
+                selecting = false;
             }
-            selecting = false;
         }
-
-        return true; // no idea what to return here!!!
     }
 
     private void addKeybind(int key, boolean free) {
-        addKeybind(KeyBindingHelper.getInputByCode(key), free);
-    }
-
-    private void addKeybind(InputMappings.Input key, boolean free) {
         String name;
         try {
-            name = key.getTranslationKey();
+            name = Keyboard.getKeyName(key);
         } catch (Exception e) {
             name = "???";
         }
-        KeyBinding keybind = new KeyBinding(name, key.getKeyCode(), KeybindKeyHandler.mps);
+        KeyBinding keybind = new KeyBinding(name, key, KeybindKeyHandler.mps);
         ClickableKeybinding clickie = new ClickableKeybinding(keybind, newKeybindButton.getPosition().plus(new Point2D(0, -20)), free, false);
         KeybindManager.getKeybindings().add(clickie);
     }

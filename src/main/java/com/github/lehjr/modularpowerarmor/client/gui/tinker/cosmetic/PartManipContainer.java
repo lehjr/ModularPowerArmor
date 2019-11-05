@@ -1,17 +1,17 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.client.render.modelspec.SpecBase;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,10 +25,12 @@ import java.util.Objects;
 public class PartManipContainer extends ScrollableFrame {
     public ItemSelectionFrame itemSelect;
     public ColourPickerFrame colourSelect;
-    public ClickableItem lastItemSlot;
+    public Integer lastItemSlot;
     public int lastColour;
     public int lastColourIndex;
     public List<PartSpecManipSubFrame> modelframes;
+    protected boolean enabled;
+    protected boolean visibile;
 
     public PartManipContainer(ItemSelectionFrame itemSelect,
                               ColourPickerFrame colourSelect,
@@ -43,6 +45,9 @@ public class PartManipContainer extends ScrollableFrame {
         this.lastItemSlot = null;
         this.lastColour = this.getColour();
         this.lastColourIndex = this.getColourIndex();
+        this.modelframes = new ArrayList<>();
+        enabled = true;
+        visibile = true;
     }
 
     @Override
@@ -60,7 +65,12 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Nonnull
     public ItemStack getItem() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getStack() : ItemStack.EMPTY;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getItem() : ItemStack.EMPTY;
+    }
+
+    @Nullable
+    public Integer getItemSlot() {
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().inventorySlot : null;
     }
 
     public int getColour() {
@@ -77,8 +87,6 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     public List<PartSpecManipSubFrame> getModelframes() {
-        System.out.println("getting fames");
-
         List<PartSpecManipSubFrame> modelframesList = new ArrayList<>();
         Iterable<SpecBase> specCollection = ModelRegistry.getInstance().getSpecs();
         PartSpecManipSubFrame prev = null;
@@ -92,7 +100,7 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     public PartSpecManipSubFrame createNewFrame(SpecBase modelspec, PartSpecManipSubFrame prev) {
-        MuseRelativeRect newborder = new MuseRelativeRect(
+        RelativeRect newborder = new RelativeRect(
                 border.finalLeft() + 4,
                 border.finalTop() + 4,
                 border.finalRight(),
@@ -103,38 +111,29 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        if (this.isEnabled() && this.isVisibile()) {
+    public void onMouseDown(double x, double y, int button) {
+        if (enabled) {
             if (button == 0) {
                 for (PartSpecManipSubFrame frame : modelframes) {
-                    if (frame.tryMouseClick(x, y + currentscrollpixels))
-                        return true;
+                    frame.tryMouseClick(x, y + currentscrollpixels);
                 }
             }
         }
-        return false;
     }
 
     @Override
     public void update(double mousex, double mousey) {
         super.update(mousex, mousey);
+        if (enabled) {
+            if (!Objects.equals(lastItemSlot, getItemSlot())) {
+                lastItemSlot = getItemSlot();
 
-        // only completely disable this if the player has no items equipped
-        if (itemSelect.hasNoItems()) {
-            this.disable();
-            this.hide();
-        } else if (itemSelect.getSelectedItem() != null) {
-            this.enable();
-            this.show();
-
-            if (!Objects.equals(lastItemSlot, itemSelect.getSelectedItem())) {
-                lastItemSlot = itemSelect.getSelectedItem();
-                double x = 0;
+                double y = 0;
                 for (PartSpecManipSubFrame subframe : modelframes) {
                     subframe.updateItems();
-                    x += subframe.border.bottom();
+                    y += subframe.border.finalBottom();
                 }
-                this.totalsize = (int) x;
+                this.totalsize = (int) y;
             }
             if (colourSelect.decrAbove > -1) {
                 decrAbove(colourSelect.decrAbove);
@@ -143,16 +142,40 @@ public class PartManipContainer extends ScrollableFrame {
         }
     }
 
+    public void hide () {
+        visibile = false;
+    }
+
+    public void show() {
+        visibile = true;
+    }
+
+    public boolean isVisibile() {
+        return visibile;
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void decrAbove(int index) {
         for (PartSpecManipSubFrame frame : modelframes) frame.decrAbove(index);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        if (this.isVisibile()) {
+        if (visibile) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();
-            GL11.glTranslated(0.0, -this.currentscrollpixels, 0.0);
+            GL11.glTranslated(0.0, (double) (-this.currentscrollpixels), 0.0);
             for (PartSpecManipSubFrame f : modelframes) {
                 f.drawPartial(currentscrollpixels + 4 + border.finalTop(), this.currentscrollpixels + border.finalBottom() - 4);
             }

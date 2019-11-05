@@ -1,0 +1,31 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:ic2_classic_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WIW",
+    "WCW",
+    "WIW"
+  ],
+  "key": {
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "componentWiring"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:powerarmorcomponent",
+    "data": 1
+  }
+}

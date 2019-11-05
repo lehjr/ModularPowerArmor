@@ -1,0 +1,40 @@
+[
+    {
+        "modid": "modularpowerarmor",
+        "name": "Modular Powerm Armor",
+        "description": "A mod which adds modular power armor, power tool, and a tinker table to configure them. Supports EU (Industrialcraft 2), FE (Forge Energy), Tesla, RF (Thermal Expansion 4). Formerly known as Modular modularpowerarmor",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "https://github.com/lehjr/ModularPowerArmor/tree/1.12.2-MPS-MPA-Lib",
+        "updateUrl": "",
+        "authors": [ "MachineMuse, Lehjr" ],
+        "credits": "Code by MachineMuse and Lehjr, Icons by WaterCandle, Modeling by SebK",
+        "logoFile": "assets/modularpowerarmor/textures/logo.png",
+        "screenshots": [ ],
+        "parent": "",
+        "requiredMods": [ "forge", "mpalib" ],
+        "dependencies": [
+            "mekanism",
+            "enderio",
+            "projred|core",
+            "bluepower",
+            "forestry",
+            "railcraft",
+            "mineFactoryreloaded",
+            "redstoneflux",
+            "buildcraft|core",
+            "appliedenergistics2",
+            "extracells",
+            "ic2",
+            "thaumcraft",
+            "galacticraftcore",
+            "mpalib",
+            "chisel",
+            "cofhcore",
+            "refinedstorage",
+            "tesla",
+            "gregtech"
+        ],
+        "useDependencyInformation": true
+    }
+]

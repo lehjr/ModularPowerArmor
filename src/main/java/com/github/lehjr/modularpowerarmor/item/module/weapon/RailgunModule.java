@@ -1,5 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -7,27 +9,19 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +33,7 @@ public class RailgunModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -50,21 +44,27 @@ public class RailgunModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
-            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_ENERGY_COST, 5000, "RF");
-            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_HEAT_EMISSION, 2, "");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_TOTAL_IMPULSE, 2500);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_ENERGY_COST, 25000);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_HEAT_EMISSION, 10);
+            this.ticker.addBasePropertyDouble(Constants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
+            this.ticker.addBasePropertyDouble(Constants.RAILGUN_ENERGY_COST, 5000, "RF");
+            this.ticker.addBasePropertyDouble(Constants.RAILGUN_HEAT_EMISSION, 2, "");
+            this.ticker.addTradeoffPropertyDouble(Constants.VOLTAGE, Constants.RAILGUN_TOTAL_IMPULSE, 2500);
+            this.ticker.addTradeoffPropertyDouble(Constants.VOLTAGE, Constants.RAILGUN_ENERGY_COST, 25000);
+            this.ticker.addTradeoffPropertyDouble(Constants.VOLTAGE, Constants.RAILGUN_HEAT_EMISSION, 10);
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                // FIXME: not sure what to do here since this is one case where the toggle thing doesn't actually apply
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
             }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
+            return null;
         }
 
         class Ticker extends PlayerTickModule implements IRightClickModule {
@@ -73,47 +73,45 @@ public class RailgunModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack itemStackIn) {
-                double timer = MuseNBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
+            public void onPlayerTickActive(EntityPlayer player, @Nonnull ItemStack itemStackIn) {
+                double timer = NBTUtils.getModularItemDoubleOrZero(itemStackIn, Constants.TIMER);
                 if (timer > 0)
-                    MuseNBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
+                    NBTUtils.setModularItemDoubleOrRemove(itemStackIn, Constants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
             }
 
             @Override
-            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                if (hand == Hand.MAIN_HAND) {
+            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+                if (hand == EnumHand.MAIN_HAND) {
                     double range = 64;
-                    double timer = MuseNBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
+                    double timer = NBTUtils.getModularItemDoubleOrZero(itemStackIn, Constants.TIMER);
                     double energyConsumption = getEnergyUsage();
                     if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption && timer == 0) {
                         ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
-                        MuseNBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, 10);
+                        NBTUtils.setModularItemDoubleOrRemove(itemStackIn, Constants.TIMER, 10);
 
-                        HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.RAILGUN_HEAT_EMISSION));
-                        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY, range);
+                        HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(Constants.RAILGUN_HEAT_EMISSION));
+                        RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, false, range);
 
                         if (raytraceresult != null) {
-                            double damage = applyPropertyModifiers(MPAConstants.RAILGUN_TOTAL_IMPULSE) / 100.0;
+                            double damage = applyPropertyModifiers(Constants.RAILGUN_TOTAL_IMPULSE) / 100.0;
                             double knockback = damage / 20.0;
                             Vec3d lookVec = playerIn.getLookVec();
 
-                            switch (raytraceresult.getType()) {
+                            switch (raytraceresult.typeOfHit) {
                                 case MISS:
                                     worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
                                     break;
 
                                 case BLOCK:
-                                    drawParticleStreamTo(playerIn, worldIn, raytraceresult.getHitVec().x, raytraceresult.getHitVec().y, raytraceresult.getHitVec().z);
+                                    drawParticleStreamTo(playerIn, worldIn, raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
                                     worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
                                     break;
 
                                 case ENTITY:
-                                    Entity target = ((EntityRayTraceResult) raytraceresult).getEntity();
-                                    drawParticleStreamTo(playerIn, worldIn, raytraceresult.getHitVec().x, raytraceresult.getHitVec().y, raytraceresult.getHitVec().z);
-                                    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
+                                    drawParticleStreamTo(playerIn, worldIn, raytraceresult.hitVec.x, raytraceresult.hitVec.y, raytraceresult.hitVec.z);
                                     DamageSource damageSource = DamageSource.causePlayerDamage(playerIn);
-                                    if (((EntityRayTraceResult) raytraceresult).getEntity().attackEntityFrom(damageSource, (int) damage)) {
-                                        ((EntityRayTraceResult) raytraceresult).getEntity().addVelocity(lookVec.x * knockback, Math.abs(lookVec.y + 0.2f) * knockback, lookVec.z * knockback);
+                                    if (raytraceresult.entityHit.attackEntityFrom(damageSource, (int) damage)) {
+                                        raytraceresult.entityHit.addVelocity(lookVec.x * knockback, Math.abs(lookVec.y + 0.2f) * knockback, lookVec.z * knockback);
                                     }
                                     break;
                             }
@@ -121,12 +119,12 @@ public class RailgunModule extends AbstractPowerModule {
                         }
                     }
                     playerIn.setActiveHand(hand);
-                    return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
+                    return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
                 }
-                return new ActionResult(ActionResultType.PASS, itemStackIn);
+                return new ActionResult(EnumActionResult.PASS, itemStackIn);
             }
 
-            public void drawParticleStreamTo(PlayerEntity source, World world, double x, double y, double z) {
+            public void drawParticleStreamTo(EntityPlayer source, World world, double x, double y, double z) {
                 Vec3d direction = source.getLookVec().normalize();
                 double xoffset = 1.3f;
                 double yoffset = -.2;
@@ -143,7 +141,7 @@ public class RailgunModule extends AbstractPowerModule {
                 double ratio = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
                 while (Math.abs(cx - x) > Math.abs(dx / ratio)) {
-                    world.addParticle(ParticleTypes.MYCELIUM, cx, cy, cz, 0.0D, 0.0D, 0.0D);
+                    world.spawnParticle(EnumParticleTypes.TOWN_AURA, cx, cy, cz, 0.0D, 0.0D, 0.0D);
                     cx += dx * 0.1 / ratio;
                     cy += dy * 0.1 / ratio;
                     cz += dz * 0.1 / ratio;
@@ -152,7 +150,7 @@ public class RailgunModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(applyPropertyModifiers(MPAConstants.RAILGUN_ENERGY_COST));
+                return (int) Math.round(applyPropertyModifiers(Constants.RAILGUN_ENERGY_COST));
             }
         }
     }

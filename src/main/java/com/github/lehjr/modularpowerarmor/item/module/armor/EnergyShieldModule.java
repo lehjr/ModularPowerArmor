@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.armor;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -10,15 +9,13 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +27,7 @@ public class EnergyShieldModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -42,23 +39,26 @@ public class EnergyShieldModule extends AbstractPowerModule {
             this.module = module;
             if (CommonConfig.moduleConfig != null) {
                 ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig, true);
-                ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.ARMOR_VALUE_ENERGY, 6, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
-                ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.ARMOR_ENERGY_CONSUMPTION, 5000, "RF");
-                ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.MAXIMUM_HEAT, 500, "");
-                ticker.addBasePropertyDouble(MPAConstants.KNOCKBACK_RESISTANCE, 0.25, "");
+                ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_VALUE_ENERGY, 6, MPALIbConstants.MODULE_TRADEOFF_PREFIX + Constants.ARMOR_POINTS);
+                ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_ENERGY_CONSUMPTION, 5000, "RF");
+                ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.MAXIMUM_HEAT, 500, "");
+                ticker.addBasePropertyDouble(Constants.KNOCKBACK_RESISTANCE, 0.25, "");
             }
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
             }
-            if (ticker == null) {
-                return LazyOptional.empty();
-            }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
+            return null;
         }
 
         class Ticker extends PlayerTickModule {
@@ -67,9 +67,9 @@ public class EnergyShieldModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
+            public void onPlayerTickActive(EntityPlayer player, @Nonnull ItemStack item) {
                 int energy = ElectricItemUtils.getPlayerEnergy(player);
-                int energyUsage = (int) applyPropertyModifiers(MPAConstants.ARMOR_ENERGY_CONSUMPTION);
+                int energyUsage = (int) applyPropertyModifiers(Constants.ARMOR_ENERGY_CONSUMPTION);
 
                 // turn off module if energy is too low. This will fire on both sides so no need to sync
                 if (energy < energyUsage) {

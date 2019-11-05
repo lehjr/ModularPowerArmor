@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:gregtech_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "componentPlatingIron"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "ingotNickel",
+    "count": 5
+  }
+}

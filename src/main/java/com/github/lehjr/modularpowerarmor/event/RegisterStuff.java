@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPACreativeTab;
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
 import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
@@ -47,14 +47,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MODID;
-import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
+import static com.github.lehjr.modularpowerarmor.basemod.Constants.MODID;
+import static com.github.lehjr.modularpowerarmor.basemod.RegistryNames.*;
 
 //import com.github.lehjr.modularpowerarmor.containers.ModularItemContainer;
 
@@ -62,7 +61,7 @@ import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
 public enum RegisterStuff {
     INSTANCE;
 
-    public static final MPACreativeTab creativeTab = new MPACreativeTab();
+    public static final CreativeTab creativeTab = new CreativeTab();
 
     @SubscribeEvent
     public void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
@@ -195,10 +194,10 @@ public enum RegisterStuff {
                 new RailgunModule(MODULE_RAILGUN__REGNAME),
 
                 // ItemBlocks ---------------------------------------------------------------------------------
-                new BlockItem(MPAObjects.INSTANCE.tinkerTable,
+                new BlockItem(Objects.INSTANCE.tinkerTable,
                         new Item.Properties().group(creativeTab))
                         .setRegistryName(new ResourceLocation(TINKER_TABLE_REG_NAME)),
-                new BlockItem(MPAObjects.INSTANCE.luxCapacitor,
+                new BlockItem(Objects.INSTANCE.luxCapacitor,
                         new Item.Properties().group(creativeTab))
                         .setRegistryName(new ResourceLocation(LUX_CAPACITOR_REG_NAME))
         );
@@ -225,53 +224,17 @@ public enum RegisterStuff {
         event.getRegistry().registerAll(
                 EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
                         .size(0.25F, 0.25F)
-                        .setCustomClientFactory(((spawnEntity, world) -> MPAObjects.LUX_CAPACITOR_ENTITY_TYPE.create(world)))
+                        .setCustomClientFactory(((spawnEntity, world) -> Objects.LUX_CAPACITOR_ENTITY_TYPE.create(world)))
                         .build(LUX_CAPACITOR_REG_NAME + "_entity").setRegistryName(LUX_CAPACITOR_REG_NAME + "_entity"),
 
                 EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.SPINNING_BLADE_ENTITY_TYPE.create(world))
+                        .setCustomClientFactory((spawnEntity, world) -> Objects.SPINNING_BLADE_ENTITY_TYPE.create(world))
                         .build(MODID +":spinning_blade").setRegistryName(MODID +":spinning_blade"),
 
                 EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.PLASMA_BOLT_ENTITY_TYPE.create(world))
+                        .setCustomClientFactory((spawnEntity, world) -> Objects.PLASMA_BOLT_ENTITY_TYPE.create(world))
                         .build(MODID +":plasma_bolt").setRegistryName(MODID +":plasma_bolt")
         );
     }
 
-    @SubscribeEvent
-    public void registerContainerTypes(final RegistryEvent.Register<ContainerType<?>> event) {
-        event.getRegistry().registerAll(
-
-//                // MODE CHANGING CONTAINER TYPE
-//                new ContainerType<>(ModeChangingContainer::new)
-//                        .setRegistryName(MODID + ":mode_changing_container_type"),
-//
-                // Modular Item Container
-                new ContainerType<>(TinkerTableContainer::new)
-                        .setRegistryName(MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME),
-//
-//                // the IForgeContainerType only needed for extra data
-//                // ModuleConfig
-//                IForgeContainerType.create((windowId, playerInventory, data) -> {
-//                    int typeIndex = data.readInt();
-//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-//                }).setRegistryName(MODID + ":module_config_container_type"),
-//
-//                // Keybinding
-//                IForgeContainerType.create((windowId, playerInventory, data) -> {
-//                    int typeIndex = data.readInt();
-//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-//                }).setRegistryName(MODID + ":table_key_config_container_type"),
-//
-//                // Cosmetic
-//                IForgeContainerType.create((windowId, playerInventory, data) -> {
-//                    int typeIndex = data.readInt();
-//                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
-//                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
-
-                // Crafting Gui
-                new ContainerType<>(MPSCraftingContainer::new)
-                        .setRegistryName(MPS_CRAFTING_CONTAINER_TYPE__REG_NAME)
-        );
-    }
 }

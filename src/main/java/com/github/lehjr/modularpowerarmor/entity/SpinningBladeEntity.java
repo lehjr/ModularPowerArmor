@@ -1,64 +1,51 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
-import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Random;
 
-public class SpinningBladeEntity extends ThrowableEntity {
+public class SpinningBladeEntity extends EntityThrowable {
     public static final int SIZE = 24;
     public double damage;
     public Entity shootingEntity;
     public ItemStack shootingItem = ItemStack.EMPTY;
 
-    public SpinningBladeEntity(EntityType<? extends SpinningBladeEntity> entityType, World world) {
-        super(entityType, world);
+    public SpinningBladeEntity(World world) {
+        super(world);
     }
 
-    public SpinningBladeEntity(World worldIn, LivingEntity shootingEntity) {
-        super(MPAObjects.SPINNING_BLADE_ENTITY_TYPE, shootingEntity, worldIn);
+    public SpinningBladeEntity(World par1World, EntityLivingBase shootingEntity) {
+        super(par1World, shootingEntity);
         this.shootingEntity = shootingEntity;
-        if (shootingEntity instanceof PlayerEntity) {
-            AtomicDouble atomicDamage = new AtomicDouble(0);
-
-            this.shootingItem = ((PlayerEntity) shootingEntity).inventory.getCurrentItem();
-            this.shootingItem.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModeChangingItem -> {
-                if (iModeChangingItem instanceof IModeChangingItem)
-                    ((IModeChangingItem) iModeChangingItem).getActiveModule().getCapability(PowerModuleCapability.POWER_MODULE)
-                            .ifPresent(m-> atomicDamage.getAndAdd(m.applyPropertyModifiers(MPAConstants.BLADE_DAMAGE)));
-            });
-            damage = atomicDamage.get();
+        if (shootingEntity instanceof EntityPlayer) {
+            this.shootingItem = ((EntityPlayer) shootingEntity).inventory.getCurrentItem();
+            if (!this.shootingItem.isEmpty()) {
+                this.damage = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(shootingItem, ModuleConstants.BLADE_DAMAGE);
+            }
         }
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;
         double scale = 1;
-        this.setMotion(
-                direction.x * speed,
-                direction.y * speed,
-                direction.z * speed
-        );
+        this.motionX = direction.x * speed;
+        this.motionY = direction.y * speed;
+        this.motionZ = direction.z * speed;
         double r = 1;
         double xoffset = 1.3f + r - direction.y * shootingEntity.getEyeHeight();
         double yoffset = -.2;
@@ -69,7 +56,7 @@ public class SpinningBladeEntity extends ThrowableEntity {
         this.posX = shootingEntity.posX + direction.x * xoffset - direction.y * horzx * yoffset - horzz * zoffset;
         this.posY = shootingEntity.posY + shootingEntity.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
         this.posZ = shootingEntity.posZ + direction.z * xoffset - direction.y * horzz * yoffset + horzx * zoffset;
-        this.setBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
+        this.setEntityBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
     }
 
     /**
@@ -80,38 +67,32 @@ public class SpinningBladeEntity extends ThrowableEntity {
         return 0;
     }
 
+
     public int getMaxLifetime() {
         return 200;
     }
 
     @Override
-    protected void registerData() {
-
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
+    public void onUpdate() {
+        super.onUpdate();
         if (this.ticksExisted > this.getMaxLifetime()) {
-            this.remove();
+            this.setDead();
         }
     }
 
     @Override
     protected void onImpact(RayTraceResult hitResult) {
-        if (hitResult.getType() == RayTraceResult.Type.BLOCK) {
+        if (hitResult.typeOfHit == RayTraceResult.Type.BLOCK) {
             World world = this.world;
             if (world == null) {
                 return;
             }
-
-            BlockRayTraceResult result = (BlockRayTraceResult) hitResult;
-            Block block = world.getBlockState(result.getPos()).getBlock();
+            Block block = world.getBlockState(hitResult.getBlockPos()).getBlock();
             if (block instanceof IShearable) {
                 IShearable target = (IShearable) block;
-                if (target.isShearable(this.shootingItem, world, result.getPos()) && !world.isRemote) {
-                    List<ItemStack> drops = target.onSheared(this.shootingItem, world, result.getPos(),
-                            EnchantmentHelper.getEnchantmentLevel(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("fortune")), this.shootingItem));
+                if (target.isShearable(this.shootingItem, world, hitResult.getBlockPos()) && !world.isRemote) {
+                    List<ItemStack> drops = target.onSheared(this.shootingItem, world, hitResult.getBlockPos(),
+                            EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByLocation("fortune"), this.shootingItem));
                     Random rand = new Random();
 
                     for (ItemStack stack : drops) {
@@ -119,47 +100,38 @@ public class SpinningBladeEntity extends ThrowableEntity {
                         double d = rand.nextFloat() * f + (1.0F - f) * 0.5D;
                         double d1 = rand.nextFloat() * f + (1.0F - f) * 0.5D;
                         double d2 = rand.nextFloat() * f + (1.0F - f) * 0.5D;
-                        ItemEntity entityitem = new ItemEntity(world, result.getPos().getX() + d, result.getPos().getY() + d1, result.getPos().getZ() + d2, stack);
+                        EntityItem entityitem = new EntityItem(world, hitResult.getBlockPos().getX() + d, hitResult.getBlockPos().getY() + d1, hitResult.getBlockPos().getZ() + d2, stack);
                         entityitem.setPickupDelay(10);
-                        world.addEntity(entityitem);
+                        world.spawnEntity(entityitem);
                     }
-//                    if (this.shootingEntity instanceof PlayerEntity) {
-//                        ((PlayerEntity) shootingEntity).addStat(StatList.getBlockStats(block), 1);
-//                    }
+                    if (this.shootingEntity instanceof EntityPlayer) {
+                        ((EntityPlayer) shootingEntity).addStat(StatList.getBlockStats(block), 1);
+                    }
                 }
-                world.destroyBlock(result.getPos(), true);// Destroy block and drop item
+                world.destroyBlock(hitResult.getBlockPos(), true);// Destroy block and drop item
             } else { // Block hit was not IShearable
-                this.remove();
+                this.setDead();
             }
-        } else if (hitResult.getType() == RayTraceResult.Type.ENTITY && ((EntityRayTraceResult)hitResult).getEntity() != this.shootingEntity) {
-            EntityRayTraceResult result = (EntityRayTraceResult) hitResult;
-            if (result.getEntity() instanceof IShearable) {
-                IShearable target = (IShearable) result.getEntity();
-                Entity entity = result.getEntity();
+        } else if (hitResult.typeOfHit == RayTraceResult.Type.ENTITY && hitResult.entityHit != this.shootingEntity) {
+            if (hitResult.entityHit instanceof IShearable) {
+                IShearable target = (IShearable) hitResult.entityHit;
+                Entity entity = hitResult.entityHit;
                 if (target.isShearable(this.shootingItem, entity.world, entity.getPosition())) {
                     List<ItemStack> drops = target.onSheared(this.shootingItem, entity.world,
                             entity.getPosition(),
-                            EnchantmentHelper.getEnchantmentLevel(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("fortune")), this.shootingItem));
+                            EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByLocation("fortune"), this.shootingItem));
 
                     Random rand = new Random();
                     for (ItemStack drop : drops) {
-                        ItemEntity ent = entity.entityDropItem(drop, 1.0F);
-
-                        ent.setMotion(ent.getMotion().add(
-                                (rand.nextFloat() - rand.nextFloat()) * 0.1F,
-                                rand.nextFloat() * 0.05,
-                                (rand.nextFloat() - rand.nextFloat()) * 0.1F
-                                ));
+                        EntityItem ent = entity.entityDropItem(drop, 1.0F);
+                        ent.motionY += rand.nextFloat() * 0.05F;
+                        ent.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+                        ent.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                     }
                 }
             } else {
-                result.getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
+                hitResult.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
             }
         }
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

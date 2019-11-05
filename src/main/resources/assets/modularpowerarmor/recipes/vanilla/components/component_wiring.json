@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "modularpowerarmor:mps_shaped",
+  "pattern": [
+    "GRG"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    },
+    "R": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "componentWiring",
+    "count": 8
+  }
+}

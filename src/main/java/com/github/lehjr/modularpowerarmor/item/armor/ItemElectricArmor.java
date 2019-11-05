@@ -1,31 +1,51 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
-import com.github.lehjr.modularpowerarmor.client.misc.AdditionalInfo;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Power handling base class for armor
+ * Ported to Java by lehjr on 10/26/16.
  */
-public class ItemElectricArmor extends ArmorItem {
-    public ItemElectricArmor(EquipmentSlotType slots, Properties builder) {
-        super(MPSArmorMaterial.EMPTY_ARMOR, slots, builder);
+public abstract class ItemElectricArmor extends ItemArmor {
+    public ItemElectricArmor(ItemArmor.ArmorMaterial material, int renderIndexIn, EntityEquipmentSlot slot) {
+        super(material, renderIndexIn, slot);
     }
 
-    @OnlyIn(Dist.CLIENT)
+
+
+
+
+
+
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (worldIn != null) {
-            AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
-        }
+    public boolean hasColor(@Nonnull ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getColor(@Nonnull ItemStack stack) {
+        Colour c = this.getColorFromItemStack(stack);
+        return c.getInt();
+    }
+
+    @Override
+    public boolean hasOverlay(@Nonnull ItemStack stack) {
+        return super.hasOverlay(stack);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> currentTipList, ITooltipFlag flagIn) {
+        AdditionalInfo.addInformation(stack, worldIn, currentTipList, flagIn);
     }
 }

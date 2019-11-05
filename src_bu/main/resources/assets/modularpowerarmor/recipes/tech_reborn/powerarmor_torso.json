@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:tech_reborn_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "CSC",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSilver"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:powerarmor_torso"
+  }
+}

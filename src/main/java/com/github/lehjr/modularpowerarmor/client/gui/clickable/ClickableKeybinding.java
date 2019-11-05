@@ -1,23 +1,21 @@
 package com.github.lehjr.modularpowerarmor.client.gui.clickable;
 
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.mpalib.network.MPALibPackets;
-import com.github.lehjr.mpalib.network.packets.ToggleRequestPacket;
 import com.github.lehjr.mpalib.string.StringUtils;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.ToggleRequestPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -34,17 +32,18 @@ public class ClickableKeybinding extends ClickableButton {
     boolean toggled = false;
     KeyBinding keybind;
 
+
     public ClickableKeybinding(KeyBinding keybind, Point2D position, boolean free, Boolean displayOnHUD) {
         super(ClickableKeybinding.parseName(keybind), position, true);
         this.displayOnHUD = (displayOnHUD != null) ? displayOnHUD : false;
         this.keybind = keybind;
     }
 
-    static ITextComponent parseName(KeyBinding keybind) {
-        if (keybind.getKey().getKeyCode() < 0) {
-            return new TranslationTextComponent("Mouse" + (keybind.getKey().getKeyCode() + 100));
+    static String parseName(KeyBinding keybind) {
+        if (keybind.getKeyCode() < 0) {
+            return "Mouse" + (keybind.getKeyCode() + 100);
         } else {
-            return new TranslationTextComponent(keybind.getKey().getTranslationKey());
+            return Keyboard.getKeyName(keybind.getKeyCode());
         }
     }
 
@@ -61,25 +60,22 @@ public class ClickableKeybinding extends ClickableButton {
     }
 
     public void toggleModules() {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player == null) {
             return;
         }
 
         for (ClickableModule module : boundModules) {
-            ResourceLocation registryName = module.getModule().getItem().getRegistryName();
-            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                player.inventory.getStackInSlot(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler ->{
-                    if (handler instanceof IModularItem) {
-                        ((IModularItem) handler).toggleModule(registryName, toggleval);
-                    }
-                });
+            String valstring = (toggleval) ? " on" : " off";
+            if ((FMLCommonHandler.instance().getEffectiveSide().equals(Side.CLIENT) && MPSConfig.INSTANCE.toggleModuleSpam())) {
+                player.sendMessage(new TextComponentString("Toggled " + module.getModule().getDataName() + valstring));
             }
-            MPALibPackets.CHANNEL_INSTANCE.sendToServer(new ToggleRequestPacket(registryName, toggleval));
+            ModuleManager.INSTANCE.toggleModuleForPlayer(player, module.getModule().getDataName(), toggleval);
+            MPSPackets.sendToServer(new ToggleRequestPacket(module.getModule().getDataName(), toggleval));
         }
         toggleval = !toggleval;
     }
-//
+
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
@@ -144,7 +140,7 @@ public class ClickableKeybinding extends ClickableButton {
     }
 
     public boolean equals(ClickableKeybinding other) {
-        return other.keybind.getKey().getKeyCode() == this.keybind.getKey().getKeyCode();
+        return other.keybind.getKeyCode() == this.keybind.getKeyCode();
     }
 
     public void toggleHUDState() {

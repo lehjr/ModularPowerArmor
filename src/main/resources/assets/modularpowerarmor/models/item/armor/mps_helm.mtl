@@ -4,4 +4,4 @@
 newmtl initialShadingGroup
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
-map_Kd modularpowerarmor:item/armor/diffuse
+map_Kd modularpowerarmor:items/armor/diffuse

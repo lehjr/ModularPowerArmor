@@ -1,70 +1,47 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
+import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class ClimbAssistModule extends AbstractPowerModule {
-    public ClimbAssistModule(String regName) {
-        super(regName);
+public class ClimbAssistModule extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
+    public ClimbAssistModule(EnumModuleTarget moduleTarget) {
+        super(moduleTarget);
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
     }
 
-    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new CapProvider(stack);
+    public EnumModuleCategory getCategory() {
+        return EnumModuleCategory.MOVEMENT;
     }
 
-    public class CapProvider implements ICapabilityProvider {
-        ItemStack module;
-        IPlayerTickModule ticker;
+    @Override
+    public String getDataName() {
+        return ModuleConstants.MODULE_CLIMB_ASSIST__DATANAME;
+    }
 
-        public CapProvider(@Nonnull ItemStack module) {
-            this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+    @Override
+    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
+        player.stepHeight = 1.001F;
+    }
+
+    @Override
+    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+        if (player.stepHeight == 1.001F) {
+            player.stepHeight = 0.5001F;
         }
+    }
 
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
-            }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
-        }
-
-        class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
-                super(module, category, target, config, true);
-            }
-
-            @Override
-            public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
-                player.stepHeight = 1.001F;
-            }
-
-            @Override
-            public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
-                if (player.stepHeight == 1.001F) {
-                    player.stepHeight = 0.5001F;
-                }
-            }
-        }
+    @Override
+    public TextureAtlasSprite getIcon(ItemStack item) {
+        return MuseIcon.climbAssist;
     }
 }

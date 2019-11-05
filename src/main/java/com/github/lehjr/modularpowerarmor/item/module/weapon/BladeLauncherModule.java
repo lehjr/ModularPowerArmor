@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -11,18 +11,17 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +33,7 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -45,14 +44,22 @@ public class BladeLauncherModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClickie.addBasePropertyDouble(MPAConstants.BLADE_ENERGY, 5000, "RF");
-            this.rightClickie.addBasePropertyDouble(MPAConstants.BLADE_DAMAGE, 6, "pt");
+            this.rightClickie.addBasePropertyDouble(Constants.BLADE_ENERGY, 5000, "RF");
+            this.rightClickie.addBasePropertyDouble(Constants.BLADE_DAMAGE, 6, "pt");
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> rightClickie));
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) rightClickie;
+            }
+            return null;
         }
 
         class RightClickie extends RightClickModule {
@@ -61,32 +68,32 @@ public class BladeLauncherModule extends AbstractPowerModule {
             }
 
             @Override
-            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                if (hand == Hand.MAIN_HAND) {
-                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > applyPropertyModifiers(MPAConstants.BLADE_ENERGY)) {
+            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+                if (hand == EnumHand.MAIN_HAND) {
+                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > applyPropertyModifiers(Constants.BLADE_ENERGY)) {
                         playerIn.setActiveHand(hand);
-                        return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
+                        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
                     }
                 }
-                return new ActionResult(ActionResultType.PASS, itemStackIn);
+                return new ActionResult(EnumActionResult.PASS, itemStackIn);
             }
 
             @Override
-            public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+            public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
                 if (!worldIn.isRemote) {
-                   int energyConsumption = getEnergyUsage();
+                    int energyConsumption = getEnergyUsage();
 
-                    if (ElectricItemUtils.getPlayerEnergy((PlayerEntity) entityLiving) > energyConsumption) {
-                        ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, energyConsumption);
+                    if (ElectricItemUtils.getPlayerEnergy((EntityPlayer) entityLiving) > energyConsumption) {
+                        ElectricItemUtils.drainPlayerEnergy((EntityPlayer) entityLiving, energyConsumption);
                         SpinningBladeEntity blade = new SpinningBladeEntity(worldIn, entityLiving);
-                        worldIn.addEntity(blade);
+                        worldIn.spawnEntity(blade);
                     }
                 }
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(applyPropertyModifiers(MPAConstants.BLADE_ENERGY));
+                return (int) Math.round(applyPropertyModifiers(Constants.BLADE_ENERGY));
             }
         }
     }

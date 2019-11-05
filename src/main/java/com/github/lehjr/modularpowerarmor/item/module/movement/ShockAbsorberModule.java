@@ -2,53 +2,38 @@ package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.ToggleableModule;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
+import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class ShockAbsorberModule extends AbstractPowerModule {
-    public ShockAbsorberModule(String regName) {
-        super(regName);
+public class ShockAbsorberModule extends AbstractPowerModule implements IToggleableModule {
+    public ShockAbsorberModule(EnumModuleTarget moduleTarget) {
+        super(moduleTarget);
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 2));
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Blocks.WOOL, 2));
+        addBasePropertyDouble(ModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION, 0, "RF/m");
+        addTradeoffPropertyDouble(ModuleConstants.POWER, ModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION, 100);
+        addBasePropertyDouble(ModuleConstants.SHOCK_ABSORB_MULTIPLIER, 0, "%");
+        addTradeoffPropertyDouble(ModuleConstants.POWER, ModuleConstants.SHOCK_ABSORB_MULTIPLIER, 10);
     }
 
-    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new CapProvider(stack);
+    public EnumModuleCategory getCategory() {
+        return EnumModuleCategory.MOVEMENT;
     }
 
-    public class CapProvider implements ICapabilityProvider {
-        ItemStack module;
-        IToggleableModule moduleToggle;
+    @Override
+    public String getDataName() {
+        return ModuleConstants.MODULE_SHOCK_ABSORBER__DATANAME;
+    }
 
-        public CapProvider(@Nonnull ItemStack module) {
-            this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig, true);
-            this.moduleToggle.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/m");
-            this.moduleToggle.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 100);
-            this.moduleToggle.addBasePropertyDouble(MPAConstants.MULTIPLIER, 0, "%");
-            this.moduleToggle.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.MULTIPLIER, 10);
-        }
-
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
-            }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleToggle));
-        }
+    @Override
+    public TextureAtlasSprite getIcon(ItemStack item) {
+        return MuseIcon.shockAbsorber;
     }
 }

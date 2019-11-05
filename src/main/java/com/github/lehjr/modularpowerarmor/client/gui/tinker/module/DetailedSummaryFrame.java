@@ -1,89 +1,63 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.Renderer;
-import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 public class DetailedSummaryFrame extends ScrollableFrame {
-    protected PlayerEntity player;
+    public static final double SCALEFACTOR = 1;
+    protected EntityPlayer player;
+    protected int slotPoints;
     protected int energy;
     protected double armor;
     protected ItemSelectionFrame itemSelectionFrame;
 
-    public DetailedSummaryFrame(
-                                PlayerEntity player,
+    public DetailedSummaryFrame(EntityPlayer player,
                                 Point2D topleft,
                                 Point2D bottomright,
                                 Colour borderColour,
                                 Colour insideColour,
                                 ItemSelectionFrame itemSelectionFrame) {
-        super(topleft, bottomright, borderColour, insideColour);
+        super(topleft.times(1.0 / SCALEFACTOR), bottomright.times(1.0 / SCALEFACTOR), borderColour, insideColour);
         this.player = player;
         this.itemSelectionFrame = itemSelectionFrame;
     }
 
-    /*
-    Todo: break down by item:
-    Energy current/max
-    Armor Points
-    Occupied slots/total (break down by specialty slots)
-
-
-
-
-
-
-
-
-     */
-
-
-
-
-
     @Override
     public void update(double mousex, double mousey) {
-        energy = ElectricItemUtils.getPlayerEnergy(player);
+        energy = 0;
         armor = 0;
+        slotPoints = 0;
 
-        for (ItemStack stack : ItemUtils.getModularItemsEquipped(player)) {
-            energy += ElectricItemUtils.getItemEnergy(stack);
-            AtomicDouble atomicArmor = new AtomicDouble(0);
-            stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-                if (iModularItem instanceof IModularItem) {
-                    for (ItemStack module: ((IModularItem) iModularItem).getInstalledModules()) {
-                        module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(iPowerModule -> {
-                            // FIXME NPE Armor
+        if (itemSelectionFrame.getSelectedItem() != null) {
+            slotPoints += (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemSelectionFrame.getSelectedItem().getItem(), ModuleConstants.SLOT_POINTS);
+        }
 
-                            atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_PHYSICAL));
-                            atomicArmor.getAndAdd(iPowerModule.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_ENERGY));
-                        });
-                    }
-                }
-            });
-
-            armor += atomicArmor.get();
+        for (ItemStack stack : ItemUtils.getLegacyModularItemsEquipped(player)) {
+            energy += (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPALIbConstants.MAXIMUM_ENERGY);
+//            slotPoints += (int)ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, MPSModuleConstants.SLOT_POINTS);
+            armor += ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_VALUE_PHYSICAL);
+            armor += ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_VALUE_ENERGY);
         }
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks)  {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         if (player != null) {
+            GL11.glPushMatrix();
+            GL11.glScaled(SCALEFACTOR, SCALEFACTOR, SCALEFACTOR);
             super.render(mouseX, mouseY, partialTicks);
             int margin = 4;
             int nexty = (int) border.top() + margin;
@@ -91,7 +65,7 @@ public class DetailedSummaryFrame extends ScrollableFrame {
             nexty += 10;
 
             // Max Energy
-            String formattedValue = StringUtils.formatNumberFromUnits(energy, "RF");
+            String formattedValue = StringUtils.formatNumberFromUnits(energy, AbstractPowerModule.getUnit(MPALIbConstants.MAXIMUM_ENERGY));
             String name = I18n.format("gui.modularpowerarmor.energyStorage");
             double valueWidth = Renderer.getStringWidth(formattedValue);
             double allowedNameWidth = border.width() - valueWidth - margin * 2;
@@ -101,6 +75,21 @@ public class DetailedSummaryFrame extends ScrollableFrame {
             }
             Renderer.drawRightAlignedString(formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
             nexty += 10 * namesList.size() + 1;
+
+            // Slot points
+            if (slotPoints > 0) {
+                formattedValue = StringUtils.wrapFormatTags(StringUtils.formatNumberFromUnits(slotPoints, "pts"), StringUtils.FormatCodes.BrightGreen);
+                name = I18n.format("gui.modularpowerarmor.slotpoints");
+                valueWidth = Renderer.getStringWidth(formattedValue);
+                allowedNameWidth = border.width() - valueWidth - margin * 2;
+                namesList = StringUtils.wrapStringToVisualLength(name, allowedNameWidth);
+                assert namesList != null;
+                for (int i = 0; i < namesList.size(); i++) {
+                    Renderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
+                }
+                Renderer.drawRightAlignedString(formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
+                nexty += 10 * namesList.size() + 1;
+            }
 
             // Armor points
             formattedValue = StringUtils.formatNumberFromUnits(armor, "pts");
@@ -113,6 +102,21 @@ public class DetailedSummaryFrame extends ScrollableFrame {
                 Renderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
             }
             Renderer.drawRightAlignedString(formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
+
+            GL11.glPopMatrix();
         }
+    }
+
+    @Override
+    public void onMouseDown(double x, double y, int button) {
+    }
+
+    @Override
+    public void onMouseUp(double x, double y, int button) {
+    }
+
+    @Override
+    public List<String> getToolTip(int x, int y) {
+        return null;
     }
 }

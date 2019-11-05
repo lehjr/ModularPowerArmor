@@ -1,55 +1,41 @@
 package com.github.lehjr.modularpowerarmor.tileentity;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-
-import javax.annotation.Nonnull;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class TileEntityLuxCapacitor extends MPALibTileEntity {
     private Colour color;
 
     public TileEntityLuxCapacitor() {
-        super(MPAObjects.capacitorTileEntityType);
         this.color = BlockLuxCapacitor.defaultColor;
     }
 
     public TileEntityLuxCapacitor(Colour colour) {
-        super(MPAObjects.capacitorTileEntityType);
-        this.color = colour;
-    }
-
-    public void setColor(Colour colour) {
         this.color = colour;
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt) {
-        super.write(nbt);
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+        if (color == null)
+            color = ((IExtendedBlockState) this.getWorld().getBlockState(this.getPos())).getValue(BlockLuxCapacitor.COLOR);
         if (color == null)
             color = BlockLuxCapacitor.defaultColor;
-        nbt.putInt("c", color.getInt());
+        nbt.setInteger("c", color.getInt());
         return nbt;
     }
 
-    @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(BlockLuxCapacitor.COLOUR_PROP, color.getInt()).build();
-    }
-
-    @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
-        if (nbt.contains("c")) {
-            color = new Colour(nbt.getInt("c"));
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        if (nbt.hasKey("c")) {
+            color = new Colour(nbt.getInteger("c"));
         } else {
-            MPALibLogger.logger.debug("No NBT found! D:");
+            MPALibLogger.logDebug("No NBT found! D:");
         }
     }
 

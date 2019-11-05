@@ -1,32 +1,29 @@
 package com.github.lehjr.modularpowerarmor.item.module.vision;
 
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class NightVisionModule extends AbstractPowerModule {
     static final int powerDrain = 50;
-    private static final Effect nightvision = Effects.NIGHT_VISION;
+    private static final Potion nightvision = MobEffects.NIGHT_VISION;
 
     public NightVisionModule(String regName) {
         super(regName);
@@ -34,7 +31,7 @@ public class NightVisionModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities (ItemStack stack, @Nullable CompoundNBT nbt){
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -47,13 +44,19 @@ public class NightVisionModule extends AbstractPowerModule {
             this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if(cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
             }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
+            return null;
         }
 
         class Ticker extends PlayerTickModule {
@@ -62,16 +65,16 @@ public class NightVisionModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
+            public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
                 if (player.world.isRemote)
                     return;
 
                 double totalEnergy = ElectricItemUtils.getPlayerEnergy(player);
-                EffectInstance nightVisionEffect = player.isPotionActive(nightvision) ? player.getActivePotionEffect(nightvision) : null;
+                PotionEffect nightVisionEffect = player.isPotionActive(nightvision) ? player.getActivePotionEffect(nightvision) : null;
 
                 if (totalEnergy > powerDrain) {
                     if (nightVisionEffect == null || nightVisionEffect.getDuration() < 250 && nightVisionEffect.getAmplifier() == -3) {
-                        player.addPotionEffect(new EffectInstance(nightvision, 500, -3, false, false));
+                        player.addPotionEffect(new PotionEffect(nightvision, 500, -3, false, false));
                         ElectricItemUtils.drainPlayerEnergy(player, powerDrain);
                     }
                 } else
@@ -79,8 +82,8 @@ public class NightVisionModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
-                EffectInstance nightVisionEffect = null;
+            public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+                PotionEffect nightVisionEffect = null;
                 if (player.isPotionActive(nightvision)) {
                     nightVisionEffect = player.getActivePotionEffect(nightvision);
                     if (nightVisionEffect.getAmplifier() == -3) {

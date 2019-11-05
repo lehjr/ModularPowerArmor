@@ -1,24 +1,22 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
+
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +32,7 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities (ItemStack stack, @Nullable CompoundNBT nbt){
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -45,17 +43,23 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION, 250);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 250, "RF");
+            this.ticker.addBasePropertyDouble(Constants.ENERGY_GENERATION, 250);
+            this.ticker.addTradeoffPropertyDouble(Constants.ENERGY_GENERATED, Constants.ENERGY_GENERATION, 250, "RF");
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
             }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
+            return null;
         }
 
         class Ticker extends PlayerTickModule {
@@ -64,16 +68,16 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
+            public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
                 double currentHeat = HeatUtils.getPlayerHeat(player);
                 double maxHeat = HeatUtils.getPlayerMaxHeat(player);
-                if (player.world.getGameTime() % 20 == 0) {
+                if (player.world.getTotalWorldTime() % 20 == 0) {
                     if (player.isBurning()) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) (4 * applyPropertyModifiers(MPAConstants.ENERGY_GENERATION)));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) (4 * applyPropertyModifiers(Constants.ENERGY_GENERATION)));
                     } else if (currentHeat >= 200) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) (2 * applyPropertyModifiers(MPAConstants.ENERGY_GENERATION)));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) (2 * applyPropertyModifiers(Constants.ENERGY_GENERATION)));
                     } else if ((currentHeat / maxHeat) >= 0.5) {
-                        ElectricItemUtils.givePlayerEnergy(player, (int) applyPropertyModifiers(MPAConstants.ENERGY_GENERATION));
+                        ElectricItemUtils.givePlayerEnergy(player, (int) applyPropertyModifiers(Constants.ENERGY_GENERATION));
                     }
                 }
             }

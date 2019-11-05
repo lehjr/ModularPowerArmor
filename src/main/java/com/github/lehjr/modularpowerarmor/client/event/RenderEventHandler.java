@@ -1,58 +1,93 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
+import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
+import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
-import net.minecraft.client.MainWindow;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum RenderEventHandler {
-    INSTANCE;
-    private static boolean ownFly = false;
-    public static final ResourceLocation binoculars = new ResourceLocation(MPARegistryNames.BINOCULARS_MODULE__REGNAME);
-    public static final ResourceLocation jetpack =  new ResourceLocation(MPARegistryNames.MODULE_JETPACK__REGNAME);
-    public static final ResourceLocation glider = new ResourceLocation(MPARegistryNames.MODULE_GLIDER__REGNAME);
-    public static final ResourceLocation jetBoots = new ResourceLocation(MPARegistryNames.MODULE_JETBOOTS__REGNAME);
-    public static final ResourceLocation flightControl= new ResourceLocation(MPARegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
+/**
+ * Ported to Java by lehjr on 10/24/16.
+ */
+public class RenderEventHandler {
+    private static final MPSConfig config = MPSConfig.INSTANCE;
+    private static boolean ownFly;
+    private final DrawableRect frame = new DrawableRect(config.keybindHUDx(), config.keybindHUDy(), config.keybindHUDx() + (double) 16, config.keybindHUDy() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
-    private final DrawableRect frame = new DrawableRect(ClientConfig.HUD_KEYBIND_HUD_X.get(), ClientConfig.HUD_KEYBIND_HUD_Y.get(), ClientConfig.HUD_KEYBIND_HUD_X.get() + (double) 16, ClientConfig.HUD_KEYBIND_HUD_Y.get() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
-
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void preTextureStitch(TextureStitchEvent.Pre event) {
-        MuseIcon.registerIcons(event);
-        MPSModelHelper.loadArmorModels(event, null);
+    public RenderEventHandler() {
+        this.ownFly = false;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void preTextureStitch(TextureStitchEvent.Pre event) {
+        if (event.getMap().equals( Minecraft.getMinecraft().getTextureMapBlocks())) {
+            MuseIcon.registerIcons(event.getMap());
+            MPSModelHelper.loadArmorModels(event.getMap());
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onTextureStitch(TextureStitchEvent.Post event) {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void renderLast(RenderWorldLastEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        ScaledResolution screen = new ScaledResolution(mc);
+    }
+
+    @SubscribeEvent
+    public void onPreRenderPlayer(RenderPlayerEvent.Pre event) {
+        if (!event.getEntityPlayer().capabilities.isFlying && !event.getEntityPlayer().onGround && this.playerHasFlightOn(event.getEntityPlayer())) {
+            event.getEntityPlayer().capabilities.isFlying = true;
+            RenderEventHandler.ownFly = true;
+        }
+    }
+
+    private boolean playerHasFlightOn(EntityPlayer player) {
+        return ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_JETPACK__DATANAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_GLIDER__DATANAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.FEET), ModuleConstants.MODULE_JETBOOTS__DATANAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ModuleConstants.MODULE_FLIGHT_CONTROL__DATANAME);
+    }
+
+    @SubscribeEvent
+    public void onPostRenderPlayer(RenderPlayerEvent.Post event) {
+        if (RenderEventHandler.ownFly) {
+            RenderEventHandler.ownFly = false;
+            event.getEntityPlayer().capabilities.isFlying = false;
+        }
+    }
+
+    @SubscribeEvent
+    public void onFOVUpdate(FOVUpdateEvent e) {
+        ItemStack helmet = e.getEntity().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+        if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, ModuleConstants.BINOCULARS_MODULE__DATANAME)) {
+            e.setNewfov(e.getNewfov() / (float) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helmet, ModuleConstants.FOV));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onPostRenderGameOverlayEvent(RenderGameOverlayEvent.Post e) {
         RenderGameOverlayEvent.ElementType elementType = e.getType();
@@ -61,88 +96,31 @@ public enum RenderEventHandler {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void renderLast(RenderWorldLastEvent event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        MainWindow screen = minecraft.mainWindow;
-    }
-
-    @SubscribeEvent
-    public void onPreRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (!event.getEntityPlayer().abilities.isFlying && !event.getEntityPlayer().onGround && this.playerHasFlightOn(event.getEntityPlayer())) {
-            event.getEntityPlayer().abilities.isFlying = true;
-            RenderEventHandler.ownFly = true;
-        }
-    }
-
-    private boolean playerHasFlightOn(PlayerEntity player) {
-        return
-
-                player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                        .map(iModularItem ->
-                                (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(flightControl)).orElse(false) ||
-
-                        player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                                .map(iModularItem ->
-                                        (iModularItem instanceof IModularItem) &&
-                                                ((IModularItem) iModularItem).isModuleOnline(jetpack) ||
-                                                ((IModularItem) iModularItem).isModuleOnline(glider)).orElse(false) ||
-
-                        player.getItemStackFromSlot(EquipmentSlotType.FEET).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                                .map(iModularItem ->
-                                        (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(jetBoots)).orElse(false);
-    }
-
-    @SubscribeEvent
-    public void onPostRenderPlayer(RenderPlayerEvent.Post event) {
-        if (RenderEventHandler.ownFly) {
-            RenderEventHandler.ownFly = false;
-            event.getEntityPlayer().abilities.isFlying = false;
-        }
-    }
-
-    @SubscribeEvent
-    public void onFOVUpdate(FOVUpdateEvent e) {
-        ItemStack helmet = e.getEntity().getItemStackFromSlot(EquipmentSlotType.HEAD);
-        helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h-> {
-                    if (h instanceof IModularItem) {
-                        ItemStack binnoculars = ((IModularItem) h).getOnlineModuleOrEmpty(binoculars);
-                        if (!binnoculars.isEmpty())
-                            e.setNewfov((float) (e.getNewfov() / binnoculars.getCapability(PowerModuleCapability.POWER_MODULE)
-                                    .map(m->m.applyPropertyModifiers(MPAConstants.FOV)).orElse(1D)));
-                    }
-                }
-        );
-    }
-
-    @OnlyIn(Dist.CLIENT)
+    @SideOnly(Side.CLIENT)
     public void drawKeybindToggles() {
-        if (ClientConfig.HUD_DISPLAY_HUD.get()) {
-            Minecraft minecraft = Minecraft.getInstance();
-            ClientPlayerEntity player = minecraft.player;
-            frame.setLeft(ClientConfig.HUD_KEYBIND_HUD_X.get());
-            frame.setTop(ClientConfig.HUD_KEYBIND_HUD_Y.get());
+        if (config.keybindHUDon()) {
+            Minecraft mc = Minecraft.getMinecraft();
+            EntityPlayerSP player = mc.player;
+            ScaledResolution screen = new ScaledResolution(mc);
+            frame.setLeft(config.keybindHUDx());
+            frame.setTop(config.keybindHUDy());
             frame.setBottom(frame.top() + 16);
-            for (ClickableKeybinding kb : KeybindManager.INSTANCE.getKeybindings()) {
+            for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
                 if (kb.displayOnHUD) {
-                    double stringwidth = Renderer.getStringWidth(kb.getLabel().getFormattedText());
+                    double stringwidth = Renderer.getStringWidth(kb.getLabel());
                     frame.setWidth(stringwidth + kb.getBoundModules().size() * 16);
                     frame.draw();
-                    Renderer.drawString(kb.getLabel().getFormattedText(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
+                    Renderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
                     double x = frame.left() + stringwidth;
                     for (ClickableModule module : kb.getBoundModules()) {
                         TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
                         boolean active = false;
-                        for (ItemStack stack : ItemUtils.getModularItemsEquipped(player)) {
-                            active = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
-                                if (iItemHandler instanceof IModularItem) {
-                                    return ((IModularItem) iItemHandler).isModuleOnline(module.getModule().getItem().getRegistryName());
-                                }
-                                return false;
-                            }).orElse(false);
+                        for (ItemStack stack : ItemUtils.getLegacyModularItemsEquipped(player)) {
+                            if (ModuleManager.INSTANCE.itemHasActiveModule(stack, module.getModule().getDataName()))
+                                active = true;
                         }
-                        Renderer.drawModuleAt(x, frame.top(), module.getModule(), active);
+
+                        IconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
                         TextureUtils.popTexture();
                         x += 16;
                     }

@@ -1,51 +1,52 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButtonToggle;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.recipebook.GhostRecipe;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
+import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import net.minecraft.client.gui.recipebook.RecipeList;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.ToggleWidget;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.Language;
 import net.minecraft.client.resources.LanguageManager;
-import net.minecraft.client.util.ClientRecipeBook;
-import net.minecraft.client.util.RecipeBookCategories;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.util.RecipeBookClient;
+import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.client.util.SearchTreeManager;
-import net.minecraft.inventory.container.RecipeBookContainer;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.network.play.client.CRecipeInfoPacket;
+import net.minecraft.network.play.client.CPacketRecipeInfo;
+import net.minecraft.stats.RecipeBook;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-@OnlyIn(Dist.CLIENT)
-public class MPSRecipeBookGui extends RecipeBookGui {
+/**
+ * @author lehjr
+ */
+public class MPSRecipeBookGui extends GuiRecipeBook {
     /** The outer green rectangle */
     protected DrawableRelativeRect outerFrame = new DrawableRelativeRect(0, 0, 0, 0,
             true,
             new Colour(0.0F, 0.2F, 0.0F, 0.8F),
             new Colour(0.1F, 0.9F, 0.1F, 0.8F));
-
 
     /** The inner blue rectangle */
     protected DrawableRelativeRect innerFrame = new DrawableRelativeRect(0, 0, 0, 0,
@@ -53,124 +54,93 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             Colour.DARKBLUE.withAlpha(0.8),
             Colour.LIGHTBLUE.withAlpha(0.8));
 
-    protected static final ResourceLocation RECIPE_BOOK = new ResourceLocation(MPAConstants.MODID,"textures/gui/recipe_book.png");
+    protected static final ResourceLocation RECIPE_BOOK = new ResourceLocation(Constants.MODID,"textures/gui/recipe_book.png");
+    protected static final ResourceLocation SEARCH_ICON = new ResourceLocation(Constants.MODID,"textures/gui/search.png");
 
-    protected static final ResourceLocation SEARCH_ICON = new ResourceLocation(MPAConstants.MODID,"textures/gui/search.png");
+    public int xOffset;
+    public int width;
+    public int height;
+    private final GhostRecipe ghostRecipe = new GhostRecipe();
+    private final List<MPSRecipeTabToggleWidget> recipeTabs = new ArrayList<MPSRecipeTabToggleWidget>() {{
+        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.SEARCH));
+        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.TOOLS));
+        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.BUILDING_BLOCKS));
+        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.MISC));
+        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.REDSTONE));
+    }};
 
-    private int xOffset;
-    private int width;
-    private int height;
-    protected final GhostRecipe ghostRecipe = new GhostRecipe();
-
-    private final List<MPSRecipeTabToggleWidget> recipeTabs = Lists.newArrayList();
     private MPSRecipeTabToggleWidget currentTab;
 
-    // todo: replace this with a textured button??
-
-    protected ToggleWidget toggleRecipesBtn;
-    protected RecipeBookContainer<?> container;
-    protected Minecraft mc;
-    private TextFieldWidget searchBar;
+    /**
+     * This button toggles between showing all recipes and showing only craftable recipes
+     */
+    private GuiButtonToggle toggleRecipesBtn;
+    private InventoryCrafting craftingSlots;
+    private Minecraft mc;
+    private GuiTextField searchBar;
     private String lastSearch = "";
-    protected ClientRecipeBook recipeBook;
-    protected final MPSRecipeBookPage recipeBookPage = new MPSRecipeBookPage();
-    protected final RecipeItemHelper stackedContents = new RecipeItemHelper();
+    private RecipeBook recipeBook;
+    private final MPSRecipeBookPage recipeBookPage = new MPSRecipeBookPage();
+    private RecipeItemHelper stackedContents = new RecipeItemHelper();
     private int timesInventoryChanged;
-    private boolean field_199738_u;
 
     @Override
-    public void init(int width, int height, Minecraft minecraft, boolean widthTooNarrow, RecipeBookContainer<?> container) {
+    public void /*init*/func_194303_a(int width, int height, Minecraft minecraft, boolean widthTooNarrow, InventoryCrafting craftingInventory) {
         this.mc = minecraft;
         this.width = width;
         this.height = height;
-        this.container = container;
-        minecraft.player.openContainer = container;
-
+        this.craftingSlots = craftingInventory;
         this.recipeBook = minecraft.player.getRecipeBook();
-
         this.timesInventoryChanged = minecraft.player.inventory.getTimesChanged();
+        this.currentTab = this.recipeTabs.get(0);
+        this.currentTab.setStateTriggered(true);
+
         if (this.isVisible()) {
-            this.initSearchBar(widthTooNarrow);
+            this.initVisuals(widthTooNarrow, craftingInventory);
         }
-        minecraft.keyboardListener.enableRepeatEvents(true);
+
+        Keyboard.enableRepeatEvents(true);
     }
 
-    int guiLeft = 0;
-
-    public int getGuiLeft() {
-        return guiLeft;
-    }
-
-    /** Looks like a second stage init() */
     @Override
-    public void initSearchBar(boolean widthTooNarrow) {
+    public void initVisuals(boolean widthTooNarrow, InventoryCrafting craftingInventory) {
         this.xOffset = widthTooNarrow ? 0 : 86;
-        guiLeft = (this.width - 147) / 2 - this.xOffset;
+        int guiLeft = (this.width - 147) / 2 - this.xOffset;
         int guiTop = (this.height - 166) / 2;
         outerFrame.setTargetDimensions(new Point2D(guiLeft, guiTop), new Point2D(146, 166));
         innerFrame.setTargetDimensions(new Point2D(guiLeft + 7, guiTop + 7), new Point2D( 146 - 14, 166 -14));
         this.stackedContents.clear();
-        this.mc.player.inventory.accountStacks(this.stackedContents);
-        this.container.func_201771_a(this.stackedContents);
-        String s = this.searchBar != null ? this.searchBar.getText() : "";
-        this.searchBar = new TextFieldWidget(this.mc.fontRenderer, guiLeft + 25, guiTop + 14, 80, 9 + 5, I18n.format("itemGroup.search"));
+        this.mc.player.inventory.fillStackedContents(this.stackedContents, false);
+        craftingInventory.fillStackedContents(this.stackedContents);
+        this.searchBar = new GuiTextField(0, this.mc.fontRenderer, guiLeft + 25, guiTop + 14, 80, this.mc.fontRenderer.FONT_HEIGHT + 5);
         this.searchBar.setMaxStringLength(50);
         this.searchBar.setEnableBackgroundDrawing(false);
         this.searchBar.setVisible(true);
         this.searchBar.setTextColor(16777215);
-        this.searchBar.setText(s);
         this.recipeBookPage.init(this.mc, guiLeft, guiTop);
         this.recipeBookPage.addListener(this);
-        this.toggleRecipesBtn = new ToggleWidget(guiLeft + 110, guiTop + 12, 26, 16, this.recipeBook.isFilteringCraftable(this.container));
-        this.func_205702_a();
-        this.recipeTabs.clear();
-
-        for(RecipeBookCategories recipebookcategories : this.container.getRecipeBookCategories()) {
-            this.recipeTabs.add(new MPSRecipeTabToggleWidget(recipebookcategories));
-        }
-
-        if (this.currentTab != null) {
-            this.currentTab = this.recipeTabs.stream().filter((tabOther) -> {
-                return tabOther.func_201503_d()/* getCategory */.equals(this.currentTab.func_201503_d());
-            }).findFirst().orElse((MPSRecipeTabToggleWidget)null);
-        }
-
-        if (this.currentTab == null) {
-            this.currentTab = this.recipeTabs.get(0);
-        }
-
-        this.currentTab.setStateTriggered(true);
+        this.toggleRecipesBtn = new GuiButtonToggle(0, guiLeft + 110, guiTop + 12, 26, 16, this.recipeBook.isFilteringCraftable());
+        this.toggleRecipesBtn.initTextureValues(152, 41, 28, 18, RECIPE_BOOK);
         this.updateCollections(false);
         this.updateTabs();
     }
 
     @Override
-    public boolean changeFocus(boolean p_changeFocus_1_) {
-        return false;
-    }
-
-    @Override
-    protected void func_205702_a() {
-        this.toggleRecipesBtn.initTextureValues(152, 41, 28, 18, RECIPE_BOOK);
-    }
-
-    @Override
     public void removed() {
-        this.searchBar = null;
-        this.currentTab = null;
-        this.mc.keyboardListener.enableRepeatEvents(false);
+        Keyboard.enableRepeatEvents(false);
     }
 
     @Override
     public int updateScreenPosition(boolean widthTooNarrow, int width, int xSize) {
-        int guiLeft;
+        int offset;
+
         if (this.isVisible() && !widthTooNarrow) {
-            guiLeft = 177 + (width - xSize - 200) / 2;
+            offset = 177 + (width - xSize - 200) / 2;
         } else {
-            guiLeft = (width - xSize) / 2;
+            offset = (width - xSize) / 2;
         }
 
-        return guiLeft;
+        return offset;
     }
 
     @Override
@@ -183,19 +153,21 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         return this.recipeBook.isGuiOpen();
     }
 
-    @Override
-    protected void setVisible(boolean visible) {
+    private void setVisible(boolean visible) {
         this.recipeBook.setGuiOpen(visible);
+
         if (!visible) {
             this.recipeBookPage.setInvisible();
         }
+
         this.sendUpdateSettings();
     }
 
     @Override
     public void slotClicked(@Nullable Slot slotIn) {
-        if (slotIn != null && slotIn.slotNumber < this.container.getSize()) {
+        if (slotIn != null && slotIn.slotNumber <= 9) {
             this.ghostRecipe.clear();
+
             if (this.isVisible()) {
                 this.updateStackedContents();
             }
@@ -203,29 +175,22 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     }
 
     private void updateCollections(boolean p_193003_1_) {
-        List<RecipeList> list = this.recipeBook.getRecipes(this.currentTab.func_201503_d());
-        list.forEach((p_193944_1_) -> {
-            p_193944_1_.canCraft(this.stackedContents, this.container.getWidth(), this.container.getHeight(), this.recipeBook);
-        });
-        List<RecipeList> list1 = Lists.newArrayList(list);
-        list1.removeIf((p_193952_0_) -> {
-            return !p_193952_0_.isNotEmpty();
-        });
-        list1.removeIf((p_193953_0_) -> {
-            return !p_193953_0_.containsValidRecipes();
-        });
+        List<RecipeList> list = (List) RecipeBookClient.RECIPES_BY_TAB.get(this.currentTab.getCategory());
+        list.forEach((recipeList) ->
+                recipeList.canCraft(this.stackedContents, this.craftingSlots.getWidth(), this.craftingSlots.getHeight(), this.recipeBook));
+
+        List<RecipeList> list1 = new ArrayList<>(list);
+        list1.removeIf((recipeList) -> !recipeList.isNotEmpty());
+        list1.removeIf((recipeList) -> !recipeList.containsValidRecipes());
         String s = this.searchBar.getText();
+
         if (!s.isEmpty()) {
-            ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<>(this.mc.getSearchTree(SearchTreeManager.RECIPES).search(s.toLowerCase(Locale.ROOT)));
-            list1.removeIf((p_193947_1_) -> {
-                return !objectset.contains(p_193947_1_);
-            });
+            ObjectSet<RecipeList> objectset = new ObjectLinkedOpenHashSet<RecipeList>(this.mc.getSearchTree(SearchTreeManager.RECIPES).search(s.toLowerCase(Locale.ROOT)));
+            list1.removeIf((recipeList) -> !objectset.contains(recipeList));
         }
 
-        if (this.recipeBook.isFilteringCraftable(this.container)) {
-            list1.removeIf((p_193958_0_) -> {
-                return !p_193958_0_.containsCraftableRecipes();
-            });
+        if (this.recipeBook.isFilteringCraftable()) {
+            list1.removeIf((recipeList) -> !recipeList.containsCraftableRecipes());
         }
 
         this.recipeBookPage.updateLists(list1, p_193003_1_);
@@ -237,16 +202,14 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         int k = 27;
         int l = 0;
 
-        for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-            RecipeBookCategories recipebookcategories = MPSRecipeTabToggleWidget.func_201503_d();
-            if (recipebookcategories != RecipeBookCategories.SEARCH && recipebookcategories != RecipeBookCategories.FURNACE_SEARCH) {
-                if (MPSRecipeTabToggleWidget.func_199500_a(this.recipeBook)) {
-                    MPSRecipeTabToggleWidget.setPosition(i, j + 27 * l++);
-                    MPSRecipeTabToggleWidget.startAnimation(this.mc);
-                }
-            } else {
-                MPSRecipeTabToggleWidget.visible = true;
-                MPSRecipeTabToggleWidget.setPosition(i, j + 27 * l++);
+        for (MPSRecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
+            CreativeTabs creativetabs = guibuttonrecipetab.getCategory();
+            if (creativetabs == CreativeTabs.SEARCH) {
+                guibuttonrecipetab.visible = true;
+                guibuttonrecipetab.setPosition(i, j + k * l++);
+            } else if (guibuttonrecipetab.updateVisibility()){
+                guibuttonrecipetab.setPosition(i, j + k * l++);
+                guibuttonrecipetab.startAnimation(this.mc);
             }
         }
     }
@@ -263,8 +226,8 @@ public class MPSRecipeBookGui extends RecipeBookGui {
 
     private void updateStackedContents() {
         this.stackedContents.clear();
-        this.mc.player.inventory.accountStacks(this.stackedContents);
-        this.container.func_201771_a(this.stackedContents);
+        this.mc.player.inventory.fillStackedContents(this.stackedContents, false);
+        this.craftingSlots.fillStackedContents(this.stackedContents);
         this.updateCollections(false);
     }
 
@@ -279,100 +242,105 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             GlStateManager.pushMatrix();
 
             this.mc.getTextureManager().bindTexture(SEARCH_ICON);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             int x = (this.width - 147) / 2 - this.xOffset;
             int y = (this.height - 166) / 2;
 
-            this.blit(x + 9, y + 11, 0, 0, 16, 16, 16, 16);
-            this.searchBar.render(mouseX, mouseY, partialTicks);
+            this.drawTexturedModalRect(x + 9, y + 11, 0, 0, 16, 16);
+            this.searchBar.drawTextBox();
             RenderHelper.disableStandardItemLighting();
 
             // move this up to before the outer frame once the texture is no longer needed
             for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-                MPSRecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
+                MPSRecipeTabToggleWidget.drawButton(this.mc, mouseX, mouseY, partialTicks);
             }
 
-            this.toggleRecipesBtn.render(mouseX, mouseY, partialTicks);
+            this.toggleRecipesBtn.drawButton(this.mc, mouseX, mouseY, partialTicks);
             this.recipeBookPage.render(x, y, mouseX, mouseY, partialTicks);
             GlStateManager.popMatrix();
         }
     }
 
     @Override
-    public void renderTooltip(int p_191876_1_, int p_191876_2_, int p_191876_3_, int p_191876_4_) {
+    public void renderTooltip(int guiLeft, int guiTop, int mouseX, int mouseY) {
         if (this.isVisible()) {
-            this.recipeBookPage.renderTooltip(p_191876_3_, p_191876_4_);
-            if (this.toggleRecipesBtn.isHovered()) {
-                String s = this.func_205703_f();
+            this.recipeBookPage.renderTooltip(mouseX, mouseY);
+
+            if (this.toggleRecipesBtn.isMouseOver()) {
+                String s1 = I18n.format(this.toggleRecipesBtn.isStateTriggered() ? "gui.recipebook.toggleRecipes.craftable" : "gui.recipebook.toggleRecipes.all");
+
                 if (this.mc.currentScreen != null) {
-                    this.mc.currentScreen.renderTooltip(s, p_191876_3_, p_191876_4_);
+                    this.mc.currentScreen.drawHoveringText(s1, mouseX, mouseY);
                 }
             }
 
-            this.renderGhostRecipeTooltip(p_191876_1_, p_191876_2_, p_191876_3_, p_191876_4_);
+            this.renderGhostRecipeTooltip(guiLeft, guiTop, mouseX, mouseY);
         }
     }
 
-    @Override
-    protected String func_205703_f() {
-        return I18n.format(this.toggleRecipesBtn.isStateTriggered() ? "gui.recipebook.toggleRecipes.craftable" : "gui.recipebook.toggleRecipes.all");
-    }
-
-    private void renderGhostRecipeTooltip(int p_193015_1_, int p_193015_2_, int p_193015_3_, int p_193015_4_) {
+    private void renderGhostRecipeTooltip(int guiLeft, int guiTop, int mouseX, int mouseY) {
         ItemStack itemstack = null;
 
-        for(int i = 0; i < this.ghostRecipe.size(); ++i) {
+        for (int i = 0; i < this.ghostRecipe.size(); ++i) {
             GhostRecipe.GhostIngredient ghostrecipe$ghostingredient = this.ghostRecipe.get(i);
-            int j = ghostrecipe$ghostingredient.getX() + p_193015_1_;
-            int k = ghostrecipe$ghostingredient.getY() + p_193015_2_;
-            if (p_193015_3_ >= j && p_193015_4_ >= k && p_193015_3_ < j + 16 && p_193015_4_ < k + 16) {
+            int j = ghostrecipe$ghostingredient.getX() + guiLeft;
+            int k = ghostrecipe$ghostingredient.getY() + guiTop;
+
+            if (mouseX >= j && mouseY >= k && mouseX < j + 16 && mouseY < k + 16) {
                 itemstack = ghostrecipe$ghostingredient.getItem();
             }
         }
 
         if (itemstack != null && this.mc.currentScreen != null) {
-            this.mc.currentScreen.renderTooltip(this.mc.currentScreen.getTooltipFromItem(itemstack), p_193015_3_, p_193015_4_);
+            this.mc.currentScreen.drawHoveringText(this.mc.currentScreen.getItemToolTip(itemstack), mouseX, mouseY);
         }
     }
 
     @Override
-    public void renderGhostRecipe(int guiLeft, int guiTop, boolean p_191864_3_, float partialTicks) {
-        this.ghostRecipe.render(this.mc, guiLeft, guiTop, p_191864_3_, partialTicks);
+    public void renderGhostRecipe(int guiLeft, int guiTop, boolean isFullSizeGrid, float partialTicks) {
+        this.ghostRecipe.render(this.mc, guiLeft, guiTop, isFullSizeGrid, partialTicks);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (this.isVisible() && !this.mc.player.isSpectator()) {
-            if (this.recipeBookPage./*mouseClicked */func_198955_a(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
-                IRecipe<?> irecipe = this.recipeBookPage.getLastClickedRecipe();
+            if (this.recipeBookPage.mouseClicked(mouseX, mouseY, mouseButton, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
+                IRecipe irecipe = this.recipeBookPage.getLastClickedRecipe();
                 RecipeList recipelist = this.recipeBookPage.getLastClickedRecipeList();
+
                 if (irecipe != null && recipelist != null) {
                     if (!recipelist.isCraftable(irecipe) && this.ghostRecipe.getRecipe() == irecipe) {
                         return false;
                     }
 
                     this.ghostRecipe.clear();
-                    this.mc.playerController.func_203413_a(this.mc.player.openContainer.windowId, irecipe, Screen.hasShiftDown());
-                    if (!this.isOffsetNextToMainGUI()) {
+                    this.mc.playerController.func_194338_a(this.mc.player.openContainer.windowId, irecipe, GuiScreen.isShiftKeyDown(), this.mc.player);
+
+                    if (!this.isOffsetNextToMainGUI() && mouseButton == 0) {
                         this.setVisible(false);
                     }
                 }
 
                 return true;
-            } else if (this.searchBar.mouseClicked(mouseX, mouseY, button)) {
+            } else if (mouseButton != 0) {
+                return false;
+            } else if (this.searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
                 return true;
-            } else if (this.toggleRecipesBtn.mouseClicked(mouseX, mouseY, button)) {
-                boolean flag = this.toggleCraftableFilter();
+            } else if (this.toggleRecipesBtn.mousePressed(this.mc, mouseX, mouseY)) {
+                boolean flag = !this.recipeBook.isFilteringCraftable();
+                this.recipeBook.setFilteringCraftable(flag);
                 this.toggleRecipesBtn.setStateTriggered(flag);
+                this.toggleRecipesBtn.playPressSound(this.mc.getSoundHandler());
                 this.sendUpdateSettings();
                 this.updateCollections(false);
                 return true;
             } else {
-                for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-                    if (MPSRecipeTabToggleWidget.mouseClicked(mouseX, mouseY, button)) {
-                        if (this.currentTab != MPSRecipeTabToggleWidget) {
+                for (MPSRecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
+                    if (guibuttonrecipetab.mousePressed(this.mc, mouseX, mouseY)) {
+                        if (this.currentTab != guibuttonrecipetab) {
+                            guibuttonrecipetab.playPressSound(this.mc.getSoundHandler());
                             this.currentTab.setStateTriggered(false);
-                            this.currentTab = MPSRecipeTabToggleWidget;
+                            this.currentTab = guibuttonrecipetab;
                             this.currentTab.setStateTriggered(true);
                             this.updateCollections(true);
                         }
@@ -388,40 +356,35 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     }
 
     @Override
-    protected boolean toggleCraftableFilter() {
-        boolean flag = !this.recipeBook.isFilteringCraftable();
-        this.recipeBook.setFilteringCraftable(flag);
-        return flag;
-    }
-
-    @Override
-    public boolean func_195604_a(double mouseX, double mouseY, int parentGuiLeft, int parentGuiTop, int parentXSize, int parentYSize, int button) {
+    public boolean hasClickedOutside(int mouseX, int mouseY, int guiLeft, int guiTop, int xSize, int ySize) {
         if (!this.isVisible()) {
             return true;
         } else {
-            boolean flag = mouseX < (double)parentGuiLeft || mouseY < (double)parentGuiTop || mouseX >= (double)(parentGuiLeft + parentXSize) || mouseY >= (double)(parentGuiTop + parentYSize);
-            boolean flag1 = (double)(parentGuiLeft - 147) < mouseX && mouseX < (double)parentGuiLeft && (double)parentGuiTop < mouseY && mouseY < (double)(parentGuiTop + parentYSize);
-            return flag && !flag1 && !this.currentTab.isHovered();
+            boolean flag = mouseX < guiLeft || mouseY < guiTop || mouseX >= guiLeft + xSize || mouseY >= guiTop + ySize;
+            boolean flag1 = guiLeft - 147 < mouseX && mouseX < guiLeft && guiTop < mouseY && mouseY < guiTop + ySize;
+            return flag && !flag1 && !this.currentTab.mousePressed(this.mc, mouseX, mouseY);
         }
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        this.field_199738_u = false;
+    public boolean keyPressed(char typedChar, int keycode) {
         if (this.isVisible() && !this.mc.player.isSpectator()) {
-            if (p_keyPressed_1_ == 256 && !this.isOffsetNextToMainGUI()) {
+            if (keycode == 1 && !this.isOffsetNextToMainGUI()) {
                 this.setVisible(false);
                 return true;
-            } else if (this.searchBar.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) {
-                this.updateSearch();
-                return true;
-            } else if (this.searchBar.isFocused() && this.searchBar.getVisible() && p_keyPressed_1_ != 256) {
-                return true;
-            } else if (this.mc.gameSettings.keyBindChat.matchesKey(p_keyPressed_1_, p_keyPressed_2_) && !this.searchBar.isFocused()) {
-                this.field_199738_u = true;
-                this.searchBar.setFocused2(true);
-                return true;
             } else {
+                if (GameSettings.isKeyDown(this.mc.gameSettings.keyBindChat) && !this.searchBar.isFocused()) {
+                    this.searchBar.setFocused(true);
+                } else if (this.searchBar.textboxKeyTyped(typedChar, keycode)) {
+                    String s1 = this.searchBar.getText().toLowerCase(Locale.ROOT);
+                    this.pirateRecipe(s1);
+
+                    if (!s1.equals(this.lastSearch)) {
+                        this.updateCollections(false);
+                        this.lastSearch = s1;
+                    }
+                    return true;
+                }
                 return false;
             }
         } else {
@@ -429,60 +392,27 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         }
     }
 
-    @Override
-    public boolean keyReleased(int p_223281_1_, int p_223281_2_, int p_223281_3_) {
-        this.field_199738_u = false;
-        return super.keyReleased(p_223281_1_, p_223281_2_, p_223281_3_);
-    }
-
-    @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (this.field_199738_u) {
-            return false;
-        } else if (this.isVisible() && !this.mc.player.isSpectator()) {
-            if (this.searchBar.charTyped(p_charTyped_1_, p_charTyped_2_)) {
-                this.updateSearch();
-                return true;
-            } else {
-                return super.charTyped(p_charTyped_1_, p_charTyped_2_); // fixme NPE
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return false;
-    }
-
-    private void updateSearch() {
-        String s = this.searchBar.getText().toLowerCase(Locale.ROOT);
-        this.pirateRecipe(s);
-        if (!s.equals(this.lastSearch)) {
-            this.updateCollections(false);
-            this.lastSearch = s;
-        }
-    }
-
     /**
      * "Check if we should activate the pirate speak easter egg"
+     *
+     * @param text 'if equal to "excitedze", activate the easter egg'
      */
     private void pirateRecipe(String text) {
         if ("excitedze".equals(text)) {
             LanguageManager languagemanager = this.mc.getLanguageManager();
             Language language = languagemanager.getLanguage("en_pt");
+
             if (languagemanager.getCurrentLanguage().compareTo(language) == 0) {
                 return;
             }
 
             languagemanager.setCurrentLanguage(language);
-            this.mc.gameSettings.language = language.getCode();
-            net.minecraftforge.client.ForgeHooksClient.refreshResources(this.mc, net.minecraftforge.resource.VanillaResourceType.LANGUAGES);
+            this.mc.gameSettings.language = language.getLanguageCode();
+            net.minecraftforge.fml.client.FMLClientHandler.instance().refreshResources(net.minecraftforge.client.resource.VanillaResourceType.LANGUAGES);
+            this.mc.fontRenderer.setUnicodeFlag(this.mc.getLanguageManager().isCurrentLocaleUnicode() || this.mc.gameSettings.forceUnicodeFont);
             this.mc.fontRenderer.setBidiFlag(languagemanager.isCurrentLanguageBidirectional());
             this.mc.gameSettings.saveOptions();
         }
-
     }
 
     private boolean isOffsetNextToMainGUI() {
@@ -492,64 +422,55 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     @Override
     public void recipesUpdated() {
         this.updateTabs();
+
         if (this.isVisible()) {
             this.updateCollections(false);
         }
     }
 
     @Override
-    public void recipesShown(List<IRecipe<?>> recipes) {
-        for(IRecipe<?> irecipe : recipes) {
+    public void recipesShown(List<IRecipe> recipes) {
+        for (IRecipe irecipe : recipes) {
             this.mc.player.removeRecipeHighlight(irecipe);
         }
     }
 
-    /*
-        called from: net.minecraft.client.network.play.ClientPlayNetHandler.handlePlaceGhostRecipe
-           which is called from: net.minecraft.network.play.server.SPlaceGhostRecipePacket.processPacket (recipes referenced by resource location)
-
-
-     */
-    /*
-        sent from this chain...
-
-
-        net.minecraft.client.multiplayer.PlayerController.func_203413_a
-        net.minecraft.network.play.ServerPlayNetHandler.processPlaceRecipe
-        net.minecraft.inventory.container.RecipeBookContainer.func_217056_a
-        net.minecraft.item.crafting.ServerRecipePlacer.place
-        net.minecraft.client.network.play.ClientPlayNetHandler.handlePlaceGhostRecipe
-     */
     @Override
-    public void setupGhostRecipe(IRecipe<?> recipe, List<Slot> slots) {
-        ItemStack itemstack = recipe.getRecipeOutput();
-        this.ghostRecipe.setRecipe(recipe);
+    public void setupGhostRecipe(IRecipe iRecipe, List<Slot> slots) {
+        ItemStack itemstack = iRecipe.getRecipeOutput();
+        this.ghostRecipe.setRecipe(iRecipe);
         this.ghostRecipe.addIngredient(Ingredient.fromStacks(itemstack), (slots.get(0)).xPos, (slots.get(0)).yPos);
+        int gridWidth = this.craftingSlots.getWidth();
+        int gridHeight = this.craftingSlots.getHeight();
+        int recipeWidth = iRecipe instanceof net.minecraftforge.common.crafting.IShapedRecipe ? ((net.minecraftforge.common.crafting.IShapedRecipe) iRecipe).getRecipeWidth() : gridWidth;
+        int slotIndex = 1; // starts at 1 because index 0 is output slot
+        Iterator<Ingredient> iterator = iRecipe.getIngredients().iterator();
 
-        // IRecipePlacer
-        this.placeRecipe(
-                this.container.getWidth(), // grid width
-                this.container.getHeight(), // grid height
-                this.container.getOutputSlot(), //  usually the first slot added to the list during container init
-                recipe,
-                recipe.getIngredients().iterator(),
-                0);
-    }
+        for (int row = 0; row < gridHeight; ++row) {
+            for (int col = 0; col < recipeWidth; ++col) {
+                if (!iterator.hasNext()) {
+                    return;
+                }
 
-    /** IRecipePlacer ----------------------------------- */
-    @Override
-    public void setSlotContents(Iterator<Ingredient> ingredients, int slotIn, int maxAmount, int y, int x) {
-        Ingredient ingredient = ingredients.next();
-        if (!ingredient.hasNoMatchingItems()) {
-            Slot slot = this.container.inventorySlots.get(slotIn);
-            this.ghostRecipe.addIngredient(ingredient, slot.xPos, slot.yPos);
+                Ingredient ingredient = iterator.next();
+
+                if (ingredient.getMatchingStacks().length > 0) {
+                    Slot slot = slots.get(slotIndex);
+                    this.ghostRecipe.addIngredient(ingredient, slot.xPos, slot.yPos);
+                }
+
+                ++slotIndex;
+            }
+
+            if (recipeWidth < gridWidth) {
+                slotIndex += gridWidth - recipeWidth;
+            }
         }
     }
 
-    @Override
-    protected void sendUpdateSettings() {
+    private void sendUpdateSettings() {
         if (this.mc.getConnection() != null) {
-            this.mc.getConnection().sendPacket(new CRecipeInfoPacket(this.recipeBook.isGuiOpen(), this.recipeBook.isFilteringCraftable(), this.recipeBook.isFurnaceGuiOpen(), this.recipeBook.isFurnaceFilteringCraftable(), this.recipeBook.func_216758_e(), this.recipeBook.func_216761_f()));
+            this.mc.getConnection().sendPacket(new CPacketRecipeInfo(this.isVisible(), this.recipeBook.isFilteringCraftable()));
         }
     }
 }

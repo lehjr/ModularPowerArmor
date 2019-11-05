@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "modularpowerarmor:mps_shaped",
+  "pattern": [
+    "P"
+  ],
+  "key": {
+    "P": {
+      "type": "forge:ore_dict",
+      "ore": "componentPlatingDiamond"
+    }
+  },
+  "result": {
+    "item": "minecraft:diamond",
+    "count": 5
+  }
+}

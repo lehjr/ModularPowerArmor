@@ -1,14 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.sound;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = MPAConstants.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Constants.MODID, value = Side.CLIENT)
 public class SoundDictionary {
     private static final String SOUND_PREFIX = "modularpowerarmor:";
     public static SoundEvent SOUND_EVENT_GLIDER = registerSound("glider");
@@ -40,7 +39,7 @@ public class SoundDictionary {
     }
 
     private static SoundEvent registerSound(String soundName) {
-        ResourceLocation location = new ResourceLocation(MPAConstants.MODID, soundName);
+        ResourceLocation location = new ResourceLocation(Constants.MODID, soundName);
         SoundEvent event = new SoundEvent(location).setRegistryName(location);
         return event;
     }

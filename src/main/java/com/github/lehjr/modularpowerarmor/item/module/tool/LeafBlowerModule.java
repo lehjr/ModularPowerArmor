@@ -1,5 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -8,21 +11,17 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.helper.ToolHelpers;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +31,13 @@ import javax.annotation.Nullable;
  * 7:13 PM 4/21/13
  */
 public class LeafBlowerModule extends AbstractPowerModule {
-
     public LeafBlowerModule(String regName) {
         super(regName);
     }
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -50,16 +48,24 @@ public class LeafBlowerModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.rightClick.addBasePropertyDouble(MPAConstants.RADIUS, 1, "m");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);
+            this.rightClick.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffPropertyDouble(Constants.RADIUS, Constants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addBasePropertyDouble(Constants.RADIUS, 1, "m");
+            this.rightClick.addTradeoffPropertyDouble(Constants.RADIUS, Constants.RADIUS, 15);
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == PowerModuleCapability.POWER_MODULE;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) rightClick;
+            }
+            return null;
         }
 
         class RightClickie extends RightClickModule {
@@ -68,14 +74,14 @@ public class LeafBlowerModule extends AbstractPowerModule {
             }
 
             @Override
-            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                int radius = (int) applyPropertyModifiers(MPAConstants.RADIUS);
+            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+                int radius = (int) applyPropertyModifiers(Constants.RADIUS);
                 if (useBlower(radius, itemStackIn, playerIn, worldIn, playerIn.getPosition()))
-                    return ActionResult.newResult(ActionResultType.SUCCESS, itemStackIn);
-                return ActionResult.newResult(ActionResultType.PASS, itemStackIn);
+                    return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
+                return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
             }
 
-            private boolean useBlower(int radius, ItemStack itemStack, PlayerEntity player, World world, BlockPos pos) {
+            private boolean useBlower(int radius, ItemStack itemStack, EntityPlayer player, World world, BlockPos pos) {
                 int totalEnergyDrain = 0;
                 BlockPos newPos;
                 for (int i = pos.getX() - radius; i < pos.getX() + radius; i++) {
@@ -94,7 +100,7 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
             @Override
             public int getEnergyUsage() {
-                return (int) applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
+                return (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
             }
         }
     }

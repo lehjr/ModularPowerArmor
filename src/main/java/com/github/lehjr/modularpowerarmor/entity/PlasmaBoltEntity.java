@@ -1,49 +1,43 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.ParticleTypes;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
-
-public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
+public class PlasmaBoltEntity extends EntityThrowable implements IEntityAdditionalSpawnData {
     public static final int SIZE = 24;
     public double size;
     public double damagingness;
     public double explosiveness;
-    public LivingEntity shootingEntity;
+    public Entity shootingEntity;
 
-    public PlasmaBoltEntity(EntityType<? extends PlasmaBoltEntity> entityType, World world) {
-        super(entityType, world);
+    public PlasmaBoltEntity(World world) {
+        super(world);
     }
 
-    public PlasmaBoltEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
-        super(MPAObjects.PLASMA_BOLT_ENTITY_TYPE, world);
+    public PlasmaBoltEntity(World world, EntityLivingBase shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
+        super(world);
         this.shootingEntity = shootingEntity;
         this.size = ((chargeTicks) > 50 ? 50 : chargeTicks);
         this.explosiveness = explosivenessIn;
         this.damagingness = damagingnessIn;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double scale = 1.0;
-        this.setMotion(
-                direction.x * scale,
-                direction.y * scale,
-                direction.z * scale
-        );
+        this.motionX = direction.x * scale;
+        this.motionY = direction.y * scale;
+        this.motionZ = direction.z * scale;
         double r = this.size / 50.0;
         double xoffset = 1.3f + r - direction.y * shootingEntity.getEyeHeight();
         double yoffset = -.2;
@@ -54,31 +48,19 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
         this.posX = shootingEntity.posX + direction.x * xoffset - direction.y * horzx * yoffset - horzz * zoffset;
         this.posY = shootingEntity.posY + shootingEntity.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
         this.posZ = shootingEntity.posZ + direction.z * xoffset - direction.y * horzz * yoffset + horzx * zoffset;
-        this.setBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
+        this.setEntityBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
     }
 
     @Override
-    protected void registerData() {
-
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getThrower() {
-        LivingEntity other = super.getThrower();
-        return other != null ? other : this.shootingEntity;
-    }
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
         if (this.ticksExisted > this.getMaxLifetime()) {
-            this.remove();
+            this.setDead();
         }
         if (this.isInWater()) {
-            this.remove();
+            this.setDead();
             for (int var3 = 0; var3 < this.size; ++var3) {
-                this.world.addParticle(ParticleTypes.FLAME,
+                this.world.spawnParticle(EnumParticleTypes.FLAME,
                         this.posX + Math.random() * 1, this.posY + Math.random() * 1, this.posZ + Math.random()
                                 * 0.1,
                         0.0D, 0.0D, 0.0D);
@@ -99,6 +81,14 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
         return false;
     }
 
+    @Override
+    public void readEntityFromNBT(NBTTagCompound var1) {
+        this.setDead();
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound var1) {
+    }
 
     /**
      * Gets the amount of gravity to apply to the thrown entity with each tick.
@@ -111,11 +101,10 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
     @Override
     protected void onImpact(RayTraceResult result) {
         double damage = this.size / 50.0 * this.damagingness;
-        switch (result.getType()) {
+        switch (result.typeOfHit) {
             case ENTITY:
-                EntityRayTraceResult rayTraceResult = (EntityRayTraceResult) result;
-                if (rayTraceResult.getEntity() != null && rayTraceResult.getEntity() != shootingEntity) {
-                    rayTraceResult.getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
+                if (result.entityHit != null && result.entityHit != shootingEntity) {
+                    result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.shootingEntity), (int) damage);
                 }
                 break;
             case BLOCK:
@@ -123,46 +112,28 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
             default:
                 break;
         }
-        if (!this.world.isRemote) { // Dist.SERVER
-            boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
-
-            // FIXME: this is probably all wrone
-            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
+            this.world.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.size / 50.0f * 3 * this.explosiveness), flag);
         }
         for (int var3 = 0; var3 < 8; ++var3) {
-            this.world.addParticle(ParticleTypes.FLAME,
+            this.world.spawnParticle(EnumParticleTypes.FLAME,
                     this.posX + Math.random() * 0.1, this.posY + Math.random() * 0.1, this.posZ + Math.random() * 0.1,
                     0.0D, 0.0D, 0.0D);
         }
-        if (!this.world.isRemote) {
-            this.remove();
+
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            this.setDead();
         }
     }
 
-    /**
-     * Called by the server when constructing the spawn packet.
-     * Data should be added to the provided stream.
-     *
-     * @param buffer The packet data stream
-     */
     @Override
-    public void writeSpawnData(PacketBuffer buffer) {
+    public void writeSpawnData(ByteBuf buffer) {
         buffer.writeDouble(this.size);
     }
 
-    /**
-     * Called by the client when it receives a Entity spawn packet.
-     * Data should be read out of the stream in the same way as it was written.
-     *
-     * @param additionalData The packet data stream
-     */
     @Override
-    public void readSpawnData(PacketBuffer additionalData) {
+    public void readSpawnData(ByteBuf additionalData) {
         this.size = additionalData.readDouble();
-    }
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

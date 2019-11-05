@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:vanilla_recipes_enabled"
+    }
+  ],
+  "type": "modularpowerarmor:mps_shaped",
+  "pattern": [
+    " W ",
+    "WI ",
+    " IW"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "W": {
+      "type": "forge:ore_dict",
+      "ore": "componentWiring"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:power_fist"
+  }
+}

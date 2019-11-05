@@ -1,31 +1,28 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableCircle;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.RenderState;
-import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
+import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import javax.annotation.Nullable;
 import java.nio.DoubleBuffer;
 
-import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
-import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+import static net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
+import static net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
 
-public class EntityRendererPlasmaBolt extends MPALibEntityRenderer<PlasmaBoltEntity> {
+public class EntityRendererPlasmaBolt extends MuseEntityRenderer<PlasmaBoltEntity> {
     public static DoubleBuffer unrotatebuffer;
     protected static DrawableCircle circle1;
     protected static DrawableCircle circle2;
     protected static DrawableCircle circle3;
     protected static DrawableCircle circle4;
 
-    public EntityRendererPlasmaBolt(EntityRendererManager renderManager) {
+    public EntityRendererPlasmaBolt(RenderManager renderManager) {
         super(renderManager);
         Colour c1 = new Colour(.3, .3, 1, 0.3);
         circle1 = new DrawableCircle(c1, c1);
@@ -34,12 +31,6 @@ public class EntityRendererPlasmaBolt extends MPALibEntityRenderer<PlasmaBoltEnt
         c1 = new Colour(.3, .3, 1, 1);
         circle3 = new DrawableCircle(c1, c1);
         circle4 = new DrawableCircle(c1, new Colour(1, 1, 1, 1));
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getEntityTexture(PlasmaBoltEntity plasmaBoltEntity) {
-        return null;
     }
 
     public static void doRender(double size) {
@@ -67,7 +58,6 @@ public class EntityRendererPlasmaBolt extends MPALibEntityRenderer<PlasmaBoltEnt
         GL11.glPopMatrix();
     }
 
-    @SuppressWarnings( "deprecation" )
     public static void doRender(double boltSizeIn, ItemCameraTransforms.TransformType cameraTransformTypeIn) {
         if (boltSizeIn != 0) {
             GL11.glPushMatrix();
@@ -91,7 +81,6 @@ public class EntityRendererPlasmaBolt extends MPALibEntityRenderer<PlasmaBoltEnt
         }
     }
 
-
     /**
      * Actually renders the given argument. This is a synthetic bridge method,
      * always casting down its argument and then handing it off to a worker
@@ -100,7 +89,6 @@ public class EntityRendererPlasmaBolt extends MPALibEntityRenderer<PlasmaBoltEnt
      * void doRender(T entity, double d, double d1, double d2, float f, float
      * f1). But JAD is pre 1.5 so doesn't do that.
      */
-
     @Override
     public void doRender(PlasmaBoltEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         double size = (entity.size) / 10.0;

@@ -1,0 +1,40 @@
+package com.github.lehjr.modularpowerarmor.item.module.environmental;
+
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+/**
+ * Created by User: Andrew
+ * Date: 4/21/13
+ * Time: 2:03 PM
+ */
+public class ApiaristArmorModule extends AbstractPowerModule {
+    public ApiaristArmorModule(EnumModuleTarget moduleTarget) {
+        super(moduleTarget);
+        ItemStack stack = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("forestry", "crafting_material")), 6, 2);
+        stack.setItemDamage(3);
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), stack);
+        addBasePropertyDouble(ModuleConstants.APIARIST_ARMOR_ENERGY_CONSUMPTION, 100, "RF");
+    }
+
+    @Override
+    public EnumModuleCategory getCategory() {
+        return EnumModuleCategory.ENVIRONMENTAL;
+    }
+
+    @Override
+    public String getDataName() {
+        return ModuleConstants.MODULE_APIARIST_ARMOR__DATANAME;
+    }
+
+    @Override
+    public TextureAtlasSprite getIcon(ItemStack item) {
+        return MuseIcon.apiaristArmor;
+    }
+}

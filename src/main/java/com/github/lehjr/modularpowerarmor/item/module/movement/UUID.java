@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -17,14 +17,14 @@ public class UUID {
         this.most = most;
     }
 
-    public UUID(CompoundNBT nbt) {
+    public UUID(NBTTagCompound nbt) {
         this.least = nbt.getLong("UUIDLeast");
         this.most = nbt.getLong("UUIDMost");
     }
 
-    public CompoundNBT toNBT(CompoundNBT nbt) {
-        nbt.putLong("UUIDLeast", least);
-        nbt.putLong("UUIDMost", most);
+    public NBTTagCompound toNBT(NBTTagCompound nbt) {
+        nbt.setLong("UUIDLeast", least);
+        nbt.setLong("UUIDMost", most);
         return nbt;
     }
 }

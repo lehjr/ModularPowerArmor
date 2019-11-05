@@ -1,99 +1,105 @@
 package com.github.lehjr.modularpowerarmor.block;
 
-import com.github.lehjr.modularpowerarmor.containers.providers.TinkerContainerProvider;
-import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
-import net.minecraft.block.*;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
+import com.github.lehjr.modularpowerarmor.tileentity.TileEntityTinkerTable;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import javax.annotation.Nullable;
+/**
+ * This is the tinkertable block. It doesn't do much except look pretty
+ * (eventually) and provide a way for the player to access the TinkerTable GUI.
+ *
+ * @author MachineMuse
+ * <p>
+ * <p>
+ * Ported to Java by lehjr on 10/21/16.
+ */
+public class BlockTinkerTable extends BlockHorizontal {
+    public static final String translationKey = new StringBuilder(Constants.MODID).append(".").append("tinkerTable").toString();
 
-public class BlockTinkerTable extends HorizontalBlock {
-    public BlockTinkerTable(String regName) {
-        super(Block.Properties.create(Material.IRON)
-                .hardnessAndResistance(1.5F, 1000.0F)
-                .sound(SoundType.METAL)
-                .variableOpacity()
-                .lightValue(1));
+    public BlockTinkerTable(ResourceLocation regName) {
+        super(Material.IRON);
         setRegistryName(regName);
-        setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
+        setTranslationKey(translationKey);
+        setHardness(1.5F);
+        setResistance(1000.0F);
+        setHarvestLevel("pickaxe", 2);
+        setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
+        setSoundType(SoundType.METAL);
+        setLightOpacity(0);
+        setLightLevel(0.4f);
+        setTickRandomly(false);
+        setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        GameRegistry.registerTileEntity(TileEntityTinkerTable.class, regName);
     }
 
-    private static final ITextComponent title = new TranslationTextComponent("container.crafting", new Object[0]);
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if(!world.isRemote)
-            NetworkHooks.openGui((ServerPlayerEntity) player,
-                    new TinkerContainerProvider(0), (buffer) -> buffer.writeInt(0));
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (playerIn.isSneaking())
+            return false;
+        if (worldIn.isRemote)
+            playerIn.openGui(ModularPowerArmor.getInstance(), 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        return true;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
         return true;
     }
 
     @Override
-    public int getHarvestLevel(BlockState state) {
-        return 2;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return ToolType.PICKAXE;
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileEntityTinkerTable(state.getValue(FACING));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{FACING});
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TinkerTableTileEntity();
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-//    @SuppressWarnings( "deprecation" )
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
-//        return BlockFaceShape.UNDEFINED;
-//    }
-//
-//    @Override
-//    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-//        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-//    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getHorizontalIndex();
     }
 }

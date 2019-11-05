@@ -1,34 +1,32 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.mpalib.basemod.MPALibConfig;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.legacy.item.IModularItem;
 import com.github.lehjr.mpalib.math.MathUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.player.PlayerUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,16 +40,16 @@ public class MovementManager {
      */
     public static final double DEFAULT_GRAVITY = -0.0784000015258789;
 
-    public static double getPlayerJumpMultiplier(PlayerEntity player) {
-        if (playerJumpMultipliers.containsKey(player.getUniqueID())) {
-            return playerJumpMultipliers.get(player.getUniqueID());
+    public static double getPlayerJumpMultiplier(EntityPlayer player) {
+        if (playerJumpMultipliers.containsKey(player.getCommandSenderEntity().getUniqueID())) {
+            return playerJumpMultipliers.get(player.getCommandSenderEntity().getUniqueID());
         } else {
             return 0;
         }
     }
 
-    public static void setPlayerJumpTicks(PlayerEntity player, double number) {
-        playerJumpMultipliers.put(player.getUniqueID(), number);
+    public static void setPlayerJumpTicks(EntityPlayer player, double number) {
+        playerJumpMultipliers.put(player.getCommandSenderEntity().getUniqueID(), number);
     }
 
     public static double computeFallHeightFromVelocity(double velocity) {
@@ -59,55 +57,36 @@ public class MovementManager {
         return -0.5 * DEFAULT_GRAVITY * ticks * ticks;
     }
 
-    static final ResourceLocation kineticGen = new ResourceLocation(MPARegistryNames.MODULE_KINETIC_GENERATOR__REGNAME);
     // moved here so it is still accessible if sprint assist module isn't installed.
-    public static void setMovementModifier(ItemStack itemStack, double multiplier, PlayerEntity player) {
+    public static void setMovementModifier(ItemStack itemStack, double multiplier, EntityPlayer player) {
         // reduce player speed according to Kinetic Energy Generator setting
-        AtomicDouble movementResistance = new AtomicDouble(0);
-        itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-            if (iModularItem instanceof IModularItem)
-                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
-                        .ifPresent(kin->{
-                            movementResistance.set(kin.applyPropertyModifiers(MPAConstants.MOVEMENT_RESISTANCE));
-                        });
-        });
-        multiplier -= movementResistance.get();
+        if (ModuleManager.INSTANCE.itemHasActiveModule(itemStack, ModuleConstants.MODULE_KINETIC_GENERATOR__DATANAME)) {
+            double movementResistance = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.KINETIC_ENERGY_MOVEMENT_RESISTANCE);
+            multiplier -= movementResistance;
+        }
+
         // player walking speed: 0.10000000149011612
         // player sprintint speed: 0.13000001
         double additive = multiplier * (player.isSprinting() ? 0.13 : 0.1)/2;
-        CompoundNBT itemNBT = itemStack.getOrCreateTag();
+        NBTTagCompound itemNBT = NBTUtils.getNBTTag(itemStack);
         boolean hasAttribute = false;
+        if (itemNBT.hasKey("AttributeModifiers", Constants.NBT.TAG_LIST)) {
+            NBTTagList nbttaglist = itemNBT.getTagList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
 
-        if (itemNBT.contains("AttributeModifiers", Constants.NBT.TAG_LIST)) {
-            ListNBT listnbt = itemNBT.getList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
-            int remove = -1;
-
-            for (int i = 0; i < listnbt.size(); ++i) {
-                CompoundNBT attributeTag = listnbt.getCompound(i);
-                AttributeModifier attributemodifier = SharedMonsterAttributes.readAttributeModifier(attributeTag);
-                if (attributemodifier != null && attributemodifier.getName().equals(SharedMonsterAttributes.MOVEMENT_SPEED.getName())) {
-                    // adjust the tag
-                    if (additive != 0) {
-                        attributeTag.putDouble("Amount", additive);
-                        hasAttribute = true;
-                        break;
-                    } else {
-                        // discard the tag
-                        remove = i;
-                        break;
-                    }
+            for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+                NBTTagCompound attributeTag = nbttaglist.getCompoundTagAt(i);
+                if (attributeTag.getString("Name").equals(SharedMonsterAttributes.MOVEMENT_SPEED.getName())) {
+                    attributeTag.setDouble("Amount", additive);
+                    hasAttribute = true;
+                    break;
                 }
             }
-            if (hasAttribute && remove != -1) {
-                listnbt.remove(remove);
-            }
         }
-        if (!hasAttribute && additive != 0) {
-            itemStack.addAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), additive, AttributeModifier.Operation.ADDITION), EquipmentSlotType.LEGS);
-        }
+        if (!hasAttribute && additive != 0)
+            itemStack.addAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), additive, 0), EntityEquipmentSlot.LEGS);
     }
 
-    public static double thrust(PlayerEntity player, double thrust, boolean flightControl) {
+    public static double thrust(EntityPlayer player, double thrust, boolean flightControl) {
         PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
         double thrustUsed = 0;
         if (flightControl) {
@@ -115,16 +94,10 @@ public class MovementManager {
             double strafeX = desiredDirection.z;
             double strafeZ = -desiredDirection.x;
             double flightVerticality = 0;
-            ItemStack helm = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-            flightVerticality = helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iModularItem -> {
-                if (iModularItem instanceof IModularItem)
-                    return ((IModularItem) iModularItem)
-                            .getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
-                            .getCapability(PowerModuleCapability.POWER_MODULE)
-                            .map(pm->pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0D);
-                else
-                    return 0D;
-            }).orElse(0D);
+            ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+            if (!helm.isEmpty() && helm.getItem() instanceof IModularItem) {
+                flightVerticality = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helm, ModuleConstants.FLIGHT_VERTICALITY);
+            }
 
             desiredDirection = new Vec3d(
                     (desiredDirection.x * Math.signum(playerInput.moveForward) + strafeX * Math.signum(playerInput.moveStrafe)),
@@ -134,57 +107,49 @@ public class MovementManager {
             desiredDirection = desiredDirection.normalize();
 
             // Brakes
-            if (player.getMotion().y < 0 && desiredDirection.y >= 0) {
-                if (-player.getMotion().y > thrust) {
-                    player.setMotion(player.getMotion().add(0, thrust,0));
+            if (player.motionY < 0 && desiredDirection.y >= 0) {
+                if (-player.motionY > thrust) {
+                    player.motionY += thrust;
                     thrustUsed += thrust;
                     thrust = 0;
                 } else {
-                    thrust -= player.getMotion().y;
-                    thrustUsed += player.getMotion().y;
-                    player.setMotion(player.getMotion().x, 0, player.getMotion().z);
+                    thrust -= player.motionY;
+                    thrustUsed += player.motionY;
+                    player.motionY = 0;
                 }
             }
-            if (player.getMotion().y < -1) {
-                thrust += 1 + player.getMotion().y;
-                thrustUsed -= 1 + player.getMotion().y;
-                player.setMotion(player.getMotion().x, -1, player.getMotion().z);
+            if (player.motionY < -1) {
+                thrust += 1 + player.motionY;
+                thrustUsed -= 1 + player.motionY;
+                player.motionY = -1;
             }
-            if (Math.abs(player.getMotion().x) > 0 && desiredDirection.length() == 0) {
-                if (Math.abs(player.getMotion().x) > thrust) {
-                    player.setMotion(player.getMotion().add(
-                            - Math.signum(player.getMotion().x) * thrust, 0, 0));
+            if (Math.abs(player.motionX) > 0 && desiredDirection.length() == 0) {
+                if (Math.abs(player.motionX) > thrust) {
+                    player.motionX -= Math.signum(player.motionX) * thrust;
                     thrustUsed += thrust;
                     thrust = 0;
                 } else {
-                    thrust -= Math.abs(player.getMotion().x);
-                    thrustUsed += Math.abs(player.getMotion().x);
-                    player.setMotion(0, player.getMotion().y, player.getMotion().z);
+                    thrust -= Math.abs(player.motionX);
+                    thrustUsed += Math.abs(player.motionX);
+                    player.motionX = 0;
                 }
             }
-            if (Math.abs(player.getMotion().z) > 0 && desiredDirection.length() == 0) {
-                if (Math.abs(player.getMotion().z) > thrust) {
-                    player.setMotion(
-                            player.getMotion().add(
-                                    0, 0, Math.signum(player.getMotion().z) * thrust
-                            )
-
-                    );
+            if (Math.abs(player.motionZ) > 0 && desiredDirection.length() == 0) {
+                if (Math.abs(player.motionZ) > thrust) {
+                    player.motionZ -= Math.signum(player.motionZ) * thrust;
                     thrustUsed += thrust;
                     thrust = 0;
                 } else {
-                    thrustUsed += Math.abs(player.getMotion().z);
-                    thrust -= Math.abs(player.getMotion().z);
-                    player.setMotion(player.getMotion().x, player.getMotion().y, 0);
+                    thrustUsed += Math.abs(player.motionZ);
+                    thrust -= Math.abs(player.motionZ);
+                    player.motionZ = 0;
                 }
             }
 
             // Thrusting, finally :V
-            player.setMotion(player.getMotion().add(
-                    thrust * desiredDirection.x,
-                    thrust * desiredDirection.y,
-                    thrust * desiredDirection.z
-            ));
+            player.motionX += thrust * desiredDirection.x;
+            player.motionY += thrust * desiredDirection.y;
+            player.motionZ += thrust * desiredDirection.z;
             thrustUsed += thrust;
 
         } else {
@@ -192,24 +157,22 @@ public class MovementManager {
             playerHorzFacing = new Vec3d(playerHorzFacing.x, 0, playerHorzFacing.z);
             playerHorzFacing.normalize();
             if (playerInput.moveForward == 0) {
-                player.setMotion(player.getMotion().add(0, thrust, 0));
+                player.motionY += thrust;
             } else {
-                player.setMotion(player.getMotion().add(
-                        playerHorzFacing.x * thrust / root2 * Math.signum(playerInput.moveForward),
-                        thrust / root2,
-                        playerHorzFacing.z * thrust / root2 * Math.signum(playerInput.moveForward)
-                ));
+                player.motionY += thrust / root2;
+                player.motionX += playerHorzFacing.x * thrust / root2 * Math.signum(playerInput.moveForward);
+                player.motionZ += playerHorzFacing.z * thrust / root2 * Math.signum(playerInput.moveForward);
             }
             thrustUsed += thrust;
         }
 
         // Slow the player if they are going too fast
-        double horzm2 = player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z;
+        double horzm2 = player.motionX * player.motionX + player.motionZ * player.motionZ;
 
         // currently comes out to 0.0625
-        double horizontalLimit = CommonConfig.GENERAL_MAX_FLYING_SPEED.get() * CommonConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
+        double horizontalLimit = MPAConfig.INSTANCE.getMaximumFlyingSpeedmps() * MPAConfig.INSTANCE.getMaximumFlyingSpeedmps() / 400;
 
-//        double playerVelocity = Math.abs(player.getMotion().x) + Math.abs(player.getMotion().y) + Math.abs(player.getMotion().z);
+//        double playerVelocity = Math.abs(player.motionX) + Math.abs(player.motionY) + Math.abs(player.motionZ);
 
         if (playerInput.sneakKey && horizontalLimit > 0.05) {
             horizontalLimit = 0.05;
@@ -217,78 +180,73 @@ public class MovementManager {
 
         if (horzm2 > horizontalLimit) {
             double ratio = Math.sqrt(horizontalLimit / horzm2);
-            player.setMotion(
-                    player.getMotion().x * ratio,
-                    player.getMotion().y,
-                    player.getMotion().z * ratio);
+            player.motionX *= ratio;
+            player.motionZ *= ratio;
         }
         PlayerUtils.resetFloatKickTicks(player);
         return thrustUsed;
     }
 
-    public static double computePlayerVelocity(PlayerEntity player) {
-        return MathUtils.pythag(player.getMotion().x, player.getMotion().y, player.getMotion().z);
+    public static double computePlayerVelocity(EntityPlayer entityPlayer) {
+        return MathUtils.pythag(entityPlayer.motionX, entityPlayer.motionY, entityPlayer.motionZ);
     }
 
-
-    static final ResourceLocation jumpAssist = new ResourceLocation(MPARegistryNames.MODULE_JUMP_ASSIST__REGNAME);
     @SubscribeEvent
     public void handleLivingJumpEvent(LivingJumpEvent event) {
-        if (event.getEntityLiving() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            player.getItemStackFromSlot(EquipmentSlotType.LEGS).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-                if (!(iModularItem instanceof IModularItem))
-                    return;
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 
-                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
-                    double jumpAssist = jumper.applyPropertyModifiers(MPAConstants.MULTIPLIER) * 2;
-                    double drain = jumper.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
-                    int avail = ElectricItemUtils.getPlayerEnergy(player);
-                    if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
-                        Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemPowerArmor
+                    && ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_JUMP_ASSIST__DATANAME)) {
+                double jumpAssist = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_MULTIPLIER) * 2;
+                double drain = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_ENERGY_CONSUMPTION);
+                int avail = ElectricItemUtils.getPlayerEnergy(player);
+                if ((FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) && MPALibConfig.useSounds()) {
+                    Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
+                }
+                if (drain < avail) {
+                    ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
+                    setPlayerJumpTicks(player, jumpAssist);
+                    double jumpCompensationRatio = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_FOOD_COMPENSATION);
+                    if (player.isSprinting()) {
+                        player.getFoodStats().addExhaustion((float) (-0.2F * jumpCompensationRatio));
+                    } else {
+                        player.getFoodStats().addExhaustion((float) (-0.05F * jumpCompensationRatio));
                     }
-
-                    if (drain < avail) {
-                        ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
-                        setPlayerJumpTicks(player, jumpAssist);
-                        double jumpCompensationRatio = jumper.applyPropertyModifiers(MPAConstants.FOOD_COMPENSATION);
-                        if (player.isSprinting()) {
-                            player.getFoodStats().addExhaustion((float) (-0.2F * jumpCompensationRatio));
-                        } else {
-                            player.getFoodStats().addExhaustion((float) (-0.05F * jumpCompensationRatio));
-                        }
-                    }
-                });
-            });
+                }
+            }
         }
     }
 
-    private static final ResourceLocation shockAbsorbersReg = new ResourceLocation(MPARegistryNames.MODULE_SHOCK_ABSORBER__REGNAME);
-
     @SubscribeEvent
     public void handleFallEvent(LivingFallEvent event) {
-        if (event.getEntityLiving() instanceof PlayerEntity && event.getDistance() > 3.0) {
-            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
-            boots.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-                if (!(iModularItem instanceof IModularItem))
-                    return;
+//        event.getEntityLiving().sendMessage(new TextComponentString("unmodified fall settings: [ damage : " + event.getDamageMultiplier() + " ], [ distance : " + event.getDistance() + " ]"));
 
-                ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
-                shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
-                    double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPAConstants.MULTIPLIER);
-                    if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+        if (event.getEntityLiving() instanceof EntityPlayer && event.getDistance() > 3.0F) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+
+            if (!boots.isEmpty()) {
+                if (ModuleManager.INSTANCE.itemHasActiveModule(boots, ModuleConstants.MODULE_SHOCK_ABSORBER__DATANAME)) {
+                    double distanceAbsorb =
+                            MathUtils.clampDouble(event.getDistance() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, ModuleConstants.SHOCK_ABSORB_MULTIPLIER),
+                            0, event.getDistance());
+
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
-                    double drain = distanceAbsorb * sa.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
+
+                    double drain = distanceAbsorb * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, ModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
                     if (drain < avail) {
                         ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
                         event.setDistance((float) (event.getDistance() - distanceAbsorb));
 //                        event.getEntityLiving().sendMessage(new TextComponentString("modified fall settings: [ damage : " + event.getDamageMultiplier() + " ], [ distance : " + event.getDistance() + " ]"));
+
                     }
-                });
-            });
+                }
+            }
         }
     }
 }

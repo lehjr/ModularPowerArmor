@@ -1,32 +1,23 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.fml.common.Loader;
+import org.lwjgl.input.Keyboard;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public enum KeybindManager {
     INSTANCE;
-
     private static KeyBindingHelper keyBindingHelper = new KeyBindingHelper();
     // only stores keybindings relevant to us!!
     protected final Set<ClickableKeybinding> keybindings = new HashSet();
@@ -35,54 +26,39 @@ public enum KeybindManager {
         return INSTANCE.keybindings;
     }
 
-    public static KeyBinding addKeybinding(String keybindDescription, InputMappings.Input keyCode, Point2D position) {
-        KeyBinding kb = new KeyBinding(keybindDescription, keyCode.getKeyCode(), KeybindKeyHandler.mps);
+    public static KeyBinding addKeybinding(String keybindDescription, int keycode, Point2D position) {
+        KeyBinding kb = new KeyBinding(keybindDescription, keycode, KeybindKeyHandler.mps);
 //        boolean free = !KeyBinding.HASH.containsItem(keycode);
-        boolean free = !keyBindingHelper.keyBindingHasKey(keyCode);
-
+        boolean free = !keyBindingHelper.keyBindingHasKey(keycode);
         INSTANCE.keybindings.add(new ClickableKeybinding(kb, position, free, false));
         return kb;
     }
 
     public static String parseName(KeyBinding keybind) {
-        if (keybind.getKey().getKeyCode() < 0) {
-            return "Mouse" + (keybind.getKey().getKeyCode() + 100);
+        if (keybind.getKeyCode() < 0) {
+            return "Mouse" + (keybind.getKeyCode() + 100);
         } else {
-            return keybind.getKey().getTranslationKey();
+            return Keyboard.getKeyName(keybind.getKeyCode());
         }
     }
 
     public static void writeOutKeybinds() {
         BufferedWriter writer = null;
         try {
-            File file = new File(ConfigHelper.getConfigFolder().getAbsolutePath(), "modularpowerarmor-keybinds.cfg");
+            File file = new File(Loader.instance().getConfigDir() + "/machinemuse/", "modularpowerarmor-keybinds.cfg");
             if (!file.exists()) {
                 file.createNewFile();
             }
             writer = new BufferedWriter(new FileWriter(file));
-
-            PlayerEntity player = Minecraft.getInstance().player;
-            NonNullList modulesToWrite = NonNullList.create();
-
-            for (EquipmentSlotType slot: EquipmentSlotType.values()) {
-                if (slot.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-                    player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
-                            iItemHandler -> {
-                                if (iItemHandler instanceof IModularItem) {
-                                    modulesToWrite.addAll(((IModularItem) iItemHandler).getInstalledModules());
-                                }
-                            });
-                }
-            }
-
+            List<IPowerModule> modulesToWrite = ModuleManager.INSTANCE.getPlayerInstalledModules(Minecraft.getMinecraft().player);
             for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
-                writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
+                writer.write(keybinding.getKeyBinding().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
                 for (ClickableModule module : keybinding.getBoundModules()) {
-                    writer.write(module.getModule().getItem().getRegistryName().getPath() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
+                    writer.write(module.getModule().getDataName() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
                 }
             }
         } catch (Exception e) {
-            MPALibLogger.logger.error("Problem writing out keyconfig :(");
+            MPALibLogger.logError("Problem writing out keyconfig :(");
             e.printStackTrace();
         } finally {
             try {
@@ -94,9 +70,9 @@ public enum KeybindManager {
 
     public static void readInKeybinds() {
         try {
-            File file = new File(ConfigHelper.getConfigFolder().getAbsolutePath(), "modularpowerarmor-keybinds.cfg");
+            File file = new File(Loader.instance().getConfigDir() + "/machinemuse/", "modularpowerarmor-keybinds.cfg");
             if (!file.exists()) {
-                MPALibLogger.logger.error("No modular power armor keybind file found.");
+                MPALibLogger.logError("No modularpowerarmor keybind file found.");
                 return;
             }
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -117,9 +93,7 @@ public enum KeybindManager {
                         if (exploded.length > 4) {
                             toggleval = Boolean.parseBoolean(exploded[4]);
                         }
-
-                        workingKeybinding = new ClickableKeybinding(
-                                new KeyBinding(KeyBindingHelper.getInputByCode(id).getTranslationKey(), id, KeybindKeyHandler.mps), position, free, displayOnHUD);
+                        workingKeybinding = new ClickableKeybinding(new KeyBinding(Keyboard.getKeyName(id), id, KeybindKeyHandler.mps), position, free, displayOnHUD);
                         workingKeybinding.toggleval = toggleval;
                         INSTANCE.keybindings.add(workingKeybinding);
                     } else {
@@ -129,16 +103,16 @@ public enum KeybindManager {
                 } else if (line.contains("~") && workingKeybinding != null) {
                     String[] exploded = line.split("~");
                     Point2D position = new Point2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
-                    ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(MPAConstants.MODID, exploded[0])));
-                    if (!module.isEmpty()) {
-                        ClickableModule cmodule = new ClickableModule(module, position, -1, EnumModuleCategory.NONE);
+                    IPowerModule module = ModuleManager.INSTANCE.getModule(exploded[0]);
+                    if (module != null) {
+                        ClickableModule cmodule = new ClickableModule(module, position);
                         workingKeybinding.bindModule(cmodule);
                     }
                 }
             }
             reader.close();
         } catch (Exception e) {
-            MPALibLogger.logger.error("Problem reading in keyconfig :(");
+            MPALibLogger.logError("Problem reading in keyconfig :(");
             e.printStackTrace();
         }
     }

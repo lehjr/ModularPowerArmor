@@ -1,21 +1,20 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.storage;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.energy.ForgeEnergyModuleWrapper;
 import com.github.lehjr.mpalib.capabilities.energy.IEnergyWrapper;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class EnergyStorageModule extends AbstractPowerModule {
     protected final int maxEnergy;
@@ -29,7 +28,7 @@ public class EnergyStorageModule extends AbstractPowerModule {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
         return new CapProvider(stack);
     }
 
@@ -41,36 +40,51 @@ public class EnergyStorageModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_ENERGY, maxEnergy, "RF");
-            this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_TRAMSFER, maxTransfer, "RF");
+            this.moduleCap.addBasePropertyInteger(Constants.MAX_ENERGY, maxEnergy, "RF");
+            this.moduleCap.addBasePropertyInteger(Constants.MAX_TRAMSFER, maxTransfer, "RF");
             this.energyStorage = new ForgeEnergyModuleWrapper(
                     module,
-                    moduleCap.applyPropertyModifierBaseInt(MPAConstants.MAX_ENERGY),
-                    moduleCap.applyPropertyModifierBaseInt(MPAConstants.MAX_TRAMSFER)
+                    moduleCap.applyPropertyModifierBaseInt(Constants.MAX_ENERGY),
+                    moduleCap.applyPropertyModifierBaseInt(Constants.MAX_TRAMSFER)
             );
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == PowerModuleCapability.POWER_MODULE)
-                return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
-            if (cap == CapabilityEnergy.ENERGY) {
-                energyStorage.updateFromNBT();
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return true;
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
+            if (capability == CapabilityEnergy.ENERGY) {
+                return true;
+            }
+            // todo: more capabilities
+
+
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE)
+                return (T) moduleCap;
+            if (capability == CapabilityEnergy.ENERGY) {
+                energyStorage.updateFromNBT();
+                return (T) energyStorage;
+            }
+            return null;
         }
     }
 
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
-        return stack.getCapability(CapabilityEnergy.ENERGY)
+        return Optional.ofNullable(stack.getCapability(CapabilityEnergy.ENERGY, null))
                 .map( energyCap-> energyCap.getMaxEnergyStored() > 0).orElse(false);
     }
 
     @Override
     public double getDurabilityForDisplay(final ItemStack stack) {
-        return stack.getCapability(CapabilityEnergy.ENERGY)
+        return Optional.ofNullable(stack.getCapability(CapabilityEnergy.ENERGY, null))
                 .map( energyCap-> 1 - energyCap.getEnergyStored() / (double) energyCap.getMaxEnergyStored()).orElse(1D);
     }
 }

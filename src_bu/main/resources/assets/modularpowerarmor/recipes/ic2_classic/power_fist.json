@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:ic2_classic_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CI ",
+    " IC"
+  ],
+  "key": {
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "circuitBasic"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotRefinedIron"
+    }
+  },
+  "result": {
+    "item": "modularpowerarmor:power_fist"
+  }
+}

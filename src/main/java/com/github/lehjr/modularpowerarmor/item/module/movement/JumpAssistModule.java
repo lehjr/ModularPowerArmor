@@ -1,87 +1,68 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
+import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.lehjr.mpalib.player.PlayerUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+public class JumpAssistModule extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
+    public JumpAssistModule(EnumModuleTarget moduleTarget) {
+        super(moduleTarget);
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.servoMotor, 4));
 
-public class JumpAssistModule extends AbstractPowerModule {
-    public JumpAssistModule(String regName) {
-        super(regName);
+        addBasePropertyDouble(ModuleConstants.JUMP_ENERGY_CONSUMPTION, 0, "RF");
+        addTradeoffPropertyDouble(ModuleConstants.POWER, ModuleConstants.JUMP_ENERGY_CONSUMPTION, 250);
+        addBasePropertyDouble(ModuleConstants.JUMP_MULTIPLIER, 1, "%");
+        addTradeoffPropertyDouble(ModuleConstants.POWER, ModuleConstants.JUMP_MULTIPLIER, 4);
+
+        addBasePropertyDouble(ModuleConstants.JUMP_ENERGY_CONSUMPTION, 0, "RF");
+        addTradeoffPropertyDouble(ModuleConstants.COMPENSATION, ModuleConstants.JUMP_ENERGY_CONSUMPTION, 50);
+        addBasePropertyDouble(ModuleConstants.JUMP_FOOD_COMPENSATION, 0, "%");
+        addTradeoffPropertyDouble(ModuleConstants.COMPENSATION, ModuleConstants.JUMP_FOOD_COMPENSATION, 1);
     }
 
-    @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new CapProvider(stack);
+    public EnumModuleCategory getCategory() {
+        return EnumModuleCategory.MOVEMENT;
     }
 
-    public class CapProvider implements ICapabilityProvider {
-        ItemStack module;
-        PlayerTickModule ticker;
+    @Override
+    public String getDataName() {
+        return ModuleConstants.MODULE_JUMP_ASSIST__DATANAME;
+    }
 
-        public CapProvider(@Nonnull ItemStack module) {
-            this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
-
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
-            this.ticker.addBasePropertyDouble(MPAConstants.MULTIPLIER, 1, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
-//
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
-            this.ticker.addBasePropertyDouble(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
-        }
-
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap instanceof IToggleableModule) {
-                ((IToggleableModule) cap).updateFromNBT();
+    @Override
+    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
+        PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
+        if (playerInput.jumpKey) {
+            double multiplier = MovementManager.getPlayerJumpMultiplier(player);
+            if (multiplier > 0) {
+                player.motionY += 0.15 * Math.min(multiplier, 1);
+                MovementManager.setPlayerJumpTicks(player, multiplier - 1);
             }
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
+            player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
+        } else {
+            MovementManager.setPlayerJumpTicks(player, 0);
         }
+        PlayerUtils.resetFloatKickTicks(player);
+    }
 
-        class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
-                super(module, category, target, config, true);
-            }
+    @Override
+    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+    }
 
-            @Override
-            public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
-                PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
-                if (playerInput.jumpKey) {
-                    double multiplier = MovementManager.getPlayerJumpMultiplier(player);
-                    if (multiplier > 0) {
-                        player.setMotion(player.getMotion().add(0, 0.15 * Math.min(multiplier, 1), 0));
-                        MovementManager.setPlayerJumpTicks(player, multiplier - 1);
-                    }
-                    player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
-                } else {
-                    MovementManager.setPlayerJumpTicks(player, 0);
-                }
-                PlayerUtils.resetFloatKickTicks(player);
-            }
-        }
+    @Override
+    public TextureAtlasSprite getIcon(ItemStack item) {
+        return MuseIcon.jumpAssist;
     }
 }

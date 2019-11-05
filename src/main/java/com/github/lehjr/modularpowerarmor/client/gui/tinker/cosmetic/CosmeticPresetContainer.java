@@ -1,10 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -12,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CosmeticPresetContainer extends ScrollableFrame {
     public ItemSelectionFrame itemSelect;
@@ -42,68 +44,67 @@ public class CosmeticPresetContainer extends ScrollableFrame {
 
     @Nonnull
     public ItemStack getItem() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getStack() : ItemStack.EMPTY;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getItem() : ItemStack.EMPTY;
     }
 
     @Nullable
     public Integer getItemSlot() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getSlotIndex() : null;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().inventorySlot : null;
     }
 
     public List<CosmeticPresetSelectionSubframe> getPresetFrames() {
         List<CosmeticPresetSelectionSubframe> cosmeticFrameList = new ArrayList<>();
-//        CosmeticPresetSelectionSubframe newFrame;
-//        CosmeticPresetSelectionSubframe prev = null;
-//        for (String name :  CommonConfig.moduleConfig.getCosmeticPresets(getItem()).keySet()) {
-//            newFrame = createNewFrame(name, prev);
-//            prev = newFrame;
-//            cosmeticFrameList.add(newFrame);
-//        }
+        CosmeticPresetSelectionSubframe newFrame;
+        CosmeticPresetSelectionSubframe prev = null;
+        for (String name :  MPSConfig.INSTANCE.getCosmeticPresets(getItem()).keySet()) {
+            newFrame = createNewFrame(name, prev);
+            prev = newFrame;
+            cosmeticFrameList.add(newFrame);
+        }
         return cosmeticFrameList;
     }
 
     public CosmeticPresetSelectionSubframe createNewFrame(String label, CosmeticPresetSelectionSubframe prev) {
-        MuseRelativeRect newborder = new MuseRelativeRect(this.border.left() + 8, this.border.top() + 10, this.border.right(), this.border.top() + 24);
+        RelativeRect newborder = new RelativeRect(this.border.finalLeft() + 8, this.border.finalTop() + 10, this.border.finalRight(), this.border.finalTop() + 24);
         newborder.setMeBelow((prev != null) ? prev.border : null);
-        return new CosmeticPresetSelectionSubframe(label, new Point2D(newborder.left(), newborder.centery()),  this.itemSelect, newborder);
+        return new CosmeticPresetSelectionSubframe(label, new Point2D(newborder.finalLeft(), newborder.centery()),  this.itemSelect, newborder);
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
+    public void onMouseDown(double x, double y, int button) {
         if (enabled) {
             if (button == 0) {
                 for (CosmeticPresetSelectionSubframe frame : presetFrames) {
                     if (frame.hitbox(x, y))
-                        return true;
+                        return;
                 }
             }
         }
-        return false;
     }
 
-//    @Override
-//    public void update(double mouseX, double mouseY) {
-//        super.update(mouseX, mouseY);
-//
-//        if (enabled) {
-//            if (!Objects.equals(lastItemSlot, getItemSlot())) {
-//                lastItemSlot = getItemSlot();
-//
-//                presetFrames = getPresetFrames();
-//                double x = 0;
-//                for (CosmeticPresetSelectionSubframe subframe : presetFrames) {
-////                subframe.updateItems();
-//                    x += subframe.border.bottom();
-//                }
-//                this.totalsize = (int) x;
-////        }
-//                if (colourSelect.decrAbove > -1) {
-////            decrAbove(colourSelect.decrAbove);
-//                    colourSelect.decrAbove = -1;
-//                }
-//            }
+    @Override
+    public void update(double mouseX, double mouseY) {
+        super.update(mouseX, mouseY);
+
+        if (enabled) {
+            if (!Objects.equals(lastItemSlot, getItemSlot())) {
+                lastItemSlot = getItemSlot();
+
+                presetFrames = getPresetFrames();
+                double x = 0;
+                for (CosmeticPresetSelectionSubframe subframe : presetFrames) {
+//                subframe.updateItems();
+                    x += subframe.border.finalBottom();
+                }
+                this.totalsize = (int) x;
 //        }
-//    }
+                if (colourSelect.decrAbove > -1) {
+//            decrAbove(colourSelect.decrAbove);
+                    colourSelect.decrAbove = -1;
+                }
+            }
+        }
+    }
 
     public void hide () {
         visibile = false;
@@ -130,7 +131,7 @@ public class CosmeticPresetContainer extends ScrollableFrame {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks)  {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         if (visibile) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();

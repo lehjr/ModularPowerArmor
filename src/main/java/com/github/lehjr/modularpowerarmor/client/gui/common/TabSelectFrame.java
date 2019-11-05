@@ -5,15 +5,14 @@ import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.modularpowerarmor.client.gui.keybind.TinkerKeybindGui;
-import com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic.CosmeticGui;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.ContainerGuiOpenPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
+import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.CraftingGuiServerSidePacket;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,45 +23,59 @@ import java.util.List;
  * Ported to Java by lehjr on 10/19/16.
  */
 public class TabSelectFrame extends Rect implements IGuiFrame {
-    PlayerEntity player;
+    EntityPlayer player;
+
+    int worldx;
+    int worldy;
+    int worldz;
+
     List<ClickableButton> buttons = new ArrayList<>();
 
-    public TabSelectFrame(PlayerEntity player, int exclude) {
+    public TabSelectFrame(EntityPlayer player, int exclude, int worldx, int worldy, int worldz) {
         super(0, 0, 0, 0);
         this.player = player;
+
+        this.worldx = worldx;
+        this.worldy = worldy;
+        this.worldz = worldz;
+
+        BlockPos pos = new BlockPos(worldx, worldy, worldz);
+
         ClickableButton button;
         if (exclude != 0) {
-            button = new ClickableButton(new TranslationTextComponent("gui.modularpowerarmor.tab.tinker"), new Point2D(0, 0), true);
+            button = new ClickableButton(I18n.format("gui.modularpowerarmor.tab.tinker"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
-                MPAPackets.CHANNEL_INSTANCE.sendToServer(new ContainerGuiOpenPacket(0));
+                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
+                player.openGui(ModularPowerArmor.getInstance(), 0, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }
 
         if (exclude !=1) {
-            button = new ClickableButton(new TranslationTextComponent("gui.modularpowerarmor.tab.keybinds"), new Point2D(0, 0), true);
+            button = new ClickableButton(I18n.format("gui.modularpowerarmor.tab.keybinds"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
-                Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new TinkerKeybindGui(player.inventory, new TranslationTextComponent("gui.tinkertable"))));
+                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
+                player.openGui(ModularPowerArmor.getInstance(), 1, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }
 
         if (exclude !=2) {
-            button = new ClickableButton(new TranslationTextComponent("gui.modularpowerarmor.tab.visual"), new Point2D(0, 0), true);
+            button = new ClickableButton(I18n.format("gui.modularpowerarmor.tab.visual"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
-                Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new CosmeticGui(player.inventory, new TranslationTextComponent("gui.tinkertable"))));
+                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
+                player.openGui(ModularPowerArmor.getInstance(), 2, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }
 
         if (exclude != 3) {
-            button = new ClickableButton(new TranslationTextComponent("container.crafting"), new Point2D(0, 0), true);
+            button = new ClickableButton(I18n.format("container.crafting"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
-                MPAPackets.CHANNEL_INSTANCE.sendToServer(new ContainerGuiOpenPacket(1));
+                MPSPackets.sendToServer(new CraftingGuiServerSidePacket());
+
+                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
+                player.openGui(ModularPowerArmor.getInstance(), 3, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }
@@ -72,7 +85,9 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
         }
     }
 
-    private void init() {
+    @Override
+    public void init(double left, double top, double right, double bottom) {
+        this.setTargetDimensions(left, top, right, bottom);
         double totalButtonWidth = 0;
         for (ClickableButton button : buttons) {
             totalButtonWidth += (button.getRadius().getX() * 2);
@@ -88,55 +103,35 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
     }
 
     @Override
-    public Rect setLeft(double value) {
-        super.setLeft(value);
-        init();
-        return this;
-    }
-
-    @Override
-    public void init(double left, double top, double right, double bottom) {
-        this.setTargetDimensions(left, top, right, bottom);
-        this.init();
-    }
-
-    @Override
-    public boolean mouseClicked(double x, double y, int button) {
+    public void onMouseDown(double mouseX, double mouseY, int button) {
         if (button != 0)
-            return false;
+            return;
 
         for (ClickableButton b : buttons) {
-            if (b.isEnabled() && b.hitBox(x, y)) {
+            if (b.isEnabled() && b.hitBox(mouseX, mouseY)) {
                 b.onPressed();
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     @Override
-    public boolean mouseReleased(double v, double v1, int i) {
-        return false;
+    public void onMouseUp(double mouseX, double mouseY, int button) {
     }
 
     @Override
-    public boolean mouseScrolled(double v, double v1, double v2) {
-        return false;
-    }
-
-    @Override
-    public void update(double v, double v1) {
-
+    public void update(double mousex, double mousey) {
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        for (ClickableButton b : buttons)
+        for (ClickableButton b : buttons) {
             b.render(mouseX, mouseY, partialTicks);
+        }
     }
 
     @Override
-    public List<ITextComponent> getToolTip(int i, int i1) {
+    public List<String> getToolTip(int x, int y) {
         return null;
     }
 }

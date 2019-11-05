@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "modularpowerarmor:thermal_expansion_recipes_enabled"
+
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "II",
+    "GI",
+    "II"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "gearInvar"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  "result": {
+    "type": "forge:ore_dict",
+    "ore" : "componentPlatingIron"
+  }
+}
