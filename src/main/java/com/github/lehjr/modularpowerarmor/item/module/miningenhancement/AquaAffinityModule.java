@@ -1,8 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.MiningEnhancement;
@@ -10,18 +11,18 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategor
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,23 +40,26 @@ public class AquaAffinityModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         MiningEnhancement miningEnhancement;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
             this.miningEnhancement.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 0, "RF");
             this.miningEnhancement.addBasePropertyDouble(Constants.HARVEST_SPEED, 0.2, "%");
             this.miningEnhancement.addTradeoffPropertyDouble(Constants.POWER, Constants.ENERGY_CONSUMPTION, 1000);
             this.miningEnhancement.addTradeoffPropertyDouble(Constants.POWER, Constants.HARVEST_SPEED, 0.8);
         }
 
-        @Nonnull
+        @Nullable
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) miningEnhancement;
+            }
+            return null;
         }
 
         class BlockBreaker extends MiningEnhancement implements IBlockBreakingModule {
@@ -64,23 +68,24 @@ public class AquaAffinityModule extends AbstractPowerModule {
             }
 
             @Override
-            public boolean canHarvestBlock(@Nonnull ItemStack stack, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
+            public boolean canHarvestBlock(@Nonnull ItemStack stack, IBlockState state, EntityPlayer player, BlockPos pos, int playerEnergy) {
                 return false;
             }
 
             @Override
-            public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
-                if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
-                    ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, getEnergyUsage());
+            public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving, int playerEnergy) {
+                if (this.canHarvestBlock(itemStack, state, (EntityPlayer) entityLiving, pos, playerEnergy)) {
+                    ElectricItemUtils.drainPlayerEnergy((EntityPlayer) entityLiving, getEnergyUsage());
                     return true;
                 }
                 return false;
             }
 
             @Override
-            public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
-                PlayerEntity player = event.getEntityPlayer();
-                if (event.getNewSpeed() > 1 && (player.canSwim() || !player.onGround)
+            public void handleBreakSpeed(BreakSpeed event) {
+                EntityPlayer player = event.getEntityPlayer();
+                if (event.getNewSpeed() > 1
+                        && (player.isInsideOfMaterial(Material.WATER) || !player.onGround)
                         && ElectricItemUtils.getPlayerEnergy(player) > getEnergyUsage()) {
                     event.setNewSpeed((float) (event.getNewSpeed() * 5 * applyPropertyModifiers(Constants.HARVEST_SPEED)));
                 }
@@ -97,10 +102,5 @@ public class AquaAffinityModule extends AbstractPowerModule {
                 return ItemStack.EMPTY; // FIXME?
             }
         }
-    }
-
-    @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-        return false;
     }
 }

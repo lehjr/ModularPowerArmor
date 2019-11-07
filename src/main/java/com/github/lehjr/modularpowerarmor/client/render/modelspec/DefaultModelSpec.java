@@ -94,7 +94,7 @@ public class DefaultModelSpec {
                                 // jet pack model not displayed by default
                                 if (partSpec.binding.getItemState().equals("all") ||
                                         (partSpec.binding.getItemState().equals("jetpack") &&
-                                                ModuleManager.INSTANCE.itemHasModule(stack, MPSModuleConstants.MODULE_JETPACK__DATANAME))) { */
+                                                ModuleManager.INSTANCE.itemHasModule(stack, MPSModuleConstants.MODULE_JETPACK__REGNAME))) { */
                                     prefArray.add(((ModelPartSpec) partSpec).multiSet(new NBTTagCompound(),
                                             getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourIndex()),
                                             ((ModelPartSpec) partSpec).getGlow()));

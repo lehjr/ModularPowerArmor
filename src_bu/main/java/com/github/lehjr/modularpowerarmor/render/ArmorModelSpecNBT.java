@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.render;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
@@ -91,14 +91,14 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPAConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {
                                 /*
                                 // jet pack model not displayed by default
                                 if (partSpec.binding.getItemState().equals("all") ||
                                         (partSpec.binding.getItemState().equals("jetpack") &&
-                                                ModuleManager.INSTANCE.itemHasModule(stack, MPSModuleConstants.MODULE_JETPACK__DATANAME))) { */
+                                                ModuleManager.INSTANCE.itemHasModule(stack, MPSModuleConstants.MODULE_JETPACK__REGNAME))) { */
                                 prefArray.add(((ModelPartSpec) partSpec).multiSet(new NBTTagCompound(),
                                         getNewColourIndex(colours, spec.getColours(), partSpec.getDefaultColourIndex()),
                                         ((ModelPartSpec) partSpec).getGlow()));

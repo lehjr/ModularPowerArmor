@@ -1,31 +1,45 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.init.Blocks;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class AirtightSealModule extends AbstractPowerModule {
-    public AirtightSealModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Blocks.GLASS));
+    public AirtightSealModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.ENVIRONMENTAL;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_AIRTIGHT_SEAL__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPowerModule moduleCap;
 
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.airtightSeal;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) moduleCap;
+            }
+            return null;
+        }
     }
 }

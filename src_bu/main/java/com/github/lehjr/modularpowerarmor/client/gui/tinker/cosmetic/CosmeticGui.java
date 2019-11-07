@@ -4,7 +4,7 @@ import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class CosmeticGui extends ContainerlessGui {
         this.player = inventory.player;
         this.minecraft = Minecraft.getInstance();
 
-        usingCosmeticPresets = !CommonConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get();
+        usingCosmeticPresets = !MPAConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get();
         if (usingCosmeticPresets) {
             // check if player is the server owner
             if (minecraft.isSingleplayer()) {

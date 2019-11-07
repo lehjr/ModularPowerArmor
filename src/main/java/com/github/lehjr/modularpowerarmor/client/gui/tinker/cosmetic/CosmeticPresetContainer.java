@@ -56,7 +56,7 @@ public class CosmeticPresetContainer extends ScrollableFrame {
         List<CosmeticPresetSelectionSubframe> cosmeticFrameList = new ArrayList<>();
         CosmeticPresetSelectionSubframe newFrame;
         CosmeticPresetSelectionSubframe prev = null;
-        for (String name :  MPSConfig.INSTANCE.getCosmeticPresets(getItem()).keySet()) {
+        for (String name :  MPAConfig.INSTANCE.getCosmeticPresets(getItem()).keySet()) {
             newFrame = createNewFrame(name, prev);
             prev = newFrame;
             cosmeticFrameList.add(newFrame);

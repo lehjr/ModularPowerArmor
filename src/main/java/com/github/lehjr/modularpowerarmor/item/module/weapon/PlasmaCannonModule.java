@@ -1,12 +1,10 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -15,9 +13,7 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,7 +22,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -45,24 +40,19 @@ public class PlasmaCannonModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IRightClickModule rightClickie;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
             this.rightClickie.addBasePropertyDouble(Constants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
             this.rightClickie.addBasePropertyDouble(Constants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
             this.rightClickie.addTradeoffPropertyDouble(Constants.AMPERAGE, Constants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");
             this.rightClickie.addTradeoffPropertyDouble(Constants.AMPERAGE, Constants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 38, "pt");
             this.rightClickie.addTradeoffPropertyDouble(Constants.VOLTAGE, Constants.PLASMA_CANNON_ENERGY_PER_TICK, 500, "RF");
             this.rightClickie.addTradeoffPropertyDouble(Constants.VOLTAGE, Constants.PLASMA_CANNON_EXPLOSIVENESS, 0.5, Constants.CREEPER);
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
         }
 
         @Nullable

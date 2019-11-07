@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.storage;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.energy.ForgeEnergyModuleWrapper;
 import com.github.lehjr.mpalib.capabilities.energy.IEnergyWrapper;
@@ -39,7 +40,7 @@ public class EnergyStorageModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, CommonConfig.moduleConfig);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, MPAConfig.moduleConfig);
             this.moduleCap.addBasePropertyInteger(Constants.MAX_ENERGY, maxEnergy, "RF");
             this.moduleCap.addBasePropertyInteger(Constants.MAX_TRAMSFER, maxTransfer, "RF");
             this.energyStorage = new ForgeEnergyModuleWrapper(

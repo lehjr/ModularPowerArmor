@@ -1,9 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
@@ -21,8 +25,14 @@ import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class KeybindConfigFrame implements IGuiFrame {
@@ -95,7 +105,7 @@ public class KeybindConfigFrame implements IGuiFrame {
 //            if (!KeyBinding.HASH.containsItem(key)) {
             if (!keyBindingHelper.keyBindingHasKey(key)) {
                 addKeybind(key, true);
-            } else if (MPSConfig.INSTANCE.allowConflictingKeybinds()) {
+            } else if (MPAConfig.INSTANCE.allowConflictingKeybinds()) {
                 addKeybind(key, false);
             }
             selecting = false;
@@ -103,23 +113,48 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     public void refreshModules() {
-        List<IPowerModule> installedModules = ModuleManager.INSTANCE.getPlayerInstalledModules(player);
+        NonNullList<ItemStack> installedModules = NonNullList.create();
+
+        for (EntityEquipmentSlot slot: EntityEquipmentSlot.values()) {
+            switch (slot.getSlotType()) {
+                case HAND:
+                    Optional.ofNullable(player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(
+                            iModeChanging -> {
+                                if (iModeChanging instanceof IModeChangingItem)
+                                    installedModules.addAll(((IModularItem) iModeChanging).getInstalledModulesOfType(com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule.class));
+                            });
+                    break;
+
+                case ARMOR:
+                    if (slot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
+                        Optional.ofNullable(player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(
+                                iModularItem -> {
+                                    if (iModularItem instanceof IModularItem)
+                                        installedModules.addAll(((IModularItem) iModularItem).getInstalledModulesOfType(com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule.class));
+                                });
+                    }
+            }
+        }
+
         List<Point2D> points = GradientAndArcCalculator.pointsInLine(
                 installedModules.size(),
                 new Point2D(rect.finalLeft() + 10, rect.finalTop() + 10),
                 new Point2D(rect.finalLeft() + 10, rect.finalBottom() - 10));
         Iterator<Point2D> pointIterator = points.iterator();
-        for (IPowerModule module : installedModules) {
-            if (module instanceof IToggleableModule && !alreadyAdded(module)) {
-                ClickableModule clickie = new ClickableModule(module, pointIterator.next());
+        for (ItemStack module : installedModules) {
+            if (!alreadyAdded(module)) {
+                ClickableModule clickie = new ClickableModule(module, pointIterator.next(), -1, EnumModuleCategory.NONE);
                 modules.add(clickie);
             }
         }
     }
 
-    public boolean alreadyAdded(IPowerModule module) {
+    public boolean alreadyAdded(@Nonnull ItemStack module) {
+        if (module.isEmpty())
+            return false;
+
         for (ClickableModule clickie : modules) {
-            if (clickie.getModule().getDataName().equals(module.getDataName())) {
+            if (ItemStack.areItemsEqual(clickie.getModule(),module)) {
                 return true;
             }
         }
@@ -263,10 +298,10 @@ public class KeybindConfigFrame implements IGuiFrame {
     public List<String> getToolTip(int x, int y) {
         for (ClickableModule module : modules) {
             if (module.hitBox(x, y)) {
-                if (MPSConfig.INSTANCE.doAdditionalInfo()) {
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     return module.getToolTip();
                 }
-                return Collections.singletonList(module.getLocalizedName(module.getModule()));
+                return Collections.singletonList(module.getLocalizedName());
             }
         }
         return null;
@@ -283,7 +318,7 @@ public class KeybindConfigFrame implements IGuiFrame {
 //                if (!KeyBinding.HASH.containsItem(key)) {
                 if (!keyBindingHelper.keyBindingHasKey(key)) {
                     addKeybind(key, true);
-                } else if (MPSConfig.INSTANCE.allowConflictingKeybinds()) {
+                } else if (MPAConfig.INSTANCE.allowConflictingKeybinds()) {
                     addKeybind(key, false);
                 }
                 selecting = false;

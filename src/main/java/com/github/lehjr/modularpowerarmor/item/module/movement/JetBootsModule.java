@@ -1,91 +1,126 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
+
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.event.MovementManager;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.IConfig;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
+import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
-import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.event.MovementManager;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.items.CapabilityItemHandler;
 
-public class JetBootsModule extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
-    public JetBootsModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.ionThruster, 2));
-        addBasePropertyDouble(ModuleConstants.JETBOOTS_ENERGY_CONSUMPTION, 0);
-        addBasePropertyDouble(ModuleConstants.JETBOOTS_THRUST, 0);
-        addTradeoffPropertyDouble(ModuleConstants.THRUST, ModuleConstants.JETBOOTS_ENERGY_CONSUMPTION, 750, "RF");
-        addTradeoffPropertyDouble(ModuleConstants.THRUST, ModuleConstants.JETBOOTS_THRUST, 0.08);
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
+
+public class JetBootsModule extends AbstractPowerModule {
+    ResourceLocation flightControl = new ResourceLocation(RegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
+
+    public JetBootsModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.MOVEMENT;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_JETBOOTS__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPlayerTickModule ticker;
 
-    @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-        if (player.isInWater())
-            return;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, MPAConfig.moduleConfig);
+            this.ticker.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 0);
+            this.ticker.addBasePropertyDouble(Constants.JETBOOTS_THRUST, 0);
+            this.ticker.addTradeoffPropertyDouble(Constants.THRUST, Constants.ENERGY_CONSUMPTION, 750, "RF");
+            this.ticker.addTradeoffPropertyDouble(Constants.THRUST, Constants.JETBOOTS_THRUST, 0.08);
+        }
 
-        ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-        boolean hasFlightControl = ModuleManager.INSTANCE.itemHasActiveModule(helmet, ModuleConstants.MODULE_FLIGHT_CONTROL__DATANAME);
-        double jetEnergy = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(item, ModuleConstants.JETBOOTS_ENERGY_CONSUMPTION);
-        double thrust = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(item, ModuleConstants.JETBOOTS_THRUST);
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
+            }
+            return null;
+        }
 
-        PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
-        // if player has enough energy to fly
-        if (jetEnergy < ElectricItemUtils.getPlayerEnergy(player)) {
-            if (hasFlightControl && thrust > 0) {
-                thrust = MovementManager.thrust(player, thrust, true);
-                if ((player.world.isRemote) && MPALibConfig.useSounds()) {
-                    Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
+            }
+
+            @Override
+            public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
+                if (player.isInWater()) {
+                    return;
                 }
-                ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
-            } else if (playerInput.jumpKey && player.motionY < 0.5) {
-                thrust = MovementManager.thrust(player, thrust, false);
-                if ((player.world.isRemote) && MPALibConfig.useSounds()) {
-                    Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
+
+                ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                boolean hasFlightControl = Optional.ofNullable(helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(m->
+                        m instanceof IModularItem && ((IModularItem) m).isModuleOnline(flightControl)).orElse(false);
+
+                double jetEnergy = applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+                double thrust = applyPropertyModifiers(Constants.JETBOOTS_THRUST);
+
+                PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
+                // if player has enough energy to fly
+                if (jetEnergy < ElectricItemUtils.getPlayerEnergy(player)) {
+                    if (hasFlightControl && thrust > 0) {
+                        thrust = MovementManager.thrust(player, thrust, true);
+                        if ((player.world.isRemote) && MPALibConfig.useSounds()) {
+                            Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
+                        }
+                        ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
+                    } else if (playerInput.jumpKey && player.motionY < 0.5) {
+                        thrust = MovementManager.thrust(player, thrust, false);
+                        if ((player.world.isRemote) && MPALibConfig.useSounds()) {
+                            Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
+                        }
+                        ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
+                    } else {
+                        if ((player.world.isRemote) && MPALibConfig.useSounds()) {
+                            Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
+                        }
+                    }
+                } else {
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
+                        Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
+                    }
                 }
-                ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
-            } else {
-                if ((player.world.isRemote) && MPALibConfig.useSounds()) {
+            }
+
+            @Override
+            public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+                if (player.world.isRemote && MPALibConfig.useSounds()) {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
                 }
             }
-        } else {
-            if (player.world.isRemote && MPALibConfig.useSounds()) {
-                Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
-            }
         }
-    }
-
-    @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-        if (player.world.isRemote && MPALibConfig.useSounds()) {
-            Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
-        }
-    }
-
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.jetBoots;
     }
 }

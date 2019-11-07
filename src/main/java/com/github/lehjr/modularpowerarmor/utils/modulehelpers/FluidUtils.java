@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.utils.modulehelpers;
 
-import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
-import com.github.lehjr.mpalib.string.StringUtils;
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.capabilities.MPSChestPlateFluidHandler;
+import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -195,7 +195,7 @@ public class FluidUtils {
 
 
     public void fillWaterFromEnvironment() {
-        if (this.dataName != ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME || fluidTank == null)
+        if (this.dataName != ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME || fluidTank == null)
             return;
 
         // Fill with water block and remove that block from the world

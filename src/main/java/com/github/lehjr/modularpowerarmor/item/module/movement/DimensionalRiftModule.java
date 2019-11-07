@@ -1,8 +1,9 @@
-package com.github.lehjr.modularpowerarmor.item.module.weapon;
+package com.github.lehjr.modularpowerarmor.item.module.movement;
 
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
-import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -12,23 +13,31 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import net.minecraft.entity.EntityLivingBase;
+import com.github.lehjr.mpalib.heat.HeatUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.ITeleporter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BladeLauncherModule extends AbstractPowerModule {
-    public BladeLauncherModule(String regName) {
+
+/**
+ * Created by Eximius88 on 2/3/14.
+ */
+public class DimensionalRiftModule extends AbstractPowerModule {
+    public DimensionalRiftModule(String regName) {
         super(regName);
     }
 
@@ -40,25 +49,18 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
     public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
-        IRightClickModule rightClickie;
+        IRightClickModule rightClick;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
-            this.rightClickie.addBasePropertyDouble(Constants.BLADE_ENERGY, 5000, "RF");
-            this.rightClickie.addBasePropertyDouble(Constants.BLADE_DAMAGE, 6, "pt");
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
+            this.rightClick = new RightClickie(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
         }
 
         @Nullable
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
             if (capability == PowerModuleCapability.POWER_MODULE) {
-                return (T) rightClickie;
+                return (T) rightClick;
             }
             return null;
         }
@@ -68,33 +70,50 @@ public class BladeLauncherModule extends AbstractPowerModule {
                 super(module, category, target, config);
             }
 
+//            final int theOverworld = 0;
+//            final int theNether = -1;
+//            final int theEnd = 1;
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-                if (hand == EnumHand.MAIN_HAND) {
-                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > applyPropertyModifiers(Constants.BLADE_ENERGY)) {
-                        playerIn.setActiveHand(hand);
-                        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-                    }
-                }
-                return new ActionResult(EnumActionResult.PASS, itemStackIn);
-            }
+                if (!playerIn.isRiding() && !playerIn.isBeingRidden() && playerIn.isNonBoss() && ((playerIn instanceof EntityPlayerMP))) {
+                    EntityPlayerMP player = (EntityPlayerMP) playerIn;
+                    BlockPos coords = playerIn.bedLocation != null ? playerIn.bedLocation : playerIn.world.getSpawnPoint();
 
-            @Override
-            public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
-                if (!worldIn.isRemote) {
+                    while (!worldIn.isAirBlock(coords) && !worldIn.isAirBlock(coords.up())) {
+                        coords = coords.up();
+                    }
+
+                    playerIn.changeDimension(0, new CommandTeleporter(coords));
                     int energyConsumption = getEnergyUsage();
-
-                    if (ElectricItemUtils.getPlayerEnergy((EntityPlayer) entityLiving) > energyConsumption) {
-                        ElectricItemUtils.drainPlayerEnergy((EntityPlayer) entityLiving, energyConsumption);
-                        SpinningBladeEntity blade = new SpinningBladeEntity(worldIn, entityLiving);
-                        worldIn.spawnEntity(blade);
+                    int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
+                    if (playerEnergy >= energyConsumption) {
+                        ElectricItemUtils.drainPlayerEnergy(player, getEnergyUsage());
+                        HeatUtils.heatPlayer(player, applyPropertyModifiers(ModuleConstants.HEAT_GENERATION));
+                        return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
                     }
                 }
+                return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(applyPropertyModifiers(Constants.BLADE_ENERGY));
+                return (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+            }
+
+            // Copied from Forge.
+            private class CommandTeleporter implements ITeleporter {
+                private final BlockPos targetPos;
+
+                private CommandTeleporter(BlockPos targetPos)
+                {
+                    this.targetPos = targetPos;
+                }
+
+                @Override
+                public void placeEntity(World world, Entity entity, float yaw)
+                {
+                    entity.moveToBlockPosAndAngles(targetPos, yaw, entity.rotationPitch);
+                }
             }
         }
     }

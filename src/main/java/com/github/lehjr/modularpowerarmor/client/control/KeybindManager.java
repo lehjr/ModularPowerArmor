@@ -1,19 +1,28 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 
 import java.io.*;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public enum KeybindManager {
@@ -50,15 +59,27 @@ public enum KeybindManager {
                 file.createNewFile();
             }
             writer = new BufferedWriter(new FileWriter(file));
-            List<IPowerModule> modulesToWrite = ModuleManager.INSTANCE.getPlayerInstalledModules(Minecraft.getMinecraft().player);
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            NonNullList modulesToWrite = NonNullList.create();
+
+            for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+                if (slot.getSlotType() == EntityEquipmentSlot.Type.ARMOR) {
+                    Optional.ofNullable(player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(
+                            iItemHandler -> {
+                                if (iItemHandler instanceof IModularItem) {
+                                    modulesToWrite.addAll(((IModularItem) iItemHandler).getInstalledModules());
+                                }
+                            });
+                }
+            }
             for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
                 writer.write(keybinding.getKeyBinding().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
                 for (ClickableModule module : keybinding.getBoundModules()) {
-                    writer.write(module.getModule().getDataName() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
+                    writer.write(module.getModule().getItem().getRegistryName().getPath() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
                 }
             }
         } catch (Exception e) {
-            MPALibLogger.logError("Problem writing out keyconfig :(");
+            MPALibLogger.logger.error("Problem writing out keyconfig :(");
             e.printStackTrace();
         } finally {
             try {
@@ -103,16 +124,16 @@ public enum KeybindManager {
                 } else if (line.contains("~") && workingKeybinding != null) {
                     String[] exploded = line.split("~");
                     Point2D position = new Point2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
-                    IPowerModule module = ModuleManager.INSTANCE.getModule(exploded[0]);
-                    if (module != null) {
-                        ClickableModule cmodule = new ClickableModule(module, position);
+                    ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Constants.MODID, exploded[0])));
+                    if (!module.isEmpty()) {
+                        ClickableModule cmodule = new ClickableModule(module, position, -1, EnumModuleCategory.NONE);
                         workingKeybinding.bindModule(cmodule);
                     }
                 }
             }
             reader.close();
         } catch (Exception e) {
-            MPALibLogger.logError("Problem reading in keyconfig :(");
+            MPALibLogger.logger.error("Problem reading in keyconfig :(");
             e.printStackTrace();
         }
     }

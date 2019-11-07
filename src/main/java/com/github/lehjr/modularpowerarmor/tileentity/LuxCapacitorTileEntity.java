@@ -7,14 +7,14 @@ import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-public class TileEntityLuxCapacitor extends MPALibTileEntity {
+public class LuxCapacitorTileEntity extends MPALibTileEntity {
     private Colour color;
 
-    public TileEntityLuxCapacitor() {
+    public LuxCapacitorTileEntity() {
         this.color = BlockLuxCapacitor.defaultColor;
     }
 
-    public TileEntityLuxCapacitor(Colour colour) {
+    public LuxCapacitorTileEntity(Colour colour) {
         this.color = colour;
     }
 

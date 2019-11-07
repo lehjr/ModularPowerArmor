@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.component;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.resources.I18n;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -51,7 +53,7 @@ public class ItemComponent extends Item {
         this.setTranslationKey(new StringBuilder(Constants.MODID).append(".").append("powerArmorComponent").toString());
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-        this.setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
+        this.setCreativeTab(MPAConfig.INSTANCE.mpsCreativeTab);
         this.populate();
     }
 
@@ -69,7 +71,7 @@ public class ItemComponent extends Item {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> currentTipList, ITooltipFlag flagIn) {
-        if (MPSConfig.INSTANCE.doAdditionalInfo()) {
+        if (worldIn != null && worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             String message = I18n.format("tooltip.modularpowerarmor.componentTooltip");
             message = StringUtils.wrapMultipleFormatTags(message, StringUtils.FormatCodes.Grey, StringUtils.FormatCodes.Italic);
             currentTipList.add(message);

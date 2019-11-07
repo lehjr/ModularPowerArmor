@@ -18,6 +18,11 @@ public class GuiModeSelector extends ContainerlessGui {
         ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
         this.xSize = Math.min(screen.getScaledWidth() - 50, 500);
         this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
+        radialSelect = new RadialModeSelectionFrame(
+                new Point2D(absX(-0.5F), absY(-0.5F)),
+                new Point2D(absX(0.5F), absY(0.5F)),
+                player);
+        frames.add(radialSelect);
     }
 
     /**
@@ -26,11 +31,7 @@ public class GuiModeSelector extends ContainerlessGui {
     @Override
     public void initGui() {
         super.initGui();
-        radialSelect = new RadialModeSelectionFrame(
-                new Point2D(absX(-0.5F), absY(-0.5F)),
-                new Point2D(absX(0.5F), absY(0.5F)),
-                player);
-        frames.add(radialSelect);
+        radialSelect.init(absX(-0.5F), absY(-0.5F), absX(0.5F), absY(0.5F));
     }
 
     @Override

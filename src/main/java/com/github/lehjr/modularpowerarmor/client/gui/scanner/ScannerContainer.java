@@ -1,7 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.gui.scanner;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.capabilities.ItemHandlerPowerFist;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -61,7 +62,14 @@ public class ScannerContainer extends Container {
     // Container
     @Override // FIXME: is it even possible to open this otherwise if it's only called from the module?
     public boolean canInteractWith(final EntityPlayer player) {
-        return player == this.player && ModuleManager.INSTANCE.itemHasActiveModule(player.getHeldItem(hand), ModuleConstants.MODULE_ORE_SCANNER__DATANAME);
+        return player == this.player &&
+                java.util.Optional.ofNullable(player.getHeldItem(hand)
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                    if (iItemHandler instanceof IModeChangingItem && !((IModeChangingItem) iItemHandler).getActiveModule().isEmpty()) {
+                        return ((IModeChangingItem) iItemHandler).getActiveModule().getItem().getRegistryName().toString().equals(RegistryNames.MODULE_ORE_SCANNER__REGNAME);
+                    }
+                    return false;
+                }).orElse(false);
     }
 
     @Override

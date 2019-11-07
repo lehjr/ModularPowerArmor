@@ -1,16 +1,18 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,22 +44,17 @@ public class AdvancedSolarGenerator extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(Constants.ENERGY_GENERATION_DAY, 45000, "RF");
             this.ticker.addBasePropertyDouble(Constants.ENERGY_GENERATION_NIGHT, 1500, "RF");
             this.ticker.addBasePropertyDouble(Constants.HEAT_GENERATION_DAY, 15);
             this.ticker.addBasePropertyDouble(Constants.HEAT_GENERATION_NIGHT, 5);
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
         }
 
         @Nullable

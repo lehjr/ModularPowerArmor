@@ -1,13 +1,19 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by User: Andrew
@@ -15,27 +21,31 @@ import net.minecraft.util.ResourceLocation;
  * Time: 2:02 PM
  */
 public class GrafterModule extends AbstractPowerModule {
-    private static ItemStack grafter = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("forestry", "grafter")), 1);
-
-    public GrafterModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), grafter);
-        addBasePropertyDouble(ModuleConstants.GRAFTER_ENERGY_CONSUMPTION, 10000, "RF");
-        addBasePropertyDouble(ModuleConstants.GRAFTER_HEAT_GENERATION, 20);
+    @Nullable
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
+    }
+    public GrafterModule(String regName) {
+        super(regName);
     }
 
-    @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.TOOL;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPowerModule moduleCap;
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_GRAFTER__DATANAME;
-    }
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            moduleCap = new PowerModule(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
+        }
 
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(grafter).getParticleTexture();
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) moduleCap;
+            }
+            return null;
+        }
     }
 }

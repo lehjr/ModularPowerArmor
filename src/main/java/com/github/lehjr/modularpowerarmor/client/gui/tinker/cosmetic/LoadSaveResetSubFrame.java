@@ -223,7 +223,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
             ItemStack itemStack = clickie.getItem();
             NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(itemStack);
             if (itemNBT.hasKey(MPALIbConstants.TAG_RENDER,Constants.NBT.TAG_COMPOUND)) {
-                BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(itemStack);
+                BiMap<String, NBTTagCompound> presetMap = MPAConfig.INSTANCE.getCosmeticPresets(itemStack);
                 if (presetMap.containsValue(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER))) {
                     String name = presetMap.inverse().get(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER));
                     MPSPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, name));
@@ -249,7 +249,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     @Override
     public void update(double mousex, double mousey) {
         if (usingCosmeticPresets ||
-                (!MPSConfig.INSTANCE.allowPowerFistCustomization() &&
+                (!MPAConfig.INSTANCE.allowPowerFistCustomization() &&
                         itemSelector.getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
             // normal preset user
             if (allowCosmeticPresetCreation)
@@ -261,7 +261,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     }
 
     NBTTagCompound getDefaultPreset(@Nonnull ItemStack itemStack) {
-        return MPSConfig.INSTANCE.getPresetNBTFor(itemStack, "Default");
+        return MPAConfig.INSTANCE.getPresetNBTFor(itemStack, "Default");
     }
 
     public boolean isValidItem(ClickableItem clickie, EntityEquipmentSlot slot) {
@@ -284,7 +284,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
             return;
 
         if (usingCosmeticPresets ||
-                (!MPSConfig.INSTANCE.allowPowerFistCustomization() &&
+                (!MPAConfig.INSTANCE.allowPowerFistCustomization() &&
                         getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
             if (allowCosmeticPresetCreation) {
                 if (isEditing) {

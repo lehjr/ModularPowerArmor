@@ -11,7 +11,7 @@ import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +42,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 10000, "RF");
         }
 
@@ -65,7 +65,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
                 int energy = ElectricItemUtils.getPlayerEnergy(player);
                 int energyConsumption = (int) Math.round(applyPropertyModifiers(Constants.ENERGY_CONSUMPTION));
                 if (energy > energyConsumption && player.getAir() < 10) {
-                    if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
+                    if ((player.world.isRemote()) && MPALibConfig.useSounds()) {
                         Musique.playClientSound(SoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f);
                     }
                     ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);

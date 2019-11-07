@@ -191,7 +191,6 @@ public class MPASettings {
             put(RegistryNames.MODULE_APPENG_EC_WIRELESS_FLUID__REGNAME, true);
             put(RegistryNames.MODULE_APPENG_WIRELESS__REGNAME, true);
             put(RegistryNames.MODULE_AXE__REGNAME, true);
-            put(RegistryNames.MODULE_CHISEL__REGNAME, false);
             put(RegistryNames.MODULE_DIAMOND_PICK_UPGRADE__REGNAME, true);
             put(RegistryNames.MODULE_DIMENSIONAL_RIFT__REGNAME, true);
             put(RegistryNames.MODULE_FIELD_TINKER__REGNAME, true);
@@ -200,8 +199,6 @@ public class MPASettings {
             put(RegistryNames.MODULE_HOE__REGNAME, true);
             put(RegistryNames.MODULE_LEAF_BLOWER__REGNAME, true);
             put(RegistryNames.MODULE_LUX_CAPACITOR__REGNAME, true);
-            put(RegistryNames.MODULE_FIELD_TELEPORTER__REGNAME, true);
-            put(RegistryNames.MODULE_OC_TERMINAL__REGNAME, true);
             put(RegistryNames.MODULE_OMNIPROBE__REGNAME, true);
             put(RegistryNames.MODULE_OMNI_WRENCH__REGNAME, true);
             put(RegistryNames.MODULE_ORE_SCANNER__REGNAME, true);
@@ -217,7 +214,7 @@ public class MPASettings {
             // Mining Enhancements ------------------------------------------------------------------------
             put(RegistryNames.MODULE_AOE_PICK_UPGRADE__REGNAME, true);
             put(RegistryNames.MODULE_AQUA_AFFINITY__REGNAME, true);
-            put(RegistryNames.MODULE_FORTUNE_DATANAME, false);
+            put(RegistryNames.MODULE_FORTUNE_REGNAME, false);
             put(RegistryNames.MODULE_MAD__REGNAME, true);
             put(RegistryNames.MODULE_SILK_TOUCH__REGNAME, true);
 

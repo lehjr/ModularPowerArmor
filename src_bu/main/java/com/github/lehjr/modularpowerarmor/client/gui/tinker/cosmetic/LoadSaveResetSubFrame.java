@@ -206,7 +206,7 @@
 ////            ItemStack itemStack = clickie.getItem();
 ////            NBTTagCompound itemNBT = MuseNBTUtils.getMuseItemTag(itemStack);
 ////            if (itemNBT.contains(MPALIbConstants.TAG_RENDER,Constants.NBT.TAG_COMPOUND)) {
-////                BiMap<String, NBTTagCompound> presetMap = CommonConfig.moduleConfig.getCosmeticPresets(itemStack);
+////                BiMap<String, NBTTagCompound> presetMap = MPAConfig.moduleConfig.getCosmeticPresets(itemStack);
 ////                if (presetMap.containsValue(itemNBT.getCompound(MPALIbConstants.TAG_RENDER))) {
 ////                    String name = presetMap.inverse().get(itemNBT.getCompound(MPALIbConstants.TAG_RENDER));
 ////                    MPSPackets.sendToServer(new MusePacketCosmeticPreset(Minecraft.getInstance().player.getEntityId(), clickie.inventorySlot, name));
@@ -232,7 +232,7 @@
 ////    @Override
 ////    public void update(double mousex, double mousey) {
 ////        if (usingCosmeticPresets ||
-////                (!CommonConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get() &&
+////                (!MPAConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get() &&
 ////                        itemSelector.getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
 ////            // normal preset user
 ////            if (allowCosmeticPresetCreation)
@@ -244,7 +244,7 @@
 ////    }
 ////
 ////    NBTTagCompound getDefaultPreset(@Nonnull ItemStack itemStack) {
-////        return CommonConfig.moduleConfig.getPresetNBTFor(itemStack, "Default");
+////        return MPAConfig.moduleConfig.getPresetNBTFor(itemStack, "Default");
 ////    }
 ////
 ////    public boolean isValidItem(ClickableItem clickie, EquipmentSlotType slot) {
@@ -267,7 +267,7 @@
 ////            return;
 ////
 ////        if (usingCosmeticPresets ||
-////                (!CommonConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get() &&
+////                (!MPAConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get() &&
 ////                        getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
 ////            if (allowCosmeticPresetCreation) {
 ////                if (isEditing) {

@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.network.MPSPackets;

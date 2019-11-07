@@ -1,8 +1,7 @@
 package com.github.lehjr.modularpowerarmor.network;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.network.packets.*;
-import com.github.machinemuse.modularpowerarmor.network.packets.*;
-import net.machinemuse.modularpowerarmor.network.packets.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;

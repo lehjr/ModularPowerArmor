@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
@@ -210,6 +211,6 @@ public class MuseIcon {
     }
 
     private static TextureAtlasSprite register(TextureMap map, String location) {
-        return map.registerSprite(new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, location));
+        return map.registerSprite(new ResourceLocation(Constants.RESOURCE_DOMAIN, location));
     }
 }

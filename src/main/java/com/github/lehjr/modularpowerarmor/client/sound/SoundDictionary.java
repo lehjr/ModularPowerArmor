@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.sound;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;

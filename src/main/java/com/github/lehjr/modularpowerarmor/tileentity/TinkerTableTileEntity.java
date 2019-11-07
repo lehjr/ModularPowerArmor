@@ -10,14 +10,14 @@ import net.minecraft.util.EnumFacing;
  * <p>
  * Ported to Java by lehjr on 10/21/16.
  */
-public class TileEntityTinkerTable extends MPALibTileEntity {
+public class TinkerTableTileEntity extends MPALibTileEntity {
     EnumFacing facing;
 
-    public TileEntityTinkerTable() {
+    public TinkerTableTileEntity() {
         this.facing = EnumFacing.NORTH;
     }
 
-    public TileEntityTinkerTable(EnumFacing facing) {
+    public TinkerTableTileEntity(EnumFacing facing) {
         this.facing = facing;
     }
 

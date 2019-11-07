@@ -11,7 +11,7 @@ import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.player.PlayerUtils;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -207,7 +207,7 @@ public class MovementManager {
         double horzm2 = player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z;
 
         // currently comes out to 0.0625
-        double horizontalLimit = CommonConfig.GENERAL_MAX_FLYING_SPEED.get() * CommonConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
+        double horizontalLimit = MPAConfig.GENERAL_MAX_FLYING_SPEED.get() * MPAConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
 
 //        double playerVelocity = Math.abs(player.getMotion().x) + Math.abs(player.getMotion().y) + Math.abs(player.getMotion().z);
 
@@ -244,7 +244,7 @@ public class MovementManager {
                     double jumpAssist = jumper.applyPropertyModifiers(Constants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
-                    if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
+                    if ((player.world.isRemote()) && MPALibConfig.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
                     }
 
@@ -277,7 +277,7 @@ public class MovementManager {
                 ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(Constants.MULTIPLIER);
-                    if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && MPALibConfig.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
                     double drain = distanceAbsorb * sa.applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);

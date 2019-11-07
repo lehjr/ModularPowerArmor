@@ -2,7 +2,8 @@ package com.github.lehjr.modularpowerarmor.block;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
-import com.github.lehjr.modularpowerarmor.tileentity.TileEntityTinkerTable;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -39,13 +40,13 @@ public class BlockTinkerTable extends BlockHorizontal {
         setHardness(1.5F);
         setResistance(1000.0F);
         setHarvestLevel("pickaxe", 2);
-        setCreativeTab(MPSConfig.INSTANCE.mpsCreativeTab);
+        setCreativeTab(MPAConfig.INSTANCE.mpsCreativeTab);
         setSoundType(SoundType.METAL);
         setLightOpacity(0);
         setLightLevel(0.4f);
         setTickRandomly(false);
         setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-        GameRegistry.registerTileEntity(TileEntityTinkerTable.class, regName);
+        GameRegistry.registerTileEntity(TinkerTableTileEntity.class, regName);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class BlockTinkerTable extends BlockHorizontal {
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileEntityTinkerTable(state.getValue(FACING));
+        return new TinkerTableTileEntity(state.getValue(FACING));
     }
 
     @Override

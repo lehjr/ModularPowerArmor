@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.base.Objects;
@@ -28,13 +29,13 @@ import java.util.List;
 public enum ModelPowerFistHelper {
     INSTANCE;
 
-    public static final ResourceLocation powerFistLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist.obj");
-    public static final ResourceLocation powerFistFingersNormalLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_normal.obj");
-    public static final ResourceLocation powerFistFingersFiringLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_firing.obj");
+    public static final ResourceLocation powerFistLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist.obj");
+    public static final ResourceLocation powerFistFingersNormalLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_normal.obj");
+    public static final ResourceLocation powerFistFingersFiringLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_firing.obj");
 
-    public static final ResourceLocation powerFistLeftLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerFist/powerfist_left.obj");
-    public static final ResourceLocation powerFistFingersLeftNormalLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_normal_left.obj");
-    public static final ResourceLocation powerFistFingersLeftFiringLocation = new ResourceLocation(ResourceConstants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_firing_left.obj");
+    public static final ResourceLocation powerFistLeftLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerFist/powerfist_left.obj");
+    public static final ResourceLocation powerFistFingersLeftNormalLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_normal_left.obj");
+    public static final ResourceLocation powerFistFingersLeftFiringLocation = new ResourceLocation(Constants.RESOURCE_DOMAIN, "models/item/powerfist/powerfist_fingers_firing_left.obj");
     public static final IModelState powerfistState = getPowerfistState();
     public static IBakedModel powerFist;
     public static IBakedModel powerFistFingers;

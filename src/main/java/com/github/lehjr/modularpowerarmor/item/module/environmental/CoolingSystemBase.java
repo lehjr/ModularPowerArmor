@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
@@ -14,7 +15,7 @@ import net.minecraft.util.EnumParticleTypes;
 
 import javax.annotation.Nonnull;
 
-public abstract class CoolingSystemBase extends AbstractPowerModule implements IPlayerTickModule, IToggleableModule {
+public abstract class CoolingSystemBase extends AbstractPowerModule /*implements IPlayerTickModule, IToggleableModule */ {
 
     public CoolingSystemBase(EnumModuleTarget moduleTargetIn) {
         super(moduleTargetIn);

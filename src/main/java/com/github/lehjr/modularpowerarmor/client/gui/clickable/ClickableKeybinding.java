@@ -1,26 +1,33 @@
 package com.github.lehjr.modularpowerarmor.client.gui.clickable;
 
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.ToggleRequestPacket;
 import com.github.lehjr.mpalib.string.StringUtils;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.network.MPSPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.ToggleRequestPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Ported to Java by lehjr on 10/19/16.
@@ -31,7 +38,6 @@ public class ClickableKeybinding extends ClickableButton {
     protected List<ClickableModule> boundModules = new ArrayList<>();
     boolean toggled = false;
     KeyBinding keybind;
-
 
     public ClickableKeybinding(KeyBinding keybind, Point2D position, boolean free, Boolean displayOnHUD) {
         super(ClickableKeybinding.parseName(keybind), position, true);
@@ -60,18 +66,21 @@ public class ClickableKeybinding extends ClickableButton {
     }
 
     public void toggleModules() {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        EntityPlayer player = Minecraft.getMinecraft().player;
         if (player == null) {
             return;
         }
 
         for (ClickableModule module : boundModules) {
-            String valstring = (toggleval) ? " on" : " off";
-            if ((FMLCommonHandler.instance().getEffectiveSide().equals(Side.CLIENT) && MPSConfig.INSTANCE.toggleModuleSpam())) {
-                player.sendMessage(new TextComponentString("Toggled " + module.getModule().getDataName() + valstring));
+            ResourceLocation registryName = module.getModule().getItem().getRegistryName();
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                Optional.ofNullable(player.inventory.getStackInSlot(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(handler ->{
+                    if (handler instanceof IModularItem) {
+                        ((IModularItem) handler).toggleModule(registryName, toggleval);
+                    }
+                });
             }
-            ModuleManager.INSTANCE.toggleModuleForPlayer(player, module.getModule().getDataName(), toggleval);
-            MPSPackets.sendToServer(new ToggleRequestPacket(module.getModule().getDataName(), toggleval));
+            MPSPackets.sendToServer(new ToggleRequestPacket(registryName, toggleval));
         }
         toggleval = !toggleval;
     }

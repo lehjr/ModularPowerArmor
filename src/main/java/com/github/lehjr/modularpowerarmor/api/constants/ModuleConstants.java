@@ -10,7 +10,6 @@ public class ModuleConstants {
     /**
      * These are used in the module NBT tags and label settings... prefix with  MODULE_TRADEOFF_PREFIX before translating
      */
-    public static final String SLOT_POINTS = "slotPoints";
     public static final String MODULE_TRADEOFF_PREFIX = "modularpowerarmor.tradeoff.";
     public static final String ARMOR_POINTS = "armorPoints";
     public static final String ARMOR_VALUE_PHYSICAL = "armorPhysical";
@@ -109,7 +108,7 @@ public class ModuleConstants {
     public static final String THRUST = "thrust";
     public static final String RANGE = "range";
     public static final String RADIUS = "radius";
-    public static final String DIAMETER ="diameter";
+    public static final String DIAMETER = "diameter";
     public static final String EFFICIENCY = "efficiency";
     public static final String RED = "red";
     public static final String GREEN = "green";
@@ -121,108 +120,8 @@ public class ModuleConstants {
     public static final String AOE_ENERGY_CONSUMPTION = "aoeEnergyCon";
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";
     public static final String FORTUNE_ENERGY_CONSUMPTION = "fortuneEnCon";
-    public static final String ENCHANTMENT_LEVEL ="enchLevel";
-    public static final String FORTUNE_ENCHANTMENT_LEVEL ="fortuneLevel";
+    public static final String ENCHANTMENT_LEVEL = "enchLevel";
+    public static final String FORTUNE_ENCHANTMENT_LEVEL = "fortuneLevel";
     public static final String SILK_TOUCH_ENERGY_CONSUMPTION = "silkTouchEnCon";
 
-    /**
-     * Module UnlocalizedNames
-     */
-    // Debug --------------------------------------------------------------------------------------
-    public static final String MODULE_DEBUG = "debugModule";
-    // Armor --------------------------------------------------------------------------------------
-
-    public static final String MODULE_LEATHER_PLATING__DATANAME = "leatherPlating";
-    public static final String MODULE_IRON_PLATING__DATANAME = "ironPlating";
-    public static final String MODULE_DIAMOND_PLATING__DATANAME = "diamondPlating";
-    public static final String MODULE_ENERGY_SHIELD__DATANAME = "energyShield";
-
-    // Cosmetic -----------------------------------------------------------------------------------
-    public static final String MODULE_TRANSPARENT_ARMOR__DATANAME = "transparentArmor";
-
-    // Energy -------------------------------------------------------------------------------------
-    public static final String MODULE_BATTERY_BASIC__DATANAME = "basicBattery";
-    public static final String MODULE_BATTERY_ADVANCED__DATANAME = "advancedBattery";
-    public static final String MODULE_BATTERY_ELITE__DATANAME = "eliteBattery";
-    public static final String MODULE_BATTERY_ULTIMATE__DATANAME = "ultimateBattery";
-    public static final String MODULE_SOLAR_GENERATOR__DATANAME = "solarGenerator";
-    public static final String MODULE_ADVANCED_SOLAR_GENERATOR__DATANAME = "advSolarGenerator";
-    public static final String MODULE_COAL_GEN__DATANAME = "coalGenerator";
-    public static final String MODULE_KINETIC_GENERATOR__DATANAME = "kineticGenerator";
-    public static final String MODULE_THERMAL_GENERATOR__DATANAME = "thermalGenerator";
-
-    // Environmental ------------------------------------------------------------------------------
-    public static final String MODULE_BASIC_COOLING_SYSTEM__DATANAME = "basicCoolingSystem";
-    public static final String MODULE_ADVANCED_COOLING_SYSTEM__DATANAME = "advancedCoolingSystem";
-    public static final String MODULE_AIRTIGHT_SEAL__DATANAME = "airtightSeal";
-    public static final String MODULE_APIARIST_ARMOR__DATANAME = "apiaristArmor";
-    public static final String MODULE_HAZMAT__DATANAME = "hazmat";
-    public static final String MODULE_AUTO_FEEDER__DATANAME = "autoFeeder";
-    public static final String MODULE_MOB_REPULSOR__DATANAME = "mobRepulsor";
-    public static final String MODULE_WATER_ELECTROLYZER__DATANAME = "waterElectrolyzer";
-
-    // Movement -----------------------------------------------------------------------------------
-    public static final String MODULE_BLINK_DRIVE__DATANAME = "blinkDrive";
-    public static final String MODULE_CLIMB_ASSIST__DATANAME = "climbAssist";
-    public static final String MODULE_FLIGHT_CONTROL__DATANAME = "flightControl";
-    public static final String MODULE_GLIDER__DATANAME = "glider";
-    public static final String MODULE_JETBOOTS__DATANAME = "jetBoots";
-    public static final String MODULE_JETPACK__DATANAME = "jetpack";
-    public static final String MODULE_JUMP_ASSIST__DATANAME = "jumpAssist";
-    public static final String MODULE_PARACHUTE__DATANAME = "parachute";
-    public static final String MODULE_SHOCK_ABSORBER__DATANAME = "shockAbsorber";
-    public static final String MODULE_SPRINT_ASSIST__DATANAME = "sprintAssist";
-    public static final String MODULE_SWIM_BOOST__DATANAME = "swimAssist";
-
-    // Special ------------------------------------------------------------------------------------
-    public static final String MODULE_CLOCK__DATANAME = "clock";
-    public static final String MODULE_COMPASS__DATANAME = "compass";
-    public static final String MODULE_ACTIVE_CAMOUFLAGE__DATANAME = "invisibility";
-    public static final String MODULE_MAGNET__DATANAME = "magnet";
-
-    // Vision -------------------------------------------------------------------------------------
-    public static final String BINOCULARS_MODULE__DATANAME = "binoculars";
-    public static final String MODULE_NIGHT_VISION__DATANAME = "nightVision";
-    public static final String MODULE_THAUM_GOGGLES__DATANAME = "aurameter";
-
-    // Mining Enhancements ------------------------------------------------------------------------
-    public static final String MODULE_AOE_PICK_UPGRADE__DATANAME = "aoePickUpgrade";
-    public static final String MODULE_SILK_TOUCH__DATANAME = "silk_touch";
-    public static final String MODULE_MAD__DATANAME = "madModule";
-    public static final String MODULE_FORTUNE_DATANAME= "fortuneModule";
-
-    // Tools --------------------------------------------------------------------------------------
-    public static final String MODULE_APPENG_EC_WIRELESS_FLUID__DATANAME = "appengECWirelessFluid";
-    public static final String MODULE_APPENG_WIRELESS__DATANAME = "appengWireless";
-    public static final String MODULE_AQUA_AFFINITY__DATANAME = "aquaAffinity";
-    public static final String MODULE_AXE__DATANAME = "axe";
-    public static final String MODULE_CHISEL__DATANAME = "chisel";
-    public static final String MODULE_DIAMOND_PICK_UPGRADE__DATANAME = "diamondPickUpgrade";
-    public static final String MODULE_DIMENSIONAL_RIFT__DATANAME = "dimRiftGen";
-    public static final String MODULE_FIELD_TINKER__DATANAME = "fieldTinkerer";
-    public static final String MODULE_FLINT_AND_STEEL__DATANAME = "flintAndSteel";
-    public static final String MODULE_GRAFTER__DATANAME = "grafter";
-    public static final String MODULE_HOE__DATANAME = "hoe";
-    public static final String MODULE_LEAF_BLOWER__DATANAME = "leafBlower";
-    public static final String MODULE_LUX_CAPACITOR__DATANAME = "luxCapacitor";
-    public static final String MODULE_FIELD_TELEPORTER__DATANAME = "mffsFieldTeleporter";
-    public static final String MODULE_OC_TERMINAL__DATANAME = "ocTerminal";
-    public static final String MODULE_PORTABLE_CRAFTING__DATANAME = "portableCraftingTable";
-    public static final String MODULE_OMNIPROBE__DATANAME = "omniProbe";
-    public static final String MODULE_OMNI_WRENCH__DATANAME = "omniwrench";
-    public static final String MODULE_ORE_SCANNER__DATANAME = "oreScanner";
-    public static final String MODULE_CM_PSD__DATANAME = "cmPSD";//"Personal Shrinking Device";
-    public static final String MODULE_PICKAXE__DATANAME = "pickaxe";
-    public static final String MODULE_REF_STOR_WIRELESS__DATANAME = "refinedStorageWirelessGrid";//"Refined Storage Wireless Grid";
-    public static final String MODULE_SCOOP__DATANAME = "scoop";
-    public static final String MODULE_SHEARS__DATANAME = "shears";
-    public static final String MODULE_SHOVEL__DATANAME = "shovel";
-    public static final String MODULE_TREETAP__DATANAME = "treetap";
-
-    // Weapons ------------------------------------------------------------------------------------
-    public static final String MODULE_BLADE_LAUNCHER__DATANAME = "bladeLauncher";
-    public static final String MODULE_LIGHTNING__DATANAME = "lightningSummoner";
-    public static final String MODULE_MELEE_ASSIST__DATANAME = "meleeAssist";
-    public static final String MODULE_PLASMA_CANNON__DATANAME = "plasmaCannon";
-    public static final String MODULE_RAILGUN__DATANAME = "railgun";
 }

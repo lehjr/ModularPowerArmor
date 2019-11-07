@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;

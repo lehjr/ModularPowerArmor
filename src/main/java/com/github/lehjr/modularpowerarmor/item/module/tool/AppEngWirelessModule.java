@@ -1,77 +1,85 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import appeng.api.AEApi;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.IConfig;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
+import com.github.lehjr.mpalib.item.ItemUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
  * Created by User: Andrew2448
  * 1:42 AM 6/22/13
  */
-public class AppEngWirelessModule extends AbstractPowerModule implements IRightClickModule {
-    public AppEngWirelessModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
-        Optional<ItemStack> wirelessTerminal = AEApi.instance().definitions().items().wirelessTerminal().maybeStack(1);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), wirelessTerminal.get());
+public class AppEngWirelessModule extends AbstractPowerModule {
+    public AppEngWirelessModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.TOOL;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_APPENG_WIRELESS__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IRightClickModule rightClick;
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        AEApi.instance().registries().wireless().openWirelessTerminalGui(itemStackIn, worldIn, playerIn);
-        return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
-    }
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
+        }
 
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return EnumActionResult.PASS;
-    }
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) rightClick;
+            }
+            return null;
+        }
 
-    @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        return EnumActionResult.PASS;
-    }
+        class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
 
-    @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+            @Override
+            public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+                AEApi.instance().registries().wireless().openWirelessTerminalGui(itemStackIn, worldIn, playerIn);
+                return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+            }
 
-    }
-
-    @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
-        return 0;
-    }
-
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.appengWireless;
+            @Override
+            public int getEnergyUsage() {
+                return 0;
+            }
+        }
     }
 }

@@ -1,8 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.enchantment.IEnchantmentModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.IMiningEnhancementModule;
@@ -13,22 +14,21 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
-public class ItemModuleSilkTouch extends AbstractPowerModule {
-    public ItemModuleSilkTouch(String regName) {
+public class SilkTouchModule extends AbstractPowerModule {
+    public SilkTouchModule(String regName) {
         super(regName);
     }
 
@@ -38,7 +38,7 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IMiningEnhancementModule miningEnhancement;
 
@@ -48,10 +48,13 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
             this.miningEnhancement.addBasePropertyDouble(Constants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
         }
 
-        @Nonnull
+        @Nullable
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> miningEnhancement));
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+
+            }
+            return null;
         }
 
         class Enhancement extends MiningEnhancement implements IEnchantmentModule {
@@ -70,7 +73,7 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
              * @return True to prevent harvesting, false to continue as normal
              */
             @Override
-            public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+            public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) {
                 if (!player.world.isRemote) {
                     if (getEnergyUsage() > ElectricItemUtils.getPlayerEnergy(player))
                         removeEnchantment(itemstack);

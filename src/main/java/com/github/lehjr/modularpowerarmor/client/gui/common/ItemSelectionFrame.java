@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.geometry.FlyFromPointToPoint2D;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -10,35 +11,65 @@ import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.mpalib.math.MathUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.CapabilityItemHandler;
+import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 public class ItemSelectionFrame extends ScrollableFrame {
-    public List<ClickableItem> itemButtons;
+    protected List<ClickableItem> itemButtons;
     protected int selectedItemStack = -1;
     protected EntityPlayer player;
     protected List<Point2D> itemPoints;
     protected int lastItemSlot = -1;
+    protected List<Integer> indices;
+    TinkerTableContainer container;
 
-    public ItemSelectionFrame(Point2D topleft, Point2D bottomright, Colour backgroundColour, Colour borderColour, EntityPlayer player) {
-        super(topleft, bottomright, backgroundColour, borderColour);
+    public ItemSelectionFrame(
+            @Nullable TinkerTableContainer container,
+            Point2D topleft,
+            Point2D bottomright,
+            Colour borderColour,
+            Colour insideColour,
+            EntityPlayer player) {
+        super(topleft, bottomright, borderColour, insideColour);
+        itemButtons = new ArrayList<>();
+
+        this.container = container;
         this.player = player;
-        List<Integer> slots = ItemUtils.getLegacyModularItemSlotsInInventory(player);
-        loadPoints(slots.size());
-        loadItems();
+
+        if (container != null) {
+            loadPoints(container.getModularItemToSlotMap().keySet().size());
+        } else {
+            loadIndices();
+            if (indices != null && !indices.isEmpty()) {
+                loadPoints(indices.size());
+                loadItems();
+            }
+        }
     }
 
     @Override
     public void init(double left, double top, double right, double bottom) {
         super.init(left, top, right, bottom);
-
-        List<Integer> slots = ItemUtils.getLegacyModularItemSlotsInInventory(player);
-        loadPoints(slots.size());
-        loadItems();
+        if (container != null) {
+            loadPoints(container.getModularItemToSlotMap().keySet().size());
+        } else {
+            loadIndices();
+            if (indices != null && !indices.isEmpty()) {
+                loadPoints(indices.size());
+                loadItems();
+            }
+        }
     }
 
     public int getLastItemSlot() {
@@ -52,66 +83,98 @@ public class ItemSelectionFrame extends ScrollableFrame {
     private void loadPoints(int num) {
         double centerx = (border.left() + border.right()) / 2;
         double centery = (border.top() + border.bottom()) / 2;
+
         itemPoints = new ArrayList();
         List<Point2D> targetPoints = GradientAndArcCalculator.pointsInLine(num,
-                new Point2D(centerx, border.bottom()),
-                new Point2D(centerx, border.top()));
+                new Point2D(centerx, border.top()),
+                new Point2D(centerx, border.bottom()), 0, 18);
         for (Point2D point : targetPoints) {
             // Fly from middle over 200 ms
-            itemPoints.add(new FlyFromPointToPoint2D(
-                    new Point2D(centerx, centery),
-                    point, 200));
+            itemPoints.add(new FlyFromPointToPoint2D(new Point2D(centerx, centery), point, 200));
+        }
+        totalsize = (targetPoints.size() + 1) * 18; // slot height of 16 + spacing of 2
+    }
+
+    private void loadIndices() {
+        indices = new ArrayList<>();
+        for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            if(Optional.ofNullable(player.inventory.getStackInSlot(i)
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(m-> m instanceof IModularItem).orElse(false)) {
+                indices.add(i);
+            }
         }
     }
 
     private void loadItems() {
-        if (player != null) {
+        if (container != null) {
             itemButtons = new ArrayList<>();
-            List<Integer> slots = ItemUtils.getLegacyModularItemSlotsInInventory(player);
-            if (slots.size() > itemPoints.size()) {
-                loadPoints(slots.size());
-            }
-            if (slots.size() > 0) {
-                Iterator<Point2D> pointiterator = itemPoints.iterator();
+            Iterator<Point2D> pointiterator = itemPoints.iterator();
+            for (Integer slotIndex : container.getModularItemToSlotMap().keySet()) {
+                Slot slot = container.getSlot(slotIndex);
+                int index = slot.getSlotIndex();
 
-                for (int slot : slots) {
-                    ClickableItem clickie = new ClickableItem(
-                            player.inventory.getStackInSlot(slot),
-                            pointiterator.next(), slot);
-                    itemButtons.add(clickie);
-                }
+                com.github.lehjr.mpalib.client.gui.clickable.ClickableItem button = new com.github.lehjr.mpalib.client.gui.clickable.ClickableItem(pointiterator.next(), index);
+                button.containerIndex = slotIndex;
+                itemButtons.add(button);
+            }
+        } else if (indices != null && !indices.isEmpty()) {
+            itemButtons = new ArrayList<>();
+            Iterator<Point2D> pointiterator = itemPoints.iterator();
+            for (Integer index : indices) {
+                itemButtons.add(new com.github.lehjr.mpalib.client.gui.clickable.ClickableItem(pointiterator.next(), index));
             }
         }
     }
 
     @Override
     public void update(double mousex, double mousey) {
+        super.update(mousex, mousey);
         loadItems();
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        drawBackground(mouseX, mouseY, partialTicks);
+        this.currentscrollpixels = Math.min(currentscrollpixels, getMaxScrollPixels());
+        super.preRender(mouseX, mouseY, partialTicks);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0, -currentscrollpixels, 0);
         drawItems(mouseX, mouseY, partialTicks);
-        drawSelection();
+        drawSelection(mouseX, mouseY, partialTicks);
+        GL11.glPopMatrix();
+        super.postRender(mouseX, mouseY, partialTicks);
     }
 
     private void drawBackground(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
     }
 
-    private void drawItems(int mouseX, int mouseY, float partialTicks) {
-        for (ClickableItem item : itemButtons) {
-            item.render(mouseX, mouseY, partialTicks);
+    @Override
+    public void onMouseDown(double x, double y, int button) {
+        super.onMouseDown(x, y, button);
+        if (border.containsPoint(x, y)) {
+            y += currentscrollpixels;
+            int i = 0;
+            for (com.github.lehjr.mpalib.client.gui.clickable.ClickableItem item : itemButtons) {
+                if (item.hitBox(x, y)) {
+                    lastItemSlot = selectedItemStack;
+                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.BLOCKS, 1, null);
+                    selectedItemStack = i;
+                    if(getSelectedItem() != getPreviousSelectedItem())
+                        onSelected();
+                    return;
+                } else {
+                    i++;
+                }
+            }
         }
     }
 
-    private void drawSelection() {
+    private void drawSelection(int mouseX, int mouseY, float partialTicks) {
         if (selectedItemStack != -1) {
-            Renderer.drawCircleAround(
-                    Math.floor(itemButtons.get(selectedItemStack).getPosition().getX()),
-                    Math.floor(itemButtons.get(selectedItemStack).getPosition().getY()),
-                    10);
+            Point2D pos = itemButtons.get(selectedItemStack).getPosition();
+            if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
+                Renderer.drawCircleAround(pos.getX(), pos.getY(), 10);
+            }
         }
     }
 
@@ -135,39 +198,25 @@ public class ItemSelectionFrame extends ScrollableFrame {
         }
     }
 
-    @Override
-    public void onMouseDown(double x, double y, int button) {
-        int i = 0;
+    private void drawItems(int mouseX, int mouseY, float partialTicks) {
         for (ClickableItem item : itemButtons) {
-            if (item.hitBox(x, y)) {
-                lastItemSlot = selectedItemStack;
-                Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.BLOCKS, 1, null);
-                selectedItemStack = i;
-                onSelected();
-                break;
-            } else {
-                i++;
-            }
+            item.render(mouseX, mouseY, partialTicks);
         }
     }
 
     @Override
     public List<String> getToolTip(int x, int y) {
-        int itemHover = -1;
-        int i = 0;
-        for (ClickableItem item : itemButtons) {
-            if (item.hitBox(x, y)) {
-                itemHover = i;
-                break;
-            } else {
-                i++;
+        if (border.containsPoint(x, y)) {
+            y += currentscrollpixels;
+            if (itemButtons != null) {
+                for (ClickableItem item : itemButtons) {
+                    if (item.hitBox(x, y)) {
+                        return item.getToolTip();
+                    }
+                }
             }
         }
-        if (itemHover > -1) {
-            return itemButtons.get(itemHover).getToolTip();
-        } else {
-            return null;
-        }
+        return null;
     }
 
     /**

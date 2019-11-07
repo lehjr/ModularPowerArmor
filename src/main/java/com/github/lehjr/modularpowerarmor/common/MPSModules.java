@@ -10,7 +10,7 @@ import com.github.lehjr.modularpowerarmor.item.module.energy.generation.KineticG
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.SolarGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
-import com.github.lehjr.modularpowerarmor.item.module.mining_enhancement.*;
+import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.*;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
 import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;

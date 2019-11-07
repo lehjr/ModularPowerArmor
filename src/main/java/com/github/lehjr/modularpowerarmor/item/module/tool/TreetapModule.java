@@ -1,11 +1,18 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
+import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import com.github.lehjr.mpalib.misc.ModCompatibility;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -14,11 +21,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -29,7 +40,7 @@ import java.util.List;
  * Updated by leon on 6/14/16.
  */
 
-public class TreetapModule extends AbstractPowerModule implements IRightClickModule {
+public class TreetapModule extends AbstractPowerModule {
     public static ItemStack resin;
     public static Block rubber_wood;
     public static ItemStack emulatedTool;
@@ -37,10 +48,8 @@ public class TreetapModule extends AbstractPowerModule implements IRightClickMod
     private Method attemptExtract;
     private boolean isIC2Classic;
 
-    public TreetapModule(EnumModuleTarget moduleTarget) {
-        // TODO: add support for tree taps from other mods?
-
-        super(moduleTarget);
+    public TreetapModule(String regName) {
+        super(regName);
         if (ModCompatibility.isIndustrialCraftClassicLoaded()) {
             emulatedTool = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("ic2", "itemTreetapElectric")), 1);
             treetap = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("ic2", "itemTreetap")), 1);
@@ -66,74 +75,78 @@ public class TreetapModule extends AbstractPowerModule implements IRightClickMod
             }
             isIC2Classic = false;
         }
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), emulatedTool);
-
-        addBasePropertyDouble(ModuleConstants.ENERGY_CONSUMPTION, 1000, "RF");
     }
 
+    @Nullable
     @Override
-    public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        IBlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IRightClickModule rightClick;
 
-        try {
-            // IC2 Classic
-            if (isIC2Classic) {
-                if (block == rubber_wood && getEnergyUsage(itemStack) < ElectricItemUtils.getPlayerEnergy(player)) {
-                    if (attemptExtract.invoke("attemptExtract", null, player, world, pos, facing, null).equals(true)) {
-                        ElectricItemUtils.drainPlayerEnergy(player, (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.ENERGY_CONSUMPTION));
-                        return EnumActionResult.SUCCESS;
-                    }
-                }
-            }
-            // IC2 Experimental
-            else {
-                if (block == rubber_wood && getEnergyUsage(itemStack) < ElectricItemUtils.getPlayerEnergy(player)) {
-                    if (attemptExtract.invoke("attemptExtract", player, world, pos, facing, state, null).equals(true)) {
-                        ElectricItemUtils.drainPlayerEnergy(player, (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.ENERGY_CONSUMPTION));
-                        return EnumActionResult.SUCCESS;
-                    }
-                }
-            }
-            return EnumActionResult.PASS;
-        } catch (Exception ignored) {
-
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
+            this.rightClick.addBasePropertyDouble(ModuleConstants.ENERGY_CONSUMPTION, 1000, "RF");
         }
-        return EnumActionResult.FAIL;
-    }
 
-    @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        return EnumActionResult.PASS;
-    }
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) rightClick;
+            }
+            return null;
+        }
 
-    @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+        class RightClickie extends RightClickModule {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config);
+            }
 
-    }
+            @Override
+            public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+                return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
+            }
 
-    @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
-        return (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.ENERGY_CONSUMPTION);
-    }
+            @Override
+            public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+                IBlockState state = world.getBlockState(pos);
+                Block block = state.getBlock();
 
-    @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.TOOL;
-    }
+                try {
+                    // IC2 Classic
+                    if (isIC2Classic) {
+                        if (block == rubber_wood && getEnergyUsage() < ElectricItemUtils.getPlayerEnergy(player)) {
+                            if (attemptExtract.invoke("attemptExtract", null, player, world, pos, facing, null).equals(true)) {
+                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(ModuleConstants.ENERGY_CONSUMPTION));
+                                return EnumActionResult.SUCCESS;
+                            }
+                        }
+                    }
+                    // IC2 Experimental
+                    else {
+                        if (block == rubber_wood && getEnergyUsage() < ElectricItemUtils.getPlayerEnergy(player)) {
+                            if (attemptExtract.invoke("attemptExtract", player, world, pos, facing, state, null).equals(true)) {
+                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(ModuleConstants.ENERGY_CONSUMPTION));
+                                return EnumActionResult.SUCCESS;
+                            }
+                        }
+                    }
+                    return EnumActionResult.PASS;
+                } catch (Exception ignored) {
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_TREETAP__DATANAME;
-    }
+                }
+                return EnumActionResult.FAIL;
+            }
 
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(emulatedTool).getParticleTexture();
+            @Override
+            public int getEnergyUsage() {
+                return (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+            }
+        }
     }
 }

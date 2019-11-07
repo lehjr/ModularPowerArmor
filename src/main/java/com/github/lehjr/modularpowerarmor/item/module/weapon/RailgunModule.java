@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -43,7 +44,7 @@ public class RailgunModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(Constants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
             this.ticker.addBasePropertyDouble(Constants.RAILGUN_ENERGY_COST, 5000, "RF");
             this.ticker.addBasePropertyDouble(Constants.RAILGUN_HEAT_EMISSION, 2, "");

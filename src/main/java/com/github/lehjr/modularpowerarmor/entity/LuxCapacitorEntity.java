@@ -4,7 +4,7 @@ import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import com.github.lehjr.mpalib.math.Colour;
 import io.netty.buffer.ByteBuf;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
-import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
+import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -81,13 +81,13 @@ public class LuxCapacitorEntity extends EntityThrowable implements IEntityAdditi
                 if (MPSItems.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, dir)) {
                     IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, dir, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
                     world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
-                    world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
+                    world.setTileEntity(blockPos, new LuxCapacitorTileEntity(color));
                 } else {
                     for (EnumFacing facing : EnumFacing.values()) {
                         if (MPSItems.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, facing)) {
                             IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, facing, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
                             world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
-                            world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
+                            world.setTileEntity(blockPos, new LuxCapacitorTileEntity(color));
                             break;
                         }
                     }

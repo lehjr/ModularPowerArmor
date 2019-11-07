@@ -108,7 +108,7 @@ public class PlayerUpdateHandler {
             }
 
             // Sound update
-            if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+            if (player.world.isRemote && MPALibConfig.useSounds()) {
                 if (modularItemsEquipped.get() > 0) {
                     double velsq2 = MathUtils.sumsq(player.getMotion().x, player.getMotion().y, player.getMotion().z) - 0.5;
                     if (player.isAirBorne && velsq2 > 0) {

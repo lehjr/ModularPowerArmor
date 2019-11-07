@@ -15,7 +15,7 @@ import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -91,7 +91,7 @@ public class ItemPowerFist extends AbstractElectricTool {
      */
     @Override
     public boolean hitEntity(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
-//        if (ModuleManager.INSTANCE.itemHasActiveModule(stack, MPSModuleConstants.MODULE_OMNI_WRENCH__DATANAME)) {
+//        if (ModuleManager.INSTANCE.itemHasActiveModule(stack, MPSModuleConstants.MODULE_OMNI_WRENCH__REGNAME)) {
 //            target.rotationYaw += 90.0f;
 //            target.rotationYaw %= 360.0f;
 //        }
@@ -278,7 +278,7 @@ public class ItemPowerFist extends AbstractElectricTool {
         IEnergyStorage energyStorage;
         IHeatStorage heatStorage;
         IHandHeldModelSpecNBT modelSpec;
-        double maxHeat = CommonConfig.baseMaxHeatPowerFist();
+        double maxHeat = MPAConfig.baseMaxHeatPowerFist();
 
         public PowerToolCap(@Nonnull ItemStack fist) {
             this.fist = fist;

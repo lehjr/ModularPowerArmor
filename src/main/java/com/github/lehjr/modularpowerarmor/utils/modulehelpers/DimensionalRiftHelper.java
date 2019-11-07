@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.utils.modulehelpers;
 
 
-import com.github.lehjr.modularpowerarmor.tileentity.TileEntityPortal;
+import com.github.lehjr.modularpowerarmor.tileentity.PortalTileEntity;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -63,7 +63,7 @@ public class DimensionalRiftHelper extends Teleporter {
     public TileEntity findPortalInChunk(BlockPos pos) {
         Chunk chunk = this.worldServerInstance.getChunk(pos);
         for (Object tile : chunk.getTileEntityMap().values()) {
-            if ((tile instanceof TileEntityPortal)) {
+            if ((tile instanceof PortalTileEntity)) {
                 return (TileEntity) tile;
             }
         }

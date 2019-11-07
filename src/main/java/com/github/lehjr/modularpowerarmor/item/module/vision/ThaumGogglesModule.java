@@ -37,7 +37,7 @@ public class ThaumGogglesModule extends AbstractPowerModule {
 //
 //    @Override
 //    public String getDataName() {
-//        return ModuleConstants.MODULE_THAUM_GOGGLES__DATANAME;
+//        return ModuleConstants.MODULE_THAUM_GOGGLES__REGNAME;
 //    }
 //
 //    @Override

@@ -1,7 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -44,7 +45,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
             this.rightClick.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 1000, "RF");
             this.rightClick.addTradeoffPropertyDouble(Constants.RED, Constants.RED_HUE, 1, "%");
             this.rightClick.addTradeoffPropertyDouble(Constants.GREEN, Constants.GREEN_HUE, 1, "%");

@@ -50,6 +50,9 @@ public class RegistryNames {
     /**
      * Modules ------------------------------------------------------------------------------------
      */
+    // Debug --------------------------------------------------------------------------------------
+    public static final String MODULE_DEBUG__REGNAME = MODID + ":debug_module";
+
     // Armor --------------------------------------------------------------------------------------
     public static final String MODULE_LEATHER_PLATING__REGNAME = MODID + ":plating_leather";
     public static final String MODULE_IRON_PLATING__REGNAME =  MODID + ":plating_iron";
@@ -70,10 +73,7 @@ public class RegistryNames {
     public static final String MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME = MODID + ":generator_solar_adv";
     public static final String MODULE_KINETIC_GENERATOR__REGNAME = MODID + ":generator_kinetic";
     public static final String MODULE_THERMAL_GENERATOR__REGNAME = MODID + ":generator_thermal";
-
-    // todo
-    // Debug --------------------------------------------------------------------------------------
-    public static final String MODULE_DEBUG = MODID + ":debug_module";
+    public static final String MODULE_COAL_GEN__REGNAME = MODID + ":coalGenerator";
 
     // Environmental ------------------------------------------------------------------------------
     public static final String MODULE_COOLING_SYSTEM__REGNAME = MODID + ":cooling_system";
@@ -81,6 +81,9 @@ public class RegistryNames {
     public static final String MODULE_AUTO_FEEDER__REGNAME = MODID + ":auto_feeder";
     public static final String MODULE_MOB_REPULSOR__REGNAME = MODID + ":mob_repulsor";
     public static final String MODULE_WATER_ELECTROLYZER__REGNAME = MODID + ":water_electrolyzer";
+    public static final String MODULE_AIRTIGHT_SEAL__REGNAME = MODID + ":airtight_seal";
+    public static final String MODULE_APIARIST_ARMOR__REGNAME = MODID + ":apiarist_armor";
+    public static final String MODULE_HAZMAT__REGNAME = MODID + ":hazmat";
 
     // Movement -----------------------------------------------------------------------------------
     public static final String MODULE_BLINK_DRIVE__REGNAME = MODID + ":blink_drive";
@@ -105,25 +108,37 @@ public class RegistryNames {
     // Vision -------------------------------------------------------------------------------------
     public static final String BINOCULARS_MODULE__REGNAME = MODID + ":binoculars";
     public static final String MODULE_NIGHT_VISION__REGNAME = MODID + ":night_vision";
+    public static final String MODULE_THAUM_GOGGLES__REGNAME = MODID + ":aurameter";
 
     // Mining Enhancements ------------------------------------------------------------------------
     public static final String MODULE_AOE_PICK_UPGRADE__REGNAME = MODID + ":aoe_pick_upgrade"; // no icon
     public static final String MODULE_SILK_TOUCH__REGNAME = MODID + ":silk_touch";
     public static final String MODULE_FORTUNE_REGNAME = MODID + ":fortune";
+    public static final String MODULE_MAD__REGNAME = MODID + ":madModule";
 
     // Tools --------------------------------------------------------------------------------------
+    public static final String MODULE_APPENG_EC_WIRELESS_FLUID__REGNAME = MODID + ":appengECWirelessFluid";
+    public static final String MODULE_APPENG_WIRELESS__REGNAME = MODID + ":appengWireless";
     public static final String MODULE_AQUA_AFFINITY__REGNAME = MODID + ":aqua_affinity";
     public static final String MODULE_AXE__REGNAME = MODID + ":axe";
+    public static final String MODULE_CM_PSD__REGNAME = MODID + ":cmpsd";//"Personal Shrinking Device";
     public static final String MODULE_DIAMOND_PICK_UPGRADE__REGNAME = MODID + ":diamond_pick_upgrade";
     public static final String MODULE_FIELD_TINKER__REGNAME = MODID + ":field_tinkerer";
     public static final String MODULE_FLINT_AND_STEEL__REGNAME = MODID + ":flint_and_steel";
+    public static final String MODULE_GRAFTER__REGNAME = "grafter";
     public static final String MODULE_HOE__REGNAME = MODID + ":hoe";
     public static final String MODULE_LEAF_BLOWER__REGNAME = MODID + ":leaf_blower";
     public static final String MODULE_LUX_CAPACITOR__REGNAME = MODID + ":luxcapacitor_module";
     public static final String MODULE_PORTABLE_CRAFTING__REGNAME = MODID + ":portable_crafting_table";
+    public static final String MODULE_OMNIPROBE__REGNAME = MODID + ":omni_probe";
+    public static final String MODULE_OMNI_WRENCH__REGNAME = MODID + ":omniwrench";
+    public static final String MODULE_ORE_SCANNER__REGNAME = MODID + ":ore_scanner";
     public static final String MODULE_PICKAXE__REGNAME = MODID + ":pickaxe";
+    public static final String MODULE_REF_STOR_WIRELESS__REGNAME = MODID + ":refined_storage_wireless_grid";//"Refined Storage Wireless Grid";
+    public static final String MODULE_SCOOP__REGNAME = MODID + ":scoop";
     public static final String MODULE_SHEARS__REGNAME = MODID + ":shears";
     public static final String MODULE_SHOVEL__REGNAME = MODID + ":shovel";
+    public static final String MODULE_TREETAP__REGNAME = MODID + ":treetap";
 
     // Weapons ------------------------------------------------------------------------------------
     public static final String MODULE_BLADE_LAUNCHER__REGNAME = MODID + ":blade_launcher";
@@ -138,11 +153,4 @@ public class RegistryNames {
      */
     public static final String TINKER_TABLE_REG_NAME = MODID + ":tinkertable";
     public static final String LUX_CAPACITOR_REG_NAME = MODID + ":luxcapacitor";
-
-    /**
-     * Container
-     */
-    public static final String MPS_CRAFTING_CONTAINER_TYPE__REG_NAME = MODID + ":crafting_container";
-    public static final String MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME = MODID + ":tinker_table_container_type";
-
 }

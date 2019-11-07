@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.forge.obj.MPALibOBJLoader;
 import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
@@ -49,7 +49,7 @@ public class ModularPowerArmor {
     public ModularPowerArmor() {
         // TODO: revisit and see if a server config is needed too (not that server config only initializes with a server running and is stored with the saved world
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_SPEC, ConfigHelper.setupConfigFile("modularpowerarmor-common.toml").getAbsolutePath());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MPAConfig.COMMON_SPEC, ConfigHelper.setupConfigFile("modularpowerarmor-common.toml").getAbsolutePath());
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC, ClientConfig.clientFile.getAbsolutePath());
 
         // Register the setup method for modloading
@@ -82,10 +82,10 @@ public class ModularPowerArmor {
             final ModConfig config = event.getConfig();
             if (config.getSpec() == ClientConfig.CLIENT_SPEC) {
 //
-            } else if (config.getSpec() == CommonConfig.COMMON_SPEC) {
-                CommonConfig.commonConfig = config;
-                CommonConfig.setLoadingDone();
-                CommonConfig.finishBuilder();
+            } else if (config.getSpec() == MPAConfig.COMMON_SPEC) {
+                MPAConfig.MPAConfig = config;
+                MPAConfig.setLoadingDone();
+                MPAConfig.finishBuilder();
                 CosmeticPresetSaveLoad.copyPresetsFromJar();
             }
         });

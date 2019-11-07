@@ -1,32 +1,33 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
-import com.github.lehjr.modularpowerarmor.basemod.Constants;
-
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import net.minecraft.entity.player.PlayerEntity;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Direction;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @author lehjr
+ */
 public class FluidTankModule extends AbstractPowerModule {
     static final String FLUID_NBT_KEY = "Fluid";
     public FluidTankModule(String regName) {
@@ -46,7 +47,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPAConfig.moduleConfig, true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPAConfig.INSTANCE.moduleConfig, true);
             this.ticker.addBasePropertyInteger(Constants.FLUID_TANK_SIZE, 20000);
             this.fluidHandler = new ModuleTank(ticker.applyPropertyModifierBaseInt(Constants.FLUID_TANK_SIZE));
 
@@ -57,31 +58,47 @@ public class FluidTankModule extends AbstractPowerModule {
 
         }
 
-        @Nonnull
         @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-                return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> fluidHandler));
-            return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> ticker));
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
+                return true;
+            }
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return true;
+            }
+            return false;
         }
 
-        class ModuleTank extends FluidTank implements IFluidTank, IFluidHandler, IFluidHandlerItem {
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
+                return (T) fluidHandler;
+            }
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) ticker;
+            }
+
+            return null;
+        }
+
+        class ModuleTank extends FluidTankModule implements IFluidTank, IFluidHandler, IFluidHandlerItem {
             public ModuleTank(int capacity) {
                 super(capacity);
             }
 
             @Nullable
             public FluidStack getFluid() {
-                NBTTagCompound tagCompound = MuseNBTUtils.getMuseModuleTag(module);
-                if (tagCompound == null || !tagCompound.contains(FLUID_NBT_KEY)) {
+                NBTTagCompound tagCompound = NBTUtils.getMuseModuleTag(module);
+                if (tagCompound == null || !tagCompound.hasKey(FLUID_NBT_KEY)) {
                     return null;
                 }
-                return FluidStack.loadFluidStackFromNBT(tagCompound.getCompound(FLUID_NBT_KEY));
+                return FluidStack.loadFluidStackFromNBT(tagCompound.getCompoundTag(FLUID_NBT_KEY));
             }
 
             @Override
             protected void onContentsChanged() {
-                MuseNBTUtils.getMuseModuleTag(module).put(FLUID_NBT_KEY, writeToNBT(new NBTTagCompound()));
+                NBTUtils.getMuseModuleTag(module).setTag(FLUID_NBT_KEY, writeToNBT(new NBTTagCompound()));
             }
 
             @Nonnull
@@ -97,7 +114,7 @@ public class FluidTankModule extends AbstractPowerModule {
             }
 
             @Override
-            public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
+            public void onPlayerTickActive(EntityPlayer player, @Nonnull ItemStack item) {
                 // seems to be setup in such a way as to allow for multiple tanks in one
                 int maxFluid = fluidHandler.getTankCapacity(1);
                 int currentFluid = fluidHandler.getFluidInTank(0).getAmount();

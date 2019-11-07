@@ -1,6 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.module.vision;
 
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -35,18 +37,13 @@ public class NightVisionModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
+            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig);
         }
 
         @Nullable

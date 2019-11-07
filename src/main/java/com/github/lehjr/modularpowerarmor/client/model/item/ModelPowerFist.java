@@ -1,6 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
+import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
@@ -9,9 +11,6 @@ import com.github.lehjr.mpalib.client.render.modelspec.ModelSpec;
 import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -29,12 +28,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by lehjr on 12/19/16.
@@ -164,21 +165,26 @@ public class ModelPowerFist implements IBakedModel {
         @Override
         public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stackIn, World worldIn, EntityLivingBase entityIn) {
             itemStack = stackIn;
-            renderSpec = MPSNBTUtils.getMuseRenderTag(stackIn);
-            world = worldIn;
-            entity = entityIn;
-            item = itemStack.getItem();
-            // Todo: eliminate
-            colour = ((IModularItemBase) item).getColorFromItemStack(itemStack);
-
             if (entityIn instanceof EntityPlayer) {
-                if (!itemStack.isEmpty() && itemStack == entityIn.getHeldItemMainhand() && entityIn.isHandActive()
-                        && ModuleManager.INSTANCE.itemHasActiveModule(itemStack, ModuleConstants.MODULE_PLASMA_CANNON__DATANAME)) {
-                    isFiring = true;
-                } else
-                    isFiring = false;
-            } else isFiring = false;
+                EntityPlayer player = (EntityPlayer) entityIn;
+                if (player.isHandActive()) {
+                    Optional.ofNullable(player.getHeldItem(player.getActiveHand()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(modechanging -> {
+                        if (!(modechanging instanceof IModeChangingItem))
+                            return;
 
+                        ItemStack module = ((IModeChangingItem) modechanging).getActiveModule();
+                        int actualCount = 0;
+
+                        int maxDuration = ((IModeChangingItem) modechanging).getModularItemStack().getMaxItemUseDuration();
+                        if (!module.isEmpty()) {
+                            actualCount = (maxDuration - player.getItemInUseCount());
+                        }
+                        isFiring = actualCount > 0;
+                    });
+                } else {
+                    isFiring = false;
+                }
+            }
             return originalModel;
         }
     }

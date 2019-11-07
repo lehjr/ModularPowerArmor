@@ -18,12 +18,13 @@ import com.github.lehjr.modularpowerarmor.item.module.energy.generation.SolarGen
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.storage.EnergyStorageModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.FluidTankModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.MobRepulsorModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.WaterElectrolyzerModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AOEPickUpgradeModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AquaAffinityModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.FortuneModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.ItemModuleSilkTouch;
+import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.SilkTouchModule;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
 import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;
@@ -264,7 +265,7 @@ public enum Objects {
     public static final AOEPickUpgradeModule aoePickUpgrade = null;
 
     @GameRegistry.ObjectHolder(MODULE_SILK_TOUCH__REGNAME)
-    public static final ItemModuleSilkTouch silk_touch = null;
+    public static final SilkTouchModule silk_touch = null;
 
     @GameRegistry.ObjectHolder(MODULE_FORTUNE_REGNAME)
     public static final FortuneModule fortuneModule = null;

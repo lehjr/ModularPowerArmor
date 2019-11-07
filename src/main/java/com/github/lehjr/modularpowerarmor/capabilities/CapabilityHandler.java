@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.capabilities;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

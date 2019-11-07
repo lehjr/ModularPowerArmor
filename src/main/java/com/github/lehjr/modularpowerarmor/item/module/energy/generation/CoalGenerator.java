@@ -73,7 +73,7 @@
 //
 //    @Override
 //    public String getDataName() {
-//        return ModuleConstants.MODULE_COAL_GEN__DATANAME;
+//        return ModuleConstants.MODULE_COAL_GEN__REGNAME;
 //    }
 //
 //    @Override

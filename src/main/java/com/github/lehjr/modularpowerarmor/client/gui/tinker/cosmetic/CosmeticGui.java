@@ -45,7 +45,7 @@ public class CosmeticGui extends ContainerlessGui {
 
         rescale();
 
-        usingCosmeticPresets = !MPSConfig.INSTANCE.useLegacyCosmeticSystem();
+        usingCosmeticPresets = !MPAConfig.INSTANCE.useLegacyCosmeticSystem();
         if (usingCosmeticPresets) {
             // check if player is the server owner
             if (FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer()) {

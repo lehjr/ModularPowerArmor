@@ -1,7 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.module.vision;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
@@ -33,20 +35,15 @@ public class BinocularsModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IToggleableModule moduleToggle;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig, false);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig, false);
             this.moduleToggle.addBasePropertyDouble(Constants.FOV, 0.5);
             this.moduleToggle.addTradeoffPropertyDouble(Constants.FIELD_OF_VIEW, Constants.FOV, 9.5, "%");
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
         }
 
         @Nullable

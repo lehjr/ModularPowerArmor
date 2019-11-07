@@ -13,7 +13,7 @@ import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -57,7 +57,7 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         IFluidHandlerItem fluidHandler;
-        AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatChest());
+        AtomicDouble maxHeat = new AtomicDouble(MPAConfig.baseMaxHeatChest());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;

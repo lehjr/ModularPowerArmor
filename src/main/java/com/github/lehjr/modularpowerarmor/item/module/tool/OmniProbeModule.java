@@ -1,27 +1,34 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.modularpowerarmor.utils.modulehelpers.OmniProbeHelper;
+import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
+import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
+import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.misc.ModCompatibility;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import com.github.lehjr.modularpowerarmor.utils.modulehelpers.OmniProbeHelper;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by User: Korynkai
@@ -29,139 +36,110 @@ import javax.annotation.Nonnull;
  * <p>
  * TODO: Fix ProjectRed (may require PR to ProjectRed)
  */
-public class OmniProbeModule extends AbstractPowerModule implements IRightClickModule, IPlayerTickModule {
+public class OmniProbeModule extends AbstractPowerModule {
     private ItemStack rcMeter = ItemStack.EMPTY;
 
     private ItemStack conduitProbe = ItemStack.EMPTY;
 
     private ItemStack teMultimeter = ItemStack.EMPTY;
 
-//    private ItemStack rednetMeter = ItemStack.EMPTY;
-
-//    private ItemStack euMeter = ItemStack.EMPTY;
-
-    public OmniProbeModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 4));
-        ItemStack tHighest = new ItemStack(Items.COMPARATOR);
-
-        // Does not exist
-//        if (ModCompatibility.isMFRLoaded()) {
-//            rednetMeter = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("MineFactoryReloaded", "rednet.meter")), 1);
-//            tHighest = rednetMeter;
-//        }
-
+    public OmniProbeModule(String regName) {
+        super(regName);
         if (ModCompatibility.isRailcraftLoaded()) {
             rcMeter = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("railcraft", "tool_charge_meter")), 1);
-            tHighest = rcMeter;
         }
 
         /* untested */
         if (ModCompatibility.isThermalExpansionLoaded()) {
             teMultimeter = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("thermalexpansion", "multimeter")), 1);
-            tHighest = teMultimeter;
         }
 
         if (ModCompatibility.isEnderIOLoaded()) {
             conduitProbe = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("enderio", "item_conduit_probe")), 1);
-            tHighest = conduitProbe;
-        }
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), tHighest);
-    }
-
-    @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.TOOL;
-    }
-
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_OMNIPROBE__DATANAME;
-    }
-
-    @Override
-    public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        return ActionResult.newResult(EnumActionResult.PASS, itemStackIn);
-    }
-
-    @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return EnumActionResult.PASS;
-    }
-
-    @Override
-    public EnumActionResult onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        Block block = world.getBlockState(pos).getBlock();
-
-        if (block == null || block.isAir(world.getBlockState(pos), world, pos))
-            return EnumActionResult.PASS;
-
-        try {
-            if (ModCompatibility.isEnderIOLoaded()) {
-                if (conduitProbe.getItem().onItemUse(player, world, pos, EnumHand.MAIN_HAND, side, hitX, hitY, hitZ) == EnumActionResult.SUCCESS)
-                    return EnumActionResult.SUCCESS;
-            }
-
-//            if (ModCompatibility.isMFRLoaded()) {
-//                if (block == Block.REGISTRY.getObject(new ResourceLocation("minefactoryreloaded", "cable.redstone")))
-//                    return rednetMeter.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, EnumHand.MAIN_HAND);
-//            }
-
-            if (ModCompatibility.isRailcraftLoaded()) {
-                if (rcMeter.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS)
-                    return EnumActionResult.SUCCESS;
-            }
-
-            if(ModCompatibility.isThermalExpansionLoaded()) {
-                if (teMultimeter.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS)
-                    return EnumActionResult.SUCCESS;
-            }
-        } catch (Exception ignored) {
-
-        }
-        return EnumActionResult.PASS;
-    }
-
-    @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-        if (!OmniProbeHelper.getEIOFacadeTransparency(item)) {
-            OmniProbeHelper.setEIONoCompete(item, ModuleConstants.MODULE_OMNIPROBE__DATANAME);
-            OmniProbeHelper.setEIOFacadeTransparency(item, true);
         }
     }
 
+    @Nullable
     @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-        if (!(OmniProbeHelper.getEIONoCompete(item).isEmpty()) && (!OmniProbeHelper.getEIONoCompete(item).isEmpty())) {
-            if (OmniProbeHelper.getEIONoCompete(item).equals(ModuleConstants.MODULE_OMNIPROBE__DATANAME)) {
-                OmniProbeHelper.setEIONoCompete(item, "");
-                if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
-                    OmniProbeHelper.setEIOFacadeTransparency(item, false);
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
+    }
+
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPlayerTickModule ticker;
+
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.ticker = new Ticker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
+            }
+            return null;
+        }
+
+        class Ticker extends PlayerTickModule implements IRightClickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
+            }
+
+            @Override
+            public EnumActionResult onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+                Block block = world.getBlockState(pos).getBlock();
+
+                if (block == null || block.isAir(world.getBlockState(pos), world, pos))
+                    return EnumActionResult.PASS;
+
+                try {
+                    if (ModCompatibility.isEnderIOLoaded()) {
+                        if (conduitProbe.getItem().onItemUse(player, world, pos, EnumHand.MAIN_HAND, side, hitX, hitY, hitZ) == EnumActionResult.SUCCESS)
+                            return EnumActionResult.SUCCESS;
+                    }
+
+                    if (ModCompatibility.isRailcraftLoaded()) {
+                        if (rcMeter.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS)
+                            return EnumActionResult.SUCCESS;
+                    }
+
+                    if (ModCompatibility.isThermalExpansionLoaded()) {
+                        if (teMultimeter.getItem().onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, EnumHand.MAIN_HAND) == EnumActionResult.SUCCESS)
+                            return EnumActionResult.SUCCESS;
+                    }
+                } catch (Exception ignored) {
+
+                }
+                return EnumActionResult.PASS;
+            }
+
+            @Override
+            public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
+                if (!OmniProbeHelper.getEIOFacadeTransparency(item)) {
+                    OmniProbeHelper.setEIONoCompete(item, RegistryNames.MODULE_OMNIPROBE__REGNAME);
+                    OmniProbeHelper.setEIOFacadeTransparency(item, true);
                 }
             }
-        } else {
-            if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
-                OmniProbeHelper.setEIOFacadeTransparency(item, false);
+
+            @Override
+            public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
+                if (!(OmniProbeHelper.getEIONoCompete(item).isEmpty()) && (!OmniProbeHelper.getEIONoCompete(item).isEmpty())) {
+                    if (OmniProbeHelper.getEIONoCompete(item).equals(RegistryNames.MODULE_OMNIPROBE__REGNAME)) {
+                        OmniProbeHelper.setEIONoCompete(item, "");
+                        if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
+                            OmniProbeHelper.setEIOFacadeTransparency(item, false);
+                        }
+                    }
+                } else {
+                    if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
+                        OmniProbeHelper.setEIOFacadeTransparency(item, false);
+                    }
+                }
             }
         }
-    }
-
-    public float minF(float a, float b) {
-        return a < b ? a : b;
-    }
-
-    @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
-
-    }
-
-    @Override
-    public int getEnergyUsage(@Nonnull ItemStack itemStack) {
-        return 0;
-    }
-
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.omniProbe;
     }
 }

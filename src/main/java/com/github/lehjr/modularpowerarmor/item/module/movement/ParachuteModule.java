@@ -1,56 +1,79 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
+import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
-import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.lehjr.mpalib.player.PlayerUtils;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ParachuteModule extends AbstractPowerModule implements IToggleableModule, IPlayerTickModule {
-    public ParachuteModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.parachute, 2));
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ParachuteModule extends AbstractPowerModule {
+    public ParachuteModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.MOVEMENT;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_PARACHUTE__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPlayerTickModule ticker;
 
-    @Override
-    public void onPlayerTickActive(EntityPlayer player, ItemStack itemStack) {
-        PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
-        boolean hasGlider = false;
-        PlayerUtils.resetFloatKickTicks(player);
-        if (playerInput.sneakKey && player.motionY < -0.1 && (!hasGlider || playerInput.moveForward <= 0)) {
-            double totalVelocity = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ + player.motionY * player.motionY);
-            if (totalVelocity > 0) {
-                player.motionX = player.motionX * 0.1 / totalVelocity;
-                player.motionY = player.motionY * 0.1 / totalVelocity;
-                player.motionZ = player.motionZ * 0.1 / totalVelocity;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPAConfig.moduleConfig);
+            this.ticker.addTradeoffPropertyDouble(Constants.THRUST, Constants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffPropertyDouble(Constants.THRUST, Constants.SWIM_BOOST_AMOUNT, 1, "m/s");
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                ticker.updateFromNBT();
+                return (T) ticker;
+            }
+            return null;
+        }
+
+        class Ticker extends PlayerTickModule {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+                super(module, category, target, config, false);
+            }
+
+            @Override
+            public void onPlayerTickActive (EntityPlayer player, ItemStack itemStack){
+                PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
+                boolean hasGlider = false;
+                PlayerUtils.resetFloatKickTicks(player);
+                if (playerInput.sneakKey && player.motionY < -0.1 && (!hasGlider || playerInput.moveForward <= 0)) {
+                    double totalVelocity = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ + player.motionY * player.motionY);
+                    if (totalVelocity > 0) {
+                        player.motionX = player.motionX * 0.1 / totalVelocity;
+                        player.motionY = player.motionY * 0.1 / totalVelocity;
+                        player.motionZ = player.motionZ * 0.1 / totalVelocity;
+                    }
+                }
             }
         }
-    }
-
-    @Override
-    public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-    }
-
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.parachute;
     }
 }

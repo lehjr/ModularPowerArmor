@@ -1,41 +1,54 @@
 package com.github.lehjr.modularpowerarmor.item.module.special;
 
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.init.Items;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.toggleable.ToggleableModule;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by User: Andrew2448
  * 11:12 PM 6/11/13
  */
-public class ClockModule extends AbstractPowerModule implements IToggleableModule {
-    public static final ItemStack clock = new ItemStack(Items.CLOCK);
-
-    public ClockModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), clock);
+public class ClockModule extends AbstractPowerModule {
+    public ClockModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(clock).getParticleTexture();
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.SPECIAL;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IToggleableModule moduleToggle;
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_CLOCK__DATANAME;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig, true);
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                moduleToggle.updateFromNBT();
+                return (T) moduleToggle;
+            }
+            return null;
+        }
     }
 }

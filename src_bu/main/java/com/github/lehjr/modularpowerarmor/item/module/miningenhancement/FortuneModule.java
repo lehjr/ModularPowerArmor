@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.enchantment.IEnchantmentModule;
@@ -43,7 +43,7 @@ public class FortuneModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
             this.miningEnhancement.addBasePropertyDouble(Constants.FORTUNE_ENERGY_CONSUMPTION, 500, "RF");
             this.miningEnhancement.addTradeoffPropertyDouble(Constants.ENCHANTMENT_LEVEL, Constants.FORTUNE_ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(Constants.ENCHANTMENT_LEVEL, Constants.FORTUNE_ENCHANTMENT_LEVEL, 3, "", 1, 1);

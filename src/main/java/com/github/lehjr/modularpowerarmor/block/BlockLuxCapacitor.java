@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.block;
 
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
+import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
 import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
@@ -72,7 +72,7 @@ public class BlockLuxCapacitor extends BlockDirectional {
         setLightLevel(1.0f);
         setTickRandomly(false);
         setHarvestLevel("pickaxe", 0);
-        GameRegistry.registerTileEntity(TileEntityLuxCapacitor.class, regName);
+        GameRegistry.registerTileEntity(LuxCapacitorTileEntity.class, regName);
     }
 
     @SuppressWarnings("deprecation")
@@ -124,8 +124,8 @@ public class BlockLuxCapacitor extends BlockDirectional {
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileEntityLuxCapacitor && state instanceof IExtendedBlockState)
-            return ((IExtendedBlockState) state).withProperty(COLOR, ((TileEntityLuxCapacitor) te).getColor());
+        if (te instanceof LuxCapacitorTileEntity && state instanceof IExtendedBlockState)
+            return ((IExtendedBlockState) state).withProperty(COLOR, ((LuxCapacitorTileEntity) te).getColor());
         return state;
     }
 
@@ -173,8 +173,8 @@ public class BlockLuxCapacitor extends BlockDirectional {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         if (state instanceof IExtendedBlockState)
-            return new TileEntityLuxCapacitor(((IExtendedBlockState) state).getValue(COLOR));
-        return new TileEntityLuxCapacitor();
+            return new LuxCapacitorTileEntity(((IExtendedBlockState) state).getValue(COLOR));
+        return new LuxCapacitorTileEntity();
     }
 
     @SuppressWarnings("deprecation")

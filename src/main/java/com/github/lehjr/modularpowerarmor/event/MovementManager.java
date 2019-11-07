@@ -60,7 +60,7 @@ public class MovementManager {
     // moved here so it is still accessible if sprint assist module isn't installed.
     public static void setMovementModifier(ItemStack itemStack, double multiplier, EntityPlayer player) {
         // reduce player speed according to Kinetic Energy Generator setting
-        if (ModuleManager.INSTANCE.itemHasActiveModule(itemStack, ModuleConstants.MODULE_KINETIC_GENERATOR__DATANAME)) {
+        if (ModuleManager.INSTANCE.itemHasActiveModule(itemStack, ModuleConstants.MODULE_KINETIC_GENERATOR__REGNAME)) {
             double movementResistance = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.KINETIC_ENERGY_MOVEMENT_RESISTANCE);
             multiplier -= movementResistance;
         }
@@ -198,7 +198,7 @@ public class MovementManager {
             ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
 
             if (!stack.isEmpty() && stack.getItem() instanceof ItemPowerArmor
-                    && ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_JUMP_ASSIST__DATANAME)) {
+                    && ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_JUMP_ASSIST__REGNAME)) {
                 double jumpAssist = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_MULTIPLIER) * 2;
                 double drain = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_ENERGY_CONSUMPTION);
                 int avail = ElectricItemUtils.getPlayerEnergy(player);
@@ -228,7 +228,7 @@ public class MovementManager {
             ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
             if (!boots.isEmpty()) {
-                if (ModuleManager.INSTANCE.itemHasActiveModule(boots, ModuleConstants.MODULE_SHOCK_ABSORBER__DATANAME)) {
+                if (ModuleManager.INSTANCE.itemHasActiveModule(boots, ModuleConstants.MODULE_SHOCK_ABSORBER__REGNAME)) {
                     double distanceAbsorb =
                             MathUtils.clampDouble(event.getDistance() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, ModuleConstants.SHOCK_ABSORB_MULTIPLIER),
                             0, event.getDistance());

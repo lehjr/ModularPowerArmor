@@ -1,7 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.module.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -31,24 +33,19 @@ public class EnergyShieldModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            if (CommonConfig.moduleConfig != null) {
-                ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig, true);
+            if (MPAConfig.moduleConfig != null) {
+                ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPAConfig.moduleConfig, true);
                 ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_VALUE_ENERGY, 6, MPALIbConstants.MODULE_TRADEOFF_PREFIX + Constants.ARMOR_POINTS);
                 ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_ENERGY_CONSUMPTION, 5000, "RF");
                 ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.MAXIMUM_HEAT, 500, "");
                 ticker.addBasePropertyDouble(Constants.KNOCKBACK_RESISTANCE, 0.25, "");
             }
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
         }
 
         @Nullable

@@ -55,16 +55,16 @@ public class MPSModelHelper {
 ////        if (itemTag.contains(MPALIbConstants.TAG_RENDER, Constants.NBT.TAG_COMPOUND))
 ////            renderTag = itemTag.getCompound(MPALIbConstants.TAG_RENDER);
 ////        else if (itemTag.contains(MPALIbConstants.TAG_COSMETIC_PRESET, Constants.NBT.TAG_STRING))
-////            renderTag = CommonConfig.moduleConfig.getPresetNBTFor(stack, itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET));
+////            renderTag = MPAConfig.moduleConfig.getPresetNBTFor(stack, itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET));
 ////
 ////        if (renderTag != null)
 ////            return renderTag;
 ////
 ////        // if cosmetic presets are to be used, or powerfist customization is not allowed set to default preset
-////        if (!CommonConfig.moduleConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get() ||
-////                (stack.getItem() instanceof ItemPowerFist && CommonConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())) {
+////        if (!MPAConfig.moduleConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get() ||
+////                (stack.getItem() instanceof ItemPowerFist && MPAConfig.moduleConfig.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get())) {
 ////            itemTag.putString(MPALIbConstants.TAG_COSMETIC_PRESET, "Default");
-////            return CommonConfig.moduleConfig.getPresetNBTFor(stack, "Default");
+////            return MPAConfig.moduleConfig.getPresetNBTFor(stack, "Default");
 ////        }
 ////
 ////        renderTag = DefaultModelSpec.makeModelPrefs(stack, armorSlot);

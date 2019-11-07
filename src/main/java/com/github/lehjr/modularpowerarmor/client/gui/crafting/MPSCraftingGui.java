@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
@@ -105,7 +106,7 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
                 gridBorderColour,
                 gridBorderColour,
                 16,
-                ResourceConstants.TEXTURE_PREFIX + "gui/recipe_book_button.png");
+                Constants.TEXTURE_PREFIX + "gui/recipe_book_button.png");
         recipeBookButton.setEnabled(true);
         recipeBookButton.setVisible(true);
         recipeBookButton.setTextureOffsetX(-8.0);

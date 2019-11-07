@@ -1,34 +1,53 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.module.toggleable.ToggleableModule;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class FlightControlModule extends AbstractPowerModule implements IToggleableModule {
-    public FlightControlModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
-        addTradeoffPropertyDouble(ModuleConstants.VERTICALITY, ModuleConstants.FLIGHT_VERTICALITY, 1.0, "%");
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class FlightControlModule extends AbstractPowerModule {
+    public FlightControlModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.SPECIAL;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_FLIGHT_CONTROL__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IToggleableModule moduleToggle;
 
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.flightControl;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig, false);
+            this.moduleToggle.addTradeoffPropertyDouble(Constants.VERTICALITY, Constants.FLIGHT_VERTICALITY, 1.0, "%");
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                moduleToggle.updateFromNBT();
+                return (T) moduleToggle;
+            }
+            return null;
+        }
     }
 }

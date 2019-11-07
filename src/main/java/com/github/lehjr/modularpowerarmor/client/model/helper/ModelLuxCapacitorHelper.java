@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.cache.CacheBuilder;
@@ -24,8 +25,8 @@ import java.util.List;
 public enum ModelLuxCapacitorHelper {
     INSTANCE;
 
-    private static final ResourceLocation baseModelLocation = new ResourceLocation(ResourceConstants.RESOURCE_PREFIX + "block/luxcapacitor/luxcapacitor_base.obj");
-    private static final ResourceLocation lensModelLocation = new ResourceLocation(ResourceConstants.RESOURCE_PREFIX + "block/luxcapacitor/luxcapacitor_lens.obj");
+    private static final ResourceLocation baseModelLocation = new ResourceLocation(Constants.RESOURCE_PREFIX + "block/luxcapacitor/luxcapacitor_base.obj");
+    private static final ResourceLocation lensModelLocation = new ResourceLocation(Constants.RESOURCE_PREFIX + "block/luxcapacitor/luxcapacitor_lens.obj");
 
     /*
      * Guava chache for the list of baked quads.

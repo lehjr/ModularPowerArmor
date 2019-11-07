@@ -2,8 +2,8 @@ package com.github.lehjr.modularpowerarmor.client.event;
 
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.client.render.Renderer;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Ported to Java by lehjr on 10/24/16.
  */
 public class RenderEventHandler {
-    private static final MPSConfig config = MPSConfig.INSTANCE;
+    private static final MPAConfig config = MPAConfig.INSTANCE;
     private static boolean ownFly;
     private final DrawableRect frame = new DrawableRect(config.keybindHUDx(), config.keybindHUDy(), config.keybindHUDx() + (double) 16, config.keybindHUDy() + (double) 16, true, Colour.DARKGREEN.withAlpha(0.2), Colour.GREEN.withAlpha(0.2));
 
@@ -65,10 +65,10 @@ public class RenderEventHandler {
     }
 
     private boolean playerHasFlightOn(EntityPlayer player) {
-        return ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_JETPACK__DATANAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_GLIDER__DATANAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.FEET), ModuleConstants.MODULE_JETBOOTS__DATANAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ModuleConstants.MODULE_FLIGHT_CONTROL__DATANAME);
+        return ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_JETPACK__REGNAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_GLIDER__REGNAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.FEET), ModuleConstants.MODULE_JETBOOTS__REGNAME) ||
+                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ModuleConstants.MODULE_FLIGHT_CONTROL__REGNAME);
     }
 
     @SubscribeEvent
@@ -82,7 +82,7 @@ public class RenderEventHandler {
     @SubscribeEvent
     public void onFOVUpdate(FOVUpdateEvent e) {
         ItemStack helmet = e.getEntity().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-        if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, ModuleConstants.BINOCULARS_MODULE__DATANAME)) {
+        if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, ModuleConstants.BINOCULARS_MODULE__REGNAME)) {
             e.setNewfov(e.getNewfov() / (float) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helmet, ModuleConstants.FOV));
         }
     }

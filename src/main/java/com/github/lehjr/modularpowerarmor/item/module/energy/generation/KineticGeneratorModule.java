@@ -2,8 +2,10 @@ package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -38,22 +40,17 @@ public class KineticGeneratorModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPAConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(Constants.ENERGY_GENERATION, 2000);
             this.ticker.addTradeoffPropertyDouble(Constants.ENERGY_GENERATED, Constants.ENERGY_GENERATION, 6000, "RF");
             this.ticker.addBasePropertyDouble(Constants.MOVEMENT_RESISTANCE, 0.01);
             this.ticker.addTradeoffPropertyDouble(Constants.ENERGY_GENERATED, Constants.MOVEMENT_RESISTANCE, 0.49, "%");
-        }
-
-        @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == PowerModuleCapability.POWER_MODULE;
         }
 
         @Nullable

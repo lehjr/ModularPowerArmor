@@ -71,13 +71,13 @@ public class AdditionalInfo {
                 // TODO: tooltip label for fluids if fluids found
 
                 // Water tank info
-                FluidUtils fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME);
+                FluidUtils fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME);
                 List<String> fluidInfo = fluidUtils.getFluidDisplayString();
                 if (!fluidInfo.isEmpty())
                     currentTipList.addAll(fluidInfo);
 
                 // advanced fluid tank info
-                fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__DATANAME);
+                fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME);
                 fluidInfo = fluidUtils.getFluidDisplayString();
                 if (!fluidInfo.isEmpty())
                     currentTipList.addAll(fluidInfo);

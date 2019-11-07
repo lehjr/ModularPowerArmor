@@ -1,13 +1,18 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.Item;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by User: Andrew
@@ -15,26 +20,33 @@ import net.minecraft.util.ResourceLocation;
  * Time: 2:03 PM
  */
 public class ApiaristArmorModule extends AbstractPowerModule {
-    public ApiaristArmorModule(EnumModuleTarget moduleTarget) {
-        super(moduleTarget);
-        ItemStack stack = new ItemStack(Item.REGISTRY.getObject(new ResourceLocation("forestry", "crafting_material")), 6, 2);
-        stack.setItemDamage(3);
-        ModuleManager.INSTANCE.addInstallCost(getDataName(), stack);
-        addBasePropertyDouble(ModuleConstants.APIARIST_ARMOR_ENERGY_CONSUMPTION, 100, "RF");
+    public ApiaristArmorModule(String regName) {
+        super(regName);
     }
 
+    @Nullable
     @Override
-    public EnumModuleCategory getCategory() {
-        return EnumModuleCategory.ENVIRONMENTAL;
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        return new CapProvider(stack);
     }
 
-    @Override
-    public String getDataName() {
-        return ModuleConstants.MODULE_APIARIST_ARMOR__DATANAME;
-    }
+    public class CapProvider implements IPowerModuleCapabilityProvider {
+        ItemStack module;
+        IPowerModule moduleCap;
 
-    @Override
-    public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.apiaristArmor;
+        public CapProvider(@Nonnull ItemStack module) {
+            this.module = module;
+            moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.ARMORONLY, MPAConfig.moduleConfig);
+            moduleCap.addBasePropertyDouble(Constants.ARMOR_ENERGY_CONSUMPTION, 100, "RF");
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == PowerModuleCapability.POWER_MODULE) {
+                return (T) moduleCap;
+            }
+            return null;
+        }
     }
 }

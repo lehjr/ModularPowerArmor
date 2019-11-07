@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.capabilities.MPSCapProvider;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
@@ -40,7 +41,7 @@ import java.util.UUID;
  * <p>
  * Ported to Java by lehjr on 11/4/16.
  */
-public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpecialArmor, IArmorTraits {
+public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpecialArmor {
     public static final UUID[] ARMOR_MODIFIERS = new UUID[]{
             UUID.randomUUID(),
             UUID.randomUUID(),
@@ -75,13 +76,13 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
             return false;
 
         if (source.damageType.equals("electricity") || source.damageType.equals("radiation") || source.damageType.equals("sulphuric_acid"))
-            return ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__DATANAME);
+            return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME);
 
         // Fixme: needs to check for Oxygen... needs to check for
 
 //        // Galacticraft
 //        if (slot == 3 && source.getDamageType().equals("oxygen_suffocation"))
-//            return ModuleManager.INSTANCE.itemHasModule(armor, MPSModuleConstants.MODULE_AIRTIGHT_SEAL__DATANAME);
+//            return ModuleManager.INSTANCE.itemHasModule(armor, MPSModuleConstants.MODULE_AIRTIGHT_SEAL__REGNAME);
 
 
 
@@ -94,9 +95,9 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         // this still needs tweaking (extra planets)
         if (source.getDamageType().equals("pressure")) {
             if (slot == 3)
-                return ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_AIRTIGHT_SEAL__DATANAME) && ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__DATANAME);
+                return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_AIRTIGHT_SEAL__REGNAME) && ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__REGNAME);
             else
-                return ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__DATANAME);
+                return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME);
 
 //            for (ItemStack armorStack : entity.getArmorInventoryList()) {
 //                if (armorStack.getItem() instanceof this)
@@ -105,7 +106,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 //
 //
 //
-////                if (ModuleManager.INSTANCE.itemHasModule(armor, MPSModuleConstants.MODULE_AIRTIGHT_SEAL__DATANAME))
+////                if (ModuleManager.INSTANCE.itemHasModule(armor, MPSModuleConstants.MODULE_AIRTIGHT_SEAL__REGNAME))
 //
 //
 //
@@ -181,7 +182,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         }
 
         // hazmat handled hazards
-        if (ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__DATANAME) &&
+        if (ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME) &&
                 (source.damageType.equals("electricity") ||
                         source.damageType.equals("radiation") ||
                         source.damageType.equals("sulphuric_acid"))) {
@@ -212,7 +213,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
         if (slot == this.armorType) {
             multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), 0.25, 0));
-            if (ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_DIAMOND_PLATING__DATANAME) || ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_ENERGY_SHIELD__DATANAME)) {
+            if (ModuleManager.INSTANCE.itemHasActiveModule(stack, RegistryNames.MODULE_DIAMOND_PLATING__REGNAME) || ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_ENERGY_SHIELD__REGNAME)) {
                 multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], "Armor toughness", 2.5, 0));
             }
         }
@@ -244,16 +245,6 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         totalArmor = Math.min(MPAConfig.INSTANCE.getMaximumArmorPerPiece(), totalArmor);
 
         return totalArmor;
-    }
-
-    @Optional.Method(modid = "forestry")
-    @Override
-    public boolean protectEntity(final EntityLivingBase player, final ItemStack armor, final String cause, final boolean doProtect) {
-        if (ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_APIARIST_ARMOR__DATANAME)) {
-            ElectricItemUtils.drainPlayerEnergy((EntityPlayer) player, (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(armor, ModuleConstants.APIARIST_ARMOR_ENERGY_CONSUMPTION));
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -292,8 +283,8 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         if (type == "overlay")  // this is to allow a tint to be applied tot the armor
             return ResourceConstants.BLANK_ARMOR_MODEL_PATH;
         if (armor.getItem() instanceof ItemPowerArmor) {
-            if ((slot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_ACTIVE_CAMOUFLAGE__DATANAME)) ||
-                    (ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_TRANSPARENT_ARMOR__DATANAME)))
+            if ((slot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_ACTIVE_CAMOUFLAGE__REGNAME)) ||
+                    (ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_TRANSPARENT_ARMOR__REGNAME)))
                 return ResourceConstants.BLANK_ARMOR_MODEL_PATH;
             return MPSNBTUtils.getArmorTexture(armor, slot);
         }
@@ -316,8 +307,8 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         ((IArmorModel) model).setVisibleSection(armorSlot);
 
         ItemStack chestPlate = armorSlot == EntityEquipmentSlot.CHEST ? armor : entityLiving.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-        if (chestPlate.getItem() instanceof ItemPowerArmorChestplate && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, ModuleConstants.MODULE_TRANSPARENT_ARMOR__DATANAME) ||
-                (armorSlot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, ModuleConstants.MODULE_ACTIVE_CAMOUFLAGE__DATANAME))) {
+        if (chestPlate.getItem() instanceof ItemPowerArmorChestplate && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, RegistryNames.MODULE_TRANSPARENT_ARMOR__REGNAME) ||
+                (armorSlot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, RegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))) {
             ((IArmorModel) model).setVisibleSection(null);
         } else
             ((IArmorModel) model).setRenderSpec(MPSNBTUtils.getMuseRenderTag(armor, armorSlot));

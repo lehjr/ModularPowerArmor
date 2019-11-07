@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.capabilities;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.legacy.module.IModuleManager;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
@@ -229,17 +230,17 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
         @Override
         public boolean canFillFluidType(FluidStack fluid) {
             if (fluid != null) {
-                if (fluid.getFluid() == FluidRegistry.WATER && moduleDataName == ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME) {
+                if (fluid.getFluid() == FluidRegistry.WATER && moduleDataName == RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME) {
                     return true;
                 }
 
-                if (fluid.getFluid() != FluidRegistry.WATER && moduleDataName == ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__DATANAME) {
+                if (fluid.getFluid() != FluidRegistry.WATER && moduleDataName == ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME) {
                     return true;
                 }
             }
 
             // This should cover both cases above... but
-            return (fluid != null && fluid.getFluid() == FluidRegistry.WATER && moduleDataName == ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME);
+            return (fluid != null && fluid.getFluid() == FluidRegistry.WATER && moduleDataName == ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME);
         }
 
         @Nullable
@@ -310,13 +311,13 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
 
     public class BasicCoolingTank extends ArmorTank {
         public BasicCoolingTank() {
-            super(ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME);
+            super(ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME);
         }
     }
 
     public class AdvancedCoolingTank extends ArmorTank {
         public AdvancedCoolingTank() {
-            super(ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__DATANAME);
+            super(ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME);
         }
     }
 }

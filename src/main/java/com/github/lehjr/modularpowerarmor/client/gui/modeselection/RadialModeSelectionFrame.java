@@ -1,93 +1,77 @@
 package com.github.lehjr.modularpowerarmor.client.gui.modeselection;
 
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.gui.geometry.SpiralPointToPoint2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
-import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
-import com.github.lehjr.mpalib.legacy.network.LegacyModeChangeRequestPacket;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableModule;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.ModeChangeRequestPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class RadialModeSelectionFrame implements IGuiFrame {
     protected final long spawnTime;
     protected List<ClickableModule> modeButtons = new ArrayList<>();
     protected int selectedModuleOriginal = -1;
     protected int selectedModuleNew = -1;
-
-
     protected EntityPlayer player;
     protected Point2D center;
     protected double radius;
     protected ItemStack stack;
 
+    Rect rect;
+
     public RadialModeSelectionFrame(Point2D topleft, Point2D bottomright, EntityPlayer player) {
         spawnTime = System.currentTimeMillis();
         this.player = player;
-        this.center = bottomright.plus(topleft).times(0.5);
-        this.radius = Math.min(center.minus(topleft).getX(), center.minus(topleft).getY());
+        rect = new Rect(topleft, bottomright);
+        center = rect.center();
+        this.radius = Math.min(rect.height(), rect.width());
         this.stack = player.inventory.getCurrentItem();
+
         loadItems();
-        //Determine which mode is currently active
-        if (!stack.isEmpty() && stack.getItem() instanceof IModeChangingItem) {
-            if (modeButtons != null) {
-                int i = 0;
-                for (ClickableModule mode : modeButtons) {
-                    if (mode.getModule().getDataName().equals(((IModeChangingItem) stack.getItem()).getActiveMode(stack))) {
-                        selectedModuleOriginal = i;
-                        break;
-                    }
-                    i++;
-                }
-            }
-        }
     }
 
     @Override
-    public void init(double v, double v1, double v2, double v3) {
-
+    public void init(double left, double top, double right, double bottom) {
+        rect.setTargetDimensions(left, top, right, bottom);
+        center = rect.center();
+        this.radius = Math.min(rect.height(), rect.width());
+        modeButtons.clear();
     }
 
     public RadialModeSelectionFrame() {
         spawnTime = System.currentTimeMillis();
     }
 
-    private boolean alreadyAdded(IRightClickModule module) {
-        for (ClickableModule clickie : modeButtons) {
-            if (clickie.getModule().getDataName().equals(module.getDataName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void loadItems() {
-        if (player != null) {
-            List<IRightClickModule> modes = new ArrayList<>();
-            for (IPowerModule module : ModuleManager.INSTANCE.getModulesOfType(IRightClickModule.class)) {
-                if (ModuleManager.INSTANCE.isValidForItem(stack, module))
-                    if (ModuleManager.INSTANCE.itemHasModule(stack, module.getDataName()))
-                        modes.add((IRightClickModule) module);
-            }
-
-            int modeNum = 0;
-            for (IRightClickModule module : modes) {
-                if (!alreadyAdded(module)) {
-                    ClickableModule clickie = new ClickableModule(module, new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modes.size()), 250));
-                    modeButtons.add(clickie);
-                    modeNum++;
+        if (player != null && modeButtons.isEmpty()) {
+            Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(handler->{
+                if (handler instanceof com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem) {
+                    List<Integer> modes = ((com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem) handler).getValidModes();
+                    int activeMode = ((com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem) handler).getActiveMode();
+                    if (activeMode > 0)
+                        selectedModuleOriginal = activeMode;
+                    int modeNum = 0;
+                    for (int mode : modes) {
+                        ClickableModule clickie = new ClickableModule(handler.getStackInSlot(mode), new SpiralPointToPoint2D(center, radius, (3 * Math.PI / 2) - ((2 * Math.PI * modeNum) / modes.size()), 250), mode, EnumModuleCategory.NONE);
+                        modeButtons.add(clickie);
+                        modeNum ++;
+                    }
                 }
-            }
+            });
         }
     }
+
 
     private void selectModule(double x, double y) {
         if (modeButtons != null) {
@@ -119,11 +103,15 @@ public class RadialModeSelectionFrame implements IGuiFrame {
             selectModule(mousex, mousey);
         }
         //Switch to selected mode if mode changed
-        if (getSelectedModule() != null && selectedModuleOriginal != selectedModuleNew && !stack.isEmpty() && stack.getItem() instanceof IModeChangingItem) {
+        if (getSelectedModule() != null && selectedModuleOriginal != selectedModuleNew) {
             // update to detect mode changes
             selectedModuleOriginal = selectedModuleNew;
-            ((IModeChangingItem) stack.getItem()).setActiveMode(stack, getSelectedModule().getModule().getDataName());
-            MPSPackets.sendToServer(new LegacyModeChangeRequestPacket(getSelectedModule().getModule().getDataName(), player.inventory.currentItem));
+            Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(handler->{
+                if (handler instanceof IModeChangingItem) {
+                    ((IModeChangingItem) handler).setActiveMode(getSelectedModule().getInventorySlot());
+                    MPALibPackets.INSTANCE.sendToServer(new ModeChangeRequestPacket(getSelectedModule().getInventorySlot(), player.inventory.currentItem));
+                }
+            });
         }
     }
 
@@ -155,13 +143,11 @@ public class RadialModeSelectionFrame implements IGuiFrame {
 
     }
 
-
     @Override
     public List<String> getToolTip(int x, int y) {
         ClickableModule module = getSelectedModule();
         if (module != null) {
-            IPowerModule selectedModule = module.getModule();
-            return Collections.singletonList(module.getLocalizedName(selectedModule));
+            return module.getToolTip();
         }
         return null;
     }

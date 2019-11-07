@@ -1,26 +1,23 @@
 package com.github.lehjr.modularpowerarmor.config;
 
-import com.github.lehjr.mpalib.basemod.MPALib;
-import com.github.lehjr.mpalib.capabilities.IConfig;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.misc.ModCompatibility;
 import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
+import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
+import com.github.lehjr.mpalib.basemod.MPALib;
+import com.github.lehjr.mpalib.capabilities.IConfig;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.io.FileUtils;
-import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -192,6 +189,7 @@ public enum MPAConfig {
     }
 
 
+    public static ModuleConfig moduleConfig = new ModuleConfig();
     static class ModuleConfig implements IConfig {
 
         @Override
@@ -219,38 +217,6 @@ public enum MPAConfig {
             return false;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Modules -----------------------------------------------------------------------------------

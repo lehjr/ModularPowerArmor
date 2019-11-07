@@ -4,8 +4,6 @@ import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
-import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
-import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
@@ -19,16 +17,18 @@ import com.github.lehjr.modularpowerarmor.item.module.armor.EnergyShieldModule;
 import com.github.lehjr.modularpowerarmor.item.module.armor.IronPlatingModule;
 import com.github.lehjr.modularpowerarmor.item.module.armor.LeatherPlatingModule;
 import com.github.lehjr.modularpowerarmor.item.module.cosmetic.TransparentArmorModule;
-import com.github.lehjr.modularpowerarmor.item.module.energy.generation.AdvancedSolarGeneratorModule;
-import com.github.lehjr.modularpowerarmor.item.module.energy.generation.BasicSolarGeneratorModule;
+import com.github.lehjr.modularpowerarmor.item.module.energy.generation.AdvancedSolarGenerator;
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.KineticGeneratorModule;
+import com.github.lehjr.modularpowerarmor.item.module.energy.generation.SolarGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.storage.EnergyStorageModule;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.MobRepulsorModule;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.WaterElectrolyzerModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AOEPickUpgradeModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AquaAffinityModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.FortuneModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.ItemModuleSilkTouch;
+import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.SilkTouchModule;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
 import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;
@@ -39,13 +39,8 @@ import com.github.lehjr.modularpowerarmor.item.module.vision.BinocularsModule;
 import com.github.lehjr.modularpowerarmor.item.module.vision.NightVisionModule;
 import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
-import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
-import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
+import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -55,9 +50,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static com.github.lehjr.modularpowerarmor.basemod.Constants.MODID;
 import static com.github.lehjr.modularpowerarmor.basemod.RegistryNames.*;
 
-//import com.github.lehjr.modularpowerarmor.containers.ModularItemContainer;
-
-@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber()
 public enum RegisterStuff {
     INSTANCE;
 
@@ -128,8 +121,8 @@ public enum RegisterStuff {
                         100000000),
 
                 // Energy Generation --------------------------------------------------------------
-                new BasicSolarGeneratorModule(MODULE_SOLAR_GENERATOR__REGNAME),
-                new AdvancedSolarGeneratorModule(MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME),
+                new SolarGeneratorModule(MODULE_SOLAR_GENERATOR__REGNAME),
+                new AdvancedSolarGenerator(MODULE_ADVANCED_SOLAR_GENERATOR__REGNAME),
                 new KineticGeneratorModule(MODULE_KINETIC_GENERATOR__REGNAME),
                 new ThermalGeneratorModule(MODULE_THERMAL_GENERATOR__REGNAME),
 
@@ -165,7 +158,7 @@ public enum RegisterStuff {
 
                 // Mining Enhancements ------------------------------------------------------------------------
                 new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
-                new ItemModuleSilkTouch(MODULE_SILK_TOUCH__REGNAME),
+                new SilkTouchModule(MODULE_SILK_TOUCH__REGNAME),
                 new FortuneModule(MODULE_FORTUNE_REGNAME),
 
                 // Tools --------------------------------------------------------------------------
@@ -212,7 +205,7 @@ public enum RegisterStuff {
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
         event.getRegistry().registerAll(
                 TileEntityType.Builder.create(() ->
-                        new TileEntityLuxCapacitor(), new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME)).build(null).setRegistryName(LUX_CAPACITOR_REG_NAME + "_tile"),
+                        new LuxCapacitorTileEntity(), new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME)).build(null).setRegistryName(LUX_CAPACITOR_REG_NAME + "_tile"),
 
                 TileEntityType.Builder.create(() ->
                         new TinkerTableTileEntity(), new BlockTinkerTable(TINKER_TABLE_REG_NAME)).build(null).setRegistryName(TINKER_TABLE_REG_NAME + "_tile")
