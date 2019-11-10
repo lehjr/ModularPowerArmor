@@ -1,5 +1,6 @@
-package com.github.lehjr.modularpowerarmor.common;
+package com.github.lehjr.modularpowerarmor.basemod;
 
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.armor.DiamondPlatingModule;
 import com.github.lehjr.modularpowerarmor.item.module.armor.EnergyShieldModule;
 import com.github.lehjr.modularpowerarmor.item.module.armor.IronPlatingModule;
@@ -28,7 +29,7 @@ import com.github.lehjr.mpalib.misc.ModCompatibility;
 
 public class MPSModules {
     public static void addModule(IPowerModule module) {
-        if (MPSConfig.INSTANCE.getModuleAllowedorDefault(module.getDataName(), true))
+        if (MPAConfig.INSTANCE.getModuleAllowedorDefault(module.getDataName(), true))
             ModuleManager.INSTANCE.addModule(module);
     }
 

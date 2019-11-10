@@ -7,6 +7,7 @@ import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
+import com.github.lehjr.modularpowerarmor.fluid.BlockFluidLiquidNitrogen;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
@@ -42,8 +43,10 @@ import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -187,47 +190,23 @@ public enum RegisterStuff {
                 new RailgunModule(MODULE_RAILGUN__REGNAME),
 
                 // ItemBlocks ---------------------------------------------------------------------------------
-                new BlockItem(Objects.INSTANCE.tinkerTable,
-                        new Item.Properties().group(creativeTab))
-                        .setRegistryName(new ResourceLocation(TINKER_TABLE_REG_NAME)),
-                new BlockItem(Objects.INSTANCE.luxCapacitor,
-                        new Item.Properties().group(creativeTab))
-                        .setRegistryName(new ResourceLocation(LUX_CAPACITOR_REG_NAME))
-        );
+                new ItemBlock(Objects.tinkerTable).setRegistryName(new ResourceLocation(TINKER_TABLE_REG_NAME)),
+                new ItemBlock(Objects.luxCapacitor).setRegistryName(new ResourceLocation(LUX_CAPACITOR_REG_NAME)));
     }
 
     @SubscribeEvent
     public void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent) {
-        blockRegistryEvent.getRegistry().registerAll(new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME), new BlockTinkerTable(TINKER_TABLE_REG_NAME));
+        blockRegistryEvent.getRegistry().register(new BlockTinkerTable( new ResourceLocation(TINKER_TABLE_REG_NAME)));
+        blockRegistryEvent.getRegistry().register(new BlockLuxCapacitor(new ResourceLocation(LUX_CAPACITOR_REG_NAME)));
+        blockRegistryEvent.getRegistry().register(new BlockFluidLiquidNitrogen(new ResourceLocation(LIQUID_NITROGEN__REGNAME)));
     }
 
-    @SubscribeEvent
-    public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        event.getRegistry().registerAll(
-                TileEntityType.Builder.create(() ->
-                        new LuxCapacitorTileEntity(), new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME)).build(null).setRegistryName(LUX_CAPACITOR_REG_NAME + "_tile"),
-
-                TileEntityType.Builder.create(() ->
-                        new TinkerTableTileEntity(), new BlockTinkerTable(TINKER_TABLE_REG_NAME)).build(null).setRegistryName(TINKER_TABLE_REG_NAME + "_tile")
-        );
+    static boolean alreadyRegistered = true;
+    public static void initFluids() {
+        if (!FluidRegistry.isFluidRegistered("liquidnitrogen") && !FluidRegistry.isFluidRegistered("liquid_nitrogen")) {
+            FluidRegistry.registerFluid(Objects.liquidNitrogen);
+            FluidRegistry.addBucketForFluid(Objects.liquidNitrogen);
+            alreadyRegistered = false;
+        }
     }
-
-    @SubscribeEvent
-    public void registerEntities(RegistryEvent.Register<EntityType<?>> event ){
-        event.getRegistry().registerAll(
-                EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
-                        .size(0.25F, 0.25F)
-                        .setCustomClientFactory(((spawnEntity, world) -> Objects.LUX_CAPACITOR_ENTITY_TYPE.create(world)))
-                        .build(LUX_CAPACITOR_REG_NAME + "_entity").setRegistryName(LUX_CAPACITOR_REG_NAME + "_entity"),
-
-                EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> Objects.SPINNING_BLADE_ENTITY_TYPE.create(world))
-                        .build(MODID +":spinning_blade").setRegistryName(MODID +":spinning_blade"),
-
-                EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> Objects.PLASMA_BOLT_ENTITY_TYPE.create(world))
-                        .build(MODID +":plasma_bolt").setRegistryName(MODID +":plasma_bolt")
-        );
-    }
-
 }

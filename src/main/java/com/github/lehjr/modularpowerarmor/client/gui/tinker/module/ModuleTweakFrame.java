@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableTinkerSlider;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.Renderer;
@@ -15,6 +15,8 @@ import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifier;
 import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierDouble;
 import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierInteger;
 import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class ModuleTweakFrame extends ScrollableFrame {
-//    protected static double SCALERATIO = 0.75;
+    //    protected static double SCALERATIO = 0.75;
     protected EntityPlayer player;
     protected static int margin = 4;
     protected ItemSelectionFrame itemTarget;
@@ -185,29 +187,36 @@ public class ModuleTweakFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean onMouseDown(double x, double y, int button) {
+        boolean handled = false;
         if (button == 0) {
             if (sliders != null) {
-                for (com.github.lehjr.mpalib.client.gui.clickable.ClickableTinkerSlider slider : sliders) {
+                for (ClickableTinkerSlider slider : sliders) {
                     if (slider.hitBox(x, y)) {
                         selectedSlider = slider;
+                        handled = true;
                         break;
                     }
                 }
             }
         }
+        return handled;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
+    public boolean onMouseUp(double x, double y, int button) {
+        boolean handled = false;
         if (selectedSlider != null && itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
-            com.github.lehjr.mpalib.client.gui.clickable.ClickableItem item = itemTarget.getSelectedItem();
+            ClickableItem item = itemTarget.getSelectedItem();
             ItemStack module = moduleTarget.getSelectedModule().getModule();
-            MPSPackets.sendToServer(
-                    new TweakRequestDoublePacket(item.inventorySlot, module.getDataName(), selectedSlider.id(), selectedSlider.getValue()));
+            MPALibPackets.INSTANCE.sendToServer(
+                    new TweakRequestDoublePacket(item.inventorySlot, module.getItem().getRegistryName(), selectedSlider.id(), selectedSlider.getValue()));
+            handled = true;
         }
         if (button == 0) {
             selectedSlider = null;
+            handled = true;
         }
+        return handled;
     }
 }

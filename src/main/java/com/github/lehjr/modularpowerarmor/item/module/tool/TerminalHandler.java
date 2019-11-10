@@ -7,10 +7,10 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.misc.ModCompatibility;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import extracells.api.ECApi;
 import extracells.api.IWirelessFluidTermHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +65,7 @@ public class TerminalHandler implements
     public boolean canHandle(@Nonnull ItemStack is) {
         if (is.isEmpty() || is.getTranslationKey() == null)
             return false;
-        return is.getTranslationKey().equals(MPSItems.INSTANCE.powerFist.getTranslationKey());
+        return is.getTranslationKey().equals(Objects.INSTANCE.powerFist.getTranslationKey());
     }
 
     @Optional.Method(modid = "appliedenergistics2")

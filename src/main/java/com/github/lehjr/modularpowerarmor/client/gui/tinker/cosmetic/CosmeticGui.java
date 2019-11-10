@@ -26,7 +26,7 @@ public class CosmeticGui extends ContainerlessGui {
     int worldx;
     int worldy;
     int worldz;
-    ItemSelectionFrame itemSelect;
+    ItemSelectionFrame itemSelectFrame;
     PlayerModelViewFrame renderframe;
     LoadSaveResetSubFrame loadSaveResetSubFrame;
     ColourPickerFrame colourpicker;
@@ -59,16 +59,17 @@ public class CosmeticGui extends ContainerlessGui {
         } else allowCosmeticPresetCreation = false;
 
 
-        itemSelect = new ItemSelectionFrame(
+        itemSelectFrame = new ItemSelectionFrame(
+                null,
                 new Point2D(absX(-0.95F), absY(-0.95F)),
                 new Point2D(absX(-0.78F), absY(-0.025F)),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHTBLUE.withAlpha(0.8F),
                 player);
-        frames.add(itemSelect);
+        frames.add(itemSelectFrame);
 
         renderframe = new PlayerModelViewFrame(
-                itemSelect,
+                itemSelectFrame,
                 new Point2D(absX(-0.75F), absY(-0.95f)),
                 new Point2D(absX(0.15F), absY(-0.025f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
@@ -81,11 +82,11 @@ public class CosmeticGui extends ContainerlessGui {
                 new Point2D(absX(0.95f), absY(-0.27f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHTBLUE.withAlpha(0.8F),
-                itemSelect);
+                itemSelectFrame);
         frames.add(colourpicker);
 
         partframe = new PartManipContainer(
-                itemSelect, colourpicker,
+                itemSelectFrame, colourpicker,
                 new Point2D(absX(-0.75F), absY(0.025f)),
                 new Point2D(absX(+0.95F), absY(0.95f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
@@ -93,7 +94,7 @@ public class CosmeticGui extends ContainerlessGui {
         frames.add(partframe);
 
         cosmeticFrame = new CosmeticPresetContainer(
-                itemSelect, colourpicker,
+                itemSelectFrame, colourpicker,
                 new Point2D(absX(-0.75F), absY(0.025f)),
                 new Point2D(absX(+0.95F), absY(0.95f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
@@ -111,7 +112,7 @@ public class CosmeticGui extends ContainerlessGui {
                         absY(-0.025f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHTBLUE.withAlpha(0.8F),
-                itemSelect,
+                itemSelectFrame,
                 usingCosmeticPresets,
                 allowCosmeticPresetCreation,
                 partframe,
@@ -136,7 +137,7 @@ public class CosmeticGui extends ContainerlessGui {
         super.initGui();
         rescale();
         backgroundRect.setTargetDimensions(absX(-1), absY(-1), absX(1), absY(1));
-        itemSelect.init(absX(-0.975F), absY(-0.95F), absX(-0.78F), absY(0.95F));
+        itemSelectFrame.init(absX(-0.975F), absY(-0.95F), absX(-0.78F), absY(0.95F));
 
 
 

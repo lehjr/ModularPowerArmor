@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererLuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererPlasmaBolt;
 import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererSpinningBlade;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
@@ -24,44 +24,45 @@ import net.minecraftforge.oredict.OreDictionary;
 public class EventRegisterRenderers {
     @SubscribeEvent
     public void registerRenderers(ModelRegistryEvent event) {
-        MPSItems mpsItems = MPSItems.INSTANCE;
+        Objects mpaItems = Objects.INSTANCE;
 
         // PowerFist
-        regRenderer(mpsItems.powerFist);
+        regRenderer(mpaItems.powerFist);
 
         // Armor
-        regRenderer(mpsItems.powerArmorHead);
-        regRenderer(mpsItems.powerArmorTorso);
-        regRenderer(mpsItems.powerArmorLegs);
-        regRenderer(mpsItems.powerArmorFeet);
+        regRenderer(mpaItems.powerArmorHead);
+        regRenderer(mpaItems.powerArmorTorso);
+        regRenderer(mpaItems.powerArmorLegs);
+        regRenderer(mpaItems.powerArmorFeet);
 
         // Tinker Table
-        regRenderer(Item.getItemFromBlock(MPSItems.INSTANCE.tinkerTable));
+        regRenderer(Item.getItemFromBlock(mpaItems.tinkerTable));
 
         // Lux Capacitor
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(MPSItems.INSTANCE.luxCapacitor), 0, ModelLuxCapacitor.modelResourceLocation);
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(mpaItems.luxCapacitor), 0, ModelLuxCapacitor.modelResourceLocation);
 
-        // Components
-        Item components = mpsItems.components;
-        if (components != null) {
-            for (Integer meta : ((ItemComponent) components).names.keySet()) {
-                String oredictName = ((ItemComponent) components).names.get(meta);
-                ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ResourceConstants.COMPONENTS_PREFIX + oredictName, "inventory");
-                ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
-                OreDictionary.registerOre(oredictName, new ItemStack(components, 1, meta));
-            }
-        }
+        // FIXME
+//        // Components
+//        Item components = mpaItems.components;
+//        if (components != null) {
+//            for (Integer meta : ((ItemComponent) components).names.keySet()) {
+//                String oredictName = ((ItemComponent) components).names.get(meta);
+//                ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ResourceConstants.COMPONENTS_PREFIX + oredictName, "inventory");
+//                ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
+//                OreDictionary.registerOre(oredictName, new ItemStack(components, 1, meta));
+//            }
+//        }
 
         RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
         RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
 
-        ModelResourceLocation liquid_nitrogen_location = new ModelResourceLocation(MPSItems.INSTANCE.blockLiquidNitrogen.getRegistryName(), "normal");
-        Item fluid = Item.getItemFromBlock(MPSItems.INSTANCE.blockLiquidNitrogen);
+        ModelResourceLocation liquid_nitrogen_location = new ModelResourceLocation(mpaItems.blockLiquidNitrogen.getRegistryName(), "normal");
+        Item fluid = Item.getItemFromBlock(mpaItems.blockLiquidNitrogen);
 
         ModelBakery.registerItemVariants(fluid);
         ModelLoader.setCustomMeshDefinition(fluid, stack -> liquid_nitrogen_location);
-        ModelLoader.setCustomStateMapper(MPSItems.INSTANCE.blockLiquidNitrogen, new StateMapperBase() {
+        ModelLoader.setCustomStateMapper(mpaItems.blockLiquidNitrogen, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
                 return liquid_nitrogen_location;

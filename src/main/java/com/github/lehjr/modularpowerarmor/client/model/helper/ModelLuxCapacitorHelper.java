@@ -2,13 +2,13 @@ package com.github.lehjr.modularpowerarmor.client.model.helper;
 
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -53,14 +53,14 @@ public enum ModelLuxCapacitorHelper {
 
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = ModelHelper.getBakedModel(baseModelLocation, transform);
-                    return bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().withProperty(BlockDirectional.FACING, facing), null, 0);
+                    return bakedModel.getQuads(Objects.INSTANCE.luxCapacitor.getDefaultState().withProperty(BlockDirectional.FACING, facing), null, 0);
                 }
 
                 List<BakedQuad> getLensColoredQuads(Colour color, @Nullable EnumFacing facing) {
                     facing = (facing != null) ? facing : EnumFacing.NORTH;
                     TRSRTransformation transform = TRSRTransformation.from(facing);
                     IBakedModel bakedModel = ModelHelper.getBakedModel(lensModelLocation, transform);
-                    List<BakedQuad> quads = bakedModel.getQuads(MPSItems.INSTANCE.luxCapacitor.getDefaultState().withProperty(BlockDirectional.FACING, facing), null, 0);
+                    List<BakedQuad> quads = bakedModel.getQuads(Objects.INSTANCE.luxCapacitor.getDefaultState().withProperty(BlockDirectional.FACING, facing), null, 0);
                     return ModelHelper.getColoredQuadsWithGlow(quads, color, true);
                 }
 

@@ -18,16 +18,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class MPSRecipeTabToggleWidget extends GuiButtonRecipeTab {
+public class RecipeTabToggleWidget extends GuiButtonRecipeTab {
     private final CreativeTabs category;
     private final Colour activeColor = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
     private final Colour inactiveColor = Colour.DARKBLUE.withAlpha(0.8);
 
     DrawableRect tabRectangle;
 
-    public MPSRecipeTabToggleWidget(int p_i47588_1_, CreativeTabs category) {
+    public RecipeTabToggleWidget(int p_i47588_1_, CreativeTabs category) {
         super(p_i47588_1_, category);
-        this.initTextureValues(153, 2, 35, 0, MPSRecipeBookGui.RECIPE_BOOK);
+        this.initTextureValues(153, 2, 35, 0, RecipeBookGui.RECIPE_BOOK);
         this.category = category;
         this.tabRectangle = new DrawableRect(0, 0, 0, 0, inactiveColor, Colour.LIGHTBLUE.withAlpha(0.8));
     }

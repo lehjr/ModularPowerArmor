@@ -99,16 +99,6 @@ public class DetailedSummaryFrame extends ScrollableFrame {
     }
 
     @Override
-    public boolean onMouseDown(double x, double y, int button) {
-        return this.border.containsPoint(x, y);
-    }
-
-    @Override
-    public boolean onMouseUp(double x, double y, int button) {
-        return this.border.containsPoint(x, y);
-    }
-
-    @Override
     public List<String> getToolTip(int x, int y) {
         return null;
     }

@@ -4,14 +4,22 @@ import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.capabilities.MPSCapProvider;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.HighPolyArmor;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
+import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
+import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.legacy.item.IArmorTraits;
-import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
 import com.google.common.collect.Multimap;
-import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,15 +31,18 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -72,11 +83,19 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 //            System.out.println("damage source: " + source.damageType);
 //            System.out.println("slot: " + slot);
 
-        if (source == null || source == HeatUtils.overheatDamage)
+        if (source == null || source == HeatUtils.overheatDamage) {
             return false;
+        }
 
-        if (source.damageType.equals("electricity") || source.damageType.equals("radiation") || source.damageType.equals("sulphuric_acid"))
-            return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME);
+        if (source.damageType.equals("electricity") || source.damageType.equals("radiation") || source.damageType.equals("sulphuric_acid")) {
+            return java.util.Optional.ofNullable(armor
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                if (iItemHandler instanceof IModularItem) {
+                    return ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
+                }
+                return false;
+            }).orElse(false);
+        }
 
         // Fixme: needs to check for Oxygen... needs to check for
 
@@ -94,24 +113,24 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
         // this still needs tweaking (extra planets)
         if (source.getDamageType().equals("pressure")) {
-            if (slot == 3)
-                return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_AIRTIGHT_SEAL__REGNAME) && ModuleManager.INSTANCE.itemHasModule(armor, ModuleConstants.MODULE_HAZMAT__REGNAME);
-            else
-                return ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME);
-
-//            for (ItemStack armorStack : entity.getArmorInventoryList()) {
-//                if (armorStack.getItem() instanceof this)
-//                    return false;
-//
-//
-//
-//
-////                if (ModuleManager.INSTANCE.itemHasModule(armor, MPSModuleConstants.MODULE_AIRTIGHT_SEAL__REGNAME))
-//
-//
-//
-//
-//            }
+            if (slot == 3) {
+                return java.util.Optional.ofNullable(armor
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        return ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_AIRTIGHT_SEAL__REGNAME)) &&
+                                ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
+                    }
+                    return false;
+                }).orElse(false);
+            } else {
+                return java.util.Optional.ofNullable(armor
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                                ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
+                    }
+                    return false;
+                }).orElse(false);
+            }
         }
 
         if (source.getDamageType().equals("cryotheum"))
@@ -161,7 +180,19 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
                 HeatUtils.heatPlayer(player, damage * 5); // FIXME: this value needs tweaking. 10 too high, 1 too low
             } else {
-                double enerConsum = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_ENERGY_CONSUMPTION);
+                double enerConsum = java.util.Optional.ofNullable(stack
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        double energyConsumption = 0D;
+                        for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                            ItemStack module = iItemHandler.getStackInSlot(i);
+                            energyConsumption += java.util.Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null))
+                                    .map(pm-> pm.applyPropertyModifiers(ModuleConstants.ARMOR_ENERGY_CONSUMPTION)).orElse(0D);
+                        }
+                    }
+                    return 0D;
+                }).orElse(0D);
+
                 double drain = enerConsum * damage;
                 ElectricItemUtils.drainPlayerEnergy((EntityPlayer) entity, (int) drain);
             }
@@ -182,7 +213,13 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         }
 
         // hazmat handled hazards
-        if (ModuleManager.INSTANCE.itemHasModule(armor, RegistryNames.MODULE_HAZMAT__REGNAME) &&
+        if (java.util.Optional.ofNullable(armor
+                .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+            if (iItemHandler instanceof IModularItem) {
+                ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
+            }
+            return false;
+        }).orElse(false) &&
                 (source.damageType.equals("electricity") ||
                         source.damageType.equals("radiation") ||
                         source.damageType.equals("sulphuric_acid"))) {
@@ -213,7 +250,14 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
         if (slot == this.armorType) {
             multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), 0.25, 0));
-            if (ModuleManager.INSTANCE.itemHasActiveModule(stack, RegistryNames.MODULE_DIAMOND_PLATING__REGNAME) || ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_ENERGY_SHIELD__REGNAME)) {
+            if (java.util.Optional.ofNullable(stack
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                if (iItemHandler instanceof IModularItem) {
+                    return ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_DIAMOND_PLATING__REGNAME)) ||
+                            ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_ENERGY_SHIELD__REGNAME));
+                }
+                return false;
+            }).orElse(false)) {
                 multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], "Armor toughness", 2.5, 0));
             }
         }
@@ -278,18 +322,18 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         return true;
     }
 
+    @Nullable
     @Override
-    public String getArmorTexture(ItemStack armor, Entity entity, EntityEquipmentSlot slot, String type) {
-        if (type == "overlay")  // this is to allow a tint to be applied tot the armor
-            return ResourceConstants.BLANK_ARMOR_MODEL_PATH;
-        if (armor.getItem() instanceof ItemPowerArmor) {
-            if ((slot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_ACTIVE_CAMOUFLAGE__REGNAME)) ||
-                    (ModuleManager.INSTANCE.itemHasActiveModule(armor, ModuleConstants.MODULE_TRANSPARENT_ARMOR__REGNAME)))
-                return ResourceConstants.BLANK_ARMOR_MODEL_PATH;
-            return MPSNBTUtils.getArmorTexture(armor, slot);
+    public String getArmorTexture(ItemStack armor, Entity entity, EntityEquipmentSlot equipmentSlotType, String type) {
+        if (type == "overlay") { // this is to allow a tint to be applied tot the armor
+            return MPALIbConstants.BLANK_ARMOR_MODEL_PATH;
         }
-        return ResourceConstants.BLANK_ARMOR_MODEL_PATH;
+        return Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->
+                spec instanceof IArmorModelSpecNBT ?
+                        ((IArmorModelSpecNBT) spec).getArmorTexture() :
+                        MPALIbConstants.BLANK_ARMOR_MODEL_PATH).orElse(MPALIbConstants.BLANK_ARMOR_MODEL_PATH);
     }
+
 
     @Override
     public boolean hasOverlay(ItemStack stack) {
@@ -299,19 +343,49 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
     @SideOnly(Side.CLIENT)
     @Override
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack armor, EntityEquipmentSlot armorSlot, ModelBiped _default) {
-        // check if using 2d armor
-        if (!MPSNBTUtils.hasHighPolyModel(armor, armorSlot))
+        if (!(entityLiving instanceof EntityPlayer)) {
             return _default;
+        }
 
-        ModelBiped model = ArmorModelInstance.getInstance();
-        ((IArmorModel) model).setVisibleSection(armorSlot);
 
-        ItemStack chestPlate = armorSlot == EntityEquipmentSlot.CHEST ? armor : entityLiving.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-        if (chestPlate.getItem() instanceof ItemPowerArmorChestplate && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, RegistryNames.MODULE_TRANSPARENT_ARMOR__REGNAME) ||
-                (armorSlot == EntityEquipmentSlot.CHEST && ModuleManager.INSTANCE.itemHasActiveModule(chestPlate, RegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))) {
-            ((IArmorModel) model).setVisibleSection(null);
-        } else
-            ((IArmorModel) model).setRenderSpec(MPSNBTUtils.getMuseRenderTag(armor, armorSlot));
-        return model;
+        return Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec-> {
+
+            NBTTagCompound renderTag = spec.getMuseRenderTag();
+            EntityPlayer player = (EntityPlayer) entityLiving;
+
+            // only triggered by this client's player looking at their own equipped armor
+            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getMinecraft().player) {
+                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                    if (player.inventory.getStackInSlot(i).equals(armor)) {
+                        renderTag = spec.getDefaultRenderTag();
+                        if (renderTag != null && !renderTag.isEmpty()) {
+                            spec.setMuseRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                            MPAPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (spec.getMuseRenderTag() != null &&
+                    (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
+                return _default;
+            }
+
+            ModelBiped model = ArmorModelInstance.getInstance();
+            if (Optional.ofNullable(armor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler ->
+                    iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
+                            .isModuleOnline(new ResourceLocation(RegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
+//                System.out.println("setting active camoflage on");
+
+                ((IArmorModel) model).setVisibleSection(null);
+            } else {
+                if (renderTag != null) {
+                    ((HighPolyArmor) model).setVisibleSection(armorSlot);
+                    ((HighPolyArmor) model).setRenderSpec(renderTag);
+                }
+            }
+            return model;
+        }).orElse(_default);
     }
 }

@@ -69,40 +69,16 @@ public class KeybindConfigFrame implements IGuiFrame {
         trashKeybindButton.move(rect.center().plus(new Point2D(0, 8)));
     }
 
-    @Override
-    public void onMouseDown(double x, double y, int button) {
-        if (button == 0) {
-            if (selectedClickie == null) {
-                for (ClickableModule module : modules) {
-                    if (module.hitBox(x, y)) {
-                        selectedClickie = module;
-                        return;
-                    }
-                }
-                for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
-                    if (keybind.hitBox(x, y)) {
-                        selectedClickie = keybind;
-                        return;
-                    }
-                }
-            }
-            if (newKeybindButton.hitBox(x, y)) {
-                selecting = true;
-            }
-        } else if (button == 1) {
-            for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
-                if (keybind.hitBox(x, y)) {
-                    keybind.toggleHUDState();
-                    return;
-                }
-            }
-        } else if (button > 2) {
-            int key = button - 100;
-//            if (KeyBinding.HASH.containsItem(key)) {
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+
+        int key = p_keyPressed_1_; // no idea which one to use here!!
+
+        if (selecting) {
+//                if (KeyBinding.HASH.containsItem(key)) {
             if (keyBindingHelper.keyBindingHasKey(key)) {
                 takenTime = System.currentTimeMillis();
             }
-//            if (!KeyBinding.HASH.containsItem(key)) {
+//                if (!KeyBinding.HASH.containsItem(key)) {
             if (!keyBindingHelper.keyBindingHasKey(key)) {
                 addKeybind(key, true);
             } else if (MPAConfig.INSTANCE.allowConflictingKeybinds()) {
@@ -110,6 +86,56 @@ public class KeybindConfigFrame implements IGuiFrame {
             }
             selecting = false;
         }
+
+        return true; // no idea what to return here!!!
+    }
+
+
+    @Override
+    public boolean onMouseDown(double x, double y, int button) {
+        if (this.rect.containsPoint(x, y)) {
+            if (button == 0) {
+                if (selectedClickie == null) {
+                    for (ClickableModule module : modules) {
+                        if (module.hitBox(x, y)) {
+                            selectedClickie = module;
+                            return true;
+                        }
+                    }
+                    for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                        if (keybind.hitBox(x, y)) {
+                            selectedClickie = keybind;
+                            return true;
+                        }
+                    }
+                }
+                if (newKeybindButton.hitBox(x, y)) {
+                    selecting = true;
+                }
+            } else if (button == 1) {
+                for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                    if (keybind.hitBox(x, y)) {
+                        keybind.toggleHUDState();
+                        return true;
+                    }
+                }
+            } else if (button > 2) {
+                int key = button - 100;
+//            if (KeyBinding.HASH.containsItem(key)) {
+                if (keyBindingHelper.keyBindingHasKey(key)) {
+                    takenTime = System.currentTimeMillis();
+                }
+//            if (!KeyBinding.HASH.containsItem(key)) {
+                if (!keyBindingHelper.keyBindingHasKey(key)) {
+                    addKeybind(key, true);
+                } else if (MPAConfig.INSTANCE.allowConflictingKeybinds()) {
+                    addKeybind(key, false);
+                }
+                selecting = false;
+            }
+            return true;
+        }
+        return false;
     }
 
     public void refreshModules() {
@@ -162,8 +188,8 @@ public class KeybindConfigFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
-        if (button == 0) {
+    public boolean onMouseUp(double x, double y, int button) {
+        if (button == 0 && rect.containsPoint(x, y)) {
             if (selectedClickie != null && closestKeybind != null && selectedClickie instanceof ClickableModule) {
                 closestKeybind.bindModule((ClickableModule) selectedClickie);
             } else if (selectedClickie != null && selectedClickie instanceof ClickableKeybinding && trashKeybindButton.hitBox(x, y)) {
@@ -174,8 +200,9 @@ public class KeybindConfigFrame implements IGuiFrame {
                 KeybindManager.getKeybindings().remove(selectedClickie);
             }
             selectedClickie = null;
+            return true;
         }
-
+        return false;
     }
 
     @Override

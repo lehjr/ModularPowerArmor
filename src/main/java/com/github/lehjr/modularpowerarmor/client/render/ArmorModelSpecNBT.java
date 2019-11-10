@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.render;
 
 
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
@@ -72,10 +73,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
         // temp data holder
         NBTTagCompound tempNBT;
 
-        EntityEquipmentSlot slot = getItemStack().getEquipmentSlot();
-        if (slot == null) {
-            slot = EntityMob.getSlotForItemStack(getItemStack());
-        }
+        EntityEquipmentSlot slot  = EntityMob.getSlotForItemStack(getItemStack());
 
         for (SpecBase spec : ModelRegistry.getInstance().getSpecs()) {
             // Only generate NBT data from Specs marked as "default"
@@ -91,7 +89,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPAConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPAConfig.allowHighPollyArmorModels()) {
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {
                                 /*

@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.modularpowerarmor.client.model.item.ModelPowerFist;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public enum ModelBakeEventHandler {
     INSTANCE;
 
-    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(MPSItems.INSTANCE.powerFistRegName, "inventory");
+    public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(Objects.INSTANCE.powerFist.getRegistryName(), "inventory");
     public static IBakedModel powerFistIconModel;
     private static IRegistry<ModelResourceLocation, IBakedModel> modelRegistry;
 

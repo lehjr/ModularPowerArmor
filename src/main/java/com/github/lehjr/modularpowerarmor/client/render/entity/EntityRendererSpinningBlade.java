@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -21,7 +22,7 @@ public class EntityRendererSpinningBlade extends MuseEntityRenderer<SpinningBlad
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL11.GL_CULL_FACE);
-        TextureUtils.pushTexture(ResourceConstants.TEXTURE_PREFIX + "modules/spinningblade.png");
+        TextureUtils.pushTexture(Constants.TEXTURE_PREFIX + "modules/spinningblade.png");
         GL11.glTranslated(x, y, z);
         double motionscale = Math.sqrt(entity.motionZ * entity.motionZ + entity.motionX * entity.motionX);
         GL11.glRotatef(90, 1, 0, 0);

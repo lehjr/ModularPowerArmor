@@ -1,19 +1,19 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.render.modelspec.DefaultModelSpec;
 import com.github.lehjr.modularpowerarmor.config.CosmeticPresetSaveLoad;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticPresetPacket;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticPresetUpdatePacket;
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
+import com.github.lehjr.modularpowerarmor.utils.nbt.MPANBTUtils;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -56,8 +57,6 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     protected PartManipContainer partframe;
     protected CosmeticPresetContainer cosmeticFrame;
     protected boolean isEditing;
-//    protected Map<Integer, String> lastCosmeticPresets;
-
     GuiTextField presetNameInputBox;
 
     public LoadSaveResetSubFrame(ColourPickerFrame colourpicker, EntityPlayer player, Rect borderRef, Colour insideColour, Colour borderColour, ItemSelectionFrame itemSelector, boolean usingCosmeticPresetsIn, boolean allowCosmeticPresetCreationIn, PartManipContainer partframe, CosmeticPresetContainer cosmeticFrame) {
@@ -203,7 +202,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
      * Get's the equipment slot the item is for.
      */
     EntityEquipmentSlot getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
+        ItemStack selectedItem = getSelectedItem().getStack();
         if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor) {
             return ((ItemPowerArmor) selectedItem.getItem()).armorType;
         }
@@ -220,15 +219,15 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
 
     void checkAndFixItem(ClickableItem clickie) {
         if (clickie != null) {
-            ItemStack itemStack = clickie.getItem();
+            ItemStack itemStack = clickie.getStack();
             NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(itemStack);
             if (itemNBT.hasKey(MPALIbConstants.TAG_RENDER,Constants.NBT.TAG_COMPOUND)) {
                 BiMap<String, NBTTagCompound> presetMap = MPAConfig.INSTANCE.getCosmeticPresets(itemStack);
                 if (presetMap.containsValue(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER))) {
                     String name = presetMap.inverse().get(itemNBT.getCompoundTag(MPALIbConstants.TAG_RENDER));
-                    MPSPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, name));
+                    MPAPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, name));
                 } else
-                    MPSPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, "Default"));
+                    MPAPackets.sendToServer(new CosmeticPresetPacket(clickie.inventorySlot, "Default"));
             }
         }
     }
@@ -250,7 +249,7 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     public void update(double mousex, double mousey) {
         if (usingCosmeticPresets ||
                 (!MPAConfig.INSTANCE.allowPowerFistCustomization() &&
-                        itemSelector.getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
+                        itemSelector.getSelectedItem() != null && getSelectedItem().getStack().getItem() instanceof ItemPowerFist)) {
             // normal preset user
             if (allowCosmeticPresetCreation)
                 cosmeticPresetCreator();
@@ -266,9 +265,9 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
 
     public boolean isValidItem(ClickableItem clickie, EntityEquipmentSlot slot) {
         if (clickie != null) {
-            if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().isValidArmor(clickie.getItem(), slot, Minecraft.getMinecraft().player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
+            if (clickie.getStack().getItem() instanceof ItemArmor)
+                return clickie.getStack().getItem().isValidArmor(clickie.getStack(), slot, Minecraft.getMinecraft().player);
+            else if (clickie.getStack().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
                 return true;
         }
         return false;
@@ -279,13 +278,13 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
-        if (itemSelector.getSelectedItem() == null || itemSelector.getSelectedItem().getItem().isEmpty())
-            return;
+    public boolean onMouseDown(double x, double y, int button) {
+        if (itemSelector.getSelectedItem() == null || itemSelector.getSelectedItem().getStack().isEmpty())
+            return false;
 
         if (usingCosmeticPresets ||
                 (!MPAConfig.INSTANCE.allowPowerFistCustomization() &&
-                        getSelectedItem() != null && getSelectedItem().getItem().getItem() instanceof ItemPowerFist)) {
+                        getSelectedItem() != null && getSelectedItem().getStack().getItem() instanceof ItemPowerFist)) {
             if (allowCosmeticPresetCreation) {
                 if (isEditing) {
                     // todo: insert check for new item selected and save tag for previous item selected
@@ -302,14 +301,14 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                         // save as dialog is open
                         if (presetNameInputBox.getVisible()) {
                             String name = presetNameInputBox.getText();
-                            ItemStack itemStack = getSelectedItem().getItem();
+                            ItemStack itemStack = getSelectedItem().getStack();
 
                             boolean save = CosmeticPresetSaveLoad.savePreset(name, itemStack);
                             if (save) {
                                 if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                                     // get the render tag for the item
-                                    NBTTagCompound nbt = MPSNBTUtils.getMuseRenderTag(itemStack).copy();
-                                    MPSPackets.sendToServer(new CosmeticPresetUpdatePacket(itemStack.getItem().getRegistryName(), name, nbt));
+                                    NBTTagCompound nbt = MPANBTUtils.getMuseRenderTag(itemStack).copy();
+                                    MPAPackets.sendToServer(new CosmeticPresetUpdatePacket(itemStack.getItem().getRegistryName(), name, nbt));
                                 }
                             }
                         } else {
@@ -320,50 +319,55 @@ public class LoadSaveResetSubFrame implements IGuiFrame {
                         // reset tag to cosmetic copy of cosmetic preset default as legacy tag for editing.
                     } else if (resetButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                            NBTTagCompound nbt = getDefaultPreset(itemSelector.getSelectedItem().getItem());
-                            MPSPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                            NBTTagCompound nbt = getDefaultPreset(itemSelector.getSelectedItem().getStack());
+                            MPAPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                         }
                         // cancel creation
                     } else if (loadButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                            MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
+                            MPAPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                         }
                         isEditing = false;
                     }
+                    return true;
                 } else {
                     if (saveButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
                             isEditing = true;
-                            NBTTagCompound nbt = MPSNBTUtils.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
-                            MPSPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                            NBTTagCompound nbt = MPANBTUtils.getMuseRenderTag(getSelectedItem().getStack(), getEquipmentSlot());
+                            MPAPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                         }
                     } else if (resetButton.hitBox(x, y)) {
                         if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                            MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
+                            MPAPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                         }
                     }
+                    return true;
                 }
             } else {
                 if (resetButton.hitBox(x, y)) {
                     if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                        MPSPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
+                        MPAPackets.sendToServer(new CosmeticPresetPacket(this.getSelectedItem().inventorySlot, "Default"));
                     }
+                    return true;
                 }
             }
             // legacy mode
         } else {
             if (resetButton.hitBox(x, y)) {
                 if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
-                    NBTTagCompound nbt = DefaultModelSpec.makeModelPrefs(itemSelector.getSelectedItem().getItem());
-                    MPSPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
+                    NBTTagCompound nbt = DefaultModelSpec.makeModelPrefs(itemSelector.getSelectedItem().getStack());
+                    MPAPackets.sendToServer(new CosmeticInfoPacket(itemSelector.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
                 }
+                return true;
             }
         }
+        return false;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
-
+    public boolean onMouseUp(double x, double y, int button) {
+        return false;
     }
 
     @Override

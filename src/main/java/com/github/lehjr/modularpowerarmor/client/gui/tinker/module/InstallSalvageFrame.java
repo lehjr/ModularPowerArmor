@@ -3,7 +3,8 @@ package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.InstallModuleRequestPacket;
 import com.github.lehjr.modularpowerarmor.network.packets.SalvageModuleRequestPacket;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
@@ -14,15 +15,18 @@ import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -57,7 +61,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
             if (player.capabilities.isCreativeMode || ItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)) {
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.BLOCKS, 1, null);
                 // Now send request to server to make it legit
-                MPSPackets.sendToServer(new InstallModuleRequestPacket(
+                MPAPackets.sendToServer(new InstallModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }
@@ -72,7 +76,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
 
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER,  1, player.getPosition());
                 IPowerModule module = targetModule.getSelectedModule().getModule();
-                MPSPackets.sendToServer(new SalvageModuleRequestPacket(
+                MPAPackets.sendToServer(new SalvageModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }
@@ -99,7 +103,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
                 installButton.show();
                 installButton.setEnabled(player.capabilities.isCreativeMode ||
                         (ItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory) &&
-                                installedModulesOfType < MPSConfig.INSTANCE.getMaxModulesOfType(module.getCategory())));
+                                installedModulesOfType < MPAConfig.INSTANCE.getMaxModulesOfType(module.getCategory())));
                 salvageButton.disableAndHide();
             } else {
                 salvageButton.enableAndShow();
@@ -190,4 +194,37 @@ public class InstallSalvageFrame extends ScrollableFrame {
         }
         return null;
     }
+
+    @Override
+    public List<String> getToolTip(int x, int y) {
+        String ret = null;
+        if (salvageButton.isVisible() && salvageButton.hitBox(x, y)) {
+            ret = I18n.format("gui.modularpowerarmor.salvage.desc");
+        }
+        if (installButton.isVisible() && installButton.hitBox(x, y)) {
+            if (installButton.isEnabled() && player.capabilities.isCreativeMode) {
+                ret = I18n.format("gui.modularpowerarmor.install.creative.desc");
+            } else if (installButton.isEnabled()) {
+                Collections.singletonList(I18n.format("gui.modularpowerarmor.install.desc"));
+            } else {
+                // todo: tell user why disabled...
+                ret = I18n.format("gui.modularpowerarmor.install.disabled.desc");
+            }
+        }
+
+        if (craftAndInstallButton.isVisible() && craftAndInstallButton.hitBox(x, y)) {
+            if (craftAndInstallButton.isEnabled()) {
+                ret = I18n.format("gui.modularpowerarmor.craftAndInstall.desc");
+            } else {
+                ret = I18n.format("gui.modularpowerarmor.craftAndInstall.disabled.desc");
+            }
+        }
+
+        if (ret != null) {
+            return StringUtils.wrapITextComponentToLength(ret, 30);
+        }
+        return null;
+    }
+
+
 }

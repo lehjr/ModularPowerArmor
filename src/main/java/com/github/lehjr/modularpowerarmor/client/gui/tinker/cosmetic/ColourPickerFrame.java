@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.ColourInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
@@ -134,16 +134,16 @@ public class ColourPickerFrame extends ScrollableFrame {
         return Optional.ofNullable(itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
             NBTTagCompound renderSpec = spec.getMuseRenderTag();
             renderSpec.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(intList));
-            MPSPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
+            MPAPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
             return (NBTTagIntArray) renderSpec.getTag(MPALIbConstants.TAG_COLOURS);
         }).orElse(new NBTTagIntArray(new int[0]));
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
-        if (this.isEnabled()) {
+    public boolean onMouseUp(double x, double y, int button) {
+        if (this.isEnabled())
             this.selectedSlider = null;
-        }
+        return false;
     }
 
     public DrawableRect getBorder(){
@@ -158,7 +158,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 this.selectedSlider.getSlider().setValueByX(mousex);
                 if (colours().length > selectedColour) {
                     colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
-                    MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, colours()));
+                    MPAPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, colours()));
                 }
                 // this just sets up the sliders on selecting an item
             } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
@@ -203,7 +203,7 @@ public class ColourPickerFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean onMouseDown(double x, double y, int button) {
         if (this.isEnabled()) {
             y = y + currentscrollpixels;
 
@@ -229,6 +229,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 clipboard.setContents(selection, selection);
             }
         }
+        return false;
     }
 
     public int[] getIntArray(NBTTagIntArray e) {
@@ -270,7 +271,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                     if (selectedColour == getIntArray(nbtTagIntArray).length) {
                         selectedColour = selectedColour - 1;
                     }
-                    MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
+                    MPAPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
                 }
                 return true;
             }

@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.client.model.helper.ColoredQuadHelperThingie;
 import com.github.lehjr.modularpowerarmor.client.model.helper.ModelLuxCapacitorHelper;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
@@ -9,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -39,7 +39,7 @@ import static net.minecraft.block.BlockDirectional.FACING;
 
 @SideOnly(Side.CLIENT)
 public class ModelLuxCapacitor implements IBakedModel {
-    public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(MPSItems.INSTANCE.luxCapacitor.getRegistryName().toString());
+    public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(Objects.INSTANCE.luxCapacitor.getRegistryName().toString());
     final IModelState modelState;
     public IBakedModel wrapper;
     protected Function<ResourceLocation, TextureAtlasSprite> textureGetter;
@@ -53,7 +53,7 @@ public class ModelLuxCapacitor implements IBakedModel {
     }
 
     public static ModelResourceLocation getModelResourceLocation(EnumFacing facing) {
-        return new ModelResourceLocation(MPSItems.INSTANCE.luxCapacitor.getRegistryName().toString(), "facing=" + facing.getName());
+        return new ModelResourceLocation(Objects.INSTANCE.luxCapacitor.getRegistryName().toString(), "facing=" + facing.getName());
     }
 
     IModelState getModelState() {

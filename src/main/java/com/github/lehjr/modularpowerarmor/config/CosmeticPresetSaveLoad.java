@@ -3,7 +3,7 @@ package com.github.lehjr.modularpowerarmor.config;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPSNBTUtils;
+import com.github.lehjr.modularpowerarmor.utils.nbt.MPANBTUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -157,7 +157,7 @@ public class CosmeticPresetSaveLoad {
             return false;
 
         // get the render tag for the item
-        NBTTagCompound nbt = MPSNBTUtils.getMuseRenderTag(itemStack).copy();
+        NBTTagCompound nbt = MPANBTUtils.getMuseRenderTag(itemStack).copy();
         return savePreset(itemStack.getItem().getRegistryName(), presetName, nbt);
     }
 

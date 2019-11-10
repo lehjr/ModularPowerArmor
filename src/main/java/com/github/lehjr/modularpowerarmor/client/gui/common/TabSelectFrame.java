@@ -7,7 +7,7 @@ import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CraftingGuiServerSidePacket;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,7 +72,7 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
         if (exclude != 3) {
             button = new ClickableButton(I18n.format("container.crafting"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                MPSPackets.sendToServer(new CraftingGuiServerSidePacket());
+                MPAPackets.sendToServer(new CraftingGuiServerSidePacket());
 
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
                 player.openGui(ModularPowerArmor.getInstance(), 3, player.world, worldx, worldy, worldz);
@@ -103,20 +103,22 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
     }
 
     @Override
-    public void onMouseDown(double mouseX, double mouseY, int button) {
+    public boolean onMouseDown(double mouseX, double mouseY, int button) {
         if (button != 0)
-            return;
+            return false;
 
         for (ClickableButton b : buttons) {
             if (b.isEnabled() && b.hitBox(mouseX, mouseY)) {
                 b.onPressed();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     @Override
-    public void onMouseUp(double mouseX, double mouseY, int button) {
+    public boolean onMouseUp(double mouseX, double mouseY, int button) {
+        return false;
     }
 
     @Override

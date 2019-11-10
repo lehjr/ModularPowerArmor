@@ -153,4 +153,9 @@ public class RegistryNames {
      */
     public static final String TINKER_TABLE_REG_NAME = MODID + ":tinkertable";
     public static final String LUX_CAPACITOR_REG_NAME = MODID + ":luxcapacitor";
+
+    /**
+     * Fluid --------------------------------------------------------------------------------------
+     */
+    public static final String LIQUID_NITROGEN__REGNAME = MODID + ":liquid_nitrogen";
 }

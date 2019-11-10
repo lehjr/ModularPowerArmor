@@ -44,12 +44,12 @@ public class CosmeticPresetContainer extends ScrollableFrame {
 
     @Nonnull
     public ItemStack getItem() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getItem() : ItemStack.EMPTY;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getStack() : ItemStack.EMPTY;
     }
 
     @Nullable
     public Integer getItemSlot() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().inventorySlot : null;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getSlotIndex() : null;
     }
 
     public List<CosmeticPresetSelectionSubframe> getPresetFrames() {
@@ -71,15 +71,16 @@ public class CosmeticPresetContainer extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
+    public boolean onMouseDown(double x, double y, int button) {
         if (enabled) {
             if (button == 0) {
                 for (CosmeticPresetSelectionSubframe frame : presetFrames) {
                     if (frame.hitbox(x, y))
-                        return;
+                        return true;
                 }
             }
         }
+        return false;
     }
 
     @Override
@@ -131,7 +132,7 @@ public class CosmeticPresetContainer extends ScrollableFrame {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks)  {
         if (visibile) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();

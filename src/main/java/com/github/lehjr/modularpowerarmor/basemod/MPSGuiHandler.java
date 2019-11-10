@@ -1,7 +1,7 @@
-package com.github.lehjr.modularpowerarmor.common;
+package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.client.gui.crafting.MPSCraftingContainer;
-import com.github.lehjr.modularpowerarmor.client.gui.crafting.MPSCraftingGui;
+import com.github.lehjr.modularpowerarmor.client.gui.crafting.CraftingContainer;
+import com.github.lehjr.modularpowerarmor.client.gui.crafting.CraftingGui;
 import com.github.lehjr.modularpowerarmor.client.gui.keybind.KeyConfigGui;
 import com.github.lehjr.modularpowerarmor.client.gui.modeselection.GuiModeSelector;
 import com.github.lehjr.modularpowerarmor.client.gui.scanner.ScannerContainer;
@@ -34,7 +34,7 @@ public enum MPSGuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 3)
-            return new MPSCraftingContainer(player.inventory, world, new BlockPos(x, y, z));
+            return new CraftingContainer(player.inventory, world, new BlockPos(x, y, z));
         if (ID == 5) {
             return new ScannerContainer(player, getPlayerHand(player));
         }
@@ -53,7 +53,7 @@ public enum MPSGuiHandler implements IGuiHandler {
             case 2:
                 return new CosmeticGui(player, x, y, z);
             case 3:
-                return new MPSCraftingGui(player.inventory, world, new BlockPos(x, y, z));
+                return new CraftingGui(player.inventory, world, new BlockPos(x, y, z));
             case 4:
                 return new GuiModeSelector(player);
             case 5:

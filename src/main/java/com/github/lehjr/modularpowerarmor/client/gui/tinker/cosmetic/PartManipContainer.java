@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
@@ -25,12 +26,10 @@ import java.util.Objects;
 public class PartManipContainer extends ScrollableFrame {
     public ItemSelectionFrame itemSelect;
     public ColourPickerFrame colourSelect;
-    public Integer lastItemSlot;
+    public ClickableItem lastItemSlot;
     public int lastColour;
     public int lastColourIndex;
     public List<PartSpecManipSubFrame> modelframes;
-    protected boolean enabled;
-    protected boolean visibile;
 
     public PartManipContainer(ItemSelectionFrame itemSelect,
                               ColourPickerFrame colourSelect,
@@ -45,9 +44,6 @@ public class PartManipContainer extends ScrollableFrame {
         this.lastItemSlot = null;
         this.lastColour = this.getColour();
         this.lastColourIndex = this.getColourIndex();
-        this.modelframes = new ArrayList<>();
-        enabled = true;
-        visibile = true;
     }
 
     @Override
@@ -65,12 +61,7 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Nonnull
     public ItemStack getItem() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getItem() : ItemStack.EMPTY;
-    }
-
-    @Nullable
-    public Integer getItemSlot() {
-        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().inventorySlot : null;
+        return (itemSelect.getSelectedItem() != null) ? itemSelect.getSelectedItem().getStack() : ItemStack.EMPTY;
     }
 
     public int getColour() {
@@ -111,29 +102,38 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
-        if (enabled) {
+    public boolean onMouseDown(double x, double y, int button) {
+        if (this.isEnabled() && this.isVisibile()) {
             if (button == 0) {
                 for (PartSpecManipSubFrame frame : modelframes) {
-                    frame.tryMouseClick(x, y + currentscrollpixels);
+                    if (frame.tryMouseClick(x, y + currentscrollpixels))
+                        return true;
                 }
             }
         }
+        return false;
     }
 
     @Override
     public void update(double mousex, double mousey) {
         super.update(mousex, mousey);
-        if (enabled) {
-            if (!Objects.equals(lastItemSlot, getItemSlot())) {
-                lastItemSlot = getItemSlot();
 
-                double y = 0;
+        // only completely disable this if the player has no items equipped
+        if (itemSelect.hasNoItems()) {
+            this.disable();
+            this.hide();
+        } else if (itemSelect.getSelectedItem() != null) {
+            this.enable();
+            this.show();
+
+            if (!Objects.equals(lastItemSlot, itemSelect.getSelectedItem())) {
+                lastItemSlot = itemSelect.getSelectedItem();
+                double x = 0;
                 for (PartSpecManipSubFrame subframe : modelframes) {
                     subframe.updateItems();
-                    y += subframe.border.finalBottom();
+                    x += subframe.border.bottom();
                 }
-                this.totalsize = (int) y;
+                this.totalsize = (int) x;
             }
             if (colourSelect.decrAbove > -1) {
                 decrAbove(colourSelect.decrAbove);
@@ -142,40 +142,16 @@ public class PartManipContainer extends ScrollableFrame {
         }
     }
 
-    public void hide () {
-        visibile = false;
-    }
-
-    public void show() {
-        visibile = true;
-    }
-
-    public boolean isVisibile() {
-        return visibile;
-    }
-
-    public void enable() {
-        enabled = true;
-    }
-
-    public void disable() {
-        enabled = false;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public void decrAbove(int index) {
         for (PartSpecManipSubFrame frame : modelframes) frame.decrAbove(index);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        if (visibile) {
+        if (this.isVisibile()) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();
-            GL11.glTranslated(0.0, (double) (-this.currentscrollpixels), 0.0);
+            GL11.glTranslated(0.0, -this.currentscrollpixels, 0.0);
             for (PartSpecManipSubFrame f : modelframes) {
                 f.drawPartial(currentscrollpixels + 4 + border.finalTop(), this.currentscrollpixels + border.finalBottom() - 4);
             }

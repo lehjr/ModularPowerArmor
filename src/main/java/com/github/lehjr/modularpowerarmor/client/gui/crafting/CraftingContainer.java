@@ -7,8 +7,8 @@ import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MPSCraftingContainer extends ContainerWorkbench {
-    public MPSCraftingContainer(InventoryPlayer inventoryPlayer, World world, BlockPos pos) {
+public class CraftingContainer extends ContainerWorkbench {
+    public CraftingContainer(InventoryPlayer inventoryPlayer, World world, BlockPos pos) {
         super(inventoryPlayer, world, pos);
     }
 

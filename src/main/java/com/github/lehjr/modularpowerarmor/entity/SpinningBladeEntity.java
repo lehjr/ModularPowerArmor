@@ -1,6 +1,9 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -17,8 +20,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class SpinningBladeEntity extends EntityThrowable {
@@ -35,10 +40,15 @@ public class SpinningBladeEntity extends EntityThrowable {
         super(par1World, shootingEntity);
         this.shootingEntity = shootingEntity;
         if (shootingEntity instanceof EntityPlayer) {
-            this.shootingItem = ((EntityPlayer) shootingEntity).inventory.getCurrentItem();
-            if (!this.shootingItem.isEmpty()) {
-                this.damage = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(shootingItem, ModuleConstants.BLADE_DAMAGE);
-            }
+            this.damage = Optional.ofNullable(((EntityPlayer) shootingEntity).inventory.getCurrentItem()
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                        if (iItemHandler instanceof IModeChangingItem) {
+                            return Optional.ofNullable(((IModeChangingItem) iItemHandler).getActiveModule()
+                                    .getCapability(PowerModuleCapability.POWER_MODULE, null))
+                                    .map(pm-> pm.applyPropertyModifiers(ModuleConstants.BLADE_DAMAGE)).orElse(0D);
+                        }
+                        return 0D;
+                    }).orElse(0D);
         }
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;

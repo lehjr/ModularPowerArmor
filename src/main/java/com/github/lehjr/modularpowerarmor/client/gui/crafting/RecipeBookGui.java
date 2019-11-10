@@ -42,7 +42,7 @@ import java.util.Locale;
 /**
  * @author lehjr
  */
-public class MPSRecipeBookGui extends GuiRecipeBook {
+public class RecipeBookGui extends GuiRecipeBook {
     /** The outer green rectangle */
     protected DrawableRelativeRect outerFrame = new DrawableRelativeRect(0, 0, 0, 0,
             true,
@@ -62,15 +62,15 @@ public class MPSRecipeBookGui extends GuiRecipeBook {
     public int width;
     public int height;
     private final GhostRecipe ghostRecipe = new GhostRecipe();
-    private final List<MPSRecipeTabToggleWidget> recipeTabs = new ArrayList<MPSRecipeTabToggleWidget>() {{
-        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.SEARCH));
-        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.TOOLS));
-        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.BUILDING_BLOCKS));
-        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.MISC));
-        add(new MPSRecipeTabToggleWidget(0, CreativeTabs.REDSTONE));
+    private final List<RecipeTabToggleWidget> recipeTabs = new ArrayList<RecipeTabToggleWidget>() {{
+        add(new RecipeTabToggleWidget(0, CreativeTabs.SEARCH));
+        add(new RecipeTabToggleWidget(0, CreativeTabs.TOOLS));
+        add(new RecipeTabToggleWidget(0, CreativeTabs.BUILDING_BLOCKS));
+        add(new RecipeTabToggleWidget(0, CreativeTabs.MISC));
+        add(new RecipeTabToggleWidget(0, CreativeTabs.REDSTONE));
     }};
 
-    private MPSRecipeTabToggleWidget currentTab;
+    private RecipeTabToggleWidget currentTab;
 
     /**
      * This button toggles between showing all recipes and showing only craftable recipes
@@ -81,7 +81,7 @@ public class MPSRecipeBookGui extends GuiRecipeBook {
     private GuiTextField searchBar;
     private String lastSearch = "";
     private RecipeBook recipeBook;
-    private final MPSRecipeBookPage recipeBookPage = new MPSRecipeBookPage();
+    private final RecipeBookPage recipeBookPage = new RecipeBookPage();
     private RecipeItemHelper stackedContents = new RecipeItemHelper();
     private int timesInventoryChanged;
 
@@ -203,7 +203,7 @@ public class MPSRecipeBookGui extends GuiRecipeBook {
         int k = 27;
         int l = 0;
 
-        for (MPSRecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
+        for (RecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
             CreativeTabs creativetabs = guibuttonrecipetab.getCategory();
             if (creativetabs == CreativeTabs.SEARCH) {
                 guibuttonrecipetab.visible = true;
@@ -252,7 +252,7 @@ public class MPSRecipeBookGui extends GuiRecipeBook {
             RenderHelper.disableStandardItemLighting();
 
             // move this up to before the outer frame once the texture is no longer needed
-            for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
+            for(RecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
                 MPSRecipeTabToggleWidget.drawButton(this.mc, mouseX, mouseY, partialTicks);
             }
 
@@ -336,7 +336,7 @@ public class MPSRecipeBookGui extends GuiRecipeBook {
                 this.updateCollections(false);
                 return true;
             } else {
-                for (MPSRecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
+                for (RecipeTabToggleWidget guibuttonrecipetab : this.recipeTabs) {
                     if (guibuttonrecipetab.mousePressed(this.mc, mouseX, mouseY)) {
                         if (this.currentTab != guibuttonrecipetab) {
                             guibuttonrecipetab.playPressSound(this.mc.getSoundHandler());

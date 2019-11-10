@@ -2,11 +2,8 @@ package com.github.lehjr.modularpowerarmor.network.packets;
 
 import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import com.github.lehjr.modularpowerarmor.config.CosmeticPresetSaveLoad;
-import com.github.lehjr.modularpowerarmor.config.MPAConfig;
-import com.github.lehjr.modularpowerarmor.config.MPAServerSettings;
-import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import io.netty.buffer.ByteBuf;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -71,7 +68,7 @@ public class CosmeticPresetUpdatePacket implements IMessage {
                         MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
                         if (settings != null) {
                             settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
-                            MPSPackets.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
+                            MPAPackets.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
                         } else {
                             MPSSettings.cosmetics.updateCosmeticInfo(registryName, name, cosmeticSettings);
                         }

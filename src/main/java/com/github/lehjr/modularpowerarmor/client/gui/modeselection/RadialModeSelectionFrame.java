@@ -134,13 +134,13 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
-
+    public boolean onMouseDown(double x, double y, int button) {
+        return false;
     }
 
     @Override
-    public void onMouseUp(double x, double y, int button) {
-
+    public boolean onMouseUp(double x, double y, int button) {
+        return false;
     }
 
     @Override

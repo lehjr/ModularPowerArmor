@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,6 +16,6 @@ public class CreativeTab extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(MPSItems.powerArmorHead);
+        return new ItemStack(Objects.INSTANCE.powerArmorHead);
     }
 }

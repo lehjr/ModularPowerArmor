@@ -18,7 +18,7 @@ import java.util.Objects;
 
 
 
-public class MPSNBTUtils {
+public class MPANBTUtils {
     public static NBTTagCompound getMuseRenderTag(@Nonnull ItemStack stack, EntityEquipmentSlot armorSlot) {
         NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
         NBTTagCompound renderTag = new NBTTagCompound();

@@ -7,19 +7,14 @@ import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ToggleRequestPacket;
 import com.github.lehjr.mpalib.string.StringUtils;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -80,7 +75,7 @@ public class ClickableKeybinding extends ClickableButton {
                     }
                 });
             }
-            MPSPackets.sendToServer(new ToggleRequestPacket(registryName, toggleval));
+            MPAPackets.sendToServer(new ToggleRequestPacket(registryName, toggleval));
         }
         toggleval = !toggleval;
     }

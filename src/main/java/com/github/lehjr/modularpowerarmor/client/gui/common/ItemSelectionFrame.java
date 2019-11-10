@@ -1,5 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
+import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableContainer;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.geometry.FlyFromPointToPoint2D;
@@ -8,14 +10,10 @@ import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.mpalib.math.MathUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.opengl.GL11;
 

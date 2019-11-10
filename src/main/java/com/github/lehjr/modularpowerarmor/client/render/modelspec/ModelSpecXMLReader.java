@@ -95,7 +95,7 @@ public enum ModelSpecXMLReader {
 
                                 case ARMOR_MODEL:
                                     // only allow these models if allowed by config
-                                    if (MPSConfig.INSTANCE.allowHighPollyArmorModels()) {
+                                    if (MPAConfig.INSTANCE.allowHighPollyArmorModels()) {
                                         parseModelSpec(specNode, map, EnumSpecType.ARMOR_MODEL, specName, isDefault);
                                     }
                                     break;

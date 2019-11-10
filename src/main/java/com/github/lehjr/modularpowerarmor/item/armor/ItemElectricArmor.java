@@ -7,6 +7,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,16 +18,10 @@ import java.util.List;
 /**
  * Ported to Java by lehjr on 10/26/16.
  */
-public abstract class ItemElectricArmor extends ItemArmor {
+public abstract class ItemElectricArmor extends ItemArmor implements ISpecialArmor {
     public ItemElectricArmor(ItemArmor.ArmorMaterial material, int renderIndexIn, EntityEquipmentSlot slot) {
         super(material, renderIndexIn, slot);
     }
-
-
-
-
-
-
 
     @Override
     public boolean hasColor(@Nonnull ItemStack stack) {

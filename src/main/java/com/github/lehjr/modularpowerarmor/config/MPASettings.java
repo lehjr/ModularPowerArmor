@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.config;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
@@ -483,7 +483,7 @@ public class MPASettings {
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerFist = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerFist() {
             if (cosmeticPresetsPowerFist.isEmpty() && !allowPowerFistCustomization)
-                cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.powerFist, 0);
+                cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerFist, 0);
             return cosmeticPresetsPowerFist;
         }
 
@@ -491,7 +491,7 @@ public class MPASettings {
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorHelmet = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorHelmet() {
             if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !useLegacyCosmeticSystem)
-                cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.powerArmorHead, 0);
+                cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorHead, 0);
             return cosmeticPresetsPowerArmorHelmet;
         }
 
@@ -499,7 +499,7 @@ public class MPASettings {
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorChestplate = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorChestplate() {
             if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !useLegacyCosmeticSystem)
-                cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.powerArmorTorso, 0);
+                cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorTorso, 0);
             return cosmeticPresetsPowerArmorChestplate;
         }
 
@@ -507,7 +507,7 @@ public class MPASettings {
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorLeggings = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorLeggings() {
             if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !useLegacyCosmeticSystem)
-                cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.powerArmorLegs, 0);
+                cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorLegs, 0);
             return cosmeticPresetsPowerArmorLeggings;
         }
 
@@ -515,7 +515,7 @@ public class MPASettings {
         private BiMap<String, NBTTagCompound>  cosmeticPresetsPowerArmorBoots = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorBoots() {
             if(cosmeticPresetsPowerArmorBoots.isEmpty() && !useLegacyCosmeticSystem)
-                cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(MPSItems.powerArmorFeet, 0);
+                cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorFeet, 0);
             return cosmeticPresetsPowerArmorBoots;
         }
     }

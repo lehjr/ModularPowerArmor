@@ -2,6 +2,8 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
+import com.github.lehjr.modularpowerarmor.fluid.BlockFluidLiquidNitrogen;
+import com.github.lehjr.modularpowerarmor.fluid.LiquidNitrogen;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
@@ -335,6 +337,10 @@ public enum Objects {
     @GameRegistry.ObjectHolder(LUX_CAPACITOR_REG_NAME)
     public static final BlockLuxCapacitor luxCapacitor = null;
 
-
-
+    /**
+     * Fluid --------------------------------------------------------------------------------------
+     */
+    public static final LiquidNitrogen liquidNitrogen = new LiquidNitrogen();
+    @GameRegistry.ObjectHolder(LIQUID_NITROGEN__REGNAME)
+    public static final BlockFluidLiquidNitrogen blockLiquidNitrogen = null;
 }

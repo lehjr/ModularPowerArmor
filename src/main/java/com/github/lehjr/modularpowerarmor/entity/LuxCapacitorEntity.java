@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.mpalib.math.Colour;
 import io.netty.buffer.ByteBuf;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
@@ -78,14 +78,14 @@ public class LuxCapacitorEntity extends EntityThrowable implements IEntityAdditi
             int z = hitResult.getBlockPos().getZ() - dir.getZOffset();
             if (y > 0) {
                 BlockPos blockPos = new BlockPos(x, y, z);
-                if (MPSItems.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, dir)) {
-                    IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, dir, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
+                if (Objects.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, dir)) {
+                    IBlockState blockState = Objects.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, dir, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
                     world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
                     world.setTileEntity(blockPos, new LuxCapacitorTileEntity(color));
                 } else {
                     for (EnumFacing facing : EnumFacing.values()) {
-                        if (MPSItems.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, facing)) {
-                            IBlockState blockState = MPSItems.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, facing, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
+                        if (Objects.INSTANCE.luxCapacitor.canPlaceAt(world, blockPos, facing)) {
+                            IBlockState blockState = Objects.INSTANCE.luxCapacitor.getStateForPlacement(world, blockPos, facing, hitResult.getBlockPos().getX(), hitResult.getBlockPos().getY(), hitResult.getBlockPos().getZ(), 0, null, EnumHand.MAIN_HAND);
                             world.setBlockState(blockPos, ((IExtendedBlockState) blockState).withProperty(COLOR, color));
                             world.setTileEntity(blockPos, new LuxCapacitorTileEntity(color));
                             break;

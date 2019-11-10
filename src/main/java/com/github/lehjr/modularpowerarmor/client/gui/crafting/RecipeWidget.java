@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class MPSRecipeWidget extends GuiButtonRecipe {
+public class RecipeWidget extends GuiButtonRecipe {
     Colour disabledBackground = new Colour(0.416D, 0.416D, 0.416D, 1);
     Colour enabledBackground = new Colour(0.545D, 0.545D, 0.545D, 1);
     Colour disabledBorder = new Colour(0.541D, 0.133D, 0.133D, 1);
@@ -37,7 +37,7 @@ public class MPSRecipeWidget extends GuiButtonRecipe {
     private int currentIndex;
     DrawableTile tile;
 
-    public MPSRecipeWidget() {
+    public RecipeWidget() {
         tile = new DrawableTile(0, 0, 0, 0, false, disabledBackground, disabledBorder);
     }
 

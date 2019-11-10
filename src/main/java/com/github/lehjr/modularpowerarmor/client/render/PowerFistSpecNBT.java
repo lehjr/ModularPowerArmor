@@ -5,7 +5,6 @@ import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -38,8 +37,6 @@ public class PowerFistSpecNBT extends ModelSpecNBT implements IHandHeldModelSpec
 
         // temp data holder
         NBTTagCompound tempNBT;
-
-        EntityEquipmentSlot slot = getItemStack().getEquipmentSlot();
 
         for (SpecBase spec : ModelRegistry.getInstance().getSpecs()) {
             // Only generate NBT data from Specs marked as "default"

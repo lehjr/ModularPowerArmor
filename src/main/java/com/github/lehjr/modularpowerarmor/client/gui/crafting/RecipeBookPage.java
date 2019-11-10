@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.google.common.collect.Lists;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
@@ -21,15 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class MPSRecipeBookPage extends RecipeBookPage {
-    private final List<MPSRecipeWidget> buttons = Lists.newArrayListWithCapacity(20);
-    private MPSRecipeWidget hoveredButton;
+public class RecipeBookPage extends net.minecraft.client.gui.recipebook.RecipeBookPage {
+    private final List<RecipeWidget> buttons = Lists.newArrayListWithCapacity(20);
+    private RecipeWidget hoveredButton;
     private GuiRecipeOverlay overlay = new GuiRecipeOverlay();
     private Minecraft minecraft;
     private List<IRecipeUpdateListener> listeners = new ArrayList<>();
     private List<RecipeList> recipeLists;
-    private ClickableMuseArrow forwardArrow;
-    private ClickableMuseArrow backArrow;
+    private ClickableArrow forwardArrow;
+    private ClickableArrow backArrow;
     private int totalPages;
     private int currentPage;
     private RecipeBook recipeBook;
@@ -39,15 +39,15 @@ public class MPSRecipeBookPage extends RecipeBookPage {
     private final Colour arrowNormalBackGound = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
     private final Colour arrowHighlightedBackground = Colour.WHITE;
 
-    public MPSRecipeBookPage() {
+    public RecipeBookPage() {
         for (int i = 0; i < 20; ++i) {
-            this.buttons.add(new MPSRecipeWidget());
+            this.buttons.add(new RecipeWidget());
         }
 
-        forwardArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         forwardArrow.setDrawShaft(false);
 
-        backArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        backArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         backArrow.setDrawShaft(false);
         backArrow.setDirection(DrawableArrow.ArrowDirection.LEFT);
     }
@@ -86,7 +86,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         int i = 20 * this.currentPage;
 
         for (int j = 0; j < this.buttons.size(); ++j) {
-            MPSRecipeWidget recipewidget = this.buttons.get(j);
+            RecipeWidget recipewidget = this.buttons.get(j);
             if (i + j < this.recipeLists.size()) {
                 RecipeList recipelist = this.recipeLists.get(i + j);
                 recipewidget.init(recipelist, this, this.recipeBook);
@@ -115,7 +115,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         RenderHelper.disableStandardItemLighting();
         this.hoveredButton = null;
 
-        for (MPSRecipeWidget recipewidget : this.buttons) {
+        for (RecipeWidget recipewidget : this.buttons) {
             recipewidget.drawButton(this.minecraft, mouseX, mouseY, partialTicks);
             if (recipewidget.visible && recipewidget.isMouseOver()) {
                 this.hoveredButton = recipewidget;
@@ -175,7 +175,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
             this.updateButtonsForPage();
             return true;
         } else {
-            for (MPSRecipeWidget recipewidget : this.buttons) {
+            for (RecipeWidget recipewidget : this.buttons) {
                 if (recipewidget.mousePressed(minecraft, mouseX, mouseY)) {
                     if (mouseButton == 0) {
                         this.lastClickedRecipe = recipewidget.getRecipe();

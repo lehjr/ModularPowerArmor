@@ -144,11 +144,6 @@ public class MPAServerSettings {
         useIC2Recipes = datain.readBoolean();
 
         /**
-         * Custom install costs -------------------------------------------------------------------
-         */
-        ModuleManager.INSTANCE.setCustomInstallCosts(MuseByteBufferUtils.readMap(datain, String.class, ItemStack[].class));
-
-        /**
          * Modules -------------------------------------------------------------------------------
          */
         allowedModules = MuseByteBufferUtils.readMap(datain, String.class, Boolean.class);
@@ -195,11 +190,6 @@ public class MPAServerSettings {
         packet.writeBoolean(useEnderIORecipes);
         packet.writeBoolean(useTechRebornRecipes);
         packet.writeBoolean(useIC2Recipes);
-
-        /**
-         *  Custom Install Costs -------------------------------------------------------------------
-         */
-        MuseByteBufferUtils.writeMap(packet, ModuleManager.INSTANCE.getCustomInstallCostsForServerToClientConfig(), true);
 
         /**
          * Modules -------------------------------------------------------------------------------

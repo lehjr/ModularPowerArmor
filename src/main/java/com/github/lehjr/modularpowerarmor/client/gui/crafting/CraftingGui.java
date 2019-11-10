@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.frame.InventoryFrame;
@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener {
-    private final MPSRecipeBookGui recipeBookGui;
+public class CraftingGui extends GuiContainer implements IRecipeShownListener {
+    private final RecipeBookGui recipeBookGui;
     private boolean widthTooNarrow;
     protected DrawableRect backgroundRect;
     protected List<IGuiFrame> frames;
@@ -42,23 +42,23 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
     protected final Colour gridBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
     protected final Colour gridBackGound = new Colour(0.545D, 0.545D, 0.545D, 1);
     protected DrawableRelativeRect result;
-    protected ClickableMuseArrow arrow;
+    protected ClickableArrow arrow;
     protected TexturedButton recipeBookButton;
     protected TabSelectFrame tabSelectFrame;
     final int slotWidth = 18;
     final int slotHeight = 18;
     int spacer = 7;
     EntityPlayer player;
-    public MPSCraftingGui(InventoryPlayer playerInv, World worldIn) {
+    public CraftingGui(InventoryPlayer playerInv, World worldIn) {
         this(playerInv, worldIn, BlockPos.ORIGIN);
     }
 
-    public MPSCraftingGui(InventoryPlayer playerInv, World worldIn, BlockPos blockPosition) {
+    public CraftingGui(InventoryPlayer playerInv, World worldIn, BlockPos blockPosition) {
         super(new ContainerWorkbench(playerInv, worldIn, blockPosition));
         player = playerInv.player;
         frames = new ArrayList<>();
 
-        this.recipeBookGui = new MPSRecipeBookGui();
+        this.recipeBookGui = new RecipeBookGui();
 
         backgroundRect = new DrawableRect(absX(-1), absY(-1), absX(1), absY(1), true,
                 new Colour(0.0F, 0.2F, 0.0F, 0.8F),
@@ -96,7 +96,7 @@ public class MPSCraftingGui extends GuiContainer implements IRecipeShownListener
         }});
         frames.add(hotbar);
 
-        arrow = new ClickableMuseArrow(0, 0, 0, 0, true, gridBackGound, Colour.WHITE, gridBorderColour);
+        arrow = new ClickableArrow(0, 0, 0, 0, true, gridBackGound, Colour.WHITE, gridBorderColour);
         arrow.show();
 
         recipeBookButton = new TexturedButton(

@@ -1,8 +1,7 @@
 package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.config.MPASettings;
-import com.github.lehjr.modularpowerarmor.network.MPSPackets;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.ConfigPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,7 +24,7 @@ public final class PlayerLoginHandlerThingy {
         // dedidated server or multiplayer game
         if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
             // sync config settings between client and server
-            MPSPackets.sendTo(new ConfigPacket(), (EntityPlayerMP) player);
+            MPAPackets.sendTo(new ConfigPacket(), (EntityPlayerMP) player);
         } else {
             MPSSettings.loadCustomInstallCosts();
         }

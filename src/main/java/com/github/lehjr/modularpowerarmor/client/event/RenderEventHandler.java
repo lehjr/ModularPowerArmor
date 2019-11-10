@@ -1,9 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.client.render.Renderer;
@@ -17,10 +21,14 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+
+import java.util.Optional;
 
 /**
  * Ported to Java by lehjr on 10/24/16.
@@ -65,10 +73,30 @@ public class RenderEventHandler {
     }
 
     private boolean playerHasFlightOn(EntityPlayer player) {
-        return ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_JETPACK__REGNAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_GLIDER__REGNAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.FEET), ModuleConstants.MODULE_JETBOOTS__REGNAME) ||
-                ModuleManager.INSTANCE.itemHasActiveModule(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ModuleConstants.MODULE_FLIGHT_CONTROL__REGNAME);
+        return
+                Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST)
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        return ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(RegistryNames.MODULE_JETPACK__REGNAME)) ||
+                                ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(RegistryNames.MODULE_GLIDER__REGNAME));
+                    }
+                    return false;
+                }).orElse(false) ||
+                        Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.FEET)
+                                .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                            if (iItemHandler instanceof IModularItem) {
+                                return ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(RegistryNames.MODULE_JETBOOTS__REGNAME));
+                            }
+                            return false;
+                        }).orElse(false) ||
+
+                        Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD)
+                                .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                            if (iItemHandler instanceof IModularItem) {
+                                return ((IModularItem) iItemHandler).isModuleOnline(new ResourceLocation(RegistryNames.MODULE_FLIGHT_CONTROL__REGNAME));
+                            }
+                            return false;
+                        }).orElse(false);
     }
 
     @SubscribeEvent
@@ -82,9 +110,15 @@ public class RenderEventHandler {
     @SubscribeEvent
     public void onFOVUpdate(FOVUpdateEvent e) {
         ItemStack helmet = e.getEntity().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-        if (ModuleManager.INSTANCE.itemHasActiveModule(helmet, ModuleConstants.BINOCULARS_MODULE__REGNAME)) {
-            e.setNewfov(e.getNewfov() / (float) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helmet, ModuleConstants.FOV));
-        }
+
+        Optional.ofNullable(e.getEntity().getItemStackFromSlot(EntityEquipmentSlot.HEAD)
+                .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent((iItemHandler -> {
+            if (iItemHandler instanceof IModularItem) {
+                ItemStack module = ((IModularItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.BINOCULARS_MODULE__REGNAME));
+                Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null)).ifPresent(pm->
+                        e.setNewfov(e.getNewfov() / (float) pm.applyPropertyModifiers(ModuleConstants.FOV)));
+            }
+        }));
     }
 
     @SideOnly(Side.CLIENT)
@@ -115,12 +149,19 @@ public class RenderEventHandler {
                     for (ClickableModule module : kb.getBoundModules()) {
                         TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
                         boolean active = false;
-                        for (ItemStack stack : ItemUtils.getLegacyModularItemsEquipped(player)) {
-                            if (ModuleManager.INSTANCE.itemHasActiveModule(stack, module.getModule().getDataName()))
-                                active = true;
+                        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+                            active = Optional.ofNullable(player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+                                if (iItemHandler instanceof IModularItem) {
+                                    return ((IModularItem) iItemHandler).isModuleOnline(module.getModule().getItem().getRegistryName());
+                                }
+                                return false;
+                            }).orElse(false);
                         }
+//                        Renderer.drawModuleAt(x, frame.top(), module.getModule(), active); // FIXME
+                        // FIXME
+                        //IconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
 
-                        IconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
+
                         TextureUtils.popTexture();
                         x += 16;
                     }

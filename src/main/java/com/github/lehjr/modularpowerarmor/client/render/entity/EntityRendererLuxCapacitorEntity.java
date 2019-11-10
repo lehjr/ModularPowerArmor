@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
-import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.common.MPSItems;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -29,7 +29,7 @@ public class EntityRendererLuxCapacitorEntity extends MuseEntityRenderer<LuxCapa
     @Override
     public void doRender(LuxCapacitorEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         if (luxCapacitorModel != null) {
-            blockState = ((IExtendedBlockState) MPSItems.INSTANCE.luxCapacitor.getDefaultState().
+            blockState = ((IExtendedBlockState) Objects.INSTANCE.luxCapacitor.getDefaultState().
                     withProperty(BlockDirectional.FACING, EnumFacing.DOWN)).withProperty(COLOR, entity.color);
             GL11.glPushMatrix();
             GL11.glTranslated(x, y, z);

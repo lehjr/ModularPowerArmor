@@ -86,7 +86,7 @@ public class DefaultModelSpec {
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPSConfig.INSTANCE.allowHighPollyArmorModels()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPAConfig.INSTANCE.allowHighPollyArmorModels()) {
 
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {
