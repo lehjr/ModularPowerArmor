@@ -19,10 +19,7 @@ import com.github.lehjr.modularpowerarmor.item.module.energy.generation.KineticG
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.SolarGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.storage.EnergyStorageModule;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.FluidTankModule;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.MobRepulsorModule;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.WaterElectrolyzerModule;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AOEPickUpgradeModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AquaAffinityModule;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.FortuneModule;

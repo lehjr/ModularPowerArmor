@@ -1,14 +1,9 @@
 package com.github.lehjr.modularpowerarmor.network.packets;
 
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
-import com.github.lehjr.mpalib.legacy.item.IModularItem;
-import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

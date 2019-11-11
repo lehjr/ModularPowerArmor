@@ -1,11 +1,12 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
+import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
+import com.github.lehjr.modularpowerarmor.client.gui.modeselection.GuiModeSelector;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
 import com.github.lehjr.mpalib.capabilities.player.IPlayerKeyStates;
-import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.PlayerUpdatePacket;
-import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
@@ -16,7 +17,10 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
+
+import java.util.Optional;
 
 @SideOnly(Side.CLIENT)
 public class KeybindKeyHandler {
@@ -85,23 +89,33 @@ public class KeybindKeyHandler {
         }
 
         if (pressed) {
-            if (player.inventory.getCurrentItem().getItem() instanceof IModeChangingItem) {
-                IModeChangingItem mci = (IModeChangingItem) player.inventory.getCurrentItem().getItem();
-
-                if (player.inventory.currentItem < hotbarKeys.length && key == hotbarKeys[player.inventory.currentItem].getKeyCode()) {
-                    World world = mc.world;
-                    if (mc.inGameHasFocus) {
-                        player.openGui(ModularPowerArmor.getInstance(), 4, world, 0, 0, 0);
+            // Mode changinging GUI
+            if (hotbarKeys[player.inventory.currentItem].isKeyDown() && mc.inGameHasFocus) {
+                Optional.ofNullable(player.inventory.getCurrentItem().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iModeChanging->{
+                    if (!(Minecraft.getMinecraft().currentScreen instanceof GuiModeSelector)) {
+                        player.openGui(ModularPowerArmor.getInstance(), 4, player.world, 0, 0, 0);
                     }
-                    // cycleToolBackward/cycleToolForward aren't related to the mouse wheel unless bound to that
-                } else if (cycleToolBackward.isPressed()) {
-                    mc.playerController.updateController();
-                    mci.cycleMode(player.inventory.getStackInSlot(player.inventory.currentItem), player, 1);
-                } else if (cycleToolForward.isPressed()) {
-                    mc.playerController.updateController();
-                    mci.cycleMode(player.inventory.getStackInSlot(player.inventory.currentItem), player, -1);
-                }
+                });
+
+            /* cycleToolBackward/cycleToolForward */
+            } else if (cycleToolBackward.isKeyDown()) {
+                mc.playerController.updateController();
+                Optional.ofNullable(player.inventory.getStackInSlot(player.inventory.currentItem).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                        .ifPresent(handler-> {
+                            if (handler instanceof IModeChangingItem)
+                                ((IModeChangingItem) handler).cycleMode(player, 1);
+                        });
             }
+
+            if (cycleToolForward.isKeyDown()) {
+                mc.playerController.updateController();
+                Optional.ofNullable(player.inventory.getStackInSlot(player.inventory.currentItem).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                        .ifPresent(handler-> {
+                            if (handler instanceof IModeChangingItem)
+                                ((IModeChangingItem) handler).cycleMode(player, -1);
+                        });
+            }
+
 
             if (openKeybindGUI.isPressed()) {
                 World world = mc.world;

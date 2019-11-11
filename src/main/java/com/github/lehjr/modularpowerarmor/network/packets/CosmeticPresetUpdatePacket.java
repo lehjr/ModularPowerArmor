@@ -1,9 +1,12 @@
 package com.github.lehjr.modularpowerarmor.network.packets;
 
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import com.github.lehjr.modularpowerarmor.config.CosmeticPresetSaveLoad;
-import io.netty.buffer.ByteBuf;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.config.MPAServerSettings;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,12 +68,12 @@ public class CosmeticPresetUpdatePacket implements IMessage {
                         ResourceLocation registryName = message.registryName;
                         String name = message.name;
                         NBTTagCompound cosmeticSettings = message.cosmeticSettings;
-                        MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
+                        MPAServerSettings settings = MPAConfig.INSTANCE.getServerSettings();
                         if (settings != null) {
                             settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
                             MPAPackets.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
                         } else {
-                            MPSSettings.cosmetics.updateCosmeticInfo(registryName, name, cosmeticSettings);
+                            MPASettings.cosmetics.updateCosmeticInfo(registryName, name, cosmeticSettings);
                         }
                         if (CosmeticPresetSaveLoad.savePreset(registryName, name, cosmeticSettings))
                             player.sendMessage(new TextComponentTranslation("gui.modularpowerarmor.savesuccessful"));
@@ -83,7 +86,7 @@ public class CosmeticPresetUpdatePacket implements IMessage {
                     ResourceLocation registryName = message.registryName;
                     String name = message.name;
                     NBTTagCompound cosmeticSettings = message.cosmeticSettings;
-                    MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
+                    MPAServerSettings settings = MPAConfig.INSTANCE.getServerSettings();
                     settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
                 });
             }

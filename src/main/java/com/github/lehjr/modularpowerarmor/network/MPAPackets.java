@@ -21,7 +21,6 @@ public class MPAPackets {
         INSTANCE.registerMessage(SalvageModuleRequestPacket.Handler.class, SalvageModuleRequestPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(ColourInfoPacket.Handler.class, ColourInfoPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CosmeticInfoPacket.Handler.class, CosmeticInfoPacket.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(ToggleRequestPacket.Handler.class, ToggleRequestPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(TweakRequestDoublePacket.Handler.class, TweakRequestDoublePacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CosmeticPresetUpdatePacket.Handler.class, CosmeticPresetUpdatePacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CosmeticPresetPacket.Handler.class, CosmeticPresetPacket.class, i++, Side.SERVER);

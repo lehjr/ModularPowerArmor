@@ -1,5 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
+import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
@@ -17,18 +19,13 @@ import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
-import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 

@@ -18,16 +18,16 @@ public class ConfigPacket implements IMessage {
     // read settings from packet
     @Override
     public void fromBytes(ByteBuf buf) {
-        MPSServerSettings settings = new MPSServerSettings(buf);
-        MPSConfig.INSTANCE.setServerSettings(settings);
+        MPAServerSettings settings = new MPAServerSettings(buf);
+        MPAConfig.INSTANCE.setServerSettings(settings);
     }
 
     // write values to packet to send to the client
     @Override
     public void toBytes(ByteBuf buf) {
-        if (MPSConfig.INSTANCE.getServerSettings() == null)
-            MPSConfig.INSTANCE.setServerSettings(new MPSServerSettings());
-        MPSConfig.INSTANCE.getServerSettings().writeToBuffer(buf);
+        if (MPAConfig.INSTANCE.getServerSettings() == null)
+            MPAConfig.INSTANCE.setServerSettings(new MPAServerSettings());
+        MPAConfig.INSTANCE.getServerSettings().writeToBuffer(buf);
     }
 
     public static class Handler implements IMessageHandler<ConfigPacket, IMessage> {

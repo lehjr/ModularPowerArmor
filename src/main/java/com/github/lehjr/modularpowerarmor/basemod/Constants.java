@@ -16,6 +16,7 @@ public class Constants {
 
 
     public static final String CONFIG_PREFIX = "config." + MODID + ".";
+    public static final String CONFIG_FILE = "lehjr/" + MODID;
 
     /** HUD --------------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
@@ -36,6 +37,13 @@ public class Constants {
     public static final String CONFIG_PREFIX_GENERAL = CONFIG_PREFIX + "general.";
     public static final String CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS = CONFIG_PREFIX_GENERAL + "allowConflictingKeybinds";
     public static final String CONFIG_GENERAL_MAX_FLYING_SPEED = CONFIG_PREFIX_GENERAL + "maxFlyingSpeed";
+    public static final String CONFIG_GENERAL_USE_OLD_AUTOFEEDER = CONFIG_PREFIX_GENERAL + "useOldAutofeeder";
+    public static final String CONFIG_GENERAL_GET_MAX_ARMOR_PER_PIECE = CONFIG_PREFIX_GENERAL + "getMaximumArmorPerPiece";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST = CONFIG_PREFIX_GENERAL + "baseMaxHeatPowerfist";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_HELMET = CONFIG_PREFIX_GENERAL + "baseMaxHeatHelmet";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_CHEST = CONFIG_PREFIX_GENERAL + "baseMaxHeatChest";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_LEGS = CONFIG_PREFIX_GENERAL + "baseMaxHeatLegs";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_FEET = CONFIG_PREFIX_GENERAL + "baseMaxHeatFeet";
 
     /** Recipes ----------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_RECIPES = CONFIG_PREFIX + "recipes.";

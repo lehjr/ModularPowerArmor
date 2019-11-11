@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.network.packets;
 
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
-import com.github.lehjr.mpalib.legacy.item.IModularItem;
+import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.Optional;
 
 public class CosmeticPresetPacket implements IMessage {
     int itemSlot;
@@ -43,16 +45,14 @@ public class CosmeticPresetPacket implements IMessage {
             if (ctx.side == Side.SERVER) {
                 final EntityPlayerMP player = ctx.getServerHandler().player;
                 player.getServerWorld().addScheduledTask(() -> {
-
                     int itemSlot = message.itemSlot;
                     String presetName = message.presetName;
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
-
-                    if (presetName != null && stack.getItem() instanceof IModularItem) {
-                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
-                        itemTag.removeTag(MPALIbConstants.TAG_RENDER);
-                        itemTag.setString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
-                    }
+                    Optional.ofNullable(stack.getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(ms->{
+                        NBTTagCompound renderTag = ms.getMuseRenderTag();
+                        renderTag.removeTag(MPALIbConstants.TAG_RENDER);
+                        renderTag.setString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
+                    });
                 });
             }
             return null;

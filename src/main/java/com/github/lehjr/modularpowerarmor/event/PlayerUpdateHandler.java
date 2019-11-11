@@ -4,12 +4,13 @@ import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.modularpowerarmor.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +20,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Claire Semple on 9/8/2014.
@@ -34,8 +38,9 @@ public class PlayerUpdateHandler {
         if (e.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e.getEntity();
 
-            // only MPS modular items in this list
-            List<ItemStack> modularItemsEquipped = ItemUtils.getLegacyModularItemsEquipped(player);
+
+
+
 
 
 //            // FIXME: is this really nescessary... apparently it is
@@ -64,20 +69,43 @@ public class PlayerUpdateHandler {
 
 //            Enchantment.getEnchantmentID(AdvancedRocketryAPI.enchantmentSpaceProtection);
 
-            for (ItemStack itemStack : modularItemsEquipped) {
-                for (IPowerModule module : ModuleManager.INSTANCE.getModulesOfType(IPlayerTickModule.class)) {
-                    if (ModuleManager.INSTANCE.isValidForItem(itemStack, module) && ModuleManager.INSTANCE.itemHasModule(itemStack, module.getDataName())) {
-                        if (ModuleManager.INSTANCE.isModuleOnline(itemStack, module.getDataName()))
-                            ((IPlayerTickModule) module).onPlayerTickActive(player, itemStack);
-                        else
-                            ((IPlayerTickModule) module).onPlayerTickInactive(player, itemStack);
-                    }
+            AtomicInteger modularItemsEquipped = new AtomicInteger(0);
+            for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+                if(player.getItemStackFromSlot(slot).isEmpty()) {
+                    continue;
+                }
+
+                switch (slot.getSlotType()) {
+                    case HAND:
+                        Optional.ofNullable(player.getItemStackFromSlot(slot)
+                                .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                                .ifPresent(i-> {
+                            if (i instanceof IModeChangingItem) {
+                                ((IModeChangingItem) i).tick(player);
+                                modularItemsEquipped.getAndAdd(1);
+                            }
+                        });
+                        break;
+
+                    case ARMOR:
+                        try {
+                            Optional.ofNullable(player.getItemStackFromSlot(slot)
+                                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(i-> {
+                                if (i instanceof IModularItem) {
+                                    ((IModularItem) i).tick(player);
+                                    modularItemsEquipped.getAndAdd(1);
+                                }
+                            });
+                        } catch (Exception exception) {
+                            MPALibLogger.logException(player.getItemStackFromSlot(slot).toString(), exception);
+                        }
+                        break;
                 }
             }
 
             // Sound update
             if (player.world.isRemote && MPALibConfig.useSounds()) {
-                if (modularItemsEquipped.size() > 0) {
+                if (modularItemsEquipped.get() > 0) {
                     double velsq2 = MathUtils.sumsq(player.motionX, player.motionY, player.motionZ) - 0.5;
                     if (player.isAirBorne && velsq2 > 0) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GLIDER, SoundCategory.PLAYERS, (float) (velsq2 / 3), 1.0f, true);
@@ -88,6 +116,7 @@ public class PlayerUpdateHandler {
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_GLIDER);
                 }
 
+                // fixme remove item reference and use capability references
                 if (!(player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() instanceof ItemPowerArmorBoots))
                     Musique.stopPlayerSound(player, SoundDictionary.SOUND_EVENT_JETBOOTS);
 

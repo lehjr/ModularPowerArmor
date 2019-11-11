@@ -1,44 +1,12 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
-import com.github.lehjr.mpalib.math.MathUtils;
-import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
-import li.cil.scannable.api.scanning.ScanResultProvider;
-import li.cil.scannable.client.ScanManager;
-import li.cil.scannable.common.capabilities.CapabilityScanResultProvider;
-import li.cil.scannable.common.config.Constants;
-import li.cil.scannable.common.config.Settings;
-import li.cil.scannable.common.init.Items;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.capabilities.ItemHandlerPowerFist;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
-import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OreScannerModule extends AbstractPowerModule {
     static final ResourceLocation scannerCharge = new ResourceLocation("scannable", "scanner_charge");

@@ -1,9 +1,5 @@
 package com.github.lehjr.modularpowerarmor.network.packets;
 
-import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
-import com.github.lehjr.mpalib.legacy.module.IEnchantmentModule;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
-import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.network.MuseByteBufferUtils;

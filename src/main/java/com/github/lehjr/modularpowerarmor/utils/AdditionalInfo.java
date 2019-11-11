@@ -6,7 +6,6 @@ import com.github.lehjr.modularpowerarmor.utils.modulehelpers.FluidUtils;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
-import com.github.lehjr.mpalib.legacy.item.IModeChangingItem;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.Minecraft;

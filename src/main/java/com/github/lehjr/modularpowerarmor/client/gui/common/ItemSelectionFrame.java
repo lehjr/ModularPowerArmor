@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ItemSelectionFrame extends ScrollableFrame {
-    protected List<ClickableItem> itemButtons;
+    public List<ClickableItem> itemButtons;
     protected int selectedItemStack = -1;
     protected EntityPlayer player;
     protected List<Point2D> itemPoints;
@@ -147,8 +147,10 @@ public class ItemSelectionFrame extends ScrollableFrame {
     }
 
     @Override
-    public void onMouseDown(double x, double y, int button) {
-        super.onMouseDown(x, y, button);
+    public boolean onMouseDown(double x, double y, int button) {
+        if (super.onMouseDown(x, y, button)) {
+            return true;
+        }
         if (border.containsPoint(x, y)) {
             y += currentscrollpixels;
             int i = 0;
@@ -159,12 +161,13 @@ public class ItemSelectionFrame extends ScrollableFrame {
                     selectedItemStack = i;
                     if(getSelectedItem() != getPreviousSelectedItem())
                         onSelected();
-                    return;
+                    return true;
                 } else {
                     i++;
                 }
             }
         }
+        return false;
     }
 
     private void drawSelection(int mouseX, int mouseY, float partialTicks) {

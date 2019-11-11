@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.scanner;
 
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
-import com.github.lehjr.modularpowerarmor.capabilities.ItemHandlerPowerFist;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

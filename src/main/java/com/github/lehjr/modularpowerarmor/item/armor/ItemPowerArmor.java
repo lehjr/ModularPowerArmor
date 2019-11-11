@@ -3,7 +3,6 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
-import com.github.lehjr.modularpowerarmor.capabilities.MPSCapProvider;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.HighPolyArmor;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
@@ -19,6 +18,7 @@ import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
@@ -33,7 +33,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ISpecialArmor;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -126,7 +125,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
                 return java.util.Optional.ofNullable(armor
                         .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
                     if (iItemHandler instanceof IModularItem) {
-                                ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
+                        ((IModularItem) iItemHandler).isModuleInstalled(new ResourceLocation(RegistryNames.MODULE_HAZMAT__REGNAME));
                     }
                     return false;
                 }).orElse(false);
@@ -274,21 +273,32 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         return (int) this.getArmorDouble(player, armor);
     }
 
-    @Override
     public double getArmorDouble(EntityPlayer player, ItemStack stack) {
-        double totalArmor = 0.0;
-        double energy = ElectricItemUtils.getPlayerEnergy(player);
-        double physArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_VALUE_PHYSICAL);
-        double enerArmor = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_VALUE_ENERGY);
-        double enerConsum = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.ARMOR_ENERGY_CONSUMPTION);
-
-        totalArmor += physArmor;
-        if (energy > enerConsum) {
-            totalArmor += enerArmor;
-        }
-        totalArmor = Math.min(MPAConfig.INSTANCE.getMaximumArmorPerPiece(), totalArmor);
-
-        return totalArmor;
+        return Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                .map(iItemHandler -> {
+                    double totalArmor = 0D;
+                    if (iItemHandler instanceof IModularItem) {
+                        double energy = ElectricItemUtils.getPlayerEnergy(player);
+                        AtomicDouble physArmor = new AtomicDouble(0D);
+                        AtomicDouble enerArmor = new AtomicDouble(0D);
+                        AtomicDouble enerConsum = new AtomicDouble(0D);
+                        for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                            Optional.ofNullable(iItemHandler.getStackInSlot(i).getCapability(PowerModuleCapability.POWER_MODULE, null))
+                                    .ifPresent(pm->{
+                                        physArmor.getAndAdd(pm.applyPropertyModifiers(Constants.ARMOR_VALUE_PHYSICAL));
+                                        enerArmor.getAndAdd(pm.applyPropertyModifiers(Constants.ARMOR_VALUE_ENERGY));
+                                        enerConsum.getAndAdd(pm.applyPropertyModifiers(Constants.ARMOR_ENERGY_CONSUMPTION));
+                                    });
+                        }
+                        totalArmor += physArmor.get();
+                        if (energy > enerConsum.get()) {
+                            totalArmor += enerArmor.get();
+                        }
+                        totalArmor = Math.min(MPAConfig.INSTANCE.getMaximumArmorPerPiece(), totalArmor);
+                        return totalArmor;
+                    }
+                    return totalArmor;
+                }).orElse(0D);
     }
 
     @Override
@@ -307,12 +317,6 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
     public double getDurabilityForDisplay(final ItemStack stack) {
         final IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
         return 1 - (energyStorage != null ? energyStorage.getEnergyStored() / (float) energyStorage.getMaxEnergyStored() : 0);
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-        // NBT provided here is empty or null, so it's useless for this.
-        return new MPSCapProvider(stack);
     }
 
     // Cosmetics ----------------------------------------------------------------------------------

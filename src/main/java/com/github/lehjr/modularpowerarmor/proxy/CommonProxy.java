@@ -31,7 +31,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-        MPSModules.loadPowerModules();
+//        MPSModules.loadPowerModules(); // FIXME
         EntityRegistry.registerModEntity(new ResourceLocation(Constants.MODID, "entityPlasmaBolt"), PlasmaBoltEntity.class, "entityPlasmaBolt", 2477, ModularPowerArmor.getInstance(), 64, 20, true);
         EntityRegistry.registerModEntity(new ResourceLocation(Constants.MODID, "entitySpinningBlade"), SpinningBladeEntity.class, "entitySpinningBlade", 2478, ModularPowerArmor.getInstance(), 64, 20, true);
         EntityRegistry.registerModEntity(Objects.INSTANCE.luxCapacitor.getRegistryName(), LuxCapacitorEntity.class, "entityLuxCapacitor", 2479, ModularPowerArmor.getInstance(), 64, 20, true);
@@ -39,7 +39,7 @@ public class CommonProxy {
         TerminalHandler.registerHandler();
         MinecraftForge.EVENT_BUS.register(new PlayerLoginHandlerThingy()); // doesn't seem to work if fired preinit
 
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+//        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
 
 
 

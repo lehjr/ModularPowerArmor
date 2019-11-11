@@ -1,17 +1,22 @@
 package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
+import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.legacy.item.IModularItem;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.player.PlayerUtils;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,17 +24,19 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class MovementManager {
@@ -60,18 +67,23 @@ public class MovementManager {
     // moved here so it is still accessible if sprint assist module isn't installed.
     public static void setMovementModifier(ItemStack itemStack, double multiplier, EntityPlayer player) {
         // reduce player speed according to Kinetic Energy Generator setting
-        if (ModuleManager.INSTANCE.itemHasActiveModule(itemStack, ModuleConstants.MODULE_KINETIC_GENERATOR__REGNAME)) {
-            double movementResistance = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemStack, ModuleConstants.KINETIC_ENERGY_MOVEMENT_RESISTANCE);
-            multiplier -= movementResistance;
-        }
+        multiplier -= Optional.ofNullable(itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                .map(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        Optional.ofNullable(((IModularItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.MODULE_KINETIC_GENERATOR__REGNAME))
+                                .getCapability(PowerModuleCapability.POWER_MODULE, null))
+                                .map(pm->pm.applyPropertyModifiers(Constants.MOVEMENT_RESISTANCE)).orElse(0D);
+                    }
+                    return 0D;
+                }).orElse(0D);
 
         // player walking speed: 0.10000000149011612
         // player sprintint speed: 0.13000001
         double additive = multiplier * (player.isSprinting() ? 0.13 : 0.1)/2;
         NBTTagCompound itemNBT = NBTUtils.getNBTTag(itemStack);
         boolean hasAttribute = false;
-        if (itemNBT.hasKey("AttributeModifiers", Constants.NBT.TAG_LIST)) {
-            NBTTagList nbttaglist = itemNBT.getTagList("AttributeModifiers", Constants.NBT.TAG_COMPOUND);
+        if (itemNBT.hasKey("AttributeModifiers", net.minecraftforge.common.util.Constants.NBT.TAG_LIST)) {
+            NBTTagList nbttaglist = itemNBT.getTagList("AttributeModifiers", net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < nbttaglist.tagCount(); ++i) {
                 NBTTagCompound attributeTag = nbttaglist.getCompoundTagAt(i);
@@ -95,9 +107,17 @@ public class MovementManager {
             double strafeZ = -desiredDirection.x;
             double flightVerticality = 0;
             ItemStack helm = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-            if (!helm.isEmpty() && helm.getItem() instanceof IModularItem) {
-                flightVerticality = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(helm, ModuleConstants.FLIGHT_VERTICALITY);
-            }
+
+            flightVerticality = Optional.ofNullable(helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                    .map(iModularItem -> {
+                        if (iModularItem instanceof IModularItem)
+                            return Optional.ofNullable(((IModularItem) iModularItem)
+                                    .getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.MODULE_FLIGHT_CONTROL__REGNAME))
+                                    .getCapability(PowerModuleCapability.POWER_MODULE, null))
+                                    .map(pm->pm.applyPropertyModifiers(Constants.FLIGHT_VERTICALITY)).orElse(0D);
+                        else
+                            return 0D;
+                    }).orElse(0D);
 
             desiredDirection = new Vec3d(
                     (desiredDirection.x * Math.signum(playerInput.moveForward) + strafeX * Math.signum(playerInput.moveStrafe)),
@@ -195,27 +215,34 @@ public class MovementManager {
     public void handleLivingJumpEvent(LivingJumpEvent event) {
         if (event.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+            Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.LEGS)
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+                    .ifPresent(iItemHandler -> {
+                        if (iItemHandler instanceof IModularItem) {
+                            Optional.ofNullable(((IModularItem) iItemHandler)
+                                    .getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.MODULE_JUMP_ASSIST__REGNAME))
+                                    .getCapability(PowerModuleCapability.POWER_MODULE, null)).ifPresent(pm->{
 
-            if (!stack.isEmpty() && stack.getItem() instanceof ItemPowerArmor
-                    && ModuleManager.INSTANCE.itemHasActiveModule(stack, ModuleConstants.MODULE_JUMP_ASSIST__REGNAME)) {
-                double jumpAssist = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_MULTIPLIER) * 2;
-                double drain = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_ENERGY_CONSUMPTION);
-                int avail = ElectricItemUtils.getPlayerEnergy(player);
-                if ((FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) && MPALibConfig.useSounds()) {
-                    Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
-                }
-                if (drain < avail) {
-                    ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
-                    setPlayerJumpTicks(player, jumpAssist);
-                    double jumpCompensationRatio = ModuleManager.INSTANCE.getOrSetModularPropertyDouble(stack, ModuleConstants.JUMP_FOOD_COMPENSATION);
-                    if (player.isSprinting()) {
-                        player.getFoodStats().addExhaustion((float) (-0.2F * jumpCompensationRatio));
-                    } else {
-                        player.getFoodStats().addExhaustion((float) (-0.05F * jumpCompensationRatio));
-                    }
-                }
-            }
+                                double jumpAssist = pm.applyPropertyModifiers(Constants.MULTIPLIER) * 2;
+                                double drain = pm.applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+
+                                int avail = ElectricItemUtils.getPlayerEnergy(player);
+                                if ((FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) && MPALibConfig.useSounds()) {
+                                    Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
+                                }
+                                if (drain < avail) {
+                                    ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
+                                    setPlayerJumpTicks(player, jumpAssist);
+                                    double jumpCompensationRatio = pm.applyPropertyModifiers(ModuleConstants.JUMP_FOOD_COMPENSATION);
+                                    if (player.isSprinting()) {
+                                        player.getFoodStats().addExhaustion((float) (-0.2F * jumpCompensationRatio));
+                                    } else {
+                                        player.getFoodStats().addExhaustion((float) (-0.05F * jumpCompensationRatio));
+                                    }
+                                }
+                            });
+                        }
+                    });
         }
     }
 
@@ -225,28 +252,27 @@ public class MovementManager {
 
         if (event.getEntityLiving() instanceof EntityPlayer && event.getDistance() > 3.0F) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
-            if (!boots.isEmpty()) {
-                if (ModuleManager.INSTANCE.itemHasActiveModule(boots, ModuleConstants.MODULE_SHOCK_ABSORBER__REGNAME)) {
-                    double distanceAbsorb =
-                            MathUtils.clampDouble(event.getDistance() * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, ModuleConstants.SHOCK_ABSORB_MULTIPLIER),
-                            0, event.getDistance());
+            Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.FEET)
+                    .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iModularItem -> {
+                if (!(iModularItem instanceof IModularItem))
+                    return;
 
-                    if (player.world.isRemote && MPALibConfig.useSounds()) {
+                ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.MODULE_SHOCK_ABSORBER__REGNAME));
+                Optional.ofNullable(shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE, null)).ifPresent(sa -> {
+                    double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(Constants.MULTIPLIER);
+                    if (player.world.isRemote && MPALibConfig.INSTANCE.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
-
-                    double drain = distanceAbsorb * ModuleManager.INSTANCE.getOrSetModularPropertyDouble(boots, ModuleConstants.SHOCK_ABSORB_ENERGY_CONSUMPTION);
+                    double drain = distanceAbsorb * sa.applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
                     if (drain < avail) {
                         ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
                         event.setDistance((float) (event.getDistance() - distanceAbsorb));
 //                        event.getEntityLiving().sendMessage(new TextComponentString("modified fall settings: [ damage : " + event.getDamageMultiplier() + " ], [ distance : " + event.getDistance() + " ]"));
-
                     }
-                }
-            }
+                });
+            });
         }
     }
 }

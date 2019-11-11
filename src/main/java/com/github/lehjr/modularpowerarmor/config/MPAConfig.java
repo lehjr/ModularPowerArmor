@@ -134,11 +134,6 @@ public enum MPAConfig {
         return MPASettings.general.allowConflictingKeybinds;
     }
 
-    // TODO: 100%
-    public double getSalvageChance() {
-        return getServerSettings() != null ? getServerSettings().getSalvageChance : MPASettings.general.getSalvageChance;
-    }
-
     public double getBaseMaxHeat(@Nonnull ItemStack itemStack) {
         if (itemStack.getItem() instanceof ItemPowerFist) {
             return getServerSettings() != null ? getServerSettings().baseMaxHeatPowerFist : MPASettings.general.baseMaxHeatPowerFist;

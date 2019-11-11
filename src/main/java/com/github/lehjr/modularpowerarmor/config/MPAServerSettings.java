@@ -27,7 +27,6 @@ public class MPAServerSettings {
     public final boolean useOldAutoFeeder;
     public final double maximumFlyingSpeedmps;
     public final double maximumArmorPerPiece;
-    public final double getSalvageChance;
 
     /**
      * Recipes -----------------------------------------------------------------------------------
@@ -77,7 +76,6 @@ public class MPAServerSettings {
         useOldAutoFeeder = MPASettings.general.useOldAutoFeeder;
         maximumFlyingSpeedmps = MPASettings.general.getMaximumFlyingSpeedmps;
         maximumArmorPerPiece = MPASettings.general.getMaximumArmorPerPiece;
-        getSalvageChance = MPASettings.general.getSalvageChance;
 
         /**
          *  Recipes -------------------------------------------------------------------------------
@@ -128,7 +126,6 @@ public class MPAServerSettings {
         useOldAutoFeeder = datain.readBoolean();
         maximumFlyingSpeedmps = datain.readDouble();
         maximumArmorPerPiece = datain.readDouble();
-        getSalvageChance = datain.readDouble();
         baseMaxHeatPowerFist = datain.readDouble();
         baseMaxHeatHelmet = datain.readDouble();
         baseMaxHeatChest = datain.readDouble();
@@ -176,7 +173,6 @@ public class MPAServerSettings {
         packet.writeBoolean(useOldAutoFeeder);
         packet.writeDouble(maximumFlyingSpeedmps);
         packet.writeDouble(maximumArmorPerPiece);
-        packet.writeDouble(getSalvageChance);
         packet.writeDouble(baseMaxHeatPowerFist);
         packet.writeDouble(baseMaxHeatHelmet);
         packet.writeDouble(baseMaxHeatChest);

@@ -75,7 +75,7 @@ public class MPASettings {
         @Config.Comment("Use Old Auto Feeder Method")
         public boolean useOldAutoFeeder = false;
         // Client side settings ------------------------------------------------------
-        @Config.LangKey(Constants.CONFIG_GENERAL_USE_24_HOUR_CLOCK)
+        @Config.LangKey(Constants.CONFIG_HUD_USE_24_HOUR_CLOCK) // fixme move to hud (client only)
         @Config.Comment("Use a 24h clock instead of 12h")
         public boolean use24hClock = false;
         @Config.LangKey(Constants.CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS)
@@ -93,11 +93,6 @@ public class MPASettings {
         @Config.RangeDouble(min = 0, max = 8.0)
         @Config.RequiresWorldRestart
         public double getMaximumArmorPerPiece = 6.0;
-
-        @Config.LangKey(Constants.CONFIG_GENERAL_SALVAGE_CHANCE)
-        @Config.Comment("Chance of each item being returned when salvaged")
-        @Config.RangeDouble(min = 0, max = 1.0)
-        public double getSalvageChance = 0.9;
 
         @Config.LangKey(Constants.CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST)
         @Config.Comment("PowerFist Base Heat Cap")
@@ -157,10 +152,10 @@ public class MPASettings {
             put(RegistryNames.MODULE_AIRTIGHT_SEAL__REGNAME, true);
             put(RegistryNames.MODULE_APIARIST_ARMOR__REGNAME, true);
             put(RegistryNames.MODULE_AUTO_FEEDER__REGNAME, true);
-            put(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME, true);
+            put(RegistryNames.MODULE_COOLING_SYSTEM__REGNAME, true);
             put(RegistryNames.MODULE_HAZMAT__REGNAME, true);
             put(RegistryNames.MODULE_MOB_REPULSOR__REGNAME, true);
-            put(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME, true);
+            put(RegistryNames.MODULE_FLUID_TANK__REGNAME, true);
             put(RegistryNames.MODULE_WATER_ELECTROLYZER__REGNAME, true);
 
             // Movement -------------------------------------------------------------------

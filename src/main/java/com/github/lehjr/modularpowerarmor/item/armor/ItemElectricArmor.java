@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
+import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Ported to Java by lehjr on 10/26/16.
@@ -30,8 +32,8 @@ public abstract class ItemElectricArmor extends ItemArmor implements ISpecialArm
 
     @Override
     public int getColor(@Nonnull ItemStack stack) {
-        Colour c = this.getColorFromItemStack(stack);
-        return c.getInt();
+        return Optional.ofNullable(stack.getCapability(ModelSpecNBTCapability.RENDER, null))
+                .map(ms->ms.getColorFromItemStack().getInt()).orElse(Colour.WHITE.getInt());
     }
 
     @Override

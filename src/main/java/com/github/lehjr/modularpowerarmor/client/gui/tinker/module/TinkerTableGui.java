@@ -79,12 +79,16 @@ public class TinkerTableGui extends ContainerlessGui {
         frames.add(moduleSelectFrame);
 
         installFrame = new InstallSalvageFrame(
+                container,
                 player,
-                new Point2D(absX(-0.75F), absY(0.6f)),
-                new Point2D(absX(-0.05F), absY(0.95f)),
+                new Point2D(absX(-0.75F),
+                        absY(0.6f)),
+                new Point2D(absX(-0.05F),
+                        absY(0.95f)),
                 Colour.DARKBLUE.withAlpha(0.8),
                 Colour.LIGHTBLUE.withAlpha(0.8),
-                itemSelectFrame, moduleSelectFrame);
+                itemSelectFrame,
+                moduleSelectFrame);
         frames.add(installFrame);
 
         tweakFrame = new ModuleTweakFrame(

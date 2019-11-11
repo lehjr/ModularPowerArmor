@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.utils.modulehelpers;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
-import com.github.lehjr.modularpowerarmor.capabilities.MPSChestPlateFluidHandler;
 import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.block.BlockLiquid;

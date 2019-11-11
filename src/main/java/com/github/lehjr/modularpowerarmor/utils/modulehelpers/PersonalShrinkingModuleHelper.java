@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.utils.modulehelpers;
 
-import com.github.lehjr.mpalib.legacy.item.IModularItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
