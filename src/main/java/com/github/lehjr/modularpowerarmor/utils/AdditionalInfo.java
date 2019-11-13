@@ -4,6 +4,8 @@ import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.utils.modulehelpers.FluidUtils;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
@@ -13,13 +15,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AdditionalInfo {
     /**
@@ -56,6 +64,19 @@ public class AdditionalInfo {
                 currentTipList.add(I18n.format("tooltip.modularpowerarmor.changeModes"));
         }
 
+        // Mode changing item such as power fist
+        Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
+            if(iItemHandler instanceof IModeChangingItem) {
+                ItemStack activeModule = ((IModeChangingItem) iItemHandler).getActiveModule();
+                if (!activeModule.isEmpty()) {
+                    String localizedName = activeModule.getDisplayName();
+                    currentTipList.add(I18n.format("tooltip.modularpowerarmor.mode") + " " + StringUtils.wrapFormatTags(localizedName, StringUtils.FormatCodes.Red));
+                } else {
+                    currentTipList.add(I18n.format("tooltip.modularpowerarmor.changeModes"));
+                }
+            }
+        });
+
         IElectricAdapter adapter = ElectricAdapterManager.INSTANCE.wrap(stack, true);
         if (adapter != null) {
             String energyinfo = I18n.format("tooltip.modularpowerarmor.energy") + " " + StringUtils.formatNumberShort(adapter.getEnergyStored()) + '/'
@@ -63,6 +84,9 @@ public class AdditionalInfo {
             currentTipList.add(StringUtils.wrapMultipleFormatTags(energyinfo, StringUtils.FormatCodes.Italic.character,
                     StringUtils.FormatCodes.Aqua));
         }
+
+
+
         if (worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             // this is just some random info on the fluids installed
             if (stack.getItem() instanceof ItemPowerArmorChestplate) {
@@ -82,7 +106,7 @@ public class AdditionalInfo {
                     currentTipList.addAll(fluidInfo);
             }
 
-            List<String> installed = getItemInstalledModules(player, stack);
+            List<String> installed = getItemInstalledModules(stack);
             if (installed.size() == 0) {
                 String message = I18n.format("tooltip.modularpowerarmor.noModules");
                 currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
@@ -98,6 +122,18 @@ public class AdditionalInfo {
         }
     }
 
+    public static List<String> getItemInstalledModules(@Nonnull ItemStack stack) {
+        return Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
+            List<String> moduleNames = new ArrayList<>();
+
+            if(iItemHandler instanceof IModularItem) {
+                for (ItemStack module : ((IModularItem) iItemHandler).getInstalledModules()) {
+                    moduleNames.add(StringUtils.wrapFormatTags(module.getDisplayName(), StringUtils.FormatCodes.Indigo));
+                }
+            }
+            return moduleNames;
+        }).orElse(new ArrayList<>());
+    }
 
     @SideOnly(Side.CLIENT)
     public static String additionalInfoInstructions() {

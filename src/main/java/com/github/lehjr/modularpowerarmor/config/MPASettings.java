@@ -126,7 +126,7 @@ public class MPASettings {
         @Config.Comment("Whether or not specified module is allowed")
         public Map<String, Boolean> allowedModules = new HashMap<String, Boolean>() {{
             // Debug ----------------------------------------------------------------------
-            put(ModuleConstants.MODULE_DEBUG, true);
+//            put(ModuleConstants.MODULE_DEBUG, true);
 
             // Armor ----------------------------------------------------------------------
             put(RegistryNames.MODULE_LEATHER_PLATING__REGNAME, true);

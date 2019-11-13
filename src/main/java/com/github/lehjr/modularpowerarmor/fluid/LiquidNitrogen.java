@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.fluid;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 

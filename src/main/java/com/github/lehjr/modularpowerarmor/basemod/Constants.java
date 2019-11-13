@@ -53,10 +53,14 @@ public class Constants {
     public static final String CONFIG_RECIPES_USE_TECH_REBORN = CONFIG_PREFIX_RECIPES + "useTechReborn";
     public static final String CONFIG_RECIPES_USE_IC2 = CONFIG_PREFIX_RECIPES + "useIC2";
 
+    /** Modules ----------------------------------------------------------------------------------- */
+    public static final String CONFIG_MODULES = CONFIG_PREFIX + "module";
+    public static final String CONFIG_MODULE_PROPERTY_DOUBLES = CONFIG_PREFIX + "modulePropertyDoubles";
+    public static final String CONFIG_MODULE_PROPERTY_INTEGERS = CONFIG_PREFIX + "modulePropertyIntegers";
+
     /**
      * Modules ------------------------------------------------------------------------------------
      */
-
     public static final String IS_MODULE_ALLOWED ="isModuleAllowed";
 
     // Armor --------------------------------------------------------------------------------------
@@ -86,6 +90,7 @@ public class Constants {
     public static final String EFFICIENCY = "efficiency";
     public static final String FLUID_TANK_SIZE = "fluidTankSize";
     public static final String COOLING_BONUS = "coolingBonus";
+    public static final String HEAT_ACTIVATION_PERCENT = "heatActivationPercent";
 
     // Mining Enhancement -------------------------------------------------------------------------
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";

@@ -44,6 +44,7 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
 //        KeybindManager.readInKeybinds();
         MPAConfig.INSTANCE.configDoubleKVGen();
+        MPAConfig.INSTANCE.configIntegerKVGen();
     }
 
     @Override

@@ -5,8 +5,6 @@ import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.InstallModuleRequestPacket;
-import com.github.lehjr.modularpowerarmor.network.packets.SalvageModuleRequestPacket;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
@@ -29,6 +27,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -121,7 +120,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             if (targetItem.getSelectedItem() == null || targetModule.getSelectedModule() == null)
                 return;
 
-            CraftingResultSlot slot = (CraftingResultSlot) containerIn.getSlot(containerIn.getOutputSlot());
+            SlotCrafting slot = (SlotCrafting) containerIn.getSlot(containerIn.getOutputSlot());
             if (!slot.canTakeStack(player))
                 return;
 
@@ -314,7 +313,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                 installButton.disableAndHide();
                 craftAndInstallButton.disableAndHide();
                 craftingGridHide();
-            } else if (player.abilities.isCreativeMode ||
+            } else if (player.capabilities.isCreativeMode ||
                     player.inventory.hasItemStack(selectedModule.getModule())) {
                 salvageButton.disableAndHide();
                 installButton.enableAndShow();
@@ -495,7 +494,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                     this.recipeBook.setGuiOpen(false);
                     this.recipeBook.setFilteringCraftable(true);
 
-                    Minecraft.getInstance().getConnection().sendPacket(
+                    Minecraft.getMinecraft().getConnection().sendPacket(
                             new CRecipeInfoPacket(this.recipeBook.isGuiOpen(),
                                     /* this.recipeBook.isFilteringCraftable()*/ false,
                                     /* this.recipeBook.isFurnaceGuiOpen() */ false,
@@ -526,7 +525,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                                   int guiTop,
                                   boolean isThreeByThree, // not really sure what this parameter is
                                   float partialTicks) {
-        this.ghostRecipe.render(Minecraft.getInstance(), guiLeft, guiTop, isThreeByThree, partialTicks);
+        this.ghostRecipe.render(Minecraft.getMinecraft(), guiLeft, guiTop, isThreeByThree, partialTicks);
     }
 
     /**

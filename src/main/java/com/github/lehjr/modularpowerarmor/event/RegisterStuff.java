@@ -4,9 +4,6 @@ import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
-import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
-import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
-import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.fluid.BlockFluidLiquidNitrogen;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
@@ -38,7 +35,6 @@ import com.github.lehjr.modularpowerarmor.item.module.vision.BinocularsModule;
 import com.github.lehjr.modularpowerarmor.item.module.vision.NightVisionModule;
 import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
-import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -48,7 +44,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.github.lehjr.modularpowerarmor.basemod.Constants.MODID;
 import static com.github.lehjr.modularpowerarmor.basemod.RegistryNames.*;
 
 @Mod.EventBusSubscriber()
@@ -129,7 +124,7 @@ public enum RegisterStuff {
 
                 // Environmental ------------------------------------------------------------------
                 new CoolingSystemModule(MODULE_COOLING_SYSTEM__REGNAME),
-                new FluidTankModule(MODULE_FLUID_TANK__REGNAME),
+                new WaterTankModule(MODULE_FLUID_TANK__REGNAME),
                 new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
                 new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
                 new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),

@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.config;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
@@ -24,10 +25,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 public enum MPAConfig {
     INSTANCE;
@@ -183,100 +181,125 @@ public enum MPAConfig {
         return getServerSettings() != null ? getServerSettings().useIC2Recipes :  MPASettings.recipesAllowed.useIC2Recipes;
     }
 
-
+    /**
+     * Modules -----------------------------------------------------------------------------------
+     */
     public static ModuleConfig moduleConfig = new ModuleConfig();
     static class ModuleConfig implements IConfig {
 
         @Override
-        public double getBasePropertyDoubleOrDefault(EnumModuleCategory enumModuleCategory, @Nonnull ItemStack itemStack, String s, double v) {
-            return 0;
+        public double getBasePropertyDoubleOrDefault(
+                EnumModuleCategory category,
+                @Nonnull ItemStack module,
+                String propertyName, double baseVal) {
+
+            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
+
+            return getPropertyDoubleOrDefault(key, baseVal);
+        }
+
+
+        @Override
+        public double getTradeoffPropertyDoubleOrDefault(
+                EnumModuleCategory category,
+                @Nonnull ItemStack module,
+                String tradeoffName,
+                String propertyName,
+                double multiplier) {
+
+            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
+            return getPropertyDoubleOrDefault(key, multiplier);
         }
 
         @Override
-        public double getTradeoffPropertyDoubleOrDefault(EnumModuleCategory enumModuleCategory, @Nonnull ItemStack itemStack, String s, String s1, double v) {
-            return 0;
+        public int getBasePropertIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String propertyName, int baseVal) {
+            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
+            return getPropertyIntegerOrDefault(key, baseVal);
         }
 
         @Override
-        public int getBasePropertIntegerOrDefault(EnumModuleCategory enumModuleCategory, @Nonnull ItemStack itemStack, String s, int i) {
-            return 0;
+        public int getTradeoffPropertyIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String tradeoffName, String propertyName, int multiplier) {
+            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
+            return getPropertyIntegerOrDefault(key, multiplier);
         }
 
         @Override
-        public int getTradeoffPropertyIntegerOrDefault(EnumModuleCategory enumModuleCategory, @Nonnull ItemStack itemStack, String s, String s1, int i) {
-            return 0;
+        public boolean isModuleAllowed(EnumModuleCategory category, @Nonnull ItemStack module) {
+            if (module.isEmpty()) {
+                return false;
+            }
+            boolean allowed = true;
+            String name =  itemTranslationKeyToConfigKey(module.getTranslationKey());
+            return getServerSettings() != null ? getServerSettings().allowedModules.getOrDefault(name, allowed) : MPASettings.modules.allowedModules.getOrDefault(name, allowed);
         }
 
-        @Override
-        public boolean isModuleAllowed(EnumModuleCategory enumModuleCategory, @Nonnull ItemStack itemStack) {
-            return false;
+        // drop the prefix for MPS modules and replace "dots" with underscores
+        final String itemPrefix = "item." + Constants.MODID + ".";
+        String itemTranslationKeyToConfigKey(String translationKey) {
+            if (translationKey.startsWith(itemPrefix )){
+                translationKey = translationKey.substring(itemPrefix .length());
+            }
+            return translationKey.replace(".", "_");
         }
-    }
 
-    /**
-     * Modules -----------------------------------------------------------------------------------
-     */
-    public boolean getModuleAllowedorDefault(String name, boolean allowed) {
-        // empty enhancement module
-        if (Objects.equals("emptyEnhancement", name))
-            return true;
-
-        return getServerSettings() != null ? getServerSettings().allowedModules.getOrDefault(name, allowed) : MPASettings.modules.allowedModules.getOrDefault(name, allowed);
-    }
-
-    public double getPropertyDoubleOrDefault(String name, double value) {
-        //TODO: use this after porting finished
-        //return getServerSettings() != null ? getServerSettings().propertyDouble.getOrDefault(id, getValue) : MPASettings.modules.propertyDouble.getOrDefault(id, getValue);
-        if (getServerSettings() != null) {
-            if (getServerSettings().propertyDouble.isEmpty() || !getServerSettings().propertyDouble.containsKey(name)) {
-                System.out.println("Property config values missing: ");
-                System.out.println("property: " + name);
-                System.out.println("getValue: " + value);
+        public double getPropertyDoubleOrDefault(String name, double value) {
+            //TODO: use this after porting finished
+            //return getServerSettings() != null ? getServerSettings().propertyDouble.getOrDefault(id, getValue) : MPASettings.modules.propertyDouble.getOrDefault(id, getValue);
+            if (getServerSettings() != null) {
+                if (getServerSettings().propertyDouble.isEmpty() || !getServerSettings().propertyDouble.containsKey(name)) {
+                    System.out.println("Property config values missing: ");
+                    System.out.println("property: " + name);
+                    System.out.println("getValue: " + value);
 //                getServerSettings().propertyDouble.put(id, getValue);
-                missingModuleDoubles.put(name, value);
+                    MPAConfig.INSTANCE.missingModuleDoubles.put(name, value);
 
-            }
-            return getServerSettings().propertyDouble.getOrDefault(name, value);
-        } else {
-            if (MPASettings.modules.propertyDouble.isEmpty() || !MPASettings.modules.propertyDouble.containsKey(name)) {
-                System.out.println("Property config values missing: ");
-                System.out.println("property: " + name);
-                System.out.println("getValue: " + value);
+                }
+                return getServerSettings().propertyDouble.getOrDefault(name, value);
+            } else {
+                if (MPASettings.modules.propertyDouble.isEmpty() || !MPASettings.modules.propertyDouble.containsKey(name)) {
+                    System.out.println("Property config values missing: ");
+                    System.out.println("property: " + name);
+                    System.out.println("getValue: " + value);
 //                MPASettings.modules.propertyDouble.put(id, getValue);
-                missingModuleDoubles.put(name, value);
+                    MPAConfig.INSTANCE.missingModuleDoubles.put(name, value);
+                }
+                return MPASettings.modules.propertyDouble.getOrDefault(name, value);
             }
-            return MPASettings.modules.propertyDouble.getOrDefault(name, value);
         }
-    }
 
-    public int getPropertyIntegerOrDefault(String name, int value) {
-        //TODO: use this after porting finished
-        //return getServerSettings() != null ? getServerSettings().propertyDouble.getOrDefault(id, getValue) : MPASettings.modules.propertyDouble.getOrDefault(id, getValue);
-        if (getServerSettings() != null) {
-            if (getServerSettings().propertyInteger.isEmpty() || !getServerSettings().propertyInteger.containsKey(name)) {
-                System.out.println("Property config values missing: ");
-                System.out.println("property: " + name);
-                System.out.println("getValue: " + value);
+        public int getPropertyIntegerOrDefault(String name, int value) {
+            //TODO: use this after porting finished
+            //return getServerSettings() != null ? getServerSettings().propertyDouble.getOrDefault(id, getValue) : MPASettings.modules.propertyDouble.getOrDefault(id, getValue);
+            if (getServerSettings() != null) {
+                if (getServerSettings().propertyInteger.isEmpty() || !getServerSettings().propertyInteger.containsKey(name)) {
+                    System.out.println("Property config values missing: ");
+                    System.out.println("property: " + name);
+                    System.out.println("getValue: " + value);
 //                getServerSettings().propertyInteger.put(id, getValue);
-                missingModuleIntegers.put(name, value);
-            }
-            return getServerSettings().propertyInteger.getOrDefault(name, value);
-        } else {
-            if (MPASettings.modules.propertyInteger.isEmpty() || !MPASettings.modules.propertyInteger.containsKey(name)) {
-                System.out.println("Property config values missing: ");
-                System.out.println("property: " + name);
-                System.out.println("getValue: " + value);
+                    MPAConfig.INSTANCE.missingModuleIntegers.put(name, value);
+                }
+                return getServerSettings().propertyInteger.getOrDefault(name, value);
+            } else {
+                if (MPASettings.modules.propertyInteger.isEmpty() || !MPASettings.modules.propertyInteger.containsKey(name)) {
+                    System.out.println("Property config values missing: ");
+                    System.out.println("property: " + name);
+                    System.out.println("getValue: " + value);
 //                MPASettings.modules.propertyInteger.put(id, getValue);
-                missingModuleIntegers.put(name, value);
+                    MPAConfig.INSTANCE.missingModuleIntegers.put(name, value);
+                }
+                return MPASettings.modules.propertyInteger.getOrDefault(name, value);
             }
-            return MPASettings.modules.propertyInteger.getOrDefault(name, value);
         }
     }
 
     public void configDoubleKVGen() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Map.Entry<String, Double> line : new TreeMap<>(missingModuleDoubles).entrySet()) { // treemap sorts the keys
+        for (Map.Entry<String, Double> line : new TreeMap<>(MPAConfig.INSTANCE.missingModuleDoubles).entrySet()) { // treemap sorts the keys
             stringBuilder.append("put( \"").append(line.getKey()).append("\", ").append(line.getValue()).append("D );\n");
         }
         try {
@@ -292,7 +315,7 @@ public enum MPAConfig {
     public void configIntegerKVGen() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (Map.Entry<String, Integer> line : new TreeMap<>(missingModuleIntegers).entrySet()) { // treemap sorts the keys
+        for (Map.Entry<String, Integer> line : new TreeMap<>(MPAConfig.INSTANCE.missingModuleIntegers).entrySet()) { // treemap sorts the keys
             stringBuilder.append("put( \"").append(line.getKey()).append("\", ").append(line.getValue()).append("D );\n");
         }
 

@@ -194,7 +194,7 @@ public enum Objects {
     public static CoolingSystemModule basicCoolingSystem = null;
 
     @GameRegistry.ObjectHolder(MODULE_FLUID_TANK__REGNAME)
-    public static final FluidTankModule fluidTankModule = null;
+    public static final WaterTankModule fluidTankModule = null;
 
     @GameRegistry.ObjectHolder(MODULE_AUTO_FEEDER__REGNAME)
     public static final AutoFeederModule autoFeeder = null;
