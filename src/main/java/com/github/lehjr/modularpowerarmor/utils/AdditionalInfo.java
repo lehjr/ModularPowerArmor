@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.utils;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.utils.modulehelpers.FluidUtils;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
@@ -15,9 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -85,25 +82,15 @@ public class AdditionalInfo {
                     StringUtils.FormatCodes.Aqua));
         }
 
-
-
         if (worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             // this is just some random info on the fluids installed
             if (stack.getItem() instanceof ItemPowerArmorChestplate) {
-
-                // TODO: tooltip label for fluids if fluids found
-
                 // Water tank info
-                FluidUtils fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME);
+                FluidUtils fluidUtils = new FluidUtils(player, stack, RegistryNames.MODULE_FLUID_TANK__REGNAME);
                 List<String> fluidInfo = fluidUtils.getFluidDisplayString();
-                if (!fluidInfo.isEmpty())
+                if (!fluidInfo.isEmpty()) {
                     currentTipList.addAll(fluidInfo);
-
-                // advanced fluid tank info
-                fluidUtils = new FluidUtils(player, stack, ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME);
-                fluidInfo = fluidUtils.getFluidDisplayString();
-                if (!fluidInfo.isEmpty())
-                    currentTipList.addAll(fluidInfo);
+                }
             }
 
             List<String> installed = getItemInstalledModules(stack);

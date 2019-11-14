@@ -5,7 +5,6 @@ import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
@@ -196,7 +195,7 @@ public class MPASettings {
             put(RegistryNames.MODULE_LUX_CAPACITOR__REGNAME, true);
             put(RegistryNames.MODULE_OMNIPROBE__REGNAME, true);
             put(RegistryNames.MODULE_OMNI_WRENCH__REGNAME, true);
-            put(RegistryNames.MODULE_ORE_SCANNER__REGNAME, true);
+            put(RegistryNames.MODULE_SCANNER__REGNAME, true);
             put(RegistryNames.MODULE_CM_PSD__REGNAME, true);
             put(RegistryNames.MODULE_PICKAXE__REGNAME, true);
             put(RegistryNames.MODULE_PORTABLE_CRAFTING__REGNAME, true);

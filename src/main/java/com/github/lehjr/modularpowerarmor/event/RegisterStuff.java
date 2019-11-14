@@ -169,6 +169,7 @@ public enum RegisterStuff {
                 new LuxCapacitorModule(MODULE_LUX_CAPACITOR__REGNAME),
                 new PortableCraftingModule(MODULE_PORTABLE_CRAFTING__REGNAME),
                 new PickaxeModule(MODULE_PICKAXE__REGNAME),
+                new ScannerModule(MODULE_SCANNER__REGNAME),
                 new ShearsModule(MODULE_SHEARS__REGNAME),
                 new ShovelModule(MODULE_SHOVEL__REGNAME),
 

@@ -8,7 +8,6 @@ import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -314,6 +313,11 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         }
 
         return itemstack;
+    }
+
+    @Override
+    public boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+        return super.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
     }
 
     /**

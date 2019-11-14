@@ -1,10 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.config.MPAConfig;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
@@ -13,29 +10,26 @@ import com.github.lehjr.mpalib.client.gui.frame.InventoryFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.mpalib.item.ItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.recipebook.GhostRecipe;
 import net.minecraft.client.gui.recipebook.IRecipeUpdateListener;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.play.client.CPacketRecipeInfo;
 import net.minecraft.stats.RecipeBook;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -131,7 +125,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             if (containerIndex != null) {
                 moduleTarget = getModuleTargetIndexInModularItem(containerIndex, targetModule.getSelectedModule().getModule());
                 if (moduleTarget != -1 && containerIn.getSlot(containerIn.getOutputSlot()).getHasStack()) {
-                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, 1);
+                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER, 1, player.getPosition());
                     containerIn.move(container.getOutputSlot(), moduleTarget);
                 }
             }
@@ -158,10 +152,10 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             if (moduleTarget != -1) {
                 int sourceIndex = getContainerIndexForModuleIndexInPlayerInventory(module);
                 if (sourceIndex > 9) {
-                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, 1);
+                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER, 1, player.getPosition());
                     containerIn.move(sourceIndex, moduleTarget);
                 } else if (player.capabilities.isCreativeMode) {
-                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, 1);
+                    Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER, 1, player.getPosition());
                     containerIn.creativeInstall(moduleTarget, new ItemStack(module.getItem()));
                 }
             }
@@ -189,7 +183,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                     if (moduleContainerIndex != null) {
                         int targetIndex = getModuleTargetIndexInPlayerInventory(targetModule.getSelectedModule().getModule());
                         if (targetIndex > 0) {
-                            Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1);
+                            Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, player.getPosition());
                             this.container.move(moduleContainerIndex, targetIndex);
                         }
                     }
@@ -301,7 +295,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
 
         if (targetItem.getSelectedItem() != null && targetModule.getSelectedModule() != null) {
             if (this.timesInventoryChanged != this.mc.player.inventory.getTimesChanged()) {
-                this.updateStackedContents();
+                this.updateStackedContents(this.container.craftMatrix);
                 this.timesInventoryChanged = this.mc.player.inventory.getTimesChanged();
             }
 
@@ -312,13 +306,13 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                 salvageButton.enableAndShow();
                 installButton.disableAndHide();
                 craftAndInstallButton.disableAndHide();
-                craftingGridHide();
+                craftingGridHide(this.container.craftMatrix);
             } else if (player.capabilities.isCreativeMode ||
                     player.inventory.hasItemStack(selectedModule.getModule())) {
                 salvageButton.disableAndHide();
                 installButton.enableAndShow();
                 craftAndInstallButton.disableAndHide();
-                craftingGridHide();
+                craftingGridHide(this.container.craftMatrix);
             } else {
                 craftingGridShow();
                 this.recipeList = getRecipesForModule();
@@ -341,17 +335,17 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         }
     }
 
-    public void updateStackedContents() {
+    public void updateStackedContents(InventoryCrafting craftingInventory) {
         this.stackedContents.clear();
-        this.mc.player.inventory.accountStacks(this.stackedContents);
-        this.container.func_201771_a(this.stackedContents);
+        this.mc.player.inventory.fillStackedContents(this.stackedContents, false);
+        craftingInventory.fillStackedContents(this.stackedContents);
 //        this.updateCollections(false);
     }
 
-    void craftingGridHide() {
+    void craftingGridHide(InventoryCrafting craftingInventory) {
         craftingGridIsVisible = false;
         setRecipe(-1);
-        this.container.clear();
+        craftingInventory.clear();
         for (int i = 1; i < 10; i++) {
             Slot slot = container.getSlot(i);
             if (slot instanceof IHideableSlot) {
@@ -396,7 +390,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         }
 
         if (ret != null) {
-            return StringUtils.wrapITextComponentToLength(ret, 30);
+            return StringUtils.wrapStringToLength(ret, 30);
         }
         return null;
     }
@@ -479,7 +473,8 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         if (indexIn < 0) {
             this.recipe = null;
             this.recipeIndex = indexIn;
-            this.container.clear();
+            this.container.craftMatrix.clear();
+            this.container.craftResult.clear();
         } else if (indexIn - 1 <= this.recipeList.size()) {
             if (indexIn != this.recipeIndex || this.recipe != this.recipeList.get(indexIn)) {
                 this.recipeIndex = indexIn;
@@ -493,18 +488,9 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
 
                     this.recipeBook.setGuiOpen(false);
                     this.recipeBook.setFilteringCraftable(true);
-
-                    Minecraft.getMinecraft().getConnection().sendPacket(
-                            new CRecipeInfoPacket(this.recipeBook.isGuiOpen(),
-                                    /* this.recipeBook.isFilteringCraftable()*/ false,
-                                    /* this.recipeBook.isFurnaceGuiOpen() */ false,
-                                    /* this.recipeBook.isFurnaceFilteringCraftable() */ false,
-//                            this.recipeBook.func_216758_e(),
-                                    false,
-//                            this.recipeBook.func_216761_f()
-                                    false));
                     // send packet to setup recipe. If player can craft current recipe, then actual recipe is setup, otherwise a ghost recipe is setup
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new CPlaceRecipePacket(player.openContainer.windowId, this.recipe, Screen.hasShiftDown()));
+                    this.mc.getConnection().sendPacket(new CPacketRecipeInfo(this.recipeBook.isGuiOpen(), this.recipeBook.isFilteringCraftable()));
+                    this.mc.playerController.func_194338_a(this.mc.player.openContainer.windowId, this.recipe, GuiScreen.isShiftKeyDown(), this.mc.player);
                 }
             }
         }
@@ -550,7 +536,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         }
 
         if (itemstack != null && this.mc.currentScreen != null) {
-            this.mc.currentScreen.renderTooltip(this.mc.currentScreen.getTooltipFromItem(itemstack), mouseX, mouseY);
+            this.mc.currentScreen.drawHoveringText(this.mc.currentScreen.getItemToolTip(itemstack), mouseX, mouseY);
         }
     }
 
@@ -567,16 +553,16 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         this.recipeBook = Minecraft.getMinecraft().player.getRecipeBook();
 
         if (targetItem.getSelectedItem() != null && targetModule.getSelectedModule() != null && !targetModule.getSelectedModule().isInstalled()) {
-            for (IRecipe irecipe : player.world.recipe.getRecipeManager().getRecipes()) {
-                if (!irecipe.isDynamic()) {
-                    if (irecipe.getType() == IRecipeType.CRAFTING &&
-                            !irecipe.getRecipeOutput().isEmpty() &&
-                            irecipe.getRecipeOutput().isItemEqual(module)) {
-                        recipeBook.unlock(irecipe);
-                        out.add(irecipe);
+            CraftingManager.REGISTRY.forEach(iRecipe->{
+                if (!iRecipe.isDynamic()) {
+                    if (/*iRecipe.getRegistryType() ==  IRecipeType.CRAFTING  &&*/ // FIXME: no idea what this would be
+                            !iRecipe.getRecipeOutput().isEmpty() &&
+                                    iRecipe.getRecipeOutput().isItemEqual(module)) {
+                        recipeBook.unlock(iRecipe);
+                        out.add(iRecipe);
                     }
                 }
-            }
+            });
         }
         return out;
     }
@@ -600,8 +586,8 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         ItemStack itemstack = iRecipe.getRecipeOutput();
         this.ghostRecipe.setRecipe(iRecipe);
         this.ghostRecipe.addIngredient(Ingredient.fromStacks(itemstack), (slots.get(0)).xPos, (slots.get(0)).yPos);
-        int gridWidth = this.craftingSlots.getWidth();
-        int gridHeight = this.craftingSlots.getHeight();
+        int gridWidth = 3; //this.craftingSlots.getWidth();
+        int gridHeight = 3;//this.craftingSlots.getHeight();
         int recipeWidth = iRecipe instanceof net.minecraftforge.common.crafting.IShapedRecipe ? ((net.minecraftforge.common.crafting.IShapedRecipe) iRecipe).getRecipeWidth() : gridWidth;
         int slotIndex = 1; // starts at 1 because index 0 is output slot
         Iterator<Ingredient> iterator = iRecipe.getIngredients().iterator();

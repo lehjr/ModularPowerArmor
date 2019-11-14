@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableCo
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -50,7 +51,7 @@ public class ModuleMoveFromSlotToSlotPacket implements IMessage {
                         ItemStack itemStack = source.getStack();
                         ItemStack stackCopy = itemStack.copy();
                         // fixme: no idea if this will work with target set as range
-                        if (source instanceof CraftingResultSlot && source.getHasStack()) {
+                        if (source instanceof SlotCrafting && source.getHasStack()) {
                             container.consume(player);
                             if (container.mergeItemStack(itemStack, message.targetSlot, message.targetSlot + 1, false)) {
 //                        source.onSlotChange(itemStack, stackCopy);
@@ -64,6 +65,7 @@ public class ModuleMoveFromSlotToSlotPacket implements IMessage {
                     }
                 });
             }
+            return null;
         }
     }
 }

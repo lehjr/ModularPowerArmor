@@ -132,7 +132,7 @@ public class RegistryNames {
     public static final String MODULE_PORTABLE_CRAFTING__REGNAME = MODID + ":portable_crafting_table";
     public static final String MODULE_OMNIPROBE__REGNAME = MODID + ":omni_probe";
     public static final String MODULE_OMNI_WRENCH__REGNAME = MODID + ":omniwrench";
-    public static final String MODULE_ORE_SCANNER__REGNAME = MODID + ":ore_scanner";
+    public static final String MODULE_SCANNER__REGNAME = MODID + ":ore_scanner";
     public static final String MODULE_PICKAXE__REGNAME = MODID + ":pickaxe";
     public static final String MODULE_REF_STOR_WIRELESS__REGNAME = MODID + ":refined_storage_wireless_grid";//"Refined Storage Wireless Grid";
     public static final String MODULE_SCOOP__REGNAME = MODID + ":scoop";

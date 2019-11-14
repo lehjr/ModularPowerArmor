@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.utils.modulehelpers;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.block.BlockLiquid;
@@ -11,10 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,11 +20,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class FluidUtils {
     ItemStack itemStack;
     EntityPlayer player;
-    FluidTank fluidTank;
+    IFluidTank fluidTank;
     String dataName;
 
     public FluidUtils(EntityPlayer player, ItemStack itemStack, String dataName) {
@@ -34,9 +33,8 @@ public class FluidUtils {
         this.itemStack = itemStack;
         this.dataName = dataName;
 
-        IFluidHandlerItem fluidHandler = itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-        this.fluidTank = fluidHandler instanceof MPSChestPlateFluidHandler ?
-                ((MPSChestPlateFluidHandler) fluidHandler).getFluidTank(dataName) : null;
+        Optional.ofNullable(itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)).
+                ifPresent(iFluidHandlerItem -> fluidTank = iFluidHandlerItem instanceof IFluidTank ? (IFluidTank) iFluidHandlerItem : null);
     }
 
     public List<String> getFluidDisplayString() {
@@ -194,7 +192,7 @@ public class FluidUtils {
 
 
     public void fillWaterFromEnvironment() {
-        if (this.dataName != ModuleConstants.MODULE_BASIC_COOLING_SYSTEM__REGNAME || fluidTank == null)
+        if (this.dataName != RegistryNames.MODULE_COOLING_SYSTEM__REGNAME || fluidTank == null)
             return;
 
         // Fill with water block and remove that block from the world
@@ -218,23 +216,4 @@ public class FluidUtils {
             fluidTank.fill(new FluidStack(FluidRegistry.WATER, Math.min(getMaxFluidLevel() - getFluidLevel(), 100)), false);
         }
     }
-
-// I think this was for the power fist and the personal shrinking device...
-//    public static void setLiquid(@Nonnull ItemStack stack, String id) {
-//        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
-//            itemTag.setString(TAG_LIQUID, id);
-//        }
-//    }
-//
-//    public static String getLiquid(@Nonnull ItemStack stack) {
-//        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
-//            String s = itemTag.getString(TAG_LIQUID);
-//            if (s != null) {
-//                return s;
-//            }
-//        }
-//        return "";
-//    }
 }

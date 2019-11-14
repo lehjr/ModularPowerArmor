@@ -52,26 +52,4 @@ public class MPANBTUtils {
         return new NBTTagCompound();
     }
 
-    public static String getArmorTexture(ItemStack stack, EntityEquipmentSlot slot) {
-        NBTTagCompound renderTag = getMuseRenderTag(stack, slot);
-        try {
-            TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompoundTag(MPALIbConstants.NBT_TEXTURESPEC_TAG));
-            return partSpec.getTextureLocation();
-        } catch (Exception ignored) {
-            return MPALIbConstants.BLANK_ARMOR_MODEL_PATH;
-        }
-    }
-
-    public static boolean hasHighPolyModel(ItemStack stack, EntityEquipmentSlot slot) {
-        NBTTagCompound renderTag = getMuseRenderTag(stack, slot);
-
-        // any tag other than the colours or texSpec tag is a ModelPartSpec tag
-        for (String tagName : renderTag.getKeySet()) {
-            if (Objects.equals(tagName, MPALIbConstants.NBT_TEXTURESPEC_TAG) || Objects.equals(tagName, MPALIbConstants.TAG_COLOURS))
-                continue;
-            else
-                return true;
-        }
-        return false;
-    }
 }
