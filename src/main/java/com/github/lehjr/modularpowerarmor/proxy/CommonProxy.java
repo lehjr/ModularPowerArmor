@@ -1,11 +1,14 @@
 package com.github.lehjr.modularpowerarmor.proxy;
 
-import com.github.lehjr.modularpowerarmor.basemod.*;
-import com.github.lehjr.modularpowerarmor.event.*;
-import com.github.lehjr.modularpowerarmor.item.module.tool.TerminalHandler;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.basemod.MPSGuiHandler;
+import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
+import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
+import com.github.lehjr.modularpowerarmor.event.*;
+import com.github.lehjr.modularpowerarmor.item.module.tool.TerminalHandler;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,7 +29,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
  */
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
-        RegisterStuff.INSTANCE.initFluids();
+        RegisterStuff.initFluids();
         MPAPackets.registerMPSPackets();
     }
 

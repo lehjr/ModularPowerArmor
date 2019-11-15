@@ -1,8 +1,0 @@
-{
-  "forge_marker": 1,
-  "defaults": {
-    "custom": { "flip-v": true },
-    "model": "modularpowerarmor:block/luxcapacitor.obj",
-    "texture": "modularpowerarmor:models/luxcapacitor"
-  }
-}

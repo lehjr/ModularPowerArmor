@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
-import com.github.lehjr.mpalib.math.Colour;
-import io.netty.buffer.ByteBuf;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
+import com.github.lehjr.mpalib.math.Colour;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;

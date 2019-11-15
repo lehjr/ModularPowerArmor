@@ -2,19 +2,16 @@ package com.github.lehjr.modularpowerarmor.utils.nbt;
 
 import com.github.lehjr.modularpowerarmor.client.render.modelspec.DefaultModelSpec;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
-import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
-import com.github.lehjr.mpalib.client.render.modelspec.TexturePartSpec;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 
 

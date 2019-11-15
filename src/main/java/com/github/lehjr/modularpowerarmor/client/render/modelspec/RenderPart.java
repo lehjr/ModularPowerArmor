@@ -1,5 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.render.modelspec;
 
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
+import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
@@ -7,8 +9,6 @@ import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
-import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
-import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

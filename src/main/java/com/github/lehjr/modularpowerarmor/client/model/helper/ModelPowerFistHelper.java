@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.base.Objects;
@@ -9,7 +10,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

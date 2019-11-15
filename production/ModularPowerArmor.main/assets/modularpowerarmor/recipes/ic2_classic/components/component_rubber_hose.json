@@ -4,7 +4,7 @@
       "type": "modularpowerarmor:ic2_classic_recipes_enabled"
     }
   ],
-  "type": "modularpowerarmor:mps_shaped",
+  "type": "modularpowerarmor:mpa_shaped",
   "pattern": [
     "RRR",
     "G G",

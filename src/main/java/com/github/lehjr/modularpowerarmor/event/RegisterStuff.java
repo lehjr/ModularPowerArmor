@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.CreativeTab;
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
@@ -33,12 +34,14 @@ import com.github.lehjr.modularpowerarmor.item.module.special.MagnetModule;
 import com.github.lehjr.modularpowerarmor.item.module.tool.*;
 import com.github.lehjr.modularpowerarmor.item.module.vision.BinocularsModule;
 import com.github.lehjr.modularpowerarmor.item.module.vision.NightVisionModule;
+import com.github.lehjr.modularpowerarmor.item.module.vision.ThaumGogglesModule;
 import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -46,14 +49,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.github.lehjr.modularpowerarmor.basemod.RegistryNames.*;
 
-@Mod.EventBusSubscriber()
-public enum RegisterStuff {
-    INSTANCE;
+@Mod.EventBusSubscriber(modid = Constants.MODID)
+public class RegisterStuff {
+    static {
+        new RegisterStuff();
+    }
 
     public static final CreativeTab creativeTab = new CreativeTab();
 
     @SubscribeEvent
-    public void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
+    public static void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
         itemRegistryEvent.getRegistry().registerAll(
                 // Armor --------------------------------------------------------------------------------------
                 new ItemPowerArmorHelmet(ITEM__POWER_ARMOR_HELMET__REGNAME),
@@ -123,15 +128,25 @@ public enum RegisterStuff {
                 new ThermalGeneratorModule(MODULE_THERMAL_GENERATOR__REGNAME),
 
                 // Environmental ------------------------------------------------------------------
+                new AirtightSealModule(MODULE_AIRTIGHT_SEAL__REGNAME),
+                new ApiaristArmorModule(MODULE_APIARIST_ARMOR__REGNAME),
                 new CoolingSystemModule(MODULE_COOLING_SYSTEM__REGNAME),
+                new HazmatModule(MODULE_HAZMAT__REGNAME),
                 new WaterTankModule(MODULE_FLUID_TANK__REGNAME),
                 new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
                 new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
                 new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),
 
+                // Mining Enhancements ------------------------------------------------------------------------
+                new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
+                new AquaAffinityModule(MODULE_AQUA_AFFINITY__REGNAME),
+                new SilkTouchModule(MODULE_SILK_TOUCH__REGNAME),
+                new FortuneModule(MODULE_FORTUNE_REGNAME),
+
                 // Movement -----------------------------------------------------------------------------------
                 new BlinkDriveModule(MODULE_BLINK_DRIVE__REGNAME),
                 new ClimbAssistModule(MODULE_CLIMB_ASSIST__REGNAME),
+                new DimensionalRiftModule(MODULE_DIMENSIONAL_RIFT__REGNAME),
                 new FlightControlModule(MODULE_FLIGHT_CONTROL__REGNAME),
                 new GliderModule(MODULE_GLIDER__REGNAME),
                 new JetBootsModule(MODULE_JETBOOTS__REGNAME),
@@ -151,28 +166,30 @@ public enum RegisterStuff {
                 // Vision -------------------------------------------------------------------------------------
                 new BinocularsModule(BINOCULARS_MODULE__REGNAME),
                 new NightVisionModule(MODULE_NIGHT_VISION__REGNAME),
-
-                // Mining Enhancements ------------------------------------------------------------------------
-                new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
-                new SilkTouchModule(MODULE_SILK_TOUCH__REGNAME),
-                new FortuneModule(MODULE_FORTUNE_REGNAME),
+                new ThaumGogglesModule(MODULE_THAUM_GOGGLES__REGNAME),
 
                 // Tools --------------------------------------------------------------------------
-                new AquaAffinityModule(MODULE_AQUA_AFFINITY__REGNAME),
+                new AppEngWirelessFluidModule(MODULE_APPENG_EC_WIRELESS_FLUID__REGNAME),
+                new AppEngWirelessModule(MODULE_APPENG_WIRELESS__REGNAME),
                 new AxeModule(MODULE_AXE__REGNAME),
                 new DiamondPickUpgradeModule(MODULE_DIAMOND_PICK_UPGRADE__REGNAME),
-                new DimensionalRiftModule(MODULE_DIMENSIONAL_RIFT__REGNAME),
                 new FieldTinkerModule(MODULE_FIELD_TINKER__REGNAME),
                 new FlintAndSteelModule(MODULE_FLINT_AND_STEEL__REGNAME),
+                new GrafterModule(MODULE_GRAFTER__REGNAME),
                 new HoeModule(MODULE_HOE__REGNAME),
                 new LeafBlowerModule(MODULE_LEAF_BLOWER__REGNAME),
                 new LuxCapacitorModule(MODULE_LUX_CAPACITOR__REGNAME),
+                new OmniProbeModule(MODULE_OMNIPROBE__REGNAME),
+                new OmniWrenchModule(MODULE_OMNI_WRENCH__REGNAME),
+                new PersonalShrinkingModule(MODULE_CM_PSD__REGNAME),
                 new PortableCraftingModule(MODULE_PORTABLE_CRAFTING__REGNAME),
                 new PickaxeModule(MODULE_PICKAXE__REGNAME),
+                new RefinedStorageWirelessModule(MODULE_REF_STOR_WIRELESS__REGNAME),
                 new ScannerModule(MODULE_SCANNER__REGNAME),
+                new ScoopModule(MODULE_SCOOP__REGNAME),
                 new ShearsModule(MODULE_SHEARS__REGNAME),
                 new ShovelModule(MODULE_SHOVEL__REGNAME),
-
+                new TreetapModule(MODULE_TREETAP__REGNAME),
                 // Debug --------------------------------------------------------------------------
                 // todo
 
@@ -189,7 +206,7 @@ public enum RegisterStuff {
     }
 
     @SubscribeEvent
-    public void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent) {
+    public static void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent) {
         blockRegistryEvent.getRegistry().register(new BlockTinkerTable( new ResourceLocation(TINKER_TABLE_REG_NAME)));
         blockRegistryEvent.getRegistry().register(new BlockLuxCapacitor(new ResourceLocation(LUX_CAPACITOR_REG_NAME)));
         blockRegistryEvent.getRegistry().register(new BlockFluidLiquidNitrogen(new ResourceLocation(LIQUID_NITROGEN__REGNAME)));

@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;

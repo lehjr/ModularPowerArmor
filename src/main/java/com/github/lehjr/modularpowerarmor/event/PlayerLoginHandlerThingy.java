@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.ConfigPacket;
 import net.minecraft.entity.player.EntityPlayer;

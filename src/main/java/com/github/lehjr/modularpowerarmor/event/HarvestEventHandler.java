@@ -1,12 +1,8 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.legacy.module.IBlockBreakingModule;
-import com.github.lehjr.mpalib.legacy.module.IPowerModule;
-import com.github.lehjr.modularpowerarmor.utils.PlayerUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

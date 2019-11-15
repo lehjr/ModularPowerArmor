@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.render.ArmorModelSpecNBT;
@@ -19,7 +18,6 @@ import com.github.lehjr.mpalib.misc.ModCompatibility;
 import com.google.common.util.concurrent.AtomicDouble;
 import forestry.api.apiculture.ApicultureCapabilities;
 import forestry.api.arboriculture.ArboricultureCapabilities;
-import forestry.api.core.IArmorNaturalist;
 import micdoodle8.mods.galacticraft.api.item.IBreathableArmor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

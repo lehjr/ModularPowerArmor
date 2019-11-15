@@ -1,6 +1,0 @@
-{
-  "parent": "modularpowerarmor:item/generated",
-  "textures": {
-    "layer0": "modularpowerarmor:item/module/tool/luxcapacitor"
-  }
-}

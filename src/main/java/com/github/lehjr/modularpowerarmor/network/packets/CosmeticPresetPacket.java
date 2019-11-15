@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.network.packets;
 
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
-import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;

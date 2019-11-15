@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.config;
 
+import com.github.lehjr.modularpowerarmor.utils.nbt.MPANBTUtils;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPANBTUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;

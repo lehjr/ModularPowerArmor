@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.recipebook.GuiButtonRecipe;

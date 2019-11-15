@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
+import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.CraftingGuiServerSidePacket;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.CraftingGuiServerSidePacket;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;

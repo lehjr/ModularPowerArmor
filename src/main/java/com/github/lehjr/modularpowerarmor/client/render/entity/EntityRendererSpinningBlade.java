@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.mpalib.client.render.TextureUtils;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
+import com.github.lehjr.mpalib.client.render.TextureUtils;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;

@@ -1,14 +1,14 @@
 {
   "recipes": {
-    "mps_shaped": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeFactory"
+    "mpa_shaped": "com.github.lehjr.modularpowerarmor.recipe.RecipeFactory"
   },
   "conditions": {
-    "enderio_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "gregtech_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "ic2_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "ic2_classic_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "tech_reborn_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "thermal_expansion_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory",
-    "vanilla_recipes_enabled": "net.machinemuse.modularpowerarmor.recipe.MPSRecipeConditionFactory"
+    "enderio_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "gregtech_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "ic2_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "ic2_classic_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "tech_reborn_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "thermal_expansion_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory",
+    "vanilla_recipes_enabled": "com.github.lehjr.modularpowerarmor.recipe.RecipeConditionFactory"
   }
 }

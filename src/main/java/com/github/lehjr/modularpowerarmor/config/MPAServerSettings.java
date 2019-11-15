@@ -1,16 +1,15 @@
 package com.github.lehjr.modularpowerarmor.config;
 
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import io.netty.buffer.ByteBuf;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorHelmet;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
+import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 

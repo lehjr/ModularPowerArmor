@@ -1,7 +1,7 @@
 ///**
 // *
 // */
-//package net.machinemuse.modularpowerarmor.client.gui.tinker.clickable;
+//package com.github.lehjr.modularpowerarmor.client.gui.tinker.clickable;
 //
 //import com.github.lehjr.mpalib.client.gui.clickable.Clickable;
 //import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;

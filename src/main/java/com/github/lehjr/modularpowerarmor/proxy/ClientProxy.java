@@ -2,14 +2,14 @@ package com.github.lehjr.modularpowerarmor.proxy;
 
 import com.github.lehjr.forge.obj.MPALibOBJLoader;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
 import com.github.lehjr.modularpowerarmor.client.event.EventRegisterRenderers;
+import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
+import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.CosmeticPresetSaveLoad;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
-import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
-import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
@@ -13,7 +14,6 @@ import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;

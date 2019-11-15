@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.render.modelspec;
 
 import com.github.lehjr.forge.obj.MPALibOBJModel;
+import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.string.StringUtils;
 import com.google.common.collect.ImmutableMap;
-import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.EntityEquipmentSlot;

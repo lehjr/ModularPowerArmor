@@ -25,7 +25,9 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public enum MPAConfig {
     INSTANCE;
@@ -192,6 +194,10 @@ public enum MPAConfig {
                 EnumModuleCategory category,
                 @Nonnull ItemStack module,
                 String propertyName, double baseVal) {
+            if (module.isEmpty()) {
+                return baseVal;
+            }
+
 
             String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
@@ -208,6 +214,10 @@ public enum MPAConfig {
                 String propertyName,
                 double multiplier) {
 
+            if (module.isEmpty()) {
+                return multiplier;
+            }
+
             String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
             return getPropertyDoubleOrDefault(key, multiplier);
@@ -215,6 +225,10 @@ public enum MPAConfig {
 
         @Override
         public int getBasePropertIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String propertyName, int baseVal) {
+            if (module.isEmpty()) {
+                return baseVal;
+            }
+
             String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
             return getPropertyIntegerOrDefault(key, baseVal);
@@ -222,6 +236,10 @@ public enum MPAConfig {
 
         @Override
         public int getTradeoffPropertyIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String tradeoffName, String propertyName, int multiplier) {
+            if (module.isEmpty()) {
+                return multiplier;
+            }
+
             String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
             return getPropertyIntegerOrDefault(key, multiplier);
@@ -316,7 +334,7 @@ public enum MPAConfig {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Map.Entry<String, Integer> line : new TreeMap<>(MPAConfig.INSTANCE.missingModuleIntegers).entrySet()) { // treemap sorts the keys
-            stringBuilder.append("put( \"").append(line.getKey()).append("\", ").append(line.getValue()).append("D );\n");
+            stringBuilder.append("put( \"").append(line.getKey()).append("\", ").append(line.getValue()).append(");\n");
         }
 
         try {

@@ -190,8 +190,17 @@ public enum Objects {
 
 
     // Environmental ------------------------------------------------------------------------------
+    @GameRegistry.ObjectHolder(MODULE_AIRTIGHT_SEAL__REGNAME)
+    public static AirtightSealModule airTightSeal = null;
+
+    @GameRegistry.ObjectHolder(MODULE_APIARIST_ARMOR__REGNAME)
+    public static ApiaristArmorModule apiaristModule = null;
+
     @GameRegistry.ObjectHolder(MODULE_COOLING_SYSTEM__REGNAME)
     public static CoolingSystemModule basicCoolingSystem = null;
+
+    @GameRegistry.ObjectHolder(MODULE_HAZMAT__REGNAME)
+    public static HazmatModule hazmat = null;
 
     @GameRegistry.ObjectHolder(MODULE_FLUID_TANK__REGNAME)
     public static final WaterTankModule fluidTankModule = null;

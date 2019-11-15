@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
+import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;

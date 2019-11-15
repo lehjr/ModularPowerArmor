@@ -1,6 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
+import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
+import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
 import com.github.lehjr.modularpowerarmor.client.model.helper.ColoredQuadHelperThingie;
 import com.github.lehjr.modularpowerarmor.client.model.helper.ModelLuxCapacitorHelper;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
@@ -8,8 +10,6 @@ import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
-import com.github.lehjr.modularpowerarmor.client.event.MuseIcon;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;

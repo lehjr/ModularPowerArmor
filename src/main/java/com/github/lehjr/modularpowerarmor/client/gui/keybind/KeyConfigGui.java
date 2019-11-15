@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
-import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
+import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;

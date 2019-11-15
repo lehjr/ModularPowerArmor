@@ -1,6 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
+import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
@@ -10,8 +12,6 @@ import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.recipebook.GuiRecipeBook;

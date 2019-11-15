@@ -52,7 +52,7 @@ public class SilkTouchModule extends AbstractPowerModule {
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
             if (capability == PowerModuleCapability.POWER_MODULE) {
-
+                return (T) miningEnhancement;
             }
             return null;
         }

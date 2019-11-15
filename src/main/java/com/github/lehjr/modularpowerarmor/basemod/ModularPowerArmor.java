@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 public enum ModularPowerArmor {
     INSTANCE;
 
-    @SidedProxy(clientSide = "net.machinemuse.modularpowerarmor.common.proxy.ClientProxy", serverSide = "net.machinemuse.modularpowerarmor.common.proxy.CommonProxy")
+    @SidedProxy(clientSide = "com.github.lehjr.modularpowerarmor.proxy.ClientProxy", serverSide = "com.github.lehjr.modularpowerarmor.proxy.CommonProxy")
     public static CommonProxy proxy;
     public static Configuration config = null;
 

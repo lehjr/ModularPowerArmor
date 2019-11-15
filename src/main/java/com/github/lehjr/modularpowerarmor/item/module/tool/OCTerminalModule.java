@@ -5,9 +5,9 @@ package com.github.lehjr.modularpowerarmor.item.module.tool;// package andrew.mo
 // import cpw.mods.fml.common.Loader;
 // import net.machinemuse.numina.item.IModularItem;
 // import net.machinemuse.numina.module.IRightClickModule;
-// import net.machinemuse.modularpowerarmor.item.ItemComponent;
-// import net.machinemuse.modularpowerarmor.powermodule.AbstractPowerModule;
-// import net.machinemuse.modularpowerarmor.utils.MuseCommonStrings;
+// import com.github.lehjr.modularpowerarmor.item.ItemComponent;
+// import com.github.lehjr.modularpowerarmor.powermodule.AbstractPowerModule;
+// import com.github.lehjr.modularpowerarmor.utils.MuseCommonStrings;
 // import net.machinemuse.numina.utils.item.ItemUtils;
 // import net.minecraft.entity.player.EntityPlayer;
 // import net.minecraft.entity.player.EntityPlayerMP;
