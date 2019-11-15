@@ -69,74 +69,77 @@ public enum Objects {
     /**
      * Components ---------------------------------------------------------------------------------
      */
-    @GameRegistry.ObjectHolder(COMPONENT__WIRING__REGNAME)
-    public static final ItemComponent wiring = null;
+    @GameRegistry.ObjectHolder(COMPONENT__REGNAME)
+    public static final ItemComponent component = null;
 
-    @GameRegistry.ObjectHolder(COMPONENT__SOLENOID__REGNAME)
-    public static final ItemComponent solenoid = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__SERVO__REGNAME)
-    public static final ItemComponent servo = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__GLIDER_WING__REGNAME)
-    public static final ItemComponent glider_wing = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__ION_THRUSTER__REGNAME)
-    public static final ItemComponent ion_thruster = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__LV_CAPACITOR__REGNAME)
-    public static final ItemComponent lv_capacitor = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__MV_CAPACITOR___REGNAME)
-    public static final ItemComponent mv_capacitor = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__HV_CAPACITOR___REGNAME)
-    public static final ItemComponent hv_capacitor = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__EV_CAPACITOR___REGNAME)
-    public static final ItemComponent ev_capacitor = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__PARACHUTE__REGNAME)
-    public static final ItemComponent component_parachute = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__LEATHER_PLATING__REGNAME)
-    public static final ItemComponent leatherPlating = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__IRON_PLATING__REGNAME)
-    public static final ItemComponent ironPlating = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__DIAMOND_PLATING__REGNAME)
-    public static final ItemComponent diamondPlating = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__FIELD_EMITTER__REGNAME)
-    public static final ItemComponent fieldEmitter = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__LASER_EMITTER__REGNAME)
-    public static final ItemComponent laserEmitter = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__CARBON_MYOFIBER__REGNAME)
-    public static final ItemComponent carbonMyofiber = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__CONTROL_CIRCUIT__REGNAME)
-    public static final ItemComponent controlCircuit = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__MYOFIBER_GEL__REGNAME)
-    public static final ItemComponent myofiberGel = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__ARTIFICIAL_MUSCLE__REGNAME)
-    public static final ItemComponent artificialMuscle = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__SOLAR_PANEL__REGNAME)
-    public static final ItemComponent solarPanel = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__MAGNET__REGNAME)
-    public static final ItemComponent component_magnet = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__COMPUTER_CHIP__REGNAME)
-    public static final ItemComponent computerChip = null;
-
-    @GameRegistry.ObjectHolder(COMPONENT__RUBBER_HOSE__REGNAME)
-    public static final ItemComponent rubberHose = null;
+//    @GameRegistry.ObjectHolder(COMPONENT__WIRING__REGNAME)
+//    public static final ItemComponent wiring = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__SOLENOID__REGNAME)
+//    public static final ItemComponent solenoid = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__SERVO__REGNAME)
+//    public static final ItemComponent servo = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__GLIDER_WING__REGNAME)
+//    public static final ItemComponent glider_wing = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__ION_THRUSTER__REGNAME)
+//    public static final ItemComponent ion_thruster = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__LV_CAPACITOR__REGNAME)
+//    public static final ItemComponent lv_capacitor = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__MV_CAPACITOR___REGNAME)
+//    public static final ItemComponent mv_capacitor = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__HV_CAPACITOR___REGNAME)
+//    public static final ItemComponent hv_capacitor = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__EV_CAPACITOR___REGNAME)
+//    public static final ItemComponent ev_capacitor = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__PARACHUTE__REGNAME)
+//    public static final ItemComponent component_parachute = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__LEATHER_PLATING__REGNAME)
+//    public static final ItemComponent leatherPlating = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__IRON_PLATING__REGNAME)
+//    public static final ItemComponent ironPlating = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__DIAMOND_PLATING__REGNAME)
+//    public static final ItemComponent diamondPlating = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__FIELD_EMITTER__REGNAME)
+//    public static final ItemComponent fieldEmitter = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__LASER_EMITTER__REGNAME)
+//    public static final ItemComponent laserEmitter = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__CARBON_MYOFIBER__REGNAME)
+//    public static final ItemComponent carbonMyofiber = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__CONTROL_CIRCUIT__REGNAME)
+//    public static final ItemComponent controlCircuit = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__MYOFIBER_GEL__REGNAME)
+//    public static final ItemComponent myofiberGel = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__ARTIFICIAL_MUSCLE__REGNAME)
+//    public static final ItemComponent artificialMuscle = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__SOLAR_PANEL__REGNAME)
+//    public static final ItemComponent solarPanel = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__MAGNET__REGNAME)
+//    public static final ItemComponent component_magnet = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__COMPUTER_CHIP__REGNAME)
+//    public static final ItemComponent computerChip = null;
+//
+//    @GameRegistry.ObjectHolder(COMPONENT__RUBBER_HOSE__REGNAME)
+//    public static final ItemComponent rubberHose = null;
 
     /**
      * Modules ------------------------------------------------------------------------------------

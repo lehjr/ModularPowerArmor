@@ -14,6 +14,8 @@ public class Constants {
     public static final String CITIZEN_JOE_ARMOR_PANTS = TEXTURE_PREFIX + "item/armor/joearmorpants.png";
     public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
 
+    public static final String COMPONENTS_PREFIX = RESOURCE_PREFIX + "component/";
+
 
     public static final String CONFIG_PREFIX = "config." + MODID + ".";
     public static final String CONFIG_FILE = "lehjr/" + MODID;

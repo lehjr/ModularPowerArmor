@@ -23,29 +23,30 @@ public class RegistryNames {
     /**
      * Components ---------------------------------------------------------------------------------
      */
-    public static final String COMPONENT__WIRING__REGNAME = MODID + ":component_wiring";
-    public static final String COMPONENT__SOLENOID__REGNAME = MODID + ":component_solenoid";
-    public static final String COMPONENT__SERVO__REGNAME = MODID + ":component_servo";
-    public static final String COMPONENT__GLIDER_WING__REGNAME = MODID + ":component_glider_wing";
-    public static final String COMPONENT__ION_THRUSTER__REGNAME = MODID + ":component_ion_thruster";
-    public static final String COMPONENT__LV_CAPACITOR__REGNAME = MODID + ":component_capacitor_lv";
-    public static final String COMPONENT__MV_CAPACITOR___REGNAME = MODID + ":component_capacitor_mv";
-    public static final String COMPONENT__HV_CAPACITOR___REGNAME = MODID + ":component_capacitor_hv";
-    public static final String COMPONENT__EV_CAPACITOR___REGNAME = MODID + ":component_capacitor_ev";
-    public static final String COMPONENT__PARACHUTE__REGNAME = MODID + ":component_parachute";
-    public static final String COMPONENT__LEATHER_PLATING__REGNAME = MODID + ":component_plating_leather";
-    public static final String COMPONENT__IRON_PLATING__REGNAME = MODID + ":component_plating_iron";
-    public static final String COMPONENT__DIAMOND_PLATING__REGNAME = MODID + ":component_plating_diamond";
-    public static final String COMPONENT__FIELD_EMITTER__REGNAME = MODID + ":component_field_emitter";
-    public static final String COMPONENT__LASER_EMITTER__REGNAME = MODID + ":component_laser_emitter";
-    public static final String COMPONENT__CARBON_MYOFIBER__REGNAME = MODID + ":component_carbon_myofiber";
-    public static final String COMPONENT__CONTROL_CIRCUIT__REGNAME = MODID + ":component_control_circuit";
-    public static final String COMPONENT__MYOFIBER_GEL__REGNAME = MODID + ":component_myofiber_gel";
-    public static final String COMPONENT__ARTIFICIAL_MUSCLE__REGNAME = MODID + ":component_artificial_muscle";
-    public static final String COMPONENT__SOLAR_PANEL__REGNAME = MODID + ":component_solar_panel";
-    public static final String COMPONENT__MAGNET__REGNAME = MODID + ":component_magnet";
-    public static final String COMPONENT__COMPUTER_CHIP__REGNAME = MODID + ":component_computer_chip";
-    public static final String COMPONENT__RUBBER_HOSE__REGNAME = MODID + ":component_rubber_hose";
+    public static final String COMPONENT__REGNAME = MODID + ":powerarmorcomponent";
+//    public static final String COMPONENT__WIRING__REGNAME = MODID + ":component_wiring";
+//    public static final String COMPONENT__SOLENOID__REGNAME = MODID + ":component_solenoid";
+//    public static final String COMPONENT__SERVO__REGNAME = MODID + ":component_servo";
+//    public static final String COMPONENT__GLIDER_WING__REGNAME = MODID + ":component_glider_wing";
+//    public static final String COMPONENT__ION_THRUSTER__REGNAME = MODID + ":component_ion_thruster";
+//    public static final String COMPONENT__LV_CAPACITOR__REGNAME = MODID + ":component_capacitor_lv";
+//    public static final String COMPONENT__MV_CAPACITOR___REGNAME = MODID + ":component_capacitor_mv";
+//    public static final String COMPONENT__HV_CAPACITOR___REGNAME = MODID + ":component_capacitor_hv";
+//    public static final String COMPONENT__EV_CAPACITOR___REGNAME = MODID + ":component_capacitor_ev";
+//    public static final String COMPONENT__PARACHUTE__REGNAME = MODID + ":component_parachute";
+//    public static final String COMPONENT__LEATHER_PLATING__REGNAME = MODID + ":component_plating_leather";
+//    public static final String COMPONENT__IRON_PLATING__REGNAME = MODID + ":component_plating_iron";
+//    public static final String COMPONENT__DIAMOND_PLATING__REGNAME = MODID + ":component_plating_diamond";
+//    public static final String COMPONENT__FIELD_EMITTER__REGNAME = MODID + ":component_field_emitter";
+//    public static final String COMPONENT__LASER_EMITTER__REGNAME = MODID + ":component_laser_emitter";
+//    public static final String COMPONENT__CARBON_MYOFIBER__REGNAME = MODID + ":component_carbon_myofiber";
+//    public static final String COMPONENT__CONTROL_CIRCUIT__REGNAME = MODID + ":component_control_circuit";
+//    public static final String COMPONENT__MYOFIBER_GEL__REGNAME = MODID + ":component_myofiber_gel";
+//    public static final String COMPONENT__ARTIFICIAL_MUSCLE__REGNAME = MODID + ":component_artificial_muscle";
+//    public static final String COMPONENT__SOLAR_PANEL__REGNAME = MODID + ":component_solar_panel";
+//    public static final String COMPONENT__MAGNET__REGNAME = MODID + ":component_magnet";
+//    public static final String COMPONENT__COMPUTER_CHIP__REGNAME = MODID + ":component_computer_chip";
+//    public static final String COMPONENT__RUBBER_HOSE__REGNAME = MODID + ":component_rubber_hose";
 
     /**
      * Modules ------------------------------------------------------------------------------------

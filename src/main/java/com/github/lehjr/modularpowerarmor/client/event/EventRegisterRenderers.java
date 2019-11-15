@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
@@ -9,16 +10,19 @@ import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererSpi
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
+import com.github.lehjr.modularpowerarmor.item.component.ItemComponent;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class EventRegisterRenderers {
     @SubscribeEvent
@@ -41,16 +45,15 @@ public class EventRegisterRenderers {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(mpaItems.luxCapacitor), 0, ModelLuxCapacitor.modelResourceLocation);
 
         // FIXME
-//        // Components
-//        Item components = mpaItems.components;
-//        if (components != null) {
-//            for (Integer meta : ((ItemComponent) components).names.keySet()) {
-//                String oredictName = ((ItemComponent) components).names.get(meta);
-//                ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(ResourceConstants.COMPONENTS_PREFIX + oredictName, "inventory");
-//                ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
-//                OreDictionary.registerOre(oredictName, new ItemStack(components, 1, meta));
-//            }
-//        }
+        // Components
+        Item components = mpaItems.component;
+        if (components != null) {
+            for (Integer meta : ((ItemComponent) components).names.keySet()) {
+                String oredictName = ((ItemComponent) components).names.get(meta);
+                ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(Constants.COMPONENTS_PREFIX + oredictName, "inventory");
+                ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
+            }
+        }
 
         RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
         RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);

@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import com.github.lehjr.mpalib.string.StringUtils;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
 
@@ -45,10 +47,8 @@ public class ItemComponent extends Item {
     public static ItemStack computerChip;
     public static ItemStack rubberHose;
 
-
     public ItemComponent(String regName) {
         this.maxStackSize = 64;
-
         this.setRegistryName(regName);
         this.setTranslationKey(new StringBuilder(Constants.MODID).append(".").append("powerArmorComponent").toString());
         this.setHasSubtypes(true);
@@ -59,7 +59,9 @@ public class ItemComponent extends Item {
 
     public ItemStack addComponent(int meta, String oredictName) {
         ItemStack stack = new ItemStack(this, 1, meta);
-        names.put(meta, oredictName);
+        if (!names.containsKey(meta)) {
+            names.put(meta, oredictName);
+        }
         return stack;
     }
 

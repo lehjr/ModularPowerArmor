@@ -70,29 +70,30 @@ public class RegisterStuff {
                 new ItemPowerFist(ITEM__POWER_FIST__REGNAME),
 
                 // Components ---------------------------------------------------------------------------------
-                new ItemComponent(COMPONENT__WIRING__REGNAME),
-                new ItemComponent(COMPONENT__SOLENOID__REGNAME),
-                new ItemComponent(COMPONENT__SERVO__REGNAME),
-                new ItemComponent(COMPONENT__GLIDER_WING__REGNAME),
-                new ItemComponent(COMPONENT__ION_THRUSTER__REGNAME),
-                new ItemComponent(COMPONENT__LV_CAPACITOR__REGNAME),
-                new ItemComponent(COMPONENT__MV_CAPACITOR___REGNAME),
-                new ItemComponent(COMPONENT__HV_CAPACITOR___REGNAME),
-                new ItemComponent(COMPONENT__EV_CAPACITOR___REGNAME),
-                new ItemComponent(COMPONENT__PARACHUTE__REGNAME),
-                new ItemComponent(COMPONENT__LEATHER_PLATING__REGNAME),
-                new ItemComponent(COMPONENT__IRON_PLATING__REGNAME),
-                new ItemComponent(COMPONENT__DIAMOND_PLATING__REGNAME),
-                new ItemComponent(COMPONENT__FIELD_EMITTER__REGNAME),
-                new ItemComponent(COMPONENT__LASER_EMITTER__REGNAME),
-                new ItemComponent(COMPONENT__CARBON_MYOFIBER__REGNAME),
-                new ItemComponent(COMPONENT__CONTROL_CIRCUIT__REGNAME),
-                new ItemComponent(COMPONENT__MYOFIBER_GEL__REGNAME),
-                new ItemComponent(COMPONENT__ARTIFICIAL_MUSCLE__REGNAME),
-                new ItemComponent(COMPONENT__SOLAR_PANEL__REGNAME),
-                new ItemComponent(COMPONENT__MAGNET__REGNAME),
-                new ItemComponent(COMPONENT__COMPUTER_CHIP__REGNAME),
-                new ItemComponent(COMPONENT__RUBBER_HOSE__REGNAME),
+                new ItemComponent(COMPONENT__REGNAME),
+//                new ItemComponent(COMPONENT__WIRING__REGNAME),
+//                new ItemComponent(COMPONENT__SOLENOID__REGNAME),
+//                new ItemComponent(COMPONENT__SERVO__REGNAME),
+//                new ItemComponent(COMPONENT__GLIDER_WING__REGNAME),
+//                new ItemComponent(COMPONENT__ION_THRUSTER__REGNAME),
+//                new ItemComponent(COMPONENT__LV_CAPACITOR__REGNAME),
+//                new ItemComponent(COMPONENT__MV_CAPACITOR___REGNAME),
+//                new ItemComponent(COMPONENT__HV_CAPACITOR___REGNAME),
+//                new ItemComponent(COMPONENT__EV_CAPACITOR___REGNAME),
+//                new ItemComponent(COMPONENT__PARACHUTE__REGNAME),
+//                new ItemComponent(COMPONENT__LEATHER_PLATING__REGNAME),
+//                new ItemComponent(COMPONENT__IRON_PLATING__REGNAME),
+//                new ItemComponent(COMPONENT__DIAMOND_PLATING__REGNAME),
+//                new ItemComponent(COMPONENT__FIELD_EMITTER__REGNAME),
+//                new ItemComponent(COMPONENT__LASER_EMITTER__REGNAME),
+//                new ItemComponent(COMPONENT__CARBON_MYOFIBER__REGNAME),
+//                new ItemComponent(COMPONENT__CONTROL_CIRCUIT__REGNAME),
+//                new ItemComponent(COMPONENT__MYOFIBER_GEL__REGNAME),
+//                new ItemComponent(COMPONENT__ARTIFICIAL_MUSCLE__REGNAME),
+//                new ItemComponent(COMPONENT__SOLAR_PANEL__REGNAME),
+//                new ItemComponent(COMPONENT__MAGNET__REGNAME),
+//                new ItemComponent(COMPONENT__COMPUTER_CHIP__REGNAME),
+//                new ItemComponent(COMPONENT__RUBBER_HOSE__REGNAME),
 
                 // Modules ------------------------------------------------------------------------
                 // Armor
@@ -203,6 +204,11 @@ public class RegisterStuff {
                 // ItemBlocks ---------------------------------------------------------------------------------
                 new ItemBlock(Objects.tinkerTable).setRegistryName(new ResourceLocation(TINKER_TABLE_REG_NAME)),
                 new ItemBlock(Objects.luxCapacitor).setRegistryName(new ResourceLocation(LUX_CAPACITOR_REG_NAME)));
+
+        ItemComponent temp = (ItemComponent) itemRegistryEvent.getRegistry().getValue(new ResourceLocation(COMPONENT__REGNAME));
+        if (temp != null) {
+            temp.registerOres();
+        }
     }
 
     @SubscribeEvent
