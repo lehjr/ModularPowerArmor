@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import net.minecraft.block.Block;
@@ -44,7 +44,7 @@ public class SpinningBladeEntity extends EntityThrowable {
                         if (iItemHandler instanceof IModeChangingItem) {
                             return Optional.ofNullable(((IModeChangingItem) iItemHandler).getActiveModule()
                                     .getCapability(PowerModuleCapability.POWER_MODULE, null))
-                                    .map(pm-> pm.applyPropertyModifiers(ModuleConstants.BLADE_DAMAGE)).orElse(0D);
+                                    .map(pm-> pm.applyPropertyModifiers(Constants.BLADE_DAMAGE)).orElse(0D);
                         }
                         return 0D;
                     }).orElse(0D);

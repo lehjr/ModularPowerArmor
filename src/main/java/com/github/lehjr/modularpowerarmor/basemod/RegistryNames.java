@@ -77,8 +77,8 @@ public class RegistryNames {
     public static final String MODULE_COAL_GEN__REGNAME = MODID + ":coalGenerator";
 
     // Environmental ------------------------------------------------------------------------------
-    public static final String MODULE_COOLING_SYSTEM__REGNAME = MODID + ":cooling_system";
-    public static final String MODULE_FLUID_TANK__REGNAME = MODID + ":fluid_tank";
+    public static final String MODULE_BASIC_COOLING_SYSTEM__REGNAME = MODID + ":basicCoolingSystem";
+    public static final String MODULE_ADVANCED_COOLING_SYSTEM__REGNAME = MODID + ":advancedCoolingSystem";
     public static final String MODULE_AUTO_FEEDER__REGNAME = MODID + ":auto_feeder";
     public static final String MODULE_MOB_REPULSOR__REGNAME = MODID + ":mob_repulsor";
     public static final String MODULE_WATER_ELECTROLYZER__REGNAME = MODID + ":water_electrolyzer";
@@ -133,7 +133,7 @@ public class RegistryNames {
     public static final String MODULE_PORTABLE_CRAFTING__REGNAME = MODID + ":portable_crafting_table";
     public static final String MODULE_OMNIPROBE__REGNAME = MODID + ":omni_probe";
     public static final String MODULE_OMNI_WRENCH__REGNAME = MODID + ":omniwrench";
-    public static final String MODULE_SCANNER__REGNAME = MODID + ":ore_scanner";
+    public static final String MODULE_SCANNER__REGNAME = MODID + ":scanner";
     public static final String MODULE_PICKAXE__REGNAME = MODID + ":pickaxe";
     public static final String MODULE_REF_STOR_WIRELESS__REGNAME = MODID + ":refined_storage_wireless_grid";//"Refined Storage Wireless Grid";
     public static final String MODULE_SCOOP__REGNAME = MODID + ":scoop";

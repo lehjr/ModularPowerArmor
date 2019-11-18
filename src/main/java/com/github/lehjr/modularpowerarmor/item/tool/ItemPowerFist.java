@@ -3,7 +3,6 @@ package com.github.lehjr.modularpowerarmor.item.tool;
 import appeng.api.implementations.items.IAEWrench;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.render.PowerFistSpecNBT;
@@ -265,7 +264,7 @@ public class ItemPowerFist extends MPSItemElectricTool
             }).orElse(ItemStack.EMPTY);
 
             Double punchDamage = java.util.Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null)).map(
-                    pm-> pm.applyPropertyModifiers(ModuleConstants.PUNCH_DAMAGE)).orElse(0D);
+                    pm-> pm.applyPropertyModifiers(Constants.PUNCH_DAMAGE)).orElse(0D);
 
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", punchDamage, 0));
         }
@@ -350,8 +349,8 @@ public class ItemPowerFist extends MPSItemElectricTool
         }).orElse(ItemStack.EMPTY);
 
         return java.util.Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null)).map(pm->{
-            ElectricItemUtils.drainPlayerEnergy(player, (int) pm.applyPropertyModifiers(ModuleConstants.GRAFTER_ENERGY_CONSUMPTION));
-            HeatUtils.heatPlayer(player, pm.applyPropertyModifiers(ModuleConstants.GRAFTER_HEAT_GENERATION));
+            ElectricItemUtils.drainPlayerEnergy(player, (int) pm.applyPropertyModifiers(Constants.ENERGY_CONSUMPTION));
+            HeatUtils.heatPlayer(player, pm.applyPropertyModifiers(Constants.HEAT_GENERATION));
             return 100.0f;
         }).orElse(0F);
     }

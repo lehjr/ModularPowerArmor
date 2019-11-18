@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -79,7 +78,7 @@ public class HoeModule extends AbstractPowerModule {
                     int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(itemStack, playerIn, worldIn, pos);
                     if (hook != 0) return hook > 0 ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 
-                    double radius = (int) applyPropertyModifiers(ModuleConstants.HOE_SEARCH_RADIUS);
+                    double radius = (int) applyPropertyModifiers(Constants.RADIUS);
                     for (int i = (int) Math.floor(-radius); i < radius; i++) {
                         for (int j = (int) Math.floor(-radius); j < radius; j++) {
                             if (i * i + j * j < radius * radius) {

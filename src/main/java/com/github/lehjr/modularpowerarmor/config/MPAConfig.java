@@ -198,8 +198,7 @@ public enum MPAConfig {
                 return baseVal;
             }
 
-
-            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String moduleName = module.getItem().getRegistryName().getPath();
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
 
             return getPropertyDoubleOrDefault(key, baseVal);
@@ -218,7 +217,7 @@ public enum MPAConfig {
                 return multiplier;
             }
 
-            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String moduleName = module.getItem().getRegistryName().getPath();
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
             return getPropertyDoubleOrDefault(key, multiplier);
         }
@@ -229,7 +228,7 @@ public enum MPAConfig {
                 return baseVal;
             }
 
-            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String moduleName = module.getItem().getRegistryName().getPath();
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
             return getPropertyIntegerOrDefault(key, baseVal);
         }
@@ -240,7 +239,7 @@ public enum MPAConfig {
                 return multiplier;
             }
 
-            String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
+            String moduleName = module.getItem().getRegistryName().getPath();
             String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
             return getPropertyIntegerOrDefault(key, multiplier);
         }
@@ -251,17 +250,21 @@ public enum MPAConfig {
                 return false;
             }
             boolean allowed = true;
-            String name =  itemTranslationKeyToConfigKey(module.getTranslationKey());
-            return getServerSettings() != null ? getServerSettings().allowedModules.getOrDefault(name, allowed) : MPASettings.modules.allowedModules.getOrDefault(name, allowed);
+            String moduleName = module.getItem().getRegistryName().getPath();
+            return getServerSettings() != null ? getServerSettings().allowedModules.getOrDefault(moduleName, allowed) : MPASettings.modules.allowedModules.getOrDefault(moduleName, allowed);
         }
 
         // drop the prefix for MPS modules and replace "dots" with underscores
         final String itemPrefix = "item." + Constants.MODID + ".";
+        final String itemModulePrefix = "item.module." + Constants.MODID + ".";
         String itemTranslationKeyToConfigKey(String translationKey) {
             if (translationKey.startsWith(itemPrefix )){
                 translationKey = translationKey.substring(itemPrefix .length());
             }
-            return translationKey.replace(".", "_");
+            if (translationKey.startsWith(itemModulePrefix)) {
+                translationKey = translationKey.substring(itemModulePrefix .length());
+            }
+            return translationKey;//.replace(".", "_");
         }
 
         public double getPropertyDoubleOrDefault(String name, double value) {

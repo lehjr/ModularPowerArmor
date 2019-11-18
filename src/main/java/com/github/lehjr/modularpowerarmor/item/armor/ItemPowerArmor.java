@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
@@ -186,7 +185,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
                         for (int i = 0; i < iItemHandler.getSlots(); i++) {
                             ItemStack module = iItemHandler.getStackInSlot(i);
                             energyConsumption += java.util.Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null))
-                                    .map(pm-> pm.applyPropertyModifiers(ModuleConstants.ARMOR_ENERGY_CONSUMPTION)).orElse(0D);
+                                    .map(pm-> pm.applyPropertyModifiers(Constants.ARMOR_ENERGY_CONSUMPTION)).orElse(0D);
                         }
                     }
                     return 0D;

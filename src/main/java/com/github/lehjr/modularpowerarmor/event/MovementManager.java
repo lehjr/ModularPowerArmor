@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
@@ -230,7 +229,7 @@ public class MovementManager {
                                 if (drain < avail) {
                                     ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
                                     setPlayerJumpTicks(player, jumpAssist);
-                                    double jumpCompensationRatio = pm.applyPropertyModifiers(ModuleConstants.JUMP_FOOD_COMPENSATION);
+                                    double jumpCompensationRatio = pm.applyPropertyModifiers(Constants.FOOD_COMPENSATION);
                                     if (player.isSprinting()) {
                                         player.getFoodStats().addExhaustion((float) (-0.2F * jumpCompensationRatio));
                                     } else {

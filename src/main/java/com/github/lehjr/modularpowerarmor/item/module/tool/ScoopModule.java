@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -86,7 +85,7 @@ public class ScoopModule extends AbstractPowerModule {
 
             @Override
             public void handleBreakSpeed(BreakSpeed event) {
-                event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(ModuleConstants.SCOOP_HARVEST_SPEED)));
+                event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(Constants.HARVEST_SPEED)));
             }
 
             @Override

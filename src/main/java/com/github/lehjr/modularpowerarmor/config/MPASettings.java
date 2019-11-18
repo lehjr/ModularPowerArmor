@@ -151,10 +151,10 @@ public class MPASettings {
             put(RegistryNames.MODULE_AIRTIGHT_SEAL__REGNAME, true);
             put(RegistryNames.MODULE_APIARIST_ARMOR__REGNAME, true);
             put(RegistryNames.MODULE_AUTO_FEEDER__REGNAME, true);
-            put(RegistryNames.MODULE_COOLING_SYSTEM__REGNAME, true);
+            put(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME, true);
+            put(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME, true);
             put(RegistryNames.MODULE_HAZMAT__REGNAME, true);
             put(RegistryNames.MODULE_MOB_REPULSOR__REGNAME, true);
-            put(RegistryNames.MODULE_FLUID_TANK__REGNAME, true);
             put(RegistryNames.MODULE_WATER_ELECTROLYZER__REGNAME, true);
 
             // Movement -------------------------------------------------------------------
@@ -223,6 +223,9 @@ public class MPASettings {
         @Config.LangKey(Constants.CONFIG_MODULE_PROPERTY_DOUBLES)
         @Config.Comment("Value of specified property")
         public Map<String, Double> propertyDouble = new HashMap<String, Double>() {{
+            put( "advancedcoolingsystem.coolingBonus.power.multiplier", 1.0D );
+            put( "advancedcoolingsystem.coolingFactor.base", 2.1D );
+            put( "advancedcoolingsystem.energyCon.power.multiplier", 40.0D );
             put( "aoe_pick_upgrade.energyCon.base", 500.0D );
             put( "aoe_pick_upgrade.energyCon.diameter.multiplier", 9500.0D );
             put( "apiarist_armor.armorEnergyPerDamage.base", 100.0D );
@@ -238,6 +241,9 @@ public class MPASettings {
             put( "axe.energyCon.overclock.multiplier", 9500.0D );
             put( "axe.harvSpeed.base", 8.0D );
             put( "axe.harvSpeed.overclock.multiplier", 22.0D );
+            put( "basiccoolingsystem.coolingBonus.coolingPower.multiplier", 4.0D );
+            put( "basiccoolingsystem.coolingFactor.base", 1.0D );
+            put( "basiccoolingsystem.energyCon.coolingPower.multiplier", 100.0D );
             put( "binoculars.fieldOfView.base", 0.5D );
             put( "binoculars.fieldOfView.fOVMult.multiplier", 9.5D );
             put( "blade_launcher.spinBladeDam.base", 6.0D );
@@ -246,8 +252,6 @@ public class MPASettings {
             put( "blink_drive.blinkDriveRange.range.multiplier", 59.0D );
             put( "blink_drive.energyCon.base", 10000.0D );
             put( "blink_drive.energyCon.range.multiplier", 30000.0D );
-            put( "cooling_system.coolingBonus.power.multiplier", 1.0D );
-            put( "cooling_system.energyCon.power.multiplier", 40.0D );
             put( "diamond_pick_upgrade.energyCon.base", 500.0D );
             put( "diamond_pick_upgrade.energyCon.overclock.multiplier", 9500.0D );
             put( "diamond_pick_upgrade.harvSpeed.base", 8.0D );
@@ -258,8 +262,6 @@ public class MPASettings {
             put( "energy_shield.maxHeat.fieldStrength.multiplier", 500.0D );
             put( "flight_control.yLookRatio.vertically.multiplier", 1.0D );
             put( "flint_and_steel.energyCon.base", 10000.0D );
-            put( "fluid_tank.heatActivationPercent.Activation Percent.multiplier", 0.5D );
-            put( "fluid_tank.heatActivationPercent.base", 0.5D );
             put( "fortune.fortuneEnCon.base", 500.0D );
             put( "fortune.fortuneEnCon.enchLevel.multiplier", 9500.0D );
             put( "generator_kinetic.energyPerBlock.base", 2000.0D );
@@ -381,17 +383,18 @@ public class MPASettings {
         @Config.LangKey(Constants.CONFIG_MODULE_PROPERTY_INTEGERS)
         @Config.Comment("Value of specified property")
         public Map<String, Integer> propertyInteger = new HashMap<String, Integer>() {{
-            put( "aoe_pick_upgrade.aoeMiningDiameter.diameter.multiplier", 5 );
-            put( "battery_advanced.maxEnergy.base", 5000000 );
-            put( "battery_advanced.maxTransfer.base", 5000000 );
-            put( "battery_basic.maxEnergy.base", 1000000 );
-            put( "battery_basic.maxTransfer.base", 1000000 );
-            put( "battery_elite.maxEnergy.base", 50000000 );
-            put( "battery_elite.maxTransfer.base", 50000000 );
-            put( "battery_ultimate.maxEnergy.base", 100000000 );
-            put( "battery_ultimate.maxTransfer.base", 100000000 );
-            put( "fluid_tank.fluidTankSize.base", 20000 );
-            put( "fortune.fortuneLevel.enchLevel.multiplier", 3 );
+            put( "advancedcoolingsystem.fluidTankSize.base", 20000);
+            put( "aoe_pick_upgrade.aoeMiningDiameter.diameter.multiplier", 5);
+            put( "basiccoolingsystem.fluidTankSize.base", 20000);
+            put( "battery_advanced.maxEnergy.base", 5000000);
+            put( "battery_advanced.maxTransfer.base", 5000000);
+            put( "battery_basic.maxEnergy.base", 1000000);
+            put( "battery_basic.maxTransfer.base", 1000000);
+            put( "battery_elite.maxEnergy.base", 50000000);
+            put( "battery_elite.maxTransfer.base", 50000000);
+            put( "battery_ultimate.maxEnergy.base", 100000000);
+            put( "battery_ultimate.maxTransfer.base", 100000000);
+            put( "fortune.fortuneLevel.enchLevel.multiplier", 3);
         }};
     }
 

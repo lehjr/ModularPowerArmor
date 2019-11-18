@@ -41,7 +41,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -129,11 +128,11 @@ public class RegisterStuff {
                 new ThermalGeneratorModule(MODULE_THERMAL_GENERATOR__REGNAME),
 
                 // Environmental ------------------------------------------------------------------
+                new BasicCoolingSystemModule(MODULE_BASIC_COOLING_SYSTEM__REGNAME),
+                new AdvancedCoolingSystemModule(MODULE_ADVANCED_COOLING_SYSTEM__REGNAME),
                 new AirtightSealModule(MODULE_AIRTIGHT_SEAL__REGNAME),
                 new ApiaristArmorModule(MODULE_APIARIST_ARMOR__REGNAME),
-                new CoolingSystemModule(MODULE_COOLING_SYSTEM__REGNAME),
                 new HazmatModule(MODULE_HAZMAT__REGNAME),
-                new WaterTankModule(MODULE_FLUID_TANK__REGNAME),
                 new AutoFeederModule(MODULE_AUTO_FEEDER__REGNAME),
                 new MobRepulsorModule(MODULE_MOB_REPULSOR__REGNAME),
                 new WaterElectrolyzerModule(MODULE_WATER_ELECTROLYZER__REGNAME),

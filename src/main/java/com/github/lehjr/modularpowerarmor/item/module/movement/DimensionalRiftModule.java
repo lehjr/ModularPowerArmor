@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -87,7 +86,7 @@ public class DimensionalRiftModule extends AbstractPowerModule {
                     int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
                     if (playerEnergy >= energyConsumption) {
                         ElectricItemUtils.drainPlayerEnergy(player, getEnergyUsage());
-                        HeatUtils.heatPlayer(player, applyPropertyModifiers(ModuleConstants.HEAT_GENERATION));
+                        HeatUtils.heatPlayer(player, applyPropertyModifiers(Constants.HEAT_GENERATION));
                         return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
                     }
                 }

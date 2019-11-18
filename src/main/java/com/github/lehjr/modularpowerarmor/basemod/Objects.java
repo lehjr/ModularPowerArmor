@@ -199,14 +199,14 @@ public enum Objects {
     @GameRegistry.ObjectHolder(MODULE_APIARIST_ARMOR__REGNAME)
     public static ApiaristArmorModule apiaristModule = null;
 
-    @GameRegistry.ObjectHolder(MODULE_COOLING_SYSTEM__REGNAME)
-    public static CoolingSystemModule basicCoolingSystem = null;
+    @GameRegistry.ObjectHolder(MODULE_BASIC_COOLING_SYSTEM__REGNAME)
+    public static final BasicCoolingSystemModule fluidTankModule = null;
+
+    @GameRegistry.ObjectHolder(MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)
+    public static AdvancedCoolingSystemModule basicCoolingSystem = null;
 
     @GameRegistry.ObjectHolder(MODULE_HAZMAT__REGNAME)
     public static HazmatModule hazmat = null;
-
-    @GameRegistry.ObjectHolder(MODULE_FLUID_TANK__REGNAME)
-    public static final WaterTankModule fluidTankModule = null;
 
     @GameRegistry.ObjectHolder(MODULE_AUTO_FEEDER__REGNAME)
     public static final AutoFeederModule autoFeeder = null;

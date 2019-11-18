@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -87,7 +86,7 @@ public class TreetapModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
-            this.rightClick.addBasePropertyDouble(ModuleConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 1000, "RF");
         }
 
         @Nullable
@@ -119,7 +118,7 @@ public class TreetapModule extends AbstractPowerModule {
                     if (isIC2Classic) {
                         if (block == rubber_wood && getEnergyUsage() < ElectricItemUtils.getPlayerEnergy(player)) {
                             if (attemptExtract.invoke("attemptExtract", null, player, world, pos, facing, null).equals(true)) {
-                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(ModuleConstants.ENERGY_CONSUMPTION));
+                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION));
                                 return EnumActionResult.SUCCESS;
                             }
                         }
@@ -128,7 +127,7 @@ public class TreetapModule extends AbstractPowerModule {
                     else {
                         if (block == rubber_wood && getEnergyUsage() < ElectricItemUtils.getPlayerEnergy(player)) {
                             if (attemptExtract.invoke("attemptExtract", player, world, pos, facing, state, null).equals(true)) {
-                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(ModuleConstants.ENERGY_CONSUMPTION));
+                                ElectricItemUtils.drainPlayerEnergy(player, (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION));
                                 return EnumActionResult.SUCCESS;
                             }
                         }

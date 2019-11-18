@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,6 +29,9 @@ public enum ModelBakeEventHandler {
     public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(new ResourceLocation(RegistryNames.ITEM__POWER_FIST__REGNAME), "inventory");
     public static IBakedModel powerFistIconModel;
     private static IRegistry<ModelResourceLocation, IBakedModel> modelRegistry;
+    List<ModelResourceLocation> brokenModels = new ArrayList<>();
+
+
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) throws IOException {
@@ -44,5 +49,13 @@ public enum ModelBakeEventHandler {
         modelRegistry.putObject(powerFistIconLocation, new ModelPowerFist(powerFistIconModel));
 
         MPSModelHelper.loadArmorModels(null);
+        for (ModelResourceLocation location : event.getModelRegistry().getKeys()) {
+            if (event.getModelRegistry().getObject(location).equals(event.getModelManager().getMissingModel())) {
+                brokenModels.add(location);
+            }
+        }
+        for (ModelResourceLocation location: brokenModels) {
+            System.out.println("missing model here: " + location);
+        }
     }
 }

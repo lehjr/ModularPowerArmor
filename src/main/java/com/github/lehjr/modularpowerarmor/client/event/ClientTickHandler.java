@@ -5,6 +5,7 @@ import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.CoolingSystemBase;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.hud.meters.*;
@@ -22,6 +23,8 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,6 +33,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This handler is called before/after the game processes input events and
@@ -173,38 +177,57 @@ public class ClientTickHandler {
                 String maxHeatStr = StringUtils.formatNumberShort(maxHeat);
 
                 // FIXME: Fluids
+
+                // Water
+                AtomicDouble currWater = new AtomicDouble(0);
+                AtomicDouble maxWater = new AtomicDouble(0);
+                String currWaterStr = "";
+                String maxWaterStr = "";
+
                 // Fluid
                 AtomicDouble currFluid = new AtomicDouble(0);
                 AtomicDouble maxFluid = new AtomicDouble(0);
                 String currFluidStr = "";
                 String maxFluidStr = "";
 
-//                // Water
-//                double maxWater = 0;
-//                double currWater = 0;
-//                String currWaterStr = "";
-//                String maxWaterStr = "";
-//
-//                if (waterUtils != null) {
-//                    maxWater = waterUtils.getMaxFluidLevel();
-//                    currWater = waterUtils.getFluidLevel();
-//                    currWaterStr = StringUtils.formatNumberShort(currWater);
-//                    maxWaterStr = StringUtils.formatNumberShort(maxWater);
-//                }
-//
-//                // Fluid
-//                double maxFluid = 0;
-//                double currFluid = 0;
-//                String currFluidStr = "";
-//                String maxFluidStr = "";
-//
-//                if (ModuleManager.INSTANCE.itemHasModule(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)) {
-//                    fluidUtils = new FluidUtils(player, player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), ModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME);
-//                    maxFluid = fluidUtils.getMaxFluidLevel();
-//                    currFluid = fluidUtils.getFluidLevel();
-//                    currFluidStr = StringUtils.formatNumberShort(currWater);
-//                    maxFluidStr = StringUtils.formatNumberShort(maxWater);
-//                }
+                AtomicReference<Fluid> fluid = null;
+                Optional.ofNullable(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST)
+                        .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                            ItemStack module = iItemHandler.getStackInSlot(i);
+
+                            // Basic cooling system can only use water
+                            if (!module.isEmpty()) {
+                                if (module.getItem().getRegistryName().toString()
+                                        .equals(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME)) {
+                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                            .ifPresent(pm->{
+                                                if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                    currWater.getAndAdd(((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidAmount());
+                                                    maxWater.getAndAdd(((CoolingSystemBase.CapProvider.ModuleTank) pm).getCapacity());
+                                                }
+                                            });
+
+                                    // Advanced cooling system can use fluid except water
+                                } else if (module.getItem().getRegistryName().toString()
+                                        .equals(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)) {
+                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                            .ifPresent(pm->{
+                                                if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                    currFluid.getAndAdd(((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidAmount());
+                                                    maxFluid.getAndAdd(((CoolingSystemBase.CapProvider.ModuleTank) pm).getCapacity());
+                                                    if (((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluid() != null) {
+                                                        fluid.set(((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluid().getFluid());
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    }
+                });
+
 
                 // Plasma
                 AtomicDouble currentPlasma = new AtomicDouble(0);
@@ -252,12 +275,19 @@ public class ClientTickHandler {
                             heat = new HeatMeter();
                     } else heat = null;
 
-//                    if (maxFluid > 0) {
-//                        numMeters++;
-//                        if (fluidMeter == null) {
-//                            fluidMeter = fluidUtils.getFluidMeter();
-//                        }
-//                    }
+                    if (maxWater.get() > 0) {
+                        numMeters++;
+                        if (water == null) {
+                            water = new WaterMeter();
+                        }
+                    } else water = null;
+
+                    if (maxFluid.get() > 0 && fluid != null) {
+                        numMeters++;
+                        if (fluidMeter == null) {
+                            fluidMeter = new FluidMeter(fluid.get());
+                        }
+                    }
 
                     if (maxPlasma.get() > 0 /* && drawPlasmaMeter */) {
                         numMeters++;
@@ -284,6 +314,12 @@ public class ClientTickHandler {
                     }
 
 
+                    if (water != null) {
+                        water.draw(left, top + (totalMeters - numMeters) * 8, currWater.get() / maxWater.get());
+                        Renderer.drawRightAlignedString(currWaterStr, stringX, top + (totalMeters - numMeters) * 8);
+                        numMeters--;
+                    }
+
                     if (fluidMeter != null) {
                         fluidMeter.draw(left, top + (totalMeters - numMeters) * 8, currFluid.get() / maxFluid.get());
                         Renderer.drawRightAlignedString(currFluidStr, stringX, top + (totalMeters - numMeters) * 8);
@@ -303,6 +339,11 @@ public class ClientTickHandler {
 
                     Renderer.drawString(currHeatStr + '/' + maxHeatStr + " C", 2, 2 + (numReadouts * 9));
                     numReadouts += 1;
+
+                    if (maxWater.get() > 0) {
+                        Renderer.drawString(currWaterStr + '/' + maxWaterStr + " buckets", 2, 2 + (numReadouts * 9));
+                        numReadouts += 1;
+                    }
 
                     if (maxFluid.get() > 0) {
                         Renderer.drawString(currFluidStr + '/' + maxFluidStr + " buckets", 2, 2 + (numReadouts * 9));

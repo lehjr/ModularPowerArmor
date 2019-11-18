@@ -1,8 +1,7 @@
 package com.github.lehjr.modularpowerarmor.utils;
 
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
-import com.github.lehjr.modularpowerarmor.utils.modulehelpers.FluidUtils;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.CoolingSystemBase;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
@@ -13,9 +12,12 @@ import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -55,7 +57,7 @@ public class AdditionalInfo {
         if (stack.getItem() instanceof IModeChangingItem) {
             String moduleDataName = NBTUtils.getStringOrNull(stack, MPALIbConstants.TAG_MODE);
             if (moduleDataName != null) {
-                String localizedName = I18n.format("module.modularpowerarmor." + moduleDataName + ".name");
+                String localizedName = I18n.format("item.module.modularpowerarmor." + moduleDataName + ".name");
                 currentTipList.add(I18n.format("tooltip.modularpowerarmor.mode") + " " + StringUtils.wrapFormatTags(localizedName, StringUtils.FormatCodes.Red));
             } else
                 currentTipList.add(I18n.format("tooltip.modularpowerarmor.changeModes"));
@@ -84,13 +86,45 @@ public class AdditionalInfo {
 
         if (worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             // this is just some random info on the fluids installed
-            if (stack.getItem() instanceof ItemPowerArmorChestplate) {
-                // Water tank info
-                FluidUtils fluidUtils = new FluidUtils(player, stack, RegistryNames.MODULE_FLUID_TANK__REGNAME);
-                List<String> fluidInfo = fluidUtils.getFluidDisplayString();
-                if (!fluidInfo.isEmpty()) {
-                    currentTipList.addAll(fluidInfo);
-                }
+            if (EntityMob.getSlotForItemStack(stack).equals(EntityEquipmentSlot.CHEST)) {
+                Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
+                    if (iItemHandler instanceof IModularItem) {
+                        for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                            ItemStack module = iItemHandler.getStackInSlot(i);
+
+                            // Basic cooling system can only use water
+                            if (!module.isEmpty()) {
+                                if (module.getItem().getRegistryName().toString()
+                                        .equals(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME)) {
+                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                            .ifPresent(pm->{
+                                                if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                    List<String> fluidInfo = ((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidDisplayString();
+                                                    if (!fluidInfo.isEmpty()) {
+                                                        currentTipList.addAll(fluidInfo);
+                                                    }
+                                                }
+                                            });
+
+                                    // Advanced cooling system can use fluid except water
+                                } else if (module.getItem().getRegistryName().toString()
+                                        .equals(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)) {
+                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                            .ifPresent(pm->{
+                                                if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                    if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                        List<String> fluidInfo = ((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidDisplayString();
+                                                        if (!fluidInfo.isEmpty()) {
+                                                            currentTipList.addAll(fluidInfo);
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    }
+                });
             }
 
             List<String> installed = getItemInstalledModules(stack);

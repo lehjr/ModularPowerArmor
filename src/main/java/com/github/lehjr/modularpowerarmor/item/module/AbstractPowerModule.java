@@ -20,7 +20,7 @@ public abstract class AbstractPowerModule extends Item {
 
     public AbstractPowerModule(String regName) {
         setRegistryName(regName);
-        this.setTranslationKey(new StringBuilder(getRegistryName().getNamespace()).append(".").append(getRegistryName().getPath()).toString());
+        this.setTranslationKey(new StringBuilder("module.").append(getRegistryName().getNamespace()).append(".").append(getRegistryName().getPath()).toString());
         setCreativeTab(RegisterStuff.creativeTab);
         setMaxDamage(-1);
         setMaxStackSize(1);

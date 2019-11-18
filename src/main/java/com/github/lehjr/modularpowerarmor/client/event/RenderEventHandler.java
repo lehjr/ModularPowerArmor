@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
@@ -114,7 +114,7 @@ public class RenderEventHandler {
             if (iItemHandler instanceof IModularItem) {
                 ItemStack module = ((IModularItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(RegistryNames.BINOCULARS_MODULE__REGNAME));
                 Optional.ofNullable(module.getCapability(PowerModuleCapability.POWER_MODULE, null)).ifPresent(pm->
-                        e.setNewfov(e.getNewfov() / (float) pm.applyPropertyModifiers(ModuleConstants.FOV)));
+                        e.setNewfov(e.getNewfov() / (float) pm.applyPropertyModifiers(Constants.FOV)));
             }
         }));
     }

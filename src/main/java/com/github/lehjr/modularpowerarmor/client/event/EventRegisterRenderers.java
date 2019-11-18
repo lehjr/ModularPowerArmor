@@ -22,7 +22,10 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Map;
 
 public class EventRegisterRenderers {
     @SubscribeEvent
@@ -52,6 +55,14 @@ public class EventRegisterRenderers {
                 String oredictName = ((ItemComponent) components).names.get(meta);
                 ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(Constants.COMPONENTS_PREFIX + oredictName, "inventory");
                 ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
+            }
+        }
+
+        for (Map.Entry<ResourceLocation, Item> entry: ForgeRegistries.ITEMS.getEntries()) {
+            if (entry.getKey().getNamespace().equalsIgnoreCase(Constants.MODID) && entry.getValue().getTranslationKey().startsWith("item.module." + Constants.MODID)) {
+                String location = Constants.RESOURCE_PREFIX + "module/" + entry.getKey().getPath();
+                ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(location, "inventory");
+                ModelLoader.setCustomModelResourceLocation(entry.getValue(), 0, itemModelResourceLocation);
             }
         }
 

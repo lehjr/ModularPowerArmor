@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
-import com.github.lehjr.modularpowerarmor.api.constants.ModuleConstants;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -93,8 +92,8 @@ public class AutoFeederModule extends AbstractPowerModule {
                 double foodLevel = getFoodLevel(item);
                 double saturationLevel = getSaturationLevel(item);
                 IInventory inv = player.inventory;
-                double eatingEnergyConsumption = applyPropertyModifiers(ModuleConstants.EATING_ENERGY_CONSUMPTION);
-                double efficiency = applyPropertyModifiers(ModuleConstants.EATING_EFFICIENCY);
+                double eatingEnergyConsumption = applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+                double efficiency = applyPropertyModifiers(Constants.EATING_EFFICIENCY);
 
                 FoodStats foodStats = player.getFoodStats();
                 int foodNeeded = 20 - foodStats.getFoodLevel();

@@ -92,6 +92,8 @@ public class Constants {
     public static final String EFFICIENCY = "efficiency";
     public static final String FLUID_TANK_SIZE = "fluidTankSize";
     public static final String COOLING_BONUS = "coolingBonus";
+    public static final String COOLING_FACTOR = "coolingFactor";
+    public static final String COOLING_POWER = "coolingPower";
     public static final String HEAT_ACTIVATION_PERCENT = "heatActivationPercent";
 
     // Mining Enhancement -------------------------------------------------------------------------

@@ -263,7 +263,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
     @Override
     public void init(double left, double top, double right, double bottom) {
         super.init(left, top, right, bottom);
-        this.craftingGrid.init(border.right() - 7 - craftingGridSize,
+        this.craftingGrid.init(border.finalRight() - 7 - craftingGridSize,
                 border.finalTop() + 5,
                 border.right() - 7,
                 border.finalTop() + 5 + craftingGridSize);
@@ -271,7 +271,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
 
         Point2D arrowsCenter =
                 // center of crafting grid
-                new Point2D(border.right() - 14 - craftingGridSize / 2,
+                new Point2D(border.finalRight() - 14 - craftingGridSize / 2,
                         // center between grid and border bottom
                         (border.finalBottom() - (border.finalHeight() - craftingGridSize - 7) / 2));
 
