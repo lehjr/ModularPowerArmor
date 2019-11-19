@@ -1,3 +1,6 @@
 {
-  "parent": "modularpowerarmor:block/tinkertable"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "modularpowerarmor:item/module/tool/field_tinker"
+  }
 }

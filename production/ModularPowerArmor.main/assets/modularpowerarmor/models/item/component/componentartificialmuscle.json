@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "modularpowerarmor:items/components/artificialmuscle"
+    "layer0": "modularpowerarmor:item/component/artificialmuscle"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "modularpowerarmor:items/components/magnetb"
+    "layer0": "modularpowerarmor:item/component/magnetb"
   }
 }

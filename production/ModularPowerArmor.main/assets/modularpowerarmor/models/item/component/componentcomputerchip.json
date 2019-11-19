@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "modularpowerarmor:items/components/computerchip"
+    "layer0": "modularpowerarmor:item/component/computerchip"
   }
 }
