@@ -125,7 +125,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor implements
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
-            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeat(armor));
+            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeatHelmet());
 
             this.modularItemCap = new ModularItem(armor, 18) {{
                 /*

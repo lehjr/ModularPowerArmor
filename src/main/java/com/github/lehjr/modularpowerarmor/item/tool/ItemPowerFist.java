@@ -567,7 +567,7 @@ public class ItemPowerFist extends MPSItemElectricTool
 
         public PowerToolCap(@Nonnull ItemStack fist) {
             this.fist = fist;
-            this.maxHeat = MPAConfig.INSTANCE.getBaseMaxHeat(fist);
+            this.maxHeat = MPAConfig.INSTANCE.getBaseMaxHeatPowerFist();
 
             this.modeChangingItem = new ModeChangingModularItem(fist, 40)  {{
                 /*

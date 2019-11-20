@@ -134,30 +134,24 @@ public enum MPAConfig {
         return MPASettings.general.allowConflictingKeybinds;
     }
 
-    public double getBaseMaxHeat(@Nonnull ItemStack itemStack) {
-        if (itemStack.getItem() instanceof ItemPowerFist) {
-            return getServerSettings() != null ? getServerSettings().baseMaxHeatPowerFist : MPASettings.general.baseMaxHeatPowerFist;
-        }
+    public double getBaseMaxHeatPowerFist() {
+        return getServerSettings() != null ? getServerSettings().baseMaxHeatPowerFist : MPASettings.general.baseMaxHeatPowerFist;
+    }
 
-        if (itemStack.getItem() instanceof ItemPowerArmorHelmet) {
-            return getServerSettings() != null ? getServerSettings().baseMaxHeatHelmet : MPASettings.general.baseMaxHeatHelmet;
-        }
+    public double getBaseMaxHeatHelmet() {
+        return getServerSettings() != null ? getServerSettings().baseMaxHeatHelmet : MPASettings.general.baseMaxHeatHelmet;
+    }
 
+    public double getBaseMaxHeatChest() {
+        return getServerSettings() != null ? getServerSettings().baseMaxHeatChest : MPASettings.general.baseMaxHeatChest;
+    }
 
-        if (itemStack.getItem() instanceof ItemPowerArmorChestplate) {
-            return getServerSettings() != null ? getServerSettings().baseMaxHeatChest : MPASettings.general.baseMaxHeatChest;
-        }
+    public double getBaseMaxHeatLegs() {
+        return getServerSettings() != null ? getServerSettings().baseMaxHeatLegs : MPASettings.general.baseMaxHeatLegs;
+    }
 
-
-        if (itemStack.getItem() instanceof ItemPowerArmorLeggings) {
-            return getServerSettings() != null ? getServerSettings().baseMaxHeatLegs : MPASettings.general.baseMaxHeatLegs;
-        }
-
-        if (itemStack.getItem() instanceof ItemPowerArmorBoots) {
-            return getServerSettings() != null ? getServerSettings().baseMaxHeatFeet : MPASettings.general.baseMaxHeatFeet;
-        }
-
-        return 0;
+    public double getBaseMaxHeatFeet() {
+        return getServerSettings() != null ? getServerSettings().baseMaxHeatFeet : MPASettings.general.baseMaxHeatFeet;
     }
 
     /**

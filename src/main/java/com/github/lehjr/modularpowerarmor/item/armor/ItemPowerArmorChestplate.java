@@ -26,7 +26,6 @@ import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
@@ -58,7 +57,7 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         IFluidHandlerItem fluidHandler = null;
-        AtomicDouble maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeat(armor));
+        AtomicDouble maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeatChest());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
@@ -142,12 +141,6 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
                 rangedWrapperMap.put(EnumModuleCategory.ENERGY_GENERATION,new MPALibRangedWrapper(this, 2, 3));
                 rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
                 this.setRangedWrapperMap(rangedWrapperMap);
-            }
-        }
-
-        class EmptyFluidHandler extends FluidHandlerItemStack {
-            public EmptyFluidHandler() {
-                super(ItemStack.EMPTY, 0);
             }
         }
 

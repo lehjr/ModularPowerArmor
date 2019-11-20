@@ -2,36 +2,40 @@ package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
-import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
+import com.github.lehjr.mpalib.client.gui.ContainerGui;
+import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * The gui class for the TinkerTable block.
  *
  * @author MachineMuse
  */
-public class TinkerTableGui extends ContainerlessGui {
+public class TinkerTableGui extends ContainerGui {
     TinkerTableContainer container;
-    protected final EntityPlayerSP player;
     protected ItemSelectionFrame itemSelectFrame;
     protected DetailedSummaryFrame summaryFrame;
     protected ModuleSelectionFrame moduleSelectFrame;
     protected InstallSalvageFrame installFrame;
     protected TabSelectFrame tabFrame;
     protected ModuleTweakFrame tweakFrame;
+    DrawableRect backgroundRect;
+
     protected Point2D tweakFrameUL, tweakFrameBR;
     protected int worldx;
     protected int worldy;
     protected int worldz;
 
-
+    EntityPlayer player;
 
 //    /**
 //     * Constructor. Takes a player as an argument.
@@ -45,13 +49,21 @@ public class TinkerTableGui extends ContainerlessGui {
 //        this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
 //    }
 
-    public TinkerTableGui(EntityPlayer player, int x, int y, int z) {
-        this.player = (EntityPlayerSP) player;
-        this.worldx = x;
-        this.worldy = y;
-        this.worldz = z;
 
+    public TinkerTableGui(InventoryPlayer playerInv, World worldIn) {
+        this(playerInv, worldIn, BlockPos.ORIGIN);
+    }
+
+    public TinkerTableGui(InventoryPlayer playerInv, World worldIn, BlockPos blockPosition) {
+        super(new TinkerTableContainer(playerInv, worldIn, blockPosition));
+        this.player = mc.player;
+        this.container = (TinkerTableContainer)this.inventorySlots;
         rescale();
+
+        backgroundRect = new DrawableRect(absX(-1), absY(-1), absX(1), absY(1), true,
+                new Colour(0.0F, 0.2F, 0.0F, 0.8F),
+                new Colour(0.1F, 0.9F, 0.1F, 0.8F));
+
 
         // setup all frames here, since they are no longer recreated in the initGUI section
 
@@ -113,7 +125,6 @@ public class TinkerTableGui extends ContainerlessGui {
         this.setXSize(Math.min(screen.getScaledWidth() - 50, 500));
         this.setYSize(Math.min(screen.getScaledHeight() - 50, 300));
     }
-
 
     /**
      * Add the buttons (and other controls) to the screen.

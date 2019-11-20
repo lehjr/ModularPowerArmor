@@ -54,7 +54,7 @@ public class CraftingGui extends GuiContainer implements IRecipeShownListener {
     }
 
     public CraftingGui(InventoryPlayer playerInv, World worldIn, BlockPos blockPosition) {
-        super(new ContainerWorkbench(playerInv, worldIn, blockPosition));
+        super(new CraftingContainer(playerInv, worldIn, blockPosition));
         player = playerInv.player;
         frames = new ArrayList<>();
 

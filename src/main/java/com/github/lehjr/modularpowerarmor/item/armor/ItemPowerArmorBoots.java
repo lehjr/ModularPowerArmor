@@ -64,7 +64,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor implements IMetalArmor {
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
-            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeat(armor));
+            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeatFeet());
             this.modularItemCap = new ModularArmorCap();
             this.energyStorage = java.util.Optional.ofNullable(this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY, null)).orElse(new EmptyEnergyWrapper());
             java.util.Optional.ofNullable(this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE, null))

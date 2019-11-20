@@ -7,6 +7,7 @@ import com.github.lehjr.modularpowerarmor.client.gui.modeselection.GuiModeSelect
 import com.github.lehjr.modularpowerarmor.client.gui.scanner.ScannerContainer;
 import com.github.lehjr.modularpowerarmor.client.gui.scanner.ScannerGUI;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic.CosmeticGui;
+import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,12 +34,19 @@ public enum MPSGuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == 3)
-            return new CraftingContainer(player.inventory, world, new BlockPos(x, y, z));
-        if (ID == 5) {
-            return new ScannerContainer(player, getPlayerHand(player));
+        switch (ID) {
+            case 0:
+                return new TinkerTableContainer(player.inventory, world, new BlockPos(x, y, z));
+
+            case 3:
+                return new CraftingContainer(player.inventory, world, new BlockPos(x, y, z));
+
+            case 5:
+                return new ScannerContainer(player, getPlayerHand(player));
+
+            default:
+                return null;
         }
-        return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -47,7 +55,7 @@ public enum MPSGuiHandler implements IGuiHandler {
         //        Minecraft.getMinecraft().player.addStat(AchievementList.OPEN_INVENTORY, 1);
         switch (ID) {
             case 0:
-                return new TinkerTableGui(player, x, y, z);
+                return new TinkerTableGui(player.inventory, player.world, new BlockPos(x, y, z));
             case 1:
                 return new KeyConfigGui(player, x, y, z);
             case 2:

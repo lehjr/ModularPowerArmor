@@ -58,7 +58,7 @@ public class ItemPowerArmorLeggings extends ItemPowerArmor {
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
-            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeat(armor));
+            maxHeat = new AtomicDouble(MPAConfig.INSTANCE.getBaseMaxHeatLegs());
 
             this.modularItemCap = new ModularArmorCap();
             this.energyStorage = Optional.ofNullable(this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY, null)).orElse(new EmptyEnergyWrapper());
