@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.config;
 
-import com.github.lehjr.modularpowerarmor.utils.nbt.MPANBTUtils;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.Item;
@@ -17,10 +17,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
 
@@ -153,12 +150,10 @@ public class CosmeticPresetSaveLoad {
      * Save the model settings as a Json in the config folder using the itemstack id as the folder id
      */
     public static boolean savePreset(String presetName, @Nonnull ItemStack itemStack) {
-        if (itemStack.isEmpty())
-            return false;
-
-        // get the render tag for the item
-        NBTTagCompound nbt = MPANBTUtils.getMuseRenderTag(itemStack).copy();
-        return savePreset(itemStack.getItem().getRegistryName(), presetName, nbt);
+        return Optional.ofNullable(itemStack.getCapability(ModelSpecNBTCapability.RENDER, null))
+                .map(iModelSpecNBT ->
+                        savePreset(itemStack.getItem().getRegistryName(), presetName, iModelSpecNBT.getMuseRenderTag()))
+                .orElse(false);
     }
 
     public static boolean savePreset(ResourceLocation registryNameIn, String nameIn, NBTTagCompound cosmeticSettingsIn) {

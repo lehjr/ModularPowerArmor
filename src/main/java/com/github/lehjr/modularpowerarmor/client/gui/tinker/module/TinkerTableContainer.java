@@ -34,7 +34,8 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         this.player = inventoryPlayer.player;
         this.world = player.world;
 
-//        this.inventorySlots.clear(); // replace them instead
+        // clear out the inventory slots from the super class.
+        this.inventorySlots.clear();
 
         this.craftMatrix = new InventoryCrafting(this, 3, 3);
         this.craftResult = new InventoryCraftResult();
@@ -82,17 +83,6 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
             if(slot instanceof IHideableSlot) {
                 ((IHideableSlot) slot).disable();
             }
-        }
-    }
-
-    @Override
-    protected Slot addSlotToContainer(Slot slotIn) {
-        slotsIndex++;
-        if (this.inventorySlots.size() > slotsIndex -1 || inventorySlots.isEmpty()) {
-            return super.addSlotToContainer(slotIn);
-        } else {
-            this.inventorySlots.set(slotsIndex, slotIn);
-            return slotIn;
         }
     }
 

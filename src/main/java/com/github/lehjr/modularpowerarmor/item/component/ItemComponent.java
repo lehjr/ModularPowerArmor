@@ -4,7 +4,6 @@ import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import com.github.lehjr.mpalib.string.StringUtils;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
 

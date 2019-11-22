@@ -9,12 +9,8 @@ import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -45,8 +41,6 @@ public class AdditionalInfo {
         if (worldIn == null || stack.isEmpty()) {
             return;
         }
-
-        EntityPlayer player = Minecraft.getMinecraft().player;
 
         // TODO: remove enchantment labels.
 
@@ -86,79 +80,87 @@ public class AdditionalInfo {
 
         if (worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             // this is just some random info on the fluids installed
-            if (EntityMob.getSlotForItemStack(stack).equals(EntityEquipmentSlot.CHEST)) {
-                Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
-                    if (iItemHandler instanceof IModularItem) {
-                        for (int i = 0; i < iItemHandler.getSlots(); i++) {
-                            ItemStack module = iItemHandler.getStackInSlot(i);
+            Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
+                if (iItemHandler instanceof IModularItem) {
+                    List<String> installed = new ArrayList<>();
 
-                            // Basic cooling system can only use water
-                            if (!module.isEmpty()) {
-                                if (module.getItem().getRegistryName().toString()
-                                        .equals(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME)) {
-                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-                                            .ifPresent(pm->{
+                    for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                        ItemStack module = iItemHandler.getStackInSlot(i);
+
+                        // Basic cooling system can only use water
+                        if (!module.isEmpty()) {
+
+                            // add display name here since we're already iterating through the installed modules
+                            installed.add(StringUtils.wrapFormatTags(module.getDisplayName(), StringUtils.FormatCodes.Indigo));
+
+                            if (module.getItem().getRegistryName().toString()
+                                    .equals(RegistryNames.MODULE_BASIC_COOLING_SYSTEM__REGNAME)) {
+                                Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                        .ifPresent(pm->{
+                                            if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
+                                                List<String> fluidInfo = ((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidDisplayString();
+                                                if (!fluidInfo.isEmpty()) {
+                                                    currentTipList.addAll(fluidInfo);
+                                                }
+                                            }
+                                        });
+
+                                // Advanced cooling system can use fluid except water
+                            } else if (module.getItem().getRegistryName().toString()
+                                    .equals(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)) {
+                                Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
+                                        .ifPresent(pm->{
+                                            if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
                                                 if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
                                                     List<String> fluidInfo = ((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidDisplayString();
                                                     if (!fluidInfo.isEmpty()) {
                                                         currentTipList.addAll(fluidInfo);
                                                     }
                                                 }
-                                            });
-
-                                    // Advanced cooling system can use fluid except water
-                                } else if (module.getItem().getRegistryName().toString()
-                                        .equals(RegistryNames.MODULE_ADVANCED_COOLING_SYSTEM__REGNAME)) {
-                                    Optional.ofNullable(module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-                                            .ifPresent(pm->{
-                                                if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
-                                                    if (pm instanceof CoolingSystemBase.CapProvider.ModuleTank) {
-                                                        List<String> fluidInfo = ((CoolingSystemBase.CapProvider.ModuleTank) pm).getFluidDisplayString();
-                                                        if (!fluidInfo.isEmpty()) {
-                                                            currentTipList.addAll(fluidInfo);
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                }
+                                            }
+                                        });
                             }
                         }
                     }
-                });
-            }
 
-            List<String> installed = getItemInstalledModules(stack);
-            if (installed.size() == 0) {
-                String message = I18n.format("tooltip.modularpowerarmor.noModules");
-                currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
-            } else {
-                currentTipList.add(I18n.format("tooltip.modularpowerarmor.installedModules"));
-                for (String moduleName : installed) {
-                    currentTipList.add(StringUtils.wrapFormatTags(moduleName, StringUtils.FormatCodes.Indigo));
+                    if (installed.size() == 0) {
+                        String message = I18n.format("tooltip.modularpowerarmor.noModules");
+                        currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
+                    } else {
+                        currentTipList.add(I18n.format("tooltip.modularpowerarmor.installedModules"));
+                        currentTipList.addAll(installed);
+                    }
                 }
-//                currentTipList.addAll(installed);
+            });
+
+            String description = getDescription(stack);
+            if(description != null){
+                currentTipList.add(description);
             }
         } else {
             currentTipList.add(additionalInfoInstructions());
         }
     }
 
-    public static List<String> getItemInstalledModules(@Nonnull ItemStack stack) {
-        return Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
-            List<String> moduleNames = new ArrayList<>();
-
-            if(iItemHandler instanceof IModularItem) {
-                for (ItemStack module : ((IModularItem) iItemHandler).getInstalledModules()) {
-                    moduleNames.add(StringUtils.wrapFormatTags(module.getDisplayName(), StringUtils.FormatCodes.Indigo));
-                }
-            }
-            return moduleNames;
-        }).orElse(new ArrayList<>());
-    }
-
     @SideOnly(Side.CLIENT)
     public static String additionalInfoInstructions() {
         String message = I18n.format("tooltip.modularpowerarmor.pressShift");
         return StringUtils.wrapMultipleFormatTags(message, StringUtils.FormatCodes.Grey, StringUtils.FormatCodes.Italic);
+    }
+
+    static String getDescription(@Nonnull ItemStack itemStack) {
+        String translationKey = itemStack.getTranslationKey();
+        if (translationKey != null) {
+            StringBuilder builder = new StringBuilder(translationKey);
+            builder.append(".desc");
+
+            String unlocalized = builder.toString();
+            String translated = I18n.format(unlocalized);
+            if (translated.equals(unlocalized)) {
+                System.out.println("String here: " + unlocalized);
+            }
+            return translated != unlocalized ? translated : null;
+        }
+        return null;
     }
 }

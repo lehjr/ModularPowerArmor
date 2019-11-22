@@ -44,9 +44,9 @@ public class ItemSelectionFrame extends ScrollableFrame {
 
         this.container = container;
         this.player = player;
-
         if (container != null) {
             loadPoints(container.getModularItemToSlotMap().keySet().size());
+            loadItems();
         } else {
             loadIndices();
             if (indices != null && !indices.isEmpty()) {
@@ -79,16 +79,13 @@ public class ItemSelectionFrame extends ScrollableFrame {
     }
 
     private void loadPoints(int num) {
-        double centerx = (border.left() + border.right()) / 2;
-        double centery = (border.top() + border.bottom()) / 2;
-
         itemPoints = new ArrayList();
         List<Point2D> targetPoints = GradientAndArcCalculator.pointsInLine(num,
-                new Point2D(centerx, border.top()),
-                new Point2D(centerx, border.bottom()), 0, 18);
+                new Point2D(border.centerx(), border.top()),
+                new Point2D(border.centerx(), border.bottom()), 0, 18);
         for (Point2D point : targetPoints) {
             // Fly from middle over 200 ms
-            itemPoints.add(new FlyFromPointToPoint2D(new Point2D(centerx, centery), point, 200));
+            itemPoints.add(new FlyFromPointToPoint2D(border.center(), point, 200));
         }
         totalsize = (targetPoints.size() + 1) * 18; // slot height of 16 + spacing of 2
     }
@@ -111,7 +108,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
                 Slot slot = container.getSlot(slotIndex);
                 int index = slot.getSlotIndex();
 
-                com.github.lehjr.mpalib.client.gui.clickable.ClickableItem button = new com.github.lehjr.mpalib.client.gui.clickable.ClickableItem(pointiterator.next(), index);
+                ClickableItem button = new ClickableItem(pointiterator.next(), index);
                 button.containerIndex = slotIndex;
                 itemButtons.add(button);
             }
@@ -119,7 +116,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
             itemButtons = new ArrayList<>();
             Iterator<Point2D> pointiterator = itemPoints.iterator();
             for (Integer index : indices) {
-                itemButtons.add(new com.github.lehjr.mpalib.client.gui.clickable.ClickableItem(pointiterator.next(), index));
+                itemButtons.add(new ClickableItem(pointiterator.next(), index));
             }
         }
     }
@@ -128,6 +125,8 @@ public class ItemSelectionFrame extends ScrollableFrame {
     public void update(double mousex, double mousey) {
         super.update(mousex, mousey);
         loadItems();
+
+        System.out.println("doing something here");
     }
 
     @Override

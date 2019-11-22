@@ -6,9 +6,11 @@ import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
+import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -138,24 +140,11 @@ public class CosmeticGui extends ContainerlessGui {
         rescale();
         backgroundRect.setTargetDimensions(absX(-1), absY(-1), absX(1), absY(1));
         itemSelectFrame.init(absX(-0.975F), absY(-0.95F), absX(-0.78F), absY(0.95F));
-
-
-
         renderframe.init(absX(-0.75F), absY(-0.95f), absX(0.15F), absY(-0.025f));
-
-
         colourpicker.init(absX(0.18f), absY(-0.95f), absX(0.95f), absY(-0.27f));
-
-
         partframe.init(absX(-0.75F), absY(0.025f), absX(+0.95F), absY(0.95f));
-
-
-        cosmeticFrame.init(absX(-0.95F), absY(0.025f), absX(+0.95F), absY(0.95f));
-
-
-        loadSaveResetSubFrame.init(absX(0.18f), absY(-0.23f), absX(0.95f), absY(-0.025f));
-
-
+       cosmeticFrame.init(absX(-0.95F), absY(0.025f), absX(+0.95F), absY(0.95f));
+       loadSaveResetSubFrame.init(absX(0.18f), absY(-0.23f), absX(0.95f), absY(-0.025f));
         tabFrame.init(absX(-0.95F), absY(-1.05f), absX(0.95F), absY(-0.95f));
     }
 
@@ -173,7 +162,17 @@ public class CosmeticGui extends ContainerlessGui {
     }
 
     @Override
-    public void drawScreen(int x, int y, float z) {
-        super.drawScreen(x, y, z);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawBackground();
+        if (itemSelectFrame.hasNoItems()) {
+            double centerx = absX(0);
+            double centery = absY(0);
+            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.noModulesFound.line1"), centerx, centery - 5);
+            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.noModulesFound.line2"), centerx, centery + 5);
+            tabFrame.render(mouseX, mouseY, partialTicks);
+        } else {
+            super.drawScreen(mouseX, mouseY, partialTicks);
+            drawToolTip(mouseX, mouseY);
+        }
     }
 }

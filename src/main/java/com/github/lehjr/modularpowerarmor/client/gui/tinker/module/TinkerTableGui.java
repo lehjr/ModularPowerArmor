@@ -56,6 +56,7 @@ public class TinkerTableGui extends ContainerGui {
 
     public TinkerTableGui(InventoryPlayer playerInv, World worldIn, BlockPos blockPosition) {
         super(new TinkerTableContainer(playerInv, worldIn, blockPosition));
+        this.mc = Minecraft.getMinecraft();
         this.player = mc.player;
         this.container = (TinkerTableContainer)this.inventorySlots;
         rescale();
@@ -126,6 +127,12 @@ public class TinkerTableGui extends ContainerGui {
         this.setYSize(Math.min(screen.getScaledHeight() - 50, 300));
     }
 
+    @Override
+    public void drawBackground() {
+        super.drawDefaultBackground();
+        backgroundRect.draw();
+    }
+
     /**
      * Add the buttons (and other controls) to the screen.
      */
@@ -143,13 +150,23 @@ public class TinkerTableGui extends ContainerGui {
     }
 
     @Override
-    public void drawScreen(int x, int y, float z) {
-        super.drawScreen(x, y, z);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawBackground();
         if (itemSelectFrame.hasNoItems()) {
             double centerx = absX(0);
             double centery = absY(0);
             Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.noModulesFound.line1"), centerx, centery - 5);
             Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.noModulesFound.line2"), centerx, centery + 5);
+            tabFrame.render(mouseX, mouseY, partialTicks);
+        } else {
+            super.drawScreen(mouseX, mouseY, partialTicks);
+            if (itemSelectFrame.getSelectedItem() != null && moduleSelectFrame.getSelectedModule() != null) {
+                installFrame.renderGhostRecipe(this.guiLeft, this.guiTop, true, partialTicks);
+                installFrame.renderGhostRecipeTooltip(this.guiLeft, this.guiTop, mouseX, mouseY);
+            } else {
+                installFrame.ghostRecipe.clear();
+            }
+            drawToolTip(mouseX, mouseY);
         }
     }
 }

@@ -1,8 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
-import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -12,18 +10,12 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.client.gui.hud.meters.FluidMeter;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -31,18 +23,16 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class CoolingSystemBase extends AbstractPowerModule {
     public CoolingSystemBase(String regName) {
