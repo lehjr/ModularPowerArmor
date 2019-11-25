@@ -44,23 +44,22 @@ public class ItemSelectionFrame extends ScrollableFrame {
 
         this.container = container;
         this.player = player;
-        if (container != null) {
-            loadPoints(container.getModularItemToSlotMap().keySet().size());
-            loadItems();
-        } else {
-            loadIndices();
-            if (indices != null && !indices.isEmpty()) {
-                loadPoints(indices.size());
-                loadItems();
-            }
-        }
     }
 
+
+    /**
+     * Note: if loadItems() not called here, then the update loop will fail to run
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
     @Override
     public void init(double left, double top, double right, double bottom) {
         super.init(left, top, right, bottom);
         if (container != null) {
             loadPoints(container.getModularItemToSlotMap().keySet().size());
+            loadItems();
         } else {
             loadIndices();
             if (indices != null && !indices.isEmpty()) {
@@ -112,7 +111,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
                 button.containerIndex = slotIndex;
                 itemButtons.add(button);
             }
-        } else if (indices != null && !indices.isEmpty()) {
+        } else if (indices != null) {
             itemButtons = new ArrayList<>();
             Iterator<Point2D> pointiterator = itemPoints.iterator();
             for (Integer index : indices) {
@@ -125,8 +124,6 @@ public class ItemSelectionFrame extends ScrollableFrame {
     public void update(double mousex, double mousey) {
         super.update(mousex, mousey);
         loadItems();
-
-        System.out.println("doing something here");
     }
 
     @Override
@@ -141,26 +138,20 @@ public class ItemSelectionFrame extends ScrollableFrame {
         super.postRender(mouseX, mouseY, partialTicks);
     }
 
-    private void drawBackground(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-    }
-
     @Override
     public boolean onMouseDown(double x, double y, int button) {
-        if (super.onMouseDown(x, y, button)) {
-            return true;
-        }
         if (border.containsPoint(x, y)) {
             y += currentscrollpixels;
             int i = 0;
-            for (com.github.lehjr.mpalib.client.gui.clickable.ClickableItem item : itemButtons) {
+            for (ClickableItem item : itemButtons) {
                 if (item.hitBox(x, y)) {
                     lastItemSlot = selectedItemStack;
                     Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.BLOCKS, 1, null);
                     selectedItemStack = i;
-                    if(getSelectedItem() != getPreviousSelectedItem())
+                    if(getSelectedItem() != getPreviousSelectedItem()) {
                         onSelected();
-                    return true;
+                        return true;
+                    }
                 } else {
                     i++;
                 }

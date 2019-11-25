@@ -24,7 +24,7 @@ public class AdvancedCoolingSystemModule extends CoolingSystemBase {
         return new CapProviderThis(stack);
     }
 
-    public class CapProviderThis extends CapProvider {
+    public static class CapProviderThis extends CapProvider {
         public CapProviderThis(@Nonnull ItemStack module) {
             super(module);
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPAConfig.INSTANCE.moduleConfig, true);

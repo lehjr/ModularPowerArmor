@@ -39,7 +39,7 @@ public class AxeModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IBlockBreakingModule blockBreaking;
 
@@ -61,7 +61,7 @@ public class AxeModule extends AbstractPowerModule {
             return null;
         }
 
-        class BlockBreaker extends PowerModule implements IBlockBreakingModule {
+        static class BlockBreaker extends PowerModule implements IBlockBreakingModule {
             public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config);
             }

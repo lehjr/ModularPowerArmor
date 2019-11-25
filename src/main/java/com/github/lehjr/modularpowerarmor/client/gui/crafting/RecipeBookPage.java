@@ -38,15 +38,15 @@ public class RecipeBookPage extends net.minecraft.client.gui.recipebook.RecipeBo
     private RecipeBook recipeBook;
     private IRecipe lastClickedRecipe;
     private RecipeList lastClickedRecipeList;
-    private final Colour arrowBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
-    private final Colour arrowNormalBackGound = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
-    private final Colour arrowHighlightedBackground = Colour.WHITE;
 
     public RecipeBookPage() {
         for (int i = 0; i < 20; ++i) {
             this.buttons.add(new RecipeWidget());
         }
 
+        Colour arrowHighlightedBackground = Colour.WHITE;
+        Colour arrowNormalBackGound = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
+        Colour arrowBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
         forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         forwardArrow.setDrawShaft(false);
 

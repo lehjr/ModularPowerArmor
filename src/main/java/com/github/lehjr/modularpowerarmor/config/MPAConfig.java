@@ -60,7 +60,7 @@ public enum MPAConfig {
     }
 
     @Nullable
-    public static final MPAServerSettings getServerSettings() {
+    public static MPAServerSettings getServerSettings() {
         return serverSettings;
     }
 
@@ -193,7 +193,7 @@ public enum MPAConfig {
             }
 
             String moduleName = module.getItem().getRegistryName().getPath();
-            String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
+            String key = moduleName + '.' + propertyName + ".base";
 
             return getPropertyDoubleOrDefault(key, baseVal);
         }
@@ -212,7 +212,7 @@ public enum MPAConfig {
             }
 
             String moduleName = module.getItem().getRegistryName().getPath();
-            String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
+            String key = moduleName + '.' + propertyName + '.' + tradeoffName + ".multiplier";
             return getPropertyDoubleOrDefault(key, multiplier);
         }
 
@@ -223,7 +223,7 @@ public enum MPAConfig {
             }
 
             String moduleName = module.getItem().getRegistryName().getPath();
-            String key = new StringBuilder(moduleName).append('.').append(propertyName).append(".base").toString();
+            String key = moduleName + '.' + propertyName + ".base";
             return getPropertyIntegerOrDefault(key, baseVal);
         }
 
@@ -234,7 +234,7 @@ public enum MPAConfig {
             }
 
             String moduleName = module.getItem().getRegistryName().getPath();
-            String key = new StringBuilder(moduleName).append('.').append(propertyName).append('.').append(tradeoffName).append(".multiplier").toString();
+            String key = moduleName + '.' + propertyName + '.' + tradeoffName + ".multiplier";
             return getPropertyIntegerOrDefault(key, multiplier);
         }
 
@@ -324,7 +324,6 @@ public enum MPAConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 
     public void configIntegerKVGen() {
@@ -339,7 +338,6 @@ public enum MPAConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 
     /**

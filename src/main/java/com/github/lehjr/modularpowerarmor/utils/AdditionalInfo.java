@@ -2,12 +2,10 @@ package com.github.lehjr.modularpowerarmor.utils;
 
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.CoolingSystemBase;
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
-import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,24 +35,16 @@ public class AdditionalInfo {
      * @param advancedToolTips Whether or not the player has 'advanced tooltips' turned on in
      *                         their settings.
      */
+    @SuppressWarnings("unchecked")
     public static void addInformation(@Nonnull ItemStack stack, World worldIn, List currentTipList, ITooltipFlag advancedToolTips) {
-        if (worldIn == null || stack.isEmpty()) {
+        if (worldIn == null || !worldIn.isRemote || stack.isEmpty()) {
             return;
         }
 
         // TODO: remove enchantment labels.
 
-        if (currentTipList.contains(I18n.format("silkTouch")))
+        if (currentTipList.contains(I18n.format("silkTouch"))) {
             currentTipList.remove(I18n.format("silkTouch"));
-
-        // Mode changing item such as power fist
-        if (stack.getItem() instanceof IModeChangingItem) {
-            String moduleDataName = NBTUtils.getStringOrNull(stack, MPALIbConstants.TAG_MODE);
-            if (moduleDataName != null) {
-                String localizedName = I18n.format("item.module.modularpowerarmor." + moduleDataName + ".name");
-                currentTipList.add(I18n.format("tooltip.modularpowerarmor.mode") + " " + StringUtils.wrapFormatTags(localizedName, StringUtils.FormatCodes.Red));
-            } else
-                currentTipList.add(I18n.format("tooltip.modularpowerarmor.changeModes"));
         }
 
         // Mode changing item such as power fist
@@ -65,7 +55,8 @@ public class AdditionalInfo {
                     String localizedName = activeModule.getDisplayName();
                     currentTipList.add(I18n.format("tooltip.modularpowerarmor.mode") + " " + StringUtils.wrapFormatTags(localizedName, StringUtils.FormatCodes.Red));
                 } else {
-                    currentTipList.add(I18n.format("tooltip.modularpowerarmor.changeModes"));
+                    currentTipList.addAll(
+                            StringUtils.wrapStringToLength(I18n.format("tooltip.modularpowerarmor.changeModes"), 30));
                 }
             }
         });
@@ -78,7 +69,7 @@ public class AdditionalInfo {
                     StringUtils.FormatCodes.Aqua));
         }
 
-        if (worldIn.isRemote && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             // this is just some random info on the fluids installed
             Optional.ofNullable(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).ifPresent(iItemHandler -> {
                 if (iItemHandler instanceof IModularItem) {
@@ -133,9 +124,9 @@ public class AdditionalInfo {
                 }
             });
 
-            String description = getDescription(stack);
+            List<String> description = getDescription(stack);
             if(description != null){
-                currentTipList.add(description);
+                currentTipList.addAll(description);
             }
         } else {
             currentTipList.add(additionalInfoInstructions());
@@ -148,7 +139,7 @@ public class AdditionalInfo {
         return StringUtils.wrapMultipleFormatTags(message, StringUtils.FormatCodes.Grey, StringUtils.FormatCodes.Italic);
     }
 
-    static String getDescription(@Nonnull ItemStack itemStack) {
+    static List<String> getDescription(@Nonnull ItemStack itemStack) {
         String translationKey = itemStack.getTranslationKey();
         if (translationKey != null) {
             StringBuilder builder = new StringBuilder(translationKey);
@@ -156,10 +147,7 @@ public class AdditionalInfo {
 
             String unlocalized = builder.toString();
             String translated = I18n.format(unlocalized);
-            if (translated.equals(unlocalized)) {
-                System.out.println("String here: " + unlocalized);
-            }
-            return translated != unlocalized ? translated : null;
+            return unlocalized.equals(translated) ? null : StringUtils.wrapStringToLength(translated, 30);
         }
         return null;
     }

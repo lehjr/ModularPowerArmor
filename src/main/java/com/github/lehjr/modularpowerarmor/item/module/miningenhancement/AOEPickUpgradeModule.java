@@ -57,6 +57,7 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
             this.miningEnhancement.addIntTradeoffProperty(Constants.DIAMETER, Constants.AOE_MINING_RADIUS, 5, "m", 2, 1);
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {

@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -44,14 +43,9 @@ import java.util.Optional;
 public class ModelPowerFist implements IBakedModel {
     static ItemCameraTransforms.TransformType modelcameraTransformType;
     static ItemStack itemStack;
-    static Item item;
-    static Colour colour;
-    static World world;
-    static EntityLivingBase entity;
     static boolean isFiring = false;
     static IBakedModel iconModel;
     ModelTransformCalibration calibration;
-    NBTTagCompound renderSpec = new NBTTagCompound();
 
     public ModelPowerFist(IBakedModel bakedModelIn) {
         this.iconModel = (bakedModelIn instanceof ModelPowerFist) ? ((ModelPowerFist) bakedModelIn).iconModel : bakedModelIn;
@@ -114,42 +108,44 @@ public class ModelPowerFist implements IBakedModel {
         }
 
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+        Optional.ofNullable(itemStack.getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(iModelSpecNBT -> {
+            int[] colours = iModelSpecNBT.getColorArray();
 
-        int[] colours = renderSpec != null ? renderSpec.getIntArray(MPALIbConstants.TAG_COLOURS) : new int[0];
+            Colour partColor;
+            TRSRTransformation transform;
+            NBTTagCompound renderSpec = iModelSpecNBT.getRenderTag();
 
-        Colour partColor;
-        TRSRTransformation transform;
+            if (renderSpec != null) {
+                for (NBTTagCompound nbt : NBTTagAccessor.getValues(renderSpec)) {
+                    PartSpecBase partSpec = ModelRegistry.getInstance().getPart(nbt);
+                    if (partSpec instanceof ModelPartSpec) {
 
-        if (renderSpec != null) {
-            for (NBTTagCompound nbt : NBTTagAccessor.getValues(renderSpec)) {
-                PartSpecBase partSpec = ModelRegistry.getInstance().getPart(nbt);
-                if (partSpec instanceof ModelPartSpec) {
+                        // only process this part if it's for the correct hand
+                        if (partSpec.getBinding().getTarget().name().toUpperCase().equals(
+                                modelcameraTransformType.equals(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND) ||
+                                        modelcameraTransformType.equals(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND) ?
+                                        "LEFTHAND" : "RIGHTHAND")) {
 
-                    // only process this part if it's for the correct hand
-                    if (partSpec.getBinding().getTarget().name().toUpperCase().equals(
-                            modelcameraTransformType.equals(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND) ||
-                                    modelcameraTransformType.equals(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND) ?
-                                    "LEFTHAND" : "RIGHTHAND")) {
+                            transform = ((ModelSpec) partSpec.spec).getTransform(modelcameraTransformType);
+                            String itemState = partSpec.getBinding().getItemState();
 
-                        transform = ((ModelSpec) partSpec.spec).getTransform(modelcameraTransformType);
-                        String itemState = partSpec.getBinding().getItemState();
+                            int ix = partSpec.getColourIndex(nbt);
+                            if (ix < colours.length && ix >= 0)
+                                partColor = new Colour(colours[ix]);
+                            else
+                                partColor = Colour.WHITE;
+                            boolean glow = ((ModelPartSpec) partSpec).getGlow(nbt);
 
-                        int ix = partSpec.getColourIndex(nbt);
-                        if (ix < colours.length && ix >= 0)
-                            partColor = new Colour(colours[ix]);
-                        else
-                            partColor = Colour.WHITE;
-                        boolean glow = ((ModelPartSpec) partSpec).getGlow(nbt);
-
-                        if ((!isFiring && (itemState.equals("all") || itemState.equals("normal"))) ||
-                                (isFiring && (itemState.equals("all") || itemState.equals("firing"))))
-                            builder.addAll(ModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
+                            if ((!isFiring && (itemState.equals("all") || itemState.equals("normal"))) ||
+                                    (isFiring && (itemState.equals("all") || itemState.equals("firing"))))
+                                builder.addAll(ModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
+                        }
                     }
                 }
+
             }
-            return builder.build();
-        }
-        return ImmutableList.of();
+        });
+        return builder.build();
     }
 
     @Override
@@ -157,7 +153,7 @@ public class ModelPowerFist implements IBakedModel {
         return new PowerFistItemOverrideList();
     }
 
-    public class PowerFistItemOverrideList extends ItemOverrideList {
+    public static class PowerFistItemOverrideList extends ItemOverrideList {
         public PowerFistItemOverrideList() {
             super(Collections.EMPTY_LIST);
         }

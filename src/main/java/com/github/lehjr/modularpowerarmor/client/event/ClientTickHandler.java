@@ -12,7 +12,6 @@ import com.github.lehjr.mpalib.client.gui.hud.meters.*;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
 import com.google.common.util.concurrent.AtomicDouble;
@@ -87,8 +86,7 @@ public class ClientTickHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             EntityPlayer player = Minecraft.getMinecraft().player;
-            if (player != null && Minecraft.getMinecraft().isGuiEnabled() &&
-                    ItemUtils.getLegacyModularItemsEquipped(player).size() > 0
+            if (player != null && Minecraft.getMinecraft().isGuiEnabled()
                     && Minecraft.getMinecraft().currentScreen == null) {
                 Minecraft mc = Minecraft.getMinecraft();
                 ScaledResolution screen = new ScaledResolution(mc);
@@ -143,13 +141,14 @@ public class ClientTickHandler {
                                 hour -= 18;
                                 ampm = " AM";
                             }
-
-                            Renderer.drawString(hour + ampm, 17, yBaseString + (yOffsetString * index.get()));
-                            Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), clock);
-
-                            index.addAndGet(1);
                         }
+
+                        Renderer.drawString(hour + ampm, 17, yBaseString + (yOffsetString * index.get()));
+                        Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), clock);
+
+                        index.addAndGet(1);
                     }
+
 
                     // Compass
                     ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(compassReg);

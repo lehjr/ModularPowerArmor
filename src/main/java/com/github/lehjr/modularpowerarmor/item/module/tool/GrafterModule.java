@@ -28,7 +28,7 @@ public class GrafterModule extends AbstractPowerModule {
         super(regName);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPowerModule moduleCap;
 

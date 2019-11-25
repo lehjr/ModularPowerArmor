@@ -44,7 +44,7 @@ public class AdvancedSolarGenerator extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
@@ -57,6 +57,7 @@ public class AdvancedSolarGenerator extends AbstractPowerModule {
             this.ticker.addBasePropertyDouble(Constants.HEAT_GENERATION_NIGHT, 5);
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
@@ -66,7 +67,7 @@ public class AdvancedSolarGenerator extends AbstractPowerModule {
             return null;
         }
 
-        class Ticker extends PlayerTickModule {
+        static class Ticker extends PlayerTickModule {
             public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config, true);
             }

@@ -54,7 +54,7 @@ public class AutoFeederModule extends AbstractPowerModule {
         NBTUtils.setModuleDoubleOrRemove(stack, TAG_SATURATION, d);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public static class CapProvider implements ICapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
@@ -82,7 +82,7 @@ public class AutoFeederModule extends AbstractPowerModule {
             return null;
         }
 
-        class Ticker extends PlayerTickModule {
+        static class Ticker extends PlayerTickModule {
             public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config, true);
             }

@@ -56,9 +56,6 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
     private int recipeIndex = -1;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
     private IRecipe lastClickedRecipe;
-    private final Colour arrowBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
-    private final Colour arrowNormalBackGound = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
-    private final Colour arrowHighlightedBackground = Colour.WHITE;
     protected EntityPlayer player;
     final int craftingGridSize = 54; // height and width same
 
@@ -86,6 +83,9 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         double sizey = border.bottom() - border.top();
         mc = Minecraft.getMinecraft();
 
+        Colour arrowBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
+        Colour arrowHighlightedBackground = Colour.WHITE;
+        Colour arrowNormalBackGound = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
         forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         forwardArrow.setDrawShaft(false);
         forwardArrow.setOnPressed(press -> setRecipe(recipeIndex + 1));
@@ -121,7 +121,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             Integer containerIndex = targetItem.getSelectedItem().containerIndex;
 
             // target container slot index
-            int moduleTarget = -1;
+            int moduleTarget;
             if (containerIndex != null) {
                 moduleTarget = getModuleTargetIndexInModularItem(containerIndex, targetModule.getSelectedModule().getModule());
                 if (moduleTarget != -1 && containerIn.getSlot(containerIn.getOutputSlot()).getHasStack()) {
@@ -374,7 +374,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             if (installButton.isEnabled() && player.capabilities.isCreativeMode) {
                 ret = I18n.format("gui.modularpowerarmor.install.creative.desc");
             } else if (installButton.isEnabled()) {
-                Collections.singletonList(I18n.format("gui.modularpowerarmor.install.desc"));
+                ret = I18n.format("gui.modularpowerarmor.install.desc");
             } else {
                 // todo: tell user why disabled...
                 ret = I18n.format("gui.modularpowerarmor.install.disabled.desc");

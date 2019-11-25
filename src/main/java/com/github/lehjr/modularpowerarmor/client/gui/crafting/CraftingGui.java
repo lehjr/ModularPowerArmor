@@ -309,10 +309,10 @@ public class CraftingGui extends GuiContainer implements IRecipeShownListener {
 
         if (this.recipeBookGui.mouseClicked(mouseX, mouseY, mouseButton)) {
             return;
-        } else {
-            if (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) {
-                super.mouseClicked(mouseX, mouseY, mouseButton);
-            }
+        }
+
+        if (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
 

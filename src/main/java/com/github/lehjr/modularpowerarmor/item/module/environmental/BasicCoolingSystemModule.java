@@ -32,7 +32,7 @@ public class BasicCoolingSystemModule extends CoolingSystemBase {
         return new CapProviderThis(stack);
     }
 
-    public class CapProviderThis extends CapProvider {
+    public static class CapProviderThis extends CapProvider {
         public CapProviderThis(@Nonnull ItemStack module) {
             super(module);
             this.ticker = new ThisTicker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPAConfig.moduleConfig, true);

@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.modularpowerarmor.basemod.Modules;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableItem;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
@@ -67,8 +67,8 @@ public class ModuleSelectionFrame extends ScrollableFrame {
 
     private void drawItems(int mouseX, int mouseY, float partialTicks) {
         for (ModuleSelectionSubFrame frame : categories.values()) {
-            frame.drawPartial((int) (this.currentscrollpixels + border.top() + 4),
-                    (int) (this.currentscrollpixels + border.top() + border.height() - 4), partialTicks);
+            frame.drawPartial((int) (this.currentscrollpixels + border.finalTop() + 4),
+                    (int) (this.currentscrollpixels + border.finalTop() + border.finalHeight() - 4), partialTicks);
         }
     }
 
@@ -76,7 +76,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         ClickableModule module = getSelectedModule();
         if (module != null) {
             Point2D pos = module.getPosition();
-            if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
+            if (pos.getY() > this.currentscrollpixels + border.finalTop() + 4 && pos.getY() < this.currentscrollpixels + border.finalTop() + border.finalHeight() - 4) {
                 Renderer.drawCircleAround(pos.getX(), pos.getY(), 10);
             }
         }
@@ -167,10 +167,10 @@ public class ModuleSelectionFrame extends ScrollableFrame {
             return categories.get(category);
         } else {
             RelativeRect position = new RelativeRect(
-                    border.left() + 4,
-                    border.top() + 4,
-                    border.right() - 4,
-                    border.top() + 32);
+                    border.finalLeft() + 4,
+                    border.finalTop() + 4,
+                    border.finalRight() - 4,
+                    border.finalTop() + 32);
             position.setMeBelow(lastPosition);
             lastPosition = position;
             ModuleSelectionSubFrame frame = new ModuleSelectionSubFrame(

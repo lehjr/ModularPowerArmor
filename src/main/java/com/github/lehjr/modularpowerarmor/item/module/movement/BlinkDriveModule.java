@@ -4,7 +4,6 @@ import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
-import com.github.lehjr.modularpowerarmor.utils.PlayerUtils;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -14,6 +13,7 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -77,7 +77,7 @@ public class BlinkDriveModule extends AbstractPowerModule {
                     RayTraceResult hitRayTrace = rayTrace(playerIn.world, playerIn, true, range);
 
                     MPALibLogger.logDebug("Hit:" + hitRayTrace);
-                    PlayerUtils.teleportEntity(playerIn, hitRayTrace);
+                    teleportEntity(playerIn, hitRayTrace);
                     worldIn.playSound(playerIn, playerIn.getPosition(), enderman_portal, SoundCategory.PLAYERS, 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
 
                     MPALibLogger.logDebug("blink drive anount drained: " + amountDrained);
@@ -89,6 +89,49 @@ public class BlinkDriveModule extends AbstractPowerModule {
             @Override
             public int getEnergyUsage() {
                 return (int) applyPropertyModifiers(Constants.ENERGY_CONSUMPTION);
+            }
+        }
+
+        public void teleportEntity(EntityPlayer entityPlayer, RayTraceResult rayTraceResult) {
+            if (rayTraceResult != null && entityPlayer instanceof EntityPlayerMP) {
+                EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
+                if (player.connection.netManager.isChannelOpen()) {
+                    switch (rayTraceResult.typeOfHit) {
+                        case ENTITY:
+                            player.setPositionAndUpdate(rayTraceResult.hitVec.x, rayTraceResult.hitVec.y, rayTraceResult.hitVec.z);
+                            break;
+                        case BLOCK:
+                            double hitx = rayTraceResult.hitVec.x;
+                            double hity = rayTraceResult.hitVec.y;
+                            double hitz = rayTraceResult.hitVec.z;
+                            switch (rayTraceResult.sideHit) {
+                                case DOWN: // Bottom
+                                    hity -= 2;
+                                    break;
+                                case UP: // Top
+                                    // hity += 1;
+                                    break;
+                                case NORTH: // North
+                                    hitx -= 0.5;
+                                    break;
+                                case SOUTH: // South
+                                    hitx += 0.5;
+                                    break;
+                                case WEST: // West
+                                    hitz += 0.5;
+                                    break;
+                                case EAST: // East
+                                    hitz -= 0.5;
+                                    break;
+                            }
+
+                            player.setPositionAndUpdate(hitx, hity, hitz);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
             }
         }
     }

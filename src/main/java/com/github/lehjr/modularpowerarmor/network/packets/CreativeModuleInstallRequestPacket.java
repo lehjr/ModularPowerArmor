@@ -19,6 +19,9 @@ public class CreativeModuleInstallRequestPacket implements IMessage {
     int slotId;
     ItemStack itemStack;
 
+    public CreativeModuleInstallRequestPacket() {
+    }
+
     public CreativeModuleInstallRequestPacket(int windowIdIn, int slotIdIn, @Nonnull ItemStack itemStackIn) {
         windowId = windowIdIn;
         slotId = slotIdIn;

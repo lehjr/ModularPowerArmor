@@ -30,6 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  * <p>
  * Ported to Java by lehjr on 10/21/16.
  */
+@SuppressWarnings("deprecation")
 public class BlockTinkerTable extends BlockHorizontal {
     public static final String translationKey = new StringBuilder(Constants.MODID).append(".").append("tinkerTable").toString();
 
@@ -49,11 +50,13 @@ public class BlockTinkerTable extends BlockHorizontal {
         GameRegistry.registerTileEntity(TinkerTableTileEntity.class, regName);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));

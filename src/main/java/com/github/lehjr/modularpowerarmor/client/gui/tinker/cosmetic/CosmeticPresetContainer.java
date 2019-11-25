@@ -56,6 +56,10 @@ public class CosmeticPresetContainer extends ScrollableFrame {
         List<CosmeticPresetSelectionSubframe> cosmeticFrameList = new ArrayList<>();
         CosmeticPresetSelectionSubframe newFrame;
         CosmeticPresetSelectionSubframe prev = null;
+
+        System.out.println("preset frame size: " +  MPAConfig.INSTANCE.getCosmeticPresets(getItem()).size());
+
+
         for (String name :  MPAConfig.INSTANCE.getCosmeticPresets(getItem()).keySet()) {
             newFrame = createNewFrame(name, prev);
             prev = newFrame;
@@ -107,30 +111,6 @@ public class CosmeticPresetContainer extends ScrollableFrame {
         }
     }
 
-    public void hide () {
-        visibile = false;
-    }
-
-    public void show() {
-        visibile = true;
-    }
-
-    public boolean isVisibile() {
-        return visibile;
-    }
-
-    public void enable() {
-        enabled = true;
-    }
-
-    public void disable() {
-        enabled = false;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)  {
         if (visibile) {
@@ -138,6 +118,8 @@ public class CosmeticPresetContainer extends ScrollableFrame {
             GL11.glPushMatrix();
             GL11.glTranslated(0.0, (double) (-this.currentscrollpixels), 0.0);
             for (CosmeticPresetSelectionSubframe f : presetFrames) {
+                System.out.println("doing something here");
+
                 f.render(mouseX, mouseY, partialTicks);
             }
             GL11.glPopMatrix();

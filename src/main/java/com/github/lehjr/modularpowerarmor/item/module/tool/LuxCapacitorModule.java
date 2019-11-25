@@ -38,7 +38,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public static class CapProvider implements ICapabilityProvider {
         ItemStack module;
         IRightClickModule rightClick;
 
@@ -63,7 +63,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
             return null;
         }
 
-        class RightClickie extends RightClickModule {
+        static class RightClickie extends RightClickModule {
             public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config);
             }

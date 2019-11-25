@@ -37,7 +37,7 @@ public class NightVisionModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
 
@@ -56,7 +56,7 @@ public class NightVisionModule extends AbstractPowerModule {
             return null;
         }
 
-        class Ticker extends PlayerTickModule {
+        static class Ticker extends PlayerTickModule {
             public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config, true);
             }

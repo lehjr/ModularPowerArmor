@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
+import org.lwjgl.input.Mouse;
 
 import java.util.List;
 
@@ -80,6 +81,12 @@ public class PlayerModelViewFrame implements IGuiFrame {
             this.oldMouseY = this.mouseY;
         this.mouseY = (int) mousey;
 
+
+        if (border.containsPoint(mousex, mousey)) {
+            double dscroll = (lastdWheel - Mouse.getDWheel()) / 120;
+            zoom = zoom * Math.pow(1.1, dscroll);
+            lastdWheel = Mouse.getDWheel();
+        }
         double dx = mousex - anchorx;
         double dy = mousey - anchory;
         switch (dragging) {

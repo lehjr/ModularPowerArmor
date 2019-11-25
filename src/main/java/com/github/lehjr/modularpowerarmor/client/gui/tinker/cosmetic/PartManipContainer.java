@@ -102,11 +102,10 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Override
     public boolean onMouseDown(double x, double y, int button) {
-        if (this.isEnabled() && this.isVisibile()) {
-            if (button == 0) {
-                for (PartSpecManipSubFrame frame : modelframes) {
-                    if (frame.tryMouseClick(x, y + currentscrollpixels))
-                        return true;
+        if (this.isEnabled() && this.isVisibile() && button == 0) {
+            for (PartSpecManipSubFrame frame : modelframes) {
+                if (frame.tryMouseClick(x, y + currentscrollpixels)) {
+                    return true;
                 }
             }
         }
@@ -130,7 +129,7 @@ public class PartManipContainer extends ScrollableFrame {
                 double x = 0;
                 for (PartSpecManipSubFrame subframe : modelframes) {
                     subframe.updateItems();
-                    x += subframe.border.bottom();
+                    x += subframe.border.finalBottom();
                 }
                 this.totalsize = (int) x;
             }

@@ -60,7 +60,6 @@ public class CosmeticGui extends ContainerlessGui {
             }
         } else allowCosmeticPresetCreation = false;
 
-
         itemSelectFrame = new ItemSelectionFrame(
                 null,
                 new Point2D(absX(-0.95F), absY(-0.95F)),
@@ -143,8 +142,8 @@ public class CosmeticGui extends ContainerlessGui {
         renderframe.init(absX(-0.75F), absY(-0.95f), absX(0.15F), absY(-0.025f));
         colourpicker.init(absX(0.18f), absY(-0.95f), absX(0.95f), absY(-0.27f));
         partframe.init(absX(-0.75F), absY(0.025f), absX(+0.95F), absY(0.95f));
-       cosmeticFrame.init(absX(-0.95F), absY(0.025f), absX(+0.95F), absY(0.95f));
-       loadSaveResetSubFrame.init(absX(0.18f), absY(-0.23f), absX(0.95f), absY(-0.025f));
+        cosmeticFrame.init(absX(-0.75F), absY(0.025f), absX(+0.95F), absY(0.95f));
+        loadSaveResetSubFrame.init(absX(0.18f), absY(-0.23f), absX(0.95f), absY(-0.025f));
         tabFrame.init(absX(-0.95F), absY(-1.05f), absX(0.95F), absY(-0.95f));
     }
 

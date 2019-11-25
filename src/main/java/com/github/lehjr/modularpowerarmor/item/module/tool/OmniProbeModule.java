@@ -4,7 +4,6 @@ import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.modularpowerarmor.item.module.IPowerModuleCapabilityProvider;
-import com.github.lehjr.modularpowerarmor.utils.modulehelpers.OmniProbeHelper;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -13,6 +12,7 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.misc.ModCompatibility;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -117,26 +117,52 @@ public class OmniProbeModule extends AbstractPowerModule {
                 return EnumActionResult.PASS;
             }
 
+            public static final String TAG_EIO_NO_COMPLETE = "eioNoCompete";
+            public static final String TAG_EIO_FACADE_TRANSPARENCY = "eioFacadeTransparency";
+
+            public String getEIONoCompete(@Nonnull ItemStack stack) {
+                NBTTagCompound moduleTag = NBTUtils.getMuseModuleTag(stack);
+                return moduleTag != null ? moduleTag.getString(TAG_EIO_NO_COMPLETE) : "";
+            }
+
+            public void setEIONoCompete(@Nonnull ItemStack stack, String s) {
+                NBTTagCompound moduleTag = NBTUtils.getMuseModuleTag(stack);
+                moduleTag.setString(TAG_EIO_NO_COMPLETE, s);
+            }
+
+            public boolean getEIOFacadeTransparency(@Nonnull ItemStack stack) {
+                NBTTagCompound moduleTag = NBTUtils.getMuseModuleTag(stack);
+                if (moduleTag != null) {
+                    return moduleTag.getBoolean(TAG_EIO_FACADE_TRANSPARENCY);
+                }
+                return false;
+            }
+
+            public void setEIOFacadeTransparency(@Nonnull ItemStack stack, boolean b) {
+                NBTTagCompound moduleTag = NBTUtils.getMuseModuleTag(stack);
+                moduleTag.setBoolean(TAG_EIO_FACADE_TRANSPARENCY, b);
+            }
+
             @Override
             public void onPlayerTickActive(EntityPlayer player, ItemStack item) {
-                if (!OmniProbeHelper.getEIOFacadeTransparency(item)) {
-                    OmniProbeHelper.setEIONoCompete(item, RegistryNames.MODULE_OMNIPROBE__REGNAME);
-                    OmniProbeHelper.setEIOFacadeTransparency(item, true);
+                if (!getEIOFacadeTransparency(item)) {
+                    setEIONoCompete(item, RegistryNames.MODULE_OMNIPROBE__REGNAME);
+                    setEIOFacadeTransparency(item, true);
                 }
             }
 
             @Override
             public void onPlayerTickInactive(EntityPlayer player, ItemStack item) {
-                if (!(OmniProbeHelper.getEIONoCompete(item).isEmpty()) && (!OmniProbeHelper.getEIONoCompete(item).isEmpty())) {
-                    if (OmniProbeHelper.getEIONoCompete(item).equals(RegistryNames.MODULE_OMNIPROBE__REGNAME)) {
-                        OmniProbeHelper.setEIONoCompete(item, "");
-                        if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
-                            OmniProbeHelper.setEIOFacadeTransparency(item, false);
+                if (!(getEIONoCompete(item).isEmpty()) && (!getEIONoCompete(item).isEmpty())) {
+                    if (getEIONoCompete(item).equals(RegistryNames.MODULE_OMNIPROBE__REGNAME)) {
+                        setEIONoCompete(item, "");
+                        if (getEIOFacadeTransparency(item)) {
+                            setEIOFacadeTransparency(item, false);
                         }
                     }
                 } else {
-                    if (OmniProbeHelper.getEIOFacadeTransparency(item)) {
-                        OmniProbeHelper.setEIOFacadeTransparency(item, false);
+                    if (getEIOFacadeTransparency(item)) {
+                        setEIOFacadeTransparency(item, false);
                     }
                 }
             }

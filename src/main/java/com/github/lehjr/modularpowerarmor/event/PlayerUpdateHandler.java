@@ -4,25 +4,26 @@ import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
-import com.github.lehjr.modularpowerarmor.utils.PlayerUtils;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibConfig;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeDesert;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,11 +81,11 @@ public class PlayerUpdateHandler {
                         Optional.ofNullable(player.getItemStackFromSlot(slot)
                                 .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
                                 .ifPresent(i-> {
-                            if (i instanceof IModeChangingItem) {
-                                ((IModeChangingItem) i).tick(player);
-                                modularItemsEquipped.getAndAdd(1);
-                            }
-                        });
+                                    if (i instanceof IModeChangingItem) {
+                                        ((IModeChangingItem) i).tick(player);
+                                        modularItemsEquipped.getAndAdd(1);
+                                    }
+                                });
                         break;
 
                     case ARMOR:
@@ -128,28 +129,66 @@ public class PlayerUpdateHandler {
             }
 
             // Done this way so players can let their stuff cool in their inventory without having to equip it.
-            List<ItemStack> modularItemsInInventory = ItemUtils.getLegacyModularItemsInInventory(player);
-            if (modularItemsInInventory.size() > 0) {
-                // Heat update
-                double currHeat = HeatUtils.getPlayerHeat(player);
-                if (currHeat >= 0 && !player.world.isRemote) { // only apply serverside so change is not applied twice
-                    double coolPlayerAmount = PlayerUtils.getPlayerCoolingBasedOnMaterial(player) * 0.55;  // cooling value adjustment. Too much or too little cooling makes the heat system useless.
+            // really don't need to check for modular items, since they will get handled if the player has any
+            // Heat update
+            double currHeat = HeatUtils.getPlayerHeat(player);
+            if (currHeat >= 0 && !player.world.isRemote) { // only apply serverside so change is not applied twice
+                double coolPlayerAmount = getPlayerCoolingBasedOnMaterial(player) * 0.55;  // cooling value adjustment. Too much or too little cooling makes the heat system useless.
+                // cooling value adjustment. Too much or too little cooling makes the heat system useless.
+                if (coolPlayerAmount > 0) {
+                    HeatUtils.coolPlayer(player, coolPlayerAmount);
+                }
 
-                    // cooling value adjustment. Too much or too little cooling makes the heat system useless.
-
-                    if (coolPlayerAmount > 0)
-                        HeatUtils.coolPlayer(player, coolPlayerAmount);
-
-                    double maxHeat = HeatUtils.getPlayerMaxHeat(player);
-
-                    if (currHeat > maxHeat) {
-                        player.attackEntityFrom(HeatUtils.overheatDamage, (float) (Math.sqrt(currHeat - maxHeat)/* was (int) */ / 4));
-                        player.setFire(1);
-                    } else {
-                        player.extinguish();
-                    }
+                double maxHeat = HeatUtils.getPlayerMaxHeat(player);
+                if (currHeat > maxHeat) {
+                    player.attackEntityFrom(HeatUtils.overheatDamage, (float) (Math.sqrt(currHeat - maxHeat)/* was (int) */ / 4));
+                    player.setFire(1);
+                } else {
+                    player.extinguish();
                 }
             }
         }
+    }
+
+    public static double getPlayerCoolingBasedOnMaterial(@Nonnull EntityPlayer player) {
+        // cheaper method of checking if player is in lava. Described as "non-chunkloading copy of Entity.isInLava()"
+//        if (ModCompatibility.isEnderCoreLoaded()) {
+//            if (EnderCoreMethods.isInLavaSafe(player))
+//                return 0;
+//        } else {
+        if (player.isInLava()) // not a cheap
+            return 0;
+//        }
+
+        double cool = ((2.0 - getBiome(player).getTemperature(new BlockPos((int) player.posX, (int) player.posY, (int) player.posZ)) / 2)); // Algorithm that returns a getValue from 0.0 -> 1.0. Biome temperature is from 0.0 -> 2.0
+
+        if (player.isInWater())
+            cool += 0.5;
+
+        // If high in the air, increase cooling
+        if ((int) player.posY > 128)
+            cool += 0.5;
+
+        // If nighttime and in the desert, increase cooling
+        if (!player.world.isDaytime() && getBiome(player) instanceof BiomeDesert) {
+            cool += 0.8;
+        }
+
+        // check for rain and if player is in the rain
+        // check if rain can happen in the biome the player is in
+        if (player.world.getBiome(player.getPosition()).canRain()
+                // check if raining in the world
+                && player.world.isRaining()
+                // check if the player can see the sky
+                && player.world.canBlockSeeSky(player.getPosition().add(0, 1, 0))) {
+            cool += 0.2;
+        }
+
+        return cool;
+    }
+
+    public static Biome getBiome(EntityPlayer player) {
+        Chunk chunk = player.world.getChunk(player.getPosition());
+        return chunk.getBiome(player.getPosition(), player.world.getBiomeProvider());
     }
 }

@@ -54,7 +54,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor implements IMetalArmor {
         return new PowerArmorCap(stack);
     }
 
-    class PowerArmorCap implements ICapabilityProvider {
+    static class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         IModularItem modularItemCap;
         IEnergyStorage energyStorage;
@@ -129,7 +129,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor implements IMetalArmor {
             }
         }
 
-        class EmptyEnergyWrapper extends EnergyStorage {
+        static class EmptyEnergyWrapper extends EnergyStorage {
             public EmptyEnergyWrapper() {
                 super(0);
             }

@@ -16,6 +16,9 @@ public class ModuleMoveFromSlotToSlotPacket implements IMessage {
     int sourceSlot;
     int targetSlot;
 
+    public ModuleMoveFromSlotToSlotPacket() {
+    }
+
     public ModuleMoveFromSlotToSlotPacket(int windowIdIn, int sourceSlotIn, int targetSlotIn) {
         this.windowId = windowIdIn;
         this.sourceSlot = sourceSlotIn;

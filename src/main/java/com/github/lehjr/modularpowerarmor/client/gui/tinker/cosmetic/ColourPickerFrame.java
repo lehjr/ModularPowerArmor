@@ -102,8 +102,10 @@ public class ColourPickerFrame extends ScrollableFrame {
         RelativeRect newborder = new RelativeRect(border.left(), prev != null ? prev.bottom() : this.border.top(),
                 this.border.right(), (prev != null ? prev.bottom() : this.border.top()) + 18);
         ClickableSlider slider =
-                new ClickableSlider(new Point2D(newborder.centerx(), newborder.centery()), newborder.width() - 15, id,
-                        I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + id));
+                new ClickableSlider(
+                        new Point2D(newborder.centerx(), newborder.centery()),
+                        newborder.width() - 15, id,
+                        I18n.format("modularpowerarmor.tradeoff."+ id));
         ScrollableSlider scrollableSlider = new ScrollableSlider(slider, newborder);
         scrollableSlider.setMeBelow((prev != null) ? prev : null);
         rectangles[index] = scrollableSlider;
@@ -119,7 +121,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             return null;
         }
         return Optional.ofNullable(itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
-            NBTTagCompound renderSpec = spec.getMuseRenderTag();
+            NBTTagCompound renderSpec = spec.getRenderTag();
             if (renderSpec != null && !renderSpec.isEmpty()) {
                 return new NBTTagIntArray(spec.getColorArray());
             }
@@ -132,7 +134,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             return null;
         }
         return Optional.ofNullable(itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
-            NBTTagCompound renderSpec = spec.getMuseRenderTag();
+            NBTTagCompound renderSpec = spec.getRenderTag();
             renderSpec.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(intList));
             MPAPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
             return (NBTTagIntArray) renderSpec.getTag(MPALIbConstants.TAG_COLOURS);

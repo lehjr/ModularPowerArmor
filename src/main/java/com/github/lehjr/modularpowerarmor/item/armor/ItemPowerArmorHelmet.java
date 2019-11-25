@@ -45,6 +45,7 @@ import java.util.Map;
 /**
  * Ported to Java by lehjr on 10/26/16.
  */
+@SuppressWarnings("deprecation")
 @Optional.InterfaceList({
         @Optional.Interface(iface = "thaumcraft.api.items.IGoggles", modid = "thaumcraft", striprefs = true),
         @Optional.Interface(iface = "thaumcraft.api.items.IRevealer", modid = "thaumcraft", striprefs = true),
@@ -115,7 +116,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor implements
         return new PowerArmorCap(stack);
     }
 
-    class PowerArmorCap implements ICapabilityProvider {
+    static class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         IModularItem modularItemCap;
         IEnergyStorage energyStorage;
@@ -209,7 +210,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor implements
             return null;
         }
 
-        class EmptyEnergyWrapper extends EnergyStorage {
+        static class EmptyEnergyWrapper extends EnergyStorage {
             public EmptyEnergyWrapper() {
                 super(0);
             }

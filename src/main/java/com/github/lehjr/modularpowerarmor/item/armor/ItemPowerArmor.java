@@ -3,7 +3,6 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.basemod.RegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.ArmorModelInstance;
-import com.github.lehjr.modularpowerarmor.client.model.item.armor.HighPolyArmor;
 import com.github.lehjr.modularpowerarmor.client.model.item.armor.IArmorModel;
 import com.github.lehjr.modularpowerarmor.config.MPAConfig;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
@@ -40,6 +39,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -328,13 +328,12 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
     @Nullable
     @Override
     public String getArmorTexture(ItemStack armor, Entity entity, EntityEquipmentSlot equipmentSlotType, String type) {
-        if (type == "overlay") { // this is to allow a tint to be applied tot the armor
+        if (Objects.equals(type, "overlay")) { // this is to allow a tint to be applied tot the armor
             return MPALIbConstants.BLANK_ARMOR_MODEL_PATH;
         }
-        return Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->
-                spec instanceof IArmorModelSpecNBT ?
-                        ((IArmorModelSpecNBT) spec).getArmorTexture() :
-                        MPALIbConstants.BLANK_ARMOR_MODEL_PATH).orElse(MPALIbConstants.BLANK_ARMOR_MODEL_PATH);
+        return Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null))
+                .filter(spec -> spec instanceof IArmorModelSpecNBT)
+                .map(spec -> ((IArmorModelSpecNBT) spec).getArmorTexture()).orElse(MPALIbConstants.BLANK_ARMOR_MODEL_PATH);
     }
 
 
@@ -352,8 +351,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
 
 
         return Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec-> {
-
-            NBTTagCompound renderTag = spec.getMuseRenderTag();
+            NBTTagCompound renderTag = spec.getRenderTag();
             EntityPlayer player = (EntityPlayer) entityLiving;
 
             // only triggered by this client's player looking at their own equipped armor
@@ -362,7 +360,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
                     if (player.inventory.getStackInSlot(i).equals(armor)) {
                         renderTag = spec.getDefaultRenderTag();
                         if (renderTag != null && !renderTag.isEmpty()) {
-                            spec.setMuseRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
                             MPAPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
                         }
                         break;
@@ -370,7 +368,7 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
                 }
             }
 
-            if (spec.getMuseRenderTag() != null &&
+            if (spec.getRenderTag() != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
                 return _default;
             }
@@ -384,8 +382,8 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
                 ((IArmorModel) model).setVisibleSection(null);
             } else {
                 if (renderTag != null) {
-                    ((HighPolyArmor) model).setVisibleSection(armorSlot);
-                    ((HighPolyArmor) model).setRenderSpec(renderTag);
+                    ((IArmorModel) model).setVisibleSection(armorSlot);
+                    ((IArmorModel) model).setRenderSpec(renderTag);
                 }
             }
             return model;

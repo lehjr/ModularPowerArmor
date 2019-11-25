@@ -48,7 +48,7 @@ public class CosmeticPresetPacket implements IMessage {
                     String presetName = message.presetName;
                     ItemStack stack = player.inventory.getStackInSlot(itemSlot);
                     Optional.ofNullable(stack.getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(ms->{
-                        NBTTagCompound renderTag = ms.getMuseRenderTag();
+                        NBTTagCompound renderTag = ms.getRenderTag();
                         renderTag.removeTag(MPALIbConstants.TAG_RENDER);
                         renderTag.setString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
                     });

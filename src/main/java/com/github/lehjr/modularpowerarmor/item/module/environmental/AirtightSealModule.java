@@ -24,7 +24,7 @@ public class AirtightSealModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPowerModule moduleCap;
 
@@ -33,6 +33,7 @@ public class AirtightSealModule extends AbstractPowerModule {
             moduleCap = new PowerModule(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPAConfig.moduleConfig);
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {

@@ -39,7 +39,7 @@ public abstract class CoolingSystemBase extends AbstractPowerModule {
         super(regName);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public static class CapProvider implements ICapabilityProvider {
         public ItemStack module;
         public IPlayerTickModule ticker;
         public IFluidHandlerItem fluidHandler;

@@ -39,7 +39,7 @@ public class AppEngWirelessFluidModule extends AbstractPowerModule /* implements
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IRightClickModule rightClick;
 
@@ -48,6 +48,7 @@ public class AppEngWirelessFluidModule extends AbstractPowerModule /* implements
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
         @Override
         public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
@@ -57,7 +58,7 @@ public class AppEngWirelessFluidModule extends AbstractPowerModule /* implements
             return null;
         }
 
-        class RightClickie extends RightClickModule {
+        static class RightClickie extends RightClickModule {
             public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
                 super(module, category, target, config);
             }

@@ -7,6 +7,7 @@ import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
+import com.google.common.collect.BiMap;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,18 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
             }
         }
         return EnumSpecType.NONE;
+    }
+
+    @Nullable
+    @Override
+    public NBTTagCompound getPresetTagOrNull() {
+        BiMap<String, NBTTagCompound> presetMap = MPAConfig.INSTANCE.getCosmeticPresets(getItemStack());
+        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(getItemStack());
+        String presetName = itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET);
+        if (presetName != null) {
+            return presetMap.getOrDefault("Default", null);
+        }
+        return null;
     }
 
     @Override

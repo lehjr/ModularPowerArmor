@@ -152,7 +152,7 @@ public class CosmeticPresetSaveLoad {
     public static boolean savePreset(String presetName, @Nonnull ItemStack itemStack) {
         return Optional.ofNullable(itemStack.getCapability(ModelSpecNBTCapability.RENDER, null))
                 .map(iModelSpecNBT ->
-                        savePreset(itemStack.getItem().getRegistryName(), presetName, iModelSpecNBT.getMuseRenderTag()))
+                        savePreset(itemStack.getItem().getRegistryName(), presetName, iModelSpecNBT.getRenderTag()))
                 .orElse(false);
     }
 

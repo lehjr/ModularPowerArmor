@@ -44,7 +44,7 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         modularItemToSlotMap = new HashMap<>();
 
         // crafting result: slot 0
-        this.addSlotToContainer(new HideableResultSlot(inventoryPlayer.player, this.craftMatrix, this.craftResult,0, -1000, -1000));
+        this.addSlotToContainer(new HideableResultSlot(inventoryPlayer.player, this.craftMatrix, this.craftResult, 0, -1000, -1000));
 
         int row;
         int col;
@@ -86,9 +86,9 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         }
     }
 
-    class HideableSlotItemHandler extends SlotItemHandler implements IHideableSlot {
+    static class HideableSlotItemHandler extends SlotItemHandler implements IHideableSlot {
         boolean isEnabled = false;
-        protected int parentSlot = -1;
+        protected int parentSlot;
 
         public HideableSlotItemHandler(IItemHandler itemHandler, int parent, int index, int xPosition, int yPosition) {
             super(itemHandler, index, xPosition, yPosition);
@@ -115,7 +115,7 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         }
     }
 
-    class HideableSlot extends Slot implements IHideableSlot {
+    static class HideableSlot extends Slot implements IHideableSlot {
         boolean isEnabled = false;
         public HideableSlot(IInventory iInventory, int slotIndex, int posX, int posY) {
             super(iInventory, slotIndex, posX, posY);
@@ -137,7 +137,7 @@ public class TinkerTableContainer extends ContainerWorkbench implements IModular
         }
     }
 
-    class HideableResultSlot extends SlotCrafting implements IHideableSlot {
+    static class HideableResultSlot extends SlotCrafting implements IHideableSlot {
         boolean isEnabled = false;
         public HideableResultSlot(EntityPlayer playerEntity, InventoryCrafting craftingInventory, IInventory inventory, int slotIndex, int posX, int posY) {
             super(playerEntity, craftingInventory, inventory, slotIndex, posX, posY);

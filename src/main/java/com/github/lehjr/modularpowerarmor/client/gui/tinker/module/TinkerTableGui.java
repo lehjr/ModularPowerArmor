@@ -76,6 +76,13 @@ public class TinkerTableGui extends ContainerGui {
                 Colour.LIGHTBLUE.withAlpha(0.8F), player);
         frames.add(itemSelectFrame);
 
+        itemSelectFrame.setDoOnNewSelect(doThis-> {
+            moduleSelectFrame.loadModules(false);
+            this.installFrame.ghostRecipe.clear();
+            this.container.craftResult.clear();
+            this.container.craftMatrix.clear();
+        });
+
         summaryFrame = new DetailedSummaryFrame(player,
                 new Point2D(absX(0f), absY(-0.9f)),
                 new Point2D(absX(0.95f), absY(-0.3f)),
@@ -115,10 +122,6 @@ public class TinkerTableGui extends ContainerGui {
 
         tabFrame = new TabSelectFrame(player, 0, worldx, worldy, worldz);
         frames.add(tabFrame);
-
-        itemSelectFrame.setDoOnNewSelect(doThis-> {
-            moduleSelectFrame.loadModules(false);
-        });
     }
 
     public void rescale() {
@@ -145,6 +148,7 @@ public class TinkerTableGui extends ContainerGui {
         summaryFrame.init(absX(-0.025F), absY(-0.95F), absX(0.975f), absY(-0.3f));
         installFrame.init(absX(-0.75F), absY(0.6f), absX(-0.05F), absY(0.95f));
         moduleSelectFrame.init(absX(-0.75F), absY(-0.95f), absX(-0.05F), absY(0.55f));
+        moduleSelectFrame.loadModules(true);
         tabFrame.init(absX(-0.95F), absY(-1.05f), absX(0.95F), absY(-0.95f));
         tweakFrame.init(absX(-0.025F),  absY(-0.25f), absX(0.975f), absY(0.95f));
     }

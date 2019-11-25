@@ -401,67 +401,72 @@ public class MPASettings {
     public static Cosmetics cosmetics = new Cosmetics();
     public static class Cosmetics {
         @Config.Comment("Use legacy cosmetic configuration instead of cosmetic presets")
-        public boolean useLegacyCosmeticSystem=true;
+        public boolean useLegacyCosmeticSystem = true;
 
-        //        @Config.LangKey(MPSConstants.CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS)
         @Config.Comment("Allow high polly armor models instead of just skins")
         public boolean allowHighPollyArmorModuels = true;
 
         @Config.Comment("Allow PowerFist model to be customized")
-        public boolean allowPowerFistCustomization=false;
+        public boolean allowPowerFistCustomization = false;
 
         public void updateCosmeticInfo(ResourceLocation location, String name, NBTTagCompound cosmeticInfo) {
             Item item = Item.REGISTRY.getObject(location);
 
-            if (item instanceof ItemPowerFist)
+            if (item instanceof ItemPowerFist) {
                 cosmeticPresetsPowerFist.put(name, cosmeticInfo);
-            else if (item instanceof ItemPowerArmorHelmet)
+            } else if (item instanceof ItemPowerArmorHelmet) {
                 cosmeticPresetsPowerArmorHelmet.put(name, cosmeticInfo);
-            else if (item instanceof ItemPowerArmorChestplate)
-                cosmeticPresetsPowerArmorChestplate.put(name, cosmeticInfo);
-            else if (item instanceof ItemPowerArmorLeggings)
+            } else if(item instanceof ItemPowerArmorChestplate) {
+                cosmeticPresetsPowerArmorChestplate.put(name,cosmeticInfo);
+            } else if (item instanceof ItemPowerArmorLeggings) {
                 cosmeticPresetsPowerArmorLeggings.put(name, cosmeticInfo);
-            else if (item instanceof ItemPowerArmorBoots)
+            } else if (item instanceof ItemPowerArmorBoots) {
                 cosmeticPresetsPowerArmorBoots.put(name, cosmeticInfo);
+            }
         }
 
         @Config.Ignore
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerFist = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerFist() {
-            if (cosmeticPresetsPowerFist.isEmpty() && !allowPowerFistCustomization)
+            if (cosmeticPresetsPowerFist.isEmpty() && !allowPowerFistCustomization) {
                 cosmeticPresetsPowerFist = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerFist, 0);
+            }
             return cosmeticPresetsPowerFist;
         }
 
         @Config.Ignore
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorHelmet = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorHelmet() {
-            if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !useLegacyCosmeticSystem)
+            if (cosmeticPresetsPowerArmorHelmet.isEmpty() && !useLegacyCosmeticSystem) {
                 cosmeticPresetsPowerArmorHelmet = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorHead, 0);
+            }
             return cosmeticPresetsPowerArmorHelmet;
         }
 
         @Config.Ignore
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorChestplate = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorChestplate() {
-            if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !useLegacyCosmeticSystem)
+            if(cosmeticPresetsPowerArmorChestplate.isEmpty() && !useLegacyCosmeticSystem) {
                 cosmeticPresetsPowerArmorChestplate = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorTorso, 0);
+            }
             return cosmeticPresetsPowerArmorChestplate;
         }
 
         @Config.Ignore
         private BiMap<String, NBTTagCompound> cosmeticPresetsPowerArmorLeggings = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorLeggings() {
-            if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !useLegacyCosmeticSystem)
+            if(cosmeticPresetsPowerArmorLeggings.isEmpty() && !useLegacyCosmeticSystem) {
                 cosmeticPresetsPowerArmorLeggings = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorLegs, 0);
+            }
             return cosmeticPresetsPowerArmorLeggings;
         }
 
         @Config.Ignore
         private BiMap<String, NBTTagCompound>  cosmeticPresetsPowerArmorBoots = HashBiMap.create();
         public BiMap<String, NBTTagCompound> getCosmeticPresetsPowerArmorBoots() {
-            if(cosmeticPresetsPowerArmorBoots.isEmpty() && !useLegacyCosmeticSystem)
+            if(cosmeticPresetsPowerArmorBoots.isEmpty() && !useLegacyCosmeticSystem) {
                 cosmeticPresetsPowerArmorBoots = CosmeticPresetSaveLoad.loadPresetsForItem(Objects.INSTANCE.powerArmorFeet, 0);
+            }
             return cosmeticPresetsPowerArmorBoots;
         }
     }

@@ -54,7 +54,7 @@ public enum KeybindManager {
     public static void writeOutKeybinds() {
         BufferedWriter writer = null;
         try {
-            File file = new File(Loader.instance().getConfigDir() + "/machinemuse/", "modularpowerarmor-keybinds.cfg");
+            File file = new File(Loader.instance().getConfigDir() + "/lehjr/", "modularpowerarmor-keybinds.cfg");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -91,7 +91,7 @@ public enum KeybindManager {
 
     public static void readInKeybinds() {
         try {
-            File file = new File(Loader.instance().getConfigDir() + "/machinemuse/", "modularpowerarmor-keybinds.cfg");
+            File file = new File(Loader.instance().getConfigDir() + "/lehjr/", "modularpowerarmor-keybinds.cfg");
             if (!file.exists()) {
                 MPALibLogger.logError("No modularpowerarmor keybind file found.");
                 return;

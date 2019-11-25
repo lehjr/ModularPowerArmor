@@ -126,6 +126,7 @@ public class TerminalHandler implements
     }
 
     @Optional.Interface(iface = "appeng.api.util.IConfigManager", modid = "appliedenergistics2", striprefs = true)
+    static
     class WirelessConfig implements IConfigManager {
         final ItemStack stack;
         private final Map<Settings, Enum<?>> enums = new EnumMap<>(Settings.class);
@@ -169,12 +170,14 @@ public class TerminalHandler implements
         @Override
         public void writeToNBT(NBTTagCompound tagCompound) {
             NBTTagCompound tag = new NBTTagCompound();
-            if (tagCompound.hasKey("configWirelessTerminal"))
+            if (tagCompound.hasKey("configWirelessTerminal")) {
                 tag = tagCompound.getCompoundTag("configWirelessTerminal");
+            }
 
-            for (Enum e : enums.keySet())
+            for (Enum e : enums.keySet()) {
                 tag.setString(e.name(), enums.get(e).toString());
-            tagCompound.setTag("configWirelessTerminal", tag);
+                tagCompound.setTag("configWirelessTerminal", tag);
+            }
         }
 
         @Optional.Method(modid = "appliedenergistics2")

@@ -54,7 +54,7 @@ public class ScannerModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements ICapabilityProvider {
+    public static class CapProvider implements ICapabilityProvider {
         ItemStack module;
         IPlayerTickModule ticker;
         ItemHandlerScanner itemHandler = null;

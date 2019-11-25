@@ -33,7 +33,6 @@ public class RecipeWidget extends GuiButtonRecipe {
     private RecipeBook book;
     private RecipeList list;
     private float time;
-    private float animationTime;
     private int currentIndex;
     DrawableTile tile;
 
@@ -59,7 +58,7 @@ public class RecipeWidget extends GuiButtonRecipe {
         for (IRecipe irecipe : list) {
             if (recipeBook.isNew(irecipe)) {
                 page.recipesShown(list);
-                this.animationTime = 15.0F;
+                float animationTime = 15.0F;
                 break;
             }
         }

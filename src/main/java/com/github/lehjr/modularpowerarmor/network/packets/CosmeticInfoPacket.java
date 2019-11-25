@@ -56,7 +56,7 @@ public class CosmeticInfoPacket implements IMessage {
                     String tagName = message.tagName;
                     NBTTagCompound tagData = message.tagData;
                     Optional.ofNullable(player.inventory.getStackInSlot(itemSlot).getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(render->{
-                        render.setMuseRenderTag(tagData, tagName);
+                        render.setRenderTag(tagData, tagName);
                     });
                 });
             }

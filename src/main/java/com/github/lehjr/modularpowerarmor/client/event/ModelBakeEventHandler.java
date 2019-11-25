@@ -28,14 +28,13 @@ public enum ModelBakeEventHandler {
 
     public static final ModelResourceLocation powerFistIconLocation = new ModelResourceLocation(new ResourceLocation(RegistryNames.ITEM__POWER_FIST__REGNAME), "inventory");
     public static IBakedModel powerFistIconModel;
-    private static IRegistry<ModelResourceLocation, IBakedModel> modelRegistry;
     List<ModelResourceLocation> brokenModels = new ArrayList<>();
 
 
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) throws IOException {
-        modelRegistry = event.getModelRegistry();
+        IRegistry<ModelResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
 
         // New Lux Capacitor Model
         event.getModelRegistry().putObject(ModelLuxCapacitor.modelResourceLocation, new ModelLuxCapacitor());

@@ -557,7 +557,7 @@ public class ItemPowerFist extends MPSItemElectricTool
         return RefinedStorageWirelessModule.provide(handler, player, stack);
     }
 
-    class PowerToolCap implements ICapabilityProvider {
+    static class PowerToolCap implements ICapabilityProvider {
         ItemStack fist;
         IModeChangingItem modeChangingItem;
         IEnergyStorage energyStorage;
@@ -629,7 +629,7 @@ public class ItemPowerFist extends MPSItemElectricTool
             return null;
         }
 
-        class EmptyEnergyWrapper extends EnergyStorage {
+        static class EmptyEnergyWrapper extends EnergyStorage {
             public EmptyEnergyWrapper() {
                 super(0);
             }

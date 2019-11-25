@@ -46,10 +46,10 @@ public class EventRegisterRenderers {
 
         // FIXME
         // Components
-        Item components = mpaItems.component;
+        ItemComponent components = mpaItems.component;
         if (components != null) {
-            for (Integer meta : ((ItemComponent) components).names.keySet()) {
-                String oredictName = ((ItemComponent) components).names.get(meta);
+            for (Integer meta : components.names.keySet()) {
+                String oredictName = components.names.get(meta);
                 ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(Constants.COMPONENTS_PREFIX + oredictName, "inventory");
                 ModelLoader.setCustomModelResourceLocation(components, meta, itemModelResourceLocation);
             }

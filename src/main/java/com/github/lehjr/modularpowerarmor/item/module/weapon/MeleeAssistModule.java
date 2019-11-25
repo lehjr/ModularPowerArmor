@@ -25,7 +25,7 @@ public class MeleeAssistModule extends AbstractPowerModule {
         return new CapProvider(stack);
     }
 
-    public class CapProvider implements IPowerModuleCapabilityProvider {
+    public static class CapProvider implements IPowerModuleCapabilityProvider {
         ItemStack module;
         IPowerModule moduleCap;
 
