@@ -1,6 +1,7 @@
+#PARSE_ESCAPES
+
 #Made by users: Andrew2448, MachineMuse, Lehjr
 #Last edited on 10/10/18
-
 itemGroup.modularpowerarmor=Modular Power Armor
 
 # Blocks
@@ -64,7 +65,6 @@ item.modularpowerarmor.powerArmorComponent.componentRubberHose.desc=A heavily in
 fluid.liquid_nitrogen=Liquid Nitrogen
 
 # NBTTags used as labels
-modularpowerarmor.tradeoff.slotPoints=Slot Points;
 modularpowerarmor.tradeoff.armorPoints=Armor Points
 modularpowerarmor.tradeoff.armorPhysical=Armor (Physical)
 modularpowerarmor.tradeoff.armorEnergy=Armor (Energy)
@@ -85,6 +85,8 @@ modularpowerarmor.tradeoff.autoFeederEfficiency=Auto-Feeder Efficiency
 modularpowerarmor.tradeoff.basicCoolingPower=Basic Cooling Power
 modularpowerarmor.tradeoff.coolingBonus=Cooling Bonus
 modularpowerarmor.tradeoff.coolingSystemEnergyCon=Cooling System Energy Consumption
+modularpowerarmor.tradeoff.coolingFactor=Cooling Factor
+modularpowerarmor.tradeoff.coolingTankSize=Cooling Tank Size
 modularpowerarmor.tradeoff.repulsorEnergyCon=Repulsor Energy Consumption
 modularpowerarmor.tradeoff.advCoolSysEnergyCon=Advanced Cooling System Energy Consumption
 modularpowerarmor.tradeoff.joltEnergy=Jolt Energy
@@ -109,6 +111,7 @@ modularpowerarmor.tradeoff.underwaterMovBoost=Underwater Movement Boost
 modularpowerarmor.tradeoff.swimBoostEnergyCon=Swim Boost Energy Consumption
 modularpowerarmor.tradeoff.energyCon=Energy Consumption
 modularpowerarmor.tradeoff.magnetRadius=Magnet Radius
+modularpowerarmor.tradeoff.multiplier=Multiplier
 modularpowerarmor.tradeoff.fieldOfView=Field of View
 modularpowerarmor.tradeoff.fOVMult=FOV multiplier
 modularpowerarmor.tradeoff.underWaterEnergyCon=Underwater Energy Consumption
@@ -128,6 +131,7 @@ modularpowerarmor.tradeoff.luxCapGreen=Lux Capacitor Green Hue
 modularpowerarmor.tradeoff.luxCapBlue=Lux Capacitor Blue Hue
 modularpowerarmor.tradeoff.pickHarvSpd=Pickaxe Harvest Speed
 modularpowerarmor.tradeoff.pickaxeEnergyCon=Pickaxe Energy Consumption
+modularpowerarmor.tradeoff.harvSpeed=Harvest Speed
 modularpowerarmor.tradeoff.scoopHarSpd=Scoop Harvest Speed
 modularpowerarmor.tradeoff.scoopEnergyCon=Scoop Energy Consumption
 modularpowerarmor.tradeoff.shearEnergyCon=Shearing Energy Consumption
@@ -140,6 +144,7 @@ modularpowerarmor.tradeoff.heatEmission=Heat Emission
 modularpowerarmor.tradeoff.punchEnergyCon=Punch Energy Consumption
 modularpowerarmor.tradeoff.meleeDamage=Melee Damage
 modularpowerarmor.tradeoff.meleeKnockback=Melee Knockback
+modularpowerarmor.tradeoff.knockbackResistance=Knockback Resistance
 modularpowerarmor.tradeoff.plasmaEnergyPerTick=Plasma Energy Per Tick
 modularpowerarmor.tradeoff.plasmaDamage=Plasma Damage At Full Charge
 modularpowerarmor.tradeoff.plasmaExplosiveness=Plasma Explosiveness
@@ -169,6 +174,7 @@ modularpowerarmor.tradeoff.compensation=Compensation
 modularpowerarmor.tradeoff.walkingAssist=Walking Assist
 modularpowerarmor.tradeoff.vertically=Verticality
 modularpowerarmor.tradeoff.maxEnergy=Maximum Energy
+modularpowerarmor.tradeoff.maxTransfer=Maximum Energy Transfer
 modularpowerarmor.tradeoff.maxHeat=Maximum Heat
 modularpowerarmor.tradeoff.aoeEnergyCon=AoE Energy Consumption
 modularpowerarmor.tradeoff.aoeMiningDiameter=AoE Mining Diameter
@@ -357,6 +363,7 @@ gui.modularpowerarmor.noModulesFound.line2=found in inventory. Make some!
 gui.modularpowerarmor.red=Red
 gui.modularpowerarmor.green=Green
 gui.modularpowerarmor.blue=Blue
+gui.modularpowerarmor.craftAndInstall=Craft\nand\nInstall
 gui.modularpowerarmor.install=Install
 gui.modularpowerarmor.salvage=Salvage
 gui.modularpowerarmor.newKeybind=New

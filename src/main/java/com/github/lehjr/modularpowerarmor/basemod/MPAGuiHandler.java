@@ -29,14 +29,17 @@ import javax.annotation.Nonnull;
  * <p>
  * Ported to Java by lehjr on 11/3/16.
  */
-public enum MPSGuiHandler implements IGuiHandler {
+public enum MPAGuiHandler implements IGuiHandler {
     INSTANCE;
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
-            case 0:
+            case 0: {
+                System.out.println("tinker table here");
+
                 return new TinkerTableContainer(player.inventory, world, new BlockPos(x, y, z));
+            }
 
             case 3:
                 return new CraftingContainer(player.inventory, world, new BlockPos(x, y, z));
@@ -55,7 +58,7 @@ public enum MPSGuiHandler implements IGuiHandler {
         //        Minecraft.getMinecraft().player.addStat(AchievementList.OPEN_INVENTORY, 1);
         switch (ID) {
             case 0:
-                return new TinkerTableGui(player.inventory, player.world, new BlockPos(x, y, z));
+                return new TinkerTableGui(player.inventory, world, new BlockPos(x, y, z));
             case 1:
                 return new KeyConfigGui(player, x, y, z);
             case 2:

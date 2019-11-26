@@ -41,7 +41,7 @@ public class EnergyShieldModule extends AbstractPowerModule {
             this.module = module;
             if (MPAConfig.moduleConfig != null) {
                 ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPAConfig.moduleConfig, true);
-                ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_VALUE_ENERGY, 6, MPALIbConstants.MODULE_TRADEOFF_PREFIX + Constants.ARMOR_POINTS);
+                ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_VALUE_ENERGY, 6, Constants.ARMOR_POINTS);
                 ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.ARMOR_ENERGY_CONSUMPTION, 5000, "RF");
                 ticker.addTradeoffPropertyDouble(Constants.MODULE_FIELD_STRENGTH, Constants.MAXIMUM_HEAT, 500, "");
                 ticker.addBasePropertyDouble(Constants.KNOCKBACK_RESISTANCE, 0.25, "");

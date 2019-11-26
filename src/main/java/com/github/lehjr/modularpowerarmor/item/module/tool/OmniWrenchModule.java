@@ -49,9 +49,6 @@ public class OmniWrenchModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPAConfig.moduleConfig);
-            this.rightClick.addBasePropertyDouble(Constants.ENERGY_CONSUMPTION, 500, "RF");
-            this.rightClick.addTradeoffPropertyDouble(Constants.RADIUS, Constants.ENERGY_CONSUMPTION, 9500);
-            this.rightClick.addTradeoffPropertyDouble(Constants.RADIUS, Constants.RADIUS, 8, "m");
         }
 
         @Nullable

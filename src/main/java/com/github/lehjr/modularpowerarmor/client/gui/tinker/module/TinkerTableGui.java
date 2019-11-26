@@ -37,19 +37,6 @@ public class TinkerTableGui extends ContainerGui {
 
     EntityPlayer player;
 
-//    /**
-//     * Constructor. Takes a player as an argument.
-//     *
-//     * @param player
-//     */
-//    public TinkerTableGui(EntityPlayer player) {
-//        this.player = (EntityPlayerSP) player;
-//        ScaledResolution screen = new ScaledResolution(Minecraft.getMinecraft());
-//        this.xSize = Math.min(screen.getScaledWidth() - 50, 500);
-//        this.ySize = Math.min(screen.getScaledHeight() - 50, 300);
-//    }
-
-
     public TinkerTableGui(InventoryPlayer playerInv, World worldIn) {
         this(playerInv, worldIn, BlockPos.ORIGIN);
     }
@@ -65,9 +52,7 @@ public class TinkerTableGui extends ContainerGui {
                 new Colour(0.0F, 0.2F, 0.0F, 0.8F),
                 new Colour(0.1F, 0.9F, 0.1F, 0.8F));
 
-
         // setup all frames here, since they are no longer recreated in the initGUI section
-
         itemSelectFrame = new ItemSelectionFrame(
                 container,
                 new Point2D(absX(-0.95F), absY(-0.95F)),
@@ -146,8 +131,19 @@ public class TinkerTableGui extends ContainerGui {
         backgroundRect.setTargetDimensions(absX(-1), absY(-1), absX(1), absY(1));
         itemSelectFrame.init(absX(-0.975F), absY(-0.95F), absX(-0.78F), absY(0.95F));
         summaryFrame.init(absX(-0.025F), absY(-0.95F), absX(0.975f), absY(-0.3f));
-        installFrame.init(absX(-0.75F), absY(0.6f), absX(-0.05F), absY(0.95f));
-        moduleSelectFrame.init(absX(-0.75F), absY(-0.95f), absX(-0.05F), absY(0.55f));
+        installFrame.init(
+                absX(-0.75F),
+                absY(0.975f) - 64,
+//                absY(0.6f), // top
+                absX(-0.05F),
+//                absY(0.95f)); // bottom
+                absY(0.975f)); // bottom
+        moduleSelectFrame.init(absX(-0.75F), absY(-0.95f), absX(-0.05F),
+
+
+//                absY(0.55f)
+                absY(0.975f) - 67
+        );
         moduleSelectFrame.loadModules(true);
         tabFrame.init(absX(-0.95F), absY(-1.05f), absX(0.95F), absY(-0.95f));
         tweakFrame.init(absX(-0.025F),  absY(-0.25f), absX(0.975f), absY(0.95f));

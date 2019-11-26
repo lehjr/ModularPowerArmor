@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.proxy;
 
 import com.github.lehjr.modularpowerarmor.basemod.Constants;
-import com.github.lehjr.modularpowerarmor.basemod.MPSGuiHandler;
+import com.github.lehjr.modularpowerarmor.basemod.MPAGuiHandler;
 import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
 import com.github.lehjr.modularpowerarmor.basemod.Objects;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
@@ -38,7 +38,7 @@ public class CommonProxy {
         EntityRegistry.registerModEntity(new ResourceLocation(Constants.MODID, "entityPlasmaBolt"), PlasmaBoltEntity.class, "entityPlasmaBolt", 2477, ModularPowerArmor.getInstance(), 64, 20, true);
         EntityRegistry.registerModEntity(new ResourceLocation(Constants.MODID, "entitySpinningBlade"), SpinningBladeEntity.class, "entitySpinningBlade", 2478, ModularPowerArmor.getInstance(), 64, 20, true);
         EntityRegistry.registerModEntity(Objects.INSTANCE.luxCapacitor.getRegistryName(), LuxCapacitorEntity.class, "entityLuxCapacitor", 2479, ModularPowerArmor.getInstance(), 64, 20, true);
-        NetworkRegistry.INSTANCE.registerGuiHandler(ModularPowerArmor.getInstance(), MPSGuiHandler.INSTANCE);
+        NetworkRegistry.INSTANCE.registerGuiHandler(ModularPowerArmor.getInstance(), MPAGuiHandler.INSTANCE);
         TerminalHandler.registerHandler();
         MinecraftForge.EVENT_BUS.register(new PlayerLoginHandlerThingy()); // doesn't seem to work if fired preinit
 

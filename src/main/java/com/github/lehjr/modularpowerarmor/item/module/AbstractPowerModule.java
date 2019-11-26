@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module;
 
+import com.github.lehjr.modularpowerarmor.basemod.Modules;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
 import com.github.lehjr.modularpowerarmor.utils.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
@@ -7,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -25,6 +27,7 @@ public abstract class AbstractPowerModule extends Item {
         setMaxDamage(-1);
         setMaxStackSize(1);
         setNoRepair();
+        Modules.INSTANCE.addModule(new ResourceLocation(regName));
     }
 
     // copied from vanilla item and added a range

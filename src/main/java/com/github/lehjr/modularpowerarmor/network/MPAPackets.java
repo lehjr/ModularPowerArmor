@@ -18,6 +18,7 @@ public class MPAPackets {
 
         INSTANCE.registerMessage(ConfigPacket.Handler.class, ConfigPacket.class, i++, Side.CLIENT);
         INSTANCE.registerMessage(CreativeModuleInstallRequestPacket.Handler.class, CreativeModuleInstallRequestPacket.class, i++, Side.SERVER);
+        INSTANCE.registerMessage(ContainerGuiOpenPacket.Handler.class, ContainerGuiOpenPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(ModuleMoveFromSlotToSlotPacket.Handler.class, ModuleMoveFromSlotToSlotPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(ColourInfoPacket.Handler.class, ColourInfoPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CosmeticInfoPacket.Handler.class, CosmeticInfoPacket.class, i++, Side.SERVER);

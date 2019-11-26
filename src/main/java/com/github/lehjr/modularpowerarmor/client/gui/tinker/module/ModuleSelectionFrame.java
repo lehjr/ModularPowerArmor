@@ -184,11 +184,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
 
     @Override
     public boolean onMouseDown(double x, double y, int button) {
-        if (super.onMouseDown(x, y, button))
-            return true;
-
         ModuleSelectionSubFrame sel = null;
-
         if (border.containsPoint(x, y)) {
             y += currentscrollpixels;
             int i = 0;
@@ -225,7 +221,6 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         }
         return null;
     }
-
 
     /**
      * Sets code to be executed when a new item is selected

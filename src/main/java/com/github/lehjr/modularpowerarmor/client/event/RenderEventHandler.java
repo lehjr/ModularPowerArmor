@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -139,13 +140,18 @@ public class RenderEventHandler {
             frame.setBottom(frame.top() + 16);
             for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
                 if (kb.displayOnHUD) {
-                    double stringwidth = Renderer.getStringWidth(kb.getLabel());
+                    double stringwidth = kb.getLabelWidth();
                     frame.setWidth(stringwidth + kb.getBoundModules().size() * 16);
                     frame.draw();
-                    Renderer.drawString(kb.getLabel(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
+                    List<String> label = kb.getLabel();
+                    for (int i = 0; i < label.size(); i++) {
+                        Renderer.drawString(label.get(i), frame.left() + 1, frame.top() + 3 - (4 * label.get(i).length()) + (i * 8), (kb.toggleval) ? Colour.RED : Colour.GREEN);
+                    }
+
                     double x = frame.left() + stringwidth;
                     for (ClickableModule module : kb.getBoundModules()) {
                         TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
+
                         boolean active = false;
                         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
                             active = Optional.ofNullable(player.getItemStackFromSlot(slot).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)).map(iItemHandler -> {
@@ -155,11 +161,7 @@ public class RenderEventHandler {
                                 return false;
                             }).orElse(false);
                         }
-//                        Renderer.drawModuleAt(x, frame.top(), module.getModule(), active); // FIXME
-                        // FIXME
-                        //IconUtils.drawIconAt(x, frame.top(), module.getModule().getIcon(null), (active) ? Colour.WHITE : Colour.DARKGREY.withAlpha(0.5));
-
-
+                        Renderer.drawModuleAt(x, frame.top(), module.getModule(), active);
                         TextureUtils.popTexture();
                         x += 16;
                     }

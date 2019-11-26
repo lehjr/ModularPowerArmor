@@ -112,8 +112,9 @@ public class ModuleSelectionSubFrame {
     int selectedModule = -1;
 
     public ClickableModule getSelectedModule() {
-        if (selectedModule >=0)
+        if (selectedModule >= 0) {
             return moduleButtons.get(selectedModule);
+        }
         return null;
     }
 

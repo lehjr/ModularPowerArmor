@@ -57,7 +57,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
     private IRecipe lastClickedRecipe;
     protected EntityPlayer player;
-    final int craftingGridSize = 54; // height and width same
+    final int craftingGridSize = 54; // height and width same  (3 slots x 18 high per)
 
     Minecraft mc;
     RecipeBook recipeBook;
@@ -266,7 +266,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
 
         this.craftingGrid.init(border.finalRight() - 7 - craftingGridSize,
                 border.finalTop() + 5,
-                border.right() - 7,
+                border.finalRight() - 7,
                 border.finalTop() + 5 + craftingGridSize);
 
         Point2D arrowsCenter =

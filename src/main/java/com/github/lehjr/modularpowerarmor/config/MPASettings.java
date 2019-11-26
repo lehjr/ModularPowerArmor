@@ -294,8 +294,8 @@ public class MPASettings {
             put( "jump_assist.energyCon.base", 0.0D );
             put( "jump_assist.energyCon.compensation.multiplier", 50.0D );
             put( "jump_assist.energyCon.power.multiplier", 250.0D );
-            put( "jump_assist.muultiplier.base", 1.0D );
-            put( "jump_assist.muultiplier.power.multiplier", 4.0D );
+            put( "jump_assist.multiplier.base", 1.0D );
+            put( "jump_assist.multiplier.power.multiplier", 4.0D );
             put( "jump_assist.sprintExComp.base", 0.0D );
             put( "jump_assist.sprintExComp.compensation.multiplier", 1.0D );
             put( "leaf_blower.energyCon.base", 500.0D );
@@ -320,9 +320,6 @@ public class MPASettings {
             put( "melee_assist.punchEnergyCon.carryThrough.multiplier", 200.0D );
             put( "melee_assist.punchEnergyCon.impact.multiplier", 1000.0D );
             put( "mob_repulsor.energyCon.base", 2500.0D );
-            put( "omniwrench.energyCon.base", 500.0D );
-            put( "omniwrench.energyCon.radius.multiplier", 9500.0D );
-            put( "omniwrench.radius.radius.multiplier", 8.0D );
             put( "parachute.energyCon.thrust.multiplier", 1000.0D );
             put( "parachute.underwaterMovBoost.thrust.multiplier", 1.0D );
             put( "pickaxe.energyCon.base", 500.0D );
@@ -356,8 +353,8 @@ public class MPASettings {
             put( "shears.harvSpeed.base", 8.0D );
             put( "shock_absorber.energyCon.base", 0.0D );
             put( "shock_absorber.energyCon.power.multiplier", 100.0D );
-            put( "shock_absorber.muultiplier.base", 0.0D );
-            put( "shock_absorber.muultiplier.power.multiplier", 10.0D );
+            put( "shock_absorber.multiplier.base", 0.0D );
+            put( "shock_absorber.multiplier.power.multiplier", 10.0D );
             put( "shovel.energyCon.base", 500.0D );
             put( "shovel.energyCon.overclock.multiplier", 9500.0D );
             put( "shovel.harvSpeed.base", 8.0D );

@@ -77,7 +77,7 @@ public class BlockTinkerTable extends BlockHorizontal {
         if (playerIn.isSneaking()) {
             return false;
         }
-        if (worldIn.isRemote) {
+        if (!worldIn.isRemote) {
             playerIn.openGui(ModularPowerArmor.getInstance(), 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;

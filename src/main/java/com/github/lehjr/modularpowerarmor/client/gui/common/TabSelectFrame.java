@@ -3,6 +3,7 @@ package com.github.lehjr.modularpowerarmor.client.gui.common;
 import com.github.lehjr.modularpowerarmor.basemod.ModularPowerArmor;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.ContainerGuiOpenPacket;
 import com.github.lehjr.modularpowerarmor.network.packets.CraftingGuiServerSidePacket;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
@@ -46,7 +47,8 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
             button = new ClickableButton(I18n.format("gui.modularpowerarmor.tab.tinker"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
-                player.openGui(ModularPowerArmor.getInstance(), 0, player.world, worldx, worldy, worldz);
+                MPAPackets.INSTANCE.sendToServer(new ContainerGuiOpenPacket(0));
+//                player.openGui(ModularPowerArmor.getInstance(), 0, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }
@@ -73,9 +75,9 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
             button = new ClickableButton(I18n.format("container.crafting"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
                 MPAPackets.sendToServer(new CraftingGuiServerSidePacket());
-
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
-                player.openGui(ModularPowerArmor.getInstance(), 3, player.world, worldx, worldy, worldz);
+                MPAPackets.INSTANCE.sendToServer(new ContainerGuiOpenPacket(3));
+//                player.openGui(ModularPowerArmor.getInstance(), 3, player.world, worldx, worldy, worldz);
             });
             buttons.add(button);
         }

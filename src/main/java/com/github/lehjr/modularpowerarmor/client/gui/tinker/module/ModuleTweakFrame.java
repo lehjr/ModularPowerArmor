@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
+import com.github.lehjr.modularpowerarmor.basemod.Constants;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
@@ -103,7 +104,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = StringUtils.wrapStringToVisualLength(
-                        I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
+                        I18n.format(Constants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
                 for (int i = 0; i < namesList.size(); i++) {
                     Renderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
                 }
@@ -118,7 +119,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = StringUtils.wrapStringToVisualLength(
-                        I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
+                        I18n.format(Constants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
                 for (int i = 0; i < namesList.size(); i++) {
                     Renderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
                 }
@@ -162,7 +163,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
                     center,
                     border.finalRight() - border.finalLeft() - 16,
                     moduleTag,
-                    tweak, new TextComponentTranslation(MPALIbConstants.MODULE_TRADEOFF_PREFIX + tweak).getFormattedText());
+                    tweak, new TextComponentTranslation(Constants.MODULE_TRADEOFF_PREFIX + tweak).getFormattedText());
             sliders.add(slider);
             if (selectedSlider != null && slider.hitBox(center.getX(), center.getY())) {
                 selectedSlider = slider;
