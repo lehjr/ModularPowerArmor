@@ -37,7 +37,7 @@ def buildnumber = System.getenv("BUILD_NUMBER")
 def travisbuildnumber = (System.getenv("TRAVIS_BUILD_NUMBER") ?: -000).toInteger() + 00
 version = "${mod_version}.${buildnumber ?: travisbuildnumber}"
 group = group_id // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${mod_id}-${minecraft_version}"
+archivesBaseName = "${mod_name}-${minecraft_version}"
 
 def mpalib_version = (System.getenv("MPALIB_VERSION") ?: "${version}")
 

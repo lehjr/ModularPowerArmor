@@ -1,0 +1,40 @@
+package com.github.machinemuse.powersuits.powermodule.tool;
+
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.item.ItemUtils;
+import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
+import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.basemod.ModuleManager;
+import com.github.machinemuse.powersuits.item.component.ItemComponent;
+import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.ItemStack;
+
+/**
+ * Created by User: Andrew2448
+ * 7:21 PM 4/25/13
+ */
+public class MFFSFieldTeleporterModule extends PowerModuleBase {
+    public MFFSFieldTeleporterModule(EnumModuleTarget moduleTarget) throws IllegalAccessException, NoSuchFieldException, ClassNotFoundException {
+        super(moduleTarget);
+        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(ItemComponent.controlCircuit, 1));
+
+        addBasePropertyDouble(MPSModuleConstants.FIELD_TELEPORTER_ENERGY_CONSUMPTION, 200000, "RF");
+    }
+
+    @Override
+    public EnumModuleCategory getCategory() {
+        return EnumModuleCategory.TOOL;
+    }
+
+    @Override
+    public String getDataName() {
+        return MPSModuleConstants.MODULE_FIELD_TELEPORTER__DATANAME;
+    }
+
+    @Override
+    public TextureAtlasSprite getIcon(ItemStack item) {
+        return MuseIcon.mffsFieldTeleporter;
+    }
+}
