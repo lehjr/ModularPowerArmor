@@ -44,7 +44,6 @@ import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ColourInfoPacket;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import com.github.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
-import com.github.machinemuse.powersuits.network.MPSPackets;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -134,7 +133,7 @@ public class ColourPickerFrame extends ScrollableFrame {
         if (this.itemSelector.getSelectedItem() == null) {
             return null;
         }
-        return Optional.ofNullable(itemSelector.getSelectedItem().getItem().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
+        return Optional.ofNullable(itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
             NBTTagCompound renderSpec = spec.getRenderTag();
             if (renderSpec != null && !renderSpec.isEmpty()) {
                 return new NBTTagIntArray(spec.getColorArray());
@@ -147,7 +146,7 @@ public class ColourPickerFrame extends ScrollableFrame {
         if (this.itemSelector.getSelectedItem() == null) {
             return null;
         }
-        return Optional.ofNullable(itemSelector.getSelectedItem().getItem().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
+        return Optional.ofNullable(itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec->{
             NBTTagCompound renderSpec = spec.getRenderTag();
             renderSpec.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(intList));
             MPALibPackets.sendToServer(new ColourInfoPacket(this.itemSelector.getSelectedItem().inventorySlot, this.colours()));
@@ -178,7 +177,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                 this.selectedSlider.getSlider().setValueByX(mousex);
                 if (colours().length > selectedColour) {
                     colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
-                    MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, colours()));
+                    MPALibPackets.INSTANCE.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, colours()));
                 }
                 // this just sets up the sliders on selecting an item
             } else if (itemSelector.getSelectedItem() != null && colours().length > 0) {
@@ -292,7 +291,7 @@ public class ColourPickerFrame extends ScrollableFrame {
                     if (selectedColour == getIntArray(nbtTagIntArray).length) {
                         selectedColour = selectedColour - 1;
                     }
-                    MPSPackets.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
+                    MPALibPackets.INSTANCE.sendToServer(new ColourInfoPacket(itemSelector.getSelectedItem().inventorySlot, nbtTagIntArray.getIntArray()));
                 }
                 return true;
             }

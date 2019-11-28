@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.machinemuse.powersuits.client.render;
+package com.github.machinemuse.powersuits.capabilities;
 
 
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
@@ -88,8 +88,8 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
         BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(getItemStack());
         NBTTagCompound itemTag = NBTUtils.getMuseItemTag(getItemStack());
         String presetName = itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET);
-        if (presetName != null) {
-            return presetMap.getOrDefault("Default", null);
+        if (presetName != null && !presetName.isEmpty()) {
+            return presetMap.getOrDefault(presetName, null);
         }
         return null;
     }
@@ -153,14 +153,21 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
             nbt.setTag(elem.getString(MPALIbConstants.TAG_MODEL) + "." + elem.getString(MPALIbConstants.TAG_PART), elem);
         }
 
-        if (!specList.isEmpty())
+        if (!specList.isEmpty()) {
             nbt.setTag(MPALIbConstants.NBT_SPECLIST_TAG, specList);
+        }
 
-        if (!texSpecTag.isEmpty())
+        if (!texSpecTag.isEmpty()) {
             nbt.setTag(MPALIbConstants.NBT_TEXTURESPEC_TAG, texSpecTag);
+        }
 
-        nbt.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(colours));
-        return nbt;
+        if (!nbt.isEmpty()) {
+            nbt.setTag(MPALIbConstants.TAG_COLOURS, new NBTTagIntArray(colours));
+            return nbt;
+        } else {
+            BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(getItemStack());
+            return presetMap.getOrDefault("Default", null);
+        }
     }
 
     @Override

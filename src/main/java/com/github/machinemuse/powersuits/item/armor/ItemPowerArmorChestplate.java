@@ -36,7 +36,7 @@ import com.github.lehjr.mpalib.misc.ModCompatibility;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import com.github.machinemuse.powersuits.capabilities.ForgeEnergyItemWrapper;
 import com.github.machinemuse.powersuits.capabilities.MPSChestPlateFluidHandler;
-import com.github.machinemuse.powersuits.client.render.ArmorModelSpecNBT;
+import com.github.machinemuse.powersuits.capabilities.ArmorModelSpecNBT;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import forestry.api.apiculture.ApicultureCapabilities;

@@ -86,7 +86,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
             if (player.capabilities.isCreativeMode || ItemUtils.hasInInventory(ModuleManager.INSTANCE.getInstallCost(module.getDataName()), player.inventory)) {
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.BLOCKS, 1, null);
                 // Now send request to server to make it legit
-                MPSPackets.sendToServer(new InstallModuleRequestPacket(
+                MPSPackets.INSTANCE.sendToServer(new InstallModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }
@@ -101,7 +101,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
 
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.MASTER,  1, player.getPosition());
                 IPowerModule module = targetModule.getSelectedModule().getModule();
-                MPSPackets.sendToServer(new SalvageModuleRequestPacket(
+                MPSPackets.INSTANCE.sendToServer(new SalvageModuleRequestPacket(
                         targetItem.getSelectedItem().inventorySlot,
                         module.getDataName()));
             }
@@ -121,7 +121,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
                 new Point2D(border.left() + sizex / 2.0, border.top() + sizey / 4.0));
 
         if (targetItem.getSelectedItem() != null && targetModule.getSelectedModule() != null) {
-            ItemStack stack = targetItem.getSelectedItem().getItem();
+            ItemStack stack = targetItem.getSelectedItem().getStack();
             IPowerModule module = targetModule.getSelectedModule().getModule();
             if (!ModuleManager.INSTANCE.itemHasModule(stack, module.getDataName())) {
                 int installedModulesOfType = ModuleManager.INSTANCE.getNumberInstalledModulesOfType(stack, module.getCategory());
@@ -150,7 +150,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
     }
 
     private void drawItems(int mouseX, int mouseY, float partialTicks) {
-        ItemStack stack = targetItem.getSelectedItem().getItem();
+        ItemStack stack = targetItem.getSelectedItem().getStack();
         IPowerModule module = targetModule.getSelectedModule().getModule();
         NonNullList<ItemStack> itemsToDraw = ModuleManager.INSTANCE.getInstallCost(module.getDataName());
         double yoffset;
@@ -200,7 +200,7 @@ public class InstallSalvageFrame extends ScrollableFrame {
     @Override
     public List<String> getToolTip(int x, int y) {
         if (targetItem.getSelectedItem() != null && targetModule.getSelectedModule() != null) {
-            ItemStack stack = targetItem.getSelectedItem().getItem();
+            ItemStack stack = targetItem.getSelectedItem().getStack();
             IPowerModule module = targetModule.getSelectedModule().getModule();
             NonNullList<ItemStack> itemsToCheck = ModuleManager.INSTANCE.getInstallCost(module.getDataName());
             double yoffset;

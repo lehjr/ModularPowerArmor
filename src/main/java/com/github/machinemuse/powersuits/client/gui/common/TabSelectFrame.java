@@ -98,7 +98,7 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
         if (exclude != 3) {
             button = new ClickableButton(I18n.format("container.crafting"), new Point2D(0, 0), true);
             button.setOnPressed(onPressed->{
-                MPSPackets.sendToServer(new CraftingGuiServerSidePacket());
+                MPSPackets.INSTANCE.sendToServer(new CraftingGuiServerSidePacket());
 
                 Musique.playClientSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, SoundCategory.MASTER, 1, pos);
                 player.openGui(ModularPowersuits.getInstance(), 3, player.world, worldx, worldy, worldz);

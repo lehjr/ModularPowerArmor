@@ -97,7 +97,7 @@ public class CosmeticPresetUpdatePacket implements IMessage {
                         MPSServerSettings settings = MPSConfig.INSTANCE.getServerSettings();
                         if (settings != null) {
                             settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
-                            MPSPackets.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
+                            MPSPackets.INSTANCE.sendToAll(new CosmeticPresetUpdatePacket(registryName, name, cosmeticSettings));
                         } else {
                             MPSSettings.cosmetics.updateCosmeticInfo(registryName, name, cosmeticSettings);
                         }

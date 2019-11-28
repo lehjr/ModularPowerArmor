@@ -57,11 +57,6 @@ public class MPSConfigConstants {
     public static final String CONFIG_GENERAL_BASE_MAX_HEAT_CHEST = CONFIG_PREFIX_GENERAL + "baseMaxHeatChest";
     public static final String CONFIG_GENERAL_BASE_MAX_HEAT_LEGS = CONFIG_PREFIX_GENERAL + "baseMaxHeatLegs";
     public static final String CONFIG_GENERAL_BASE_MAX_HEAT_FEET = CONFIG_PREFIX_GENERAL + "baseMaxHeatFeet";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_HELMET = CONFIG_PREFIX_GENERAL + "maxModulesHelmet";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_CHESTPLATE = CONFIG_PREFIX_GENERAL + "maxModulesChestplate";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_LEGGINGS = CONFIG_PREFIX_GENERAL +  "maxModulesLeggings";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_FEET = CONFIG_PREFIX_GENERAL +  "maxModulesFeet";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxModulesPowerFist";
 
     // Limits
     public static final String CONFIG_PREFIX_LIMITS = CONFIG_PREFIX + "limits";

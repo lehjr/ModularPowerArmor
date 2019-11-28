@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.github.machinemuse.powersuits.client.render;
+package com.github.machinemuse.powersuits.capabilities;
 
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
@@ -54,8 +54,8 @@ public class PowerFistSpecNBT extends ModelSpecNBT implements IHandHeldModelSpec
         BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(getItemStack());
         NBTTagCompound itemTag = NBTUtils.getMuseItemTag(getItemStack());
         String presetName = itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET);
-        if (presetName != null) {
-            return presetMap.getOrDefault("Default", null);
+        if (presetName != null && !presetName.isEmpty()) {
+            return presetMap.getOrDefault(presetName, null);
         }
         return null;
     }

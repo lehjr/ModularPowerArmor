@@ -58,7 +58,7 @@ public class ClickableItem extends Clickable {
     }
 
     @Nonnull
-    public ItemStack getItem() {
+    public ItemStack getStack() {
         return item;
     }
 

@@ -83,9 +83,9 @@ public class ModuleTweakFrame extends ScrollableFrame {
     public void update(double mousex, double mousey) {
 //        mousex /= SCALERATIO;
         if (itemTarget.getSelectedItem() != null && moduleTarget.getSelectedModule() != null) {
-            ItemStack stack = itemTarget.getSelectedItem().getItem();
+            ItemStack stack = itemTarget.getSelectedItem().getStack();
             IPowerModule module = moduleTarget.getSelectedModule().getModule();
-            if (ModuleManager.INSTANCE.itemHasModule(itemTarget.getSelectedItem().getItem(), moduleTarget.getSelectedModule().getModule().getDataName())) {
+            if (ModuleManager.INSTANCE.itemHasModule(itemTarget.getSelectedItem().getStack(), moduleTarget.getSelectedModule().getModule().getDataName())) {
                 loadTweaks(stack, module);
             } else {
                 sliders = null;

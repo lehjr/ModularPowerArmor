@@ -33,11 +33,11 @@ import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableLabel;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.CosmeticPresetPacket;
 import com.github.machinemuse.powersuits.client.gui.clickable.ClickableItem;
 import com.github.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
 import com.github.machinemuse.powersuits.item.armor.ItemPowerArmor;
 import com.github.machinemuse.powersuits.item.tool.ItemPowerFist;
-import com.github.machinemuse.powersuits.network.MPSPackets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -65,9 +65,9 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
 
     public boolean isValidItem(ClickableItem clickie, EntityEquipmentSlot slot) {
         if (clickie != null) {
-            if (clickie.getItem().getItem() instanceof ItemPowerArmor)
-                return clickie.getItem().getItem().isValidArmor(clickie.getItem(), slot, Minecraft.getMinecraft().player);
-            else if (clickie.getItem().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
+            if (clickie.getStack().getItem() instanceof ItemPowerArmor)
+                return clickie.getStack().getItem().isValidArmor(clickie.getStack(), slot, Minecraft.getMinecraft().player);
+            else if (clickie.getStack().getItem() instanceof ItemPowerFist && slot.getSlotType().equals(EntityEquipmentSlot.Type.HAND))
                 return true;
         }
         return false;
@@ -81,7 +81,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
      * Get's the equipment slot the item is for.
      */
     EntityEquipmentSlot getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
+        ItemStack selectedItem = getSelectedItem().getStack();
         if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor) {
             return ((ItemPowerArmor) selectedItem.getItem()).armorType;
         }
@@ -101,7 +101,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     }
 
     public NBTTagCompound getItemTag() {
-        return NBTUtils.getMuseItemTag(this.getSelectedItem().getItem());
+        return NBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
     }
 
 

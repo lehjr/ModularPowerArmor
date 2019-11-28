@@ -81,7 +81,7 @@ public class PlayerModelViewFrame implements IGuiFrame {
     }
 
     public EntityEquipmentSlot getEquipmentSlot() {
-        ItemStack selectedItem = getSelectedItem().getItem();
+        ItemStack selectedItem = getSelectedItem().getStack();
         if (selectedItem != null && selectedItem.getItem() instanceof ItemPowerArmor) {
             return ((ItemPowerArmor) selectedItem.getItem()).armorType;
         }

@@ -34,7 +34,7 @@ import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.misc.ModCompatibility;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import com.github.machinemuse.powersuits.capabilities.ForgeEnergyItemWrapper;
-import com.github.machinemuse.powersuits.client.render.ArmorModelSpecNBT;
+import com.github.machinemuse.powersuits.capabilities.ArmorModelSpecNBT;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import com.google.common.util.concurrent.AtomicDouble;

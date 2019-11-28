@@ -47,7 +47,7 @@ import com.github.machinemuse.powersuits.api.constants.MPSModConstants;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
 import com.github.machinemuse.powersuits.capabilities.ForgeEnergyItemWrapper;
 import com.github.machinemuse.powersuits.capabilities.ItemHandlerPowerFist;
-import com.github.machinemuse.powersuits.client.render.PowerFistSpecNBT;
+import com.github.machinemuse.powersuits.capabilities.PowerFistSpecNBT;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import com.github.machinemuse.powersuits.powermodule.tool.RefinedStorageWirelessModule;

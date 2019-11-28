@@ -43,8 +43,10 @@ import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.CosmeticInfoPacket;
 import com.github.machinemuse.powersuits.client.gui.clickable.ClickableItem;
 import com.github.machinemuse.powersuits.client.gui.common.ItemSelectionFrame;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,6 +74,7 @@ public class PartSpecManipSubFrame {
     public RelativeRect border;
     public List<PartSpecBase> partSpecs;
     public boolean open;
+    Minecraft minecraft;
 
     public PartSpecManipSubFrame(SpecBase model, ColourPickerFrame colourframe, ItemSelectionFrame itemSelector, RelativeRect border) {
         this.model = model;
@@ -80,6 +83,7 @@ public class PartSpecManipSubFrame {
         this.border = border;
         this.partSpecs = this.getPartSpecs();
         this.open = true;
+        minecraft = Minecraft.getMinecraft();
     }
 
     /**
@@ -91,7 +95,7 @@ public class PartSpecManipSubFrame {
         Iterator<PartSpecBase> specIt = model.getPartSpecs().iterator();
 
         if (getSelectedItem() != null) {
-            Optional.ofNullable(getSelectedItem().getItem().getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(specNBT ->{
+            Optional.ofNullable(getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(specNBT ->{
                 PartSpecBase spec;
 
                 while (specIt.hasNext()) {
@@ -99,7 +103,7 @@ public class PartSpecManipSubFrame {
 
                     // this COULD fail here if the wrong capability is applied, otherwise should be fine.
                     if (specNBT instanceof IArmorModelSpecNBT) {
-                        EntityEquipmentSlot slot = EntityMob.getSlotForItemStack(getSelectedItem().getItem());
+                        EntityEquipmentSlot slot = EntityMob.getSlotForItemStack(getSelectedItem().getStack());
                         if (spec.getBinding().getSlot() == slot) {
                             specsArray.add(spec);
                         }
@@ -124,7 +128,7 @@ public class PartSpecManipSubFrame {
             return null;
         }
 
-        return Optional.ofNullable(getSelectedItem().getItem().getCapability(ModelSpecNBTCapability.RENDER, null)).map(specNBT->{
+        return Optional.ofNullable(getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).map(specNBT->{
             NBTTagCompound renderTag = specNBT.getRenderTag();
             NBTTagCompound specTag = null;
 
@@ -160,7 +164,7 @@ public class PartSpecManipSubFrame {
 
             // update the render tag client side. The server side update is called below.
             if (getSelectedItem() != null) {
-                Optional.ofNullable(this.getSelectedItem().getItem().getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(specNBT->{
+                Optional.ofNullable(this.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER, null)).ifPresent(specNBT->{
                     NBTTagCompound renderTag  = specNBT.getRenderTag();
                     if (renderTag != null && !renderTag.isEmpty()) {
                         renderTag.setTag(name, nbt);
@@ -194,13 +198,16 @@ public class PartSpecManipSubFrame {
     public void decrAbove(int index) {
         for (PartSpecBase spec : partSpecs) {
             String tagname = ModelRegistry.getInstance().makeName(spec);
+            EntityPlayer player = minecraft.player;
             NBTTagCompound tagdata = getOrDontGetSpecTag(spec);
 
             if (tagdata != null) {
                 int oldindex = spec.getColourIndex(tagdata);
                 if (oldindex >= index && oldindex > 0) {
                     spec.setColourIndex(tagdata, oldindex - 1);
-                    MPALibPackets.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
+                    if (player.world.isRemote) {
+                        MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
+                    }
                 }
             }
         }
@@ -286,7 +293,7 @@ public class PartSpecManipSubFrame {
                 // removes the associated tag from the render tag making the part not isEnabled
                 case 0: {
                     tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
-                    MPALibPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new NBTTagCompound()));
+                    MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new NBTTagCompound()));
 
                     this.updateItems();
                     return true;
@@ -299,7 +306,7 @@ public class PartSpecManipSubFrame {
                     if (spec instanceof ModelPartSpec) {
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
                     }
-                    MPALibPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                    MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
 
                     this.updateItems();
                     return true;
@@ -311,7 +318,7 @@ public class PartSpecManipSubFrame {
                         tagname = ModelRegistry.getInstance().makeName(spec);
                         tagdata = this.getOrMakeSpecTag(spec);
                         ((ModelPartSpec) spec).setGlow(tagdata, true);
-                        MPALibPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
                         this.updateItems();
                         return true;
                     }
@@ -329,7 +336,7 @@ public class PartSpecManipSubFrame {
             tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
-            MPALibPackets.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+            MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
             return true;
         }
         return false;

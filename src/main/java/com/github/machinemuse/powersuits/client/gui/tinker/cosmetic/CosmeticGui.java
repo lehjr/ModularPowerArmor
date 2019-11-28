@@ -103,7 +103,6 @@ public class CosmeticGui extends ContainerlessGui {
 
         colourpicker = new ColourPickerFrame(
                 new Point2D(absX(0.18f), absY(-0.95f)),
-
                 new Point2D(absX(0.95f), absY(-0.27f)),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHTBLUE.withAlpha(0.8F),
@@ -175,7 +174,7 @@ public class CosmeticGui extends ContainerlessGui {
         partframe.init(absX(-0.75F), absY(0.025f), absX(+0.95F), absY(0.95f));
 
 
-        cosmeticFrame.init(absX(-0.95F), absY(0.025f), absX(+0.95F), absY(0.95f));
+        cosmeticFrame.init(absX(-0.75F), absY(0.025f), absX(+0.95F), absY(0.95f));
 
 
         loadSaveResetSubFrame.init(absX(0.18f), absY(-0.23f), absX(0.95f), absY(-0.025f));

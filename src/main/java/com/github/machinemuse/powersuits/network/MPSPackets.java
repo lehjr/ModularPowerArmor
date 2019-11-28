@@ -48,7 +48,6 @@ public class MPSPackets {
         INSTANCE.registerMessage(ToggleRequestPacket.Handler.class, ToggleRequestPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(TweakRequestDoublePacket.Handler.class, TweakRequestDoublePacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CosmeticPresetUpdatePacket.Handler.class, CosmeticPresetUpdatePacket.class, i++, Side.SERVER);
-        INSTANCE.registerMessage(CosmeticPresetPacket.Handler.class, CosmeticPresetPacket.class, i++, Side.SERVER);
         INSTANCE.registerMessage(CraftingGuiServerSidePacket.Handler.class, CraftingGuiServerSidePacket.class, i++, Side.SERVER);
     }
 

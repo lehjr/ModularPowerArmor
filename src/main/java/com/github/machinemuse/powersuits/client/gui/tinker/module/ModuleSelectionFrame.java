@@ -120,12 +120,12 @@ public class ModuleSelectionFrame extends ScrollableFrame {
             moduleButtons = new LinkedList<>();
             categories = new LinkedHashMap<>();
 
-            List<IPowerModule> workingModules = ModuleManager.INSTANCE.getValidModulesForItem(selectedItem.getItem());
+            List<IPowerModule> workingModules = ModuleManager.INSTANCE.getValidModulesForItem(selectedItem.getStack());
 
             // Prune the list of disallowed modules, if not installed on this item.
             for (Iterator<IPowerModule> it = workingModules.iterator(); it.hasNext(); ) {
                 IPowerModule module = it.next();
-                if (!module.isAllowed() && !ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module.getDataName())) {
+                if (!module.isAllowed() && !ModuleManager.INSTANCE.itemHasModule(selectedItem.getStack(), module.getDataName())) {
                     it.remove();
                 }
             }
@@ -140,7 +140,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
                         // If a disallowed module made it to the list, indicate
                         // it as disallowed
                         moduleClickable.setAllowed(false);
-                    } else if (ModuleManager.INSTANCE.itemHasModule(selectedItem.getItem(), module.getDataName())) {
+                    } else if (ModuleManager.INSTANCE.itemHasModule(selectedItem.getStack(), module.getDataName())) {
                         moduleClickable.setInstalled(true);
                     }
                     if (moduleClickable.getModule().equals(this.prevSelection)) {

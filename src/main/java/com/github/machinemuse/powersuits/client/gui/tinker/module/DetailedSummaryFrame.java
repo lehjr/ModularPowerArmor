@@ -70,7 +70,7 @@ public class DetailedSummaryFrame extends ScrollableFrame {
         slotPoints = 0;
 
         if (itemSelectionFrame.getSelectedItem() != null) {
-            slotPoints += (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemSelectionFrame.getSelectedItem().getItem(), MPSModuleConstants.SLOT_POINTS);
+            slotPoints += (int) ModuleManager.INSTANCE.getOrSetModularPropertyDouble(itemSelectionFrame.getSelectedItem().getStack(), MPSModuleConstants.SLOT_POINTS);
         }
 
         for (ItemStack stack : ItemUtils.getLegacyModularItemsEquipped(player)) {

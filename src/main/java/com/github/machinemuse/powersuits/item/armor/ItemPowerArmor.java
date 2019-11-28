@@ -32,6 +32,7 @@ import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
+import com.github.lehjr.mpalib.helper.EntityEquipmentSlotToIndex;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.CosmeticInfoPacket;
 import com.github.machinemuse.powersuits.api.constants.MPSModConstants;
@@ -319,24 +320,28 @@ public abstract class ItemPowerArmor extends ItemElectricArmor implements ISpeci
         }
 
         return java.util.Optional.ofNullable(armor.getCapability(ModelSpecNBTCapability.RENDER, null)).map(spec-> {
-            NBTTagCompound renderTag = spec.getRenderTag();
+            NBTTagCompound renderTag;
+            // check if player is looking at their own armor and check and fix tags if needed
             EntityPlayer player = (EntityPlayer) entityLiving;
-
-            // only triggered by this client's player looking at their own equipped armor
-            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getMinecraft().player) {
-                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                    if (player.inventory.getStackInSlot(i).equals(armor)) {
-                        renderTag = spec.getDefaultRenderTag();
-                        if (renderTag != null && !renderTag.isEmpty()) {
-                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-                            MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
-                        }
-                        break;
+            if (Minecraft.getMinecraft().player.equals(player)) {
+                renderTag = spec.getRenderTagOrNull();
+                if (renderTag == null) {
+                    renderTag = spec.getPresetTagOrNull();
+                }
+                if (renderTag == null) {
+                    renderTag = spec.getDefaultRenderTag();
+                    if (renderTag != null && !renderTag.isEmpty()) {
+                        int index = EntityEquipmentSlotToIndex.getSlotFor(armorSlot, player);
+                        spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                        MPALibPackets.INSTANCE.sendToServer(new CosmeticInfoPacket(index, MPALIbConstants.TAG_RENDER, renderTag));
                     }
                 }
+                // automatically gets whatever tag, but isn't as efficient if the tags aren't set
+            } else {
+                renderTag = spec.getRenderTag();
             }
 
-            if (spec.getRenderTag() != null &&
+            if (renderTag != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
                 return _default;
             }

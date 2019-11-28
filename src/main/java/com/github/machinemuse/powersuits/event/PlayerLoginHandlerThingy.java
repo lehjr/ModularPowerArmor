@@ -51,7 +51,7 @@ public final class PlayerLoginHandlerThingy {
         // dedidated server or multiplayer game
         if (!isUsingBuiltInServer || (isUsingBuiltInServer && FMLCommonHandler.instance().getMinecraftServerInstance().getCurrentPlayerCount() > 1)) {
             // sync config settings between client and server
-            MPSPackets.sendTo(new ConfigPacket(), (EntityPlayerMP) player);
+            MPSPackets.INSTANCE.sendTo(new ConfigPacket(), (EntityPlayerMP) player);
         } else {
             MPSSettings.loadCustomInstallCosts();
         }

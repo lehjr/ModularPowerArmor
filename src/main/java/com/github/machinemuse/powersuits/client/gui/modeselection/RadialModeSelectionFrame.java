@@ -150,7 +150,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
             // update to detect mode changes
             selectedModuleOriginal = selectedModuleNew;
             ((IModeChangingItem) stack.getItem()).setActiveMode(stack, getSelectedModule().getModule().getDataName());
-            MPSPackets.sendToServer(new LegacyModeChangeRequestPacket(getSelectedModule().getModule().getDataName(), player.inventory.currentItem));
+            MPSPackets.INSTANCE.sendToServer(new LegacyModeChangeRequestPacket(getSelectedModule().getModule().getDataName(), player.inventory.currentItem));
         }
     }
 
