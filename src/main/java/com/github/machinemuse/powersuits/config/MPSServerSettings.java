@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -26,7 +27,7 @@
 
 package com.github.machinemuse.powersuits.config;
 
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.item.armor.ItemPowerArmorBoots;
 import com.github.machinemuse.powersuits.item.armor.ItemPowerArmorChestplate;
@@ -208,14 +209,14 @@ public class MPSServerSettings {
         /**
          * Custom install costs -------------------------------------------------------------------
          */
-        ModuleManager.INSTANCE.setCustomInstallCosts(MuseByteBufferUtils.readMap(datain, String.class, ItemStack[].class));
+        ModuleManager.INSTANCE.setCustomInstallCosts(MPALibByteBufferUtils.readMap(datain, String.class, ItemStack[].class));
 
         /**
          * Modules -------------------------------------------------------------------------------
          */
-        allowedModules = MuseByteBufferUtils.readMap(datain, String.class, Boolean.class);
-        propertyDouble =MuseByteBufferUtils.readMap(datain, String.class, Double.class);
-        propertyInteger = MuseByteBufferUtils.readMap(datain, String.class, Integer.class);
+        allowedModules = MPALibByteBufferUtils.readMap(datain, String.class, Boolean.class);
+        propertyDouble =MPALibByteBufferUtils.readMap(datain, String.class, Double.class);
+        propertyInteger = MPALibByteBufferUtils.readMap(datain, String.class, Integer.class);
 
         /**
          * Max Modules of Type -------------------------------------------------------------------
@@ -238,11 +239,11 @@ public class MPSServerSettings {
         useLegacyCosmeticSystem = datain.readBoolean();
         allowHighPollyArmorModuels = datain.readBoolean();
         allowPowerFistCustomization = datain.readBoolean();
-        cosmeticPresetsPowerFist = HashBiMap.create(MuseByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
-        cosmeticPresetsPowerArmorHelmet = HashBiMap.create(MuseByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
-        cosmeticPresetsPowerArmorChestplate = HashBiMap.create(MuseByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
-        cosmeticPresetsPowerArmorLeggings = HashBiMap.create(MuseByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
-        cosmeticPresetsPowerArmorBoots = HashBiMap.create(MuseByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
+        cosmeticPresetsPowerFist = HashBiMap.create(MPALibByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
+        cosmeticPresetsPowerArmorHelmet = HashBiMap.create(MPALibByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
+        cosmeticPresetsPowerArmorChestplate = HashBiMap.create(MPALibByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
+        cosmeticPresetsPowerArmorLeggings = HashBiMap.create(MPALibByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
+        cosmeticPresetsPowerArmorBoots = HashBiMap.create(MPALibByteBufferUtils.readMap(datain, String.class, NBTTagCompound.class));
     }
 
     /**
@@ -276,14 +277,14 @@ public class MPSServerSettings {
         /**
          *  Custom Install Costs -------------------------------------------------------------------
          */
-        MuseByteBufferUtils.writeMap(packet, ModuleManager.INSTANCE.getCustomInstallCostsForServerToClientConfig(), true);
+        MPALibByteBufferUtils.writeMap(packet, ModuleManager.INSTANCE.getCustomInstallCostsForServerToClientConfig(), true);
 
         /**
          * Modules -------------------------------------------------------------------------------
          */
-        MuseByteBufferUtils.writeMap(packet,allowedModules, true);
-        MuseByteBufferUtils.writeMap(packet,propertyDouble, true);
-        MuseByteBufferUtils.writeMap(packet,propertyInteger, true);
+        MPALibByteBufferUtils.writeMap(packet,allowedModules, true);
+        MPALibByteBufferUtils.writeMap(packet,propertyDouble, true);
+        MPALibByteBufferUtils.writeMap(packet,propertyInteger, true);
 
         /**
          * Max Modules of Type -------------------------------------------------------------------
@@ -307,11 +308,11 @@ public class MPSServerSettings {
         packet.writeBoolean(allowHighPollyArmorModuels);
         packet.writeBoolean(allowPowerFistCustomization);
 
-        MuseByteBufferUtils.writeMap(packet,cosmeticPresetsPowerFist, true);
-        MuseByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorHelmet, true);
-        MuseByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorChestplate, true);
-        MuseByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorLeggings, true);
-        MuseByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorBoots, true);
+        MPALibByteBufferUtils.writeMap(packet,cosmeticPresetsPowerFist, true);
+        MPALibByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorHelmet, true);
+        MPALibByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorChestplate, true);
+        MPALibByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorLeggings, true);
+        MPALibByteBufferUtils.writeMap(packet,cosmeticPresetsPowerArmorBoots, true);
     }
 
     public void updateCosmeticInfo(ResourceLocation location, String name, NBTTagCompound cosmeticInfo) {

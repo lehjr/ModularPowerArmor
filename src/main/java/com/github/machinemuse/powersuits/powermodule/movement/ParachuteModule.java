@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -34,7 +35,7 @@ import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
 import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.lehjr.mpalib.player.PlayerUtils;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.item.component.ItemComponent;
 import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -79,6 +80,6 @@ public class ParachuteModule extends PowerModuleBase implements IToggleableModul
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.parachute;
+        return MPSIcon.parachute;
     }
 }

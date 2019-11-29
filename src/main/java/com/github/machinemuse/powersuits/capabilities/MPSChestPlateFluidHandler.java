@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -189,7 +190,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
     }
 
     public void updateFromNBT() {
-        NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(container);
+        NBTTagCompound itemNBT = NBTUtils.getItemTag(container);
         if (itemNBT != null) {
             for (ArmorTank tank : allHandlers) {
                 if (moduleManager.itemHasModule(container, tank.moduleDataName)) {
@@ -271,7 +272,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
         @Nullable
         @Override
         public NBTTagCompound getModuleTag() {
-            NBTTagCompound nbt = NBTUtils.getMuseItemTag(container);
+            NBTTagCompound nbt = NBTUtils.getItemTag(container);
             return (NBTTagCompound) nbt.getTag(moduleDataName);
         }
 
@@ -308,7 +309,7 @@ public class MPSChestPlateFluidHandler implements IFluidHandler, IFluidHandlerIt
 
         @Override
         protected void onContentsChanged() {
-            NBTTagCompound itemNBT = NBTUtils.getMuseItemTag(container);
+            NBTTagCompound itemNBT = NBTUtils.getItemTag(container);
             NBTTagCompound moduleTag = itemNBT.getCompoundTag(moduleDataName);
 
             if (moduleTag != null) {

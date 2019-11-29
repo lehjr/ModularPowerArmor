@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -33,7 +34,7 @@ import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.legacy.module.IEnchantmentModule;
 import com.github.lehjr.mpalib.legacy.module.IMiningEnhancementModule;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.item.component.ItemComponent;
 import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -68,7 +69,7 @@ public class SilkTouchModule extends PowerModuleBase implements IEnchantmentModu
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.apiaristArmor;
+        return MPSIcon.apiaristArmor;
     }
 
     /**

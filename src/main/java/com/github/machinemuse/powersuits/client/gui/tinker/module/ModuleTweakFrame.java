@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -131,7 +132,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
     }
 
     private void loadTweaks(ItemStack stack, IPowerModule module) {
-        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+        NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
         NBTTagCompound moduleTag = itemTag.getCompoundTag(module.getDataName());
 
         propertyStrings = new HashMap();

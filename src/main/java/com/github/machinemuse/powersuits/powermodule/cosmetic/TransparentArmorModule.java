@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -32,7 +33,7 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.legacy.module.IToggleableModule;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.item.component.ItemComponent;
 import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -57,6 +58,6 @@ public class TransparentArmorModule extends PowerModuleBase implements IToggleab
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.transparentArmor;
+        return MPSIcon.transparentArmor;
     }
 }

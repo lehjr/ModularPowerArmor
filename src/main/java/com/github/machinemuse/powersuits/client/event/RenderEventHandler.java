@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -68,7 +69,7 @@ public class RenderEventHandler {
     @SubscribeEvent
     public void preTextureStitch(TextureStitchEvent.Pre event) {
         if (event.getMap().equals( Minecraft.getMinecraft().getTextureMapBlocks())) {
-            MuseIcon.registerIcons(event.getMap());
+            MPSIcon.registerIcons(event.getMap());
             MPSModelHelper.loadArmorModels(event.getMap());
         }
     }

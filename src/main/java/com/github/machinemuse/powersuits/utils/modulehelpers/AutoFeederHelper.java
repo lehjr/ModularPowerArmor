@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -39,7 +40,7 @@ public class AutoFeederHelper {
 
     public static double getFoodLevel(@Nonnull ItemStack stack) {
         if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
             return itemTag.getDouble(TAG_FOOD);
         }
         return 0.0;
@@ -47,14 +48,14 @@ public class AutoFeederHelper {
 
     public static void setFoodLevel(@Nonnull ItemStack stack, double d) {
         if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
             itemTag.setDouble(TAG_FOOD, d);
         }
     }
 
     public static double getSaturationLevel(@Nonnull ItemStack stack) {
         if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
             Double saturationLevel = itemTag.getDouble(TAG_SATURATION);
             if (saturationLevel != null) {
                 return saturationLevel;
@@ -65,7 +66,7 @@ public class AutoFeederHelper {
 
     public static void setSaturationLevel(@Nonnull ItemStack stack, double d) {
         if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
             itemTag.setDouble(TAG_SATURATION, d);
         }
     }

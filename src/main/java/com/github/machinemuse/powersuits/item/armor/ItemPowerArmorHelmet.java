@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -28,7 +29,7 @@ package com.github.machinemuse.powersuits.item.armor;
 
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatWrapper;
-import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
+import com.github.lehjr.mpalib.capabilities.heat.MPALibHeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
@@ -118,7 +119,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor implements
     static class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         ForgeEnergyItemWrapper energyStorage;
-        IHeatWrapper heatStorage;
+        MPALibHeatItemWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         double maxHeat;
 
@@ -127,7 +128,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor implements
             maxHeat = MPSConfig.INSTANCE.getBaseMaxHeatHelmet();
             energyStorage = new ForgeEnergyItemWrapper(armor, ModuleManager.INSTANCE);
             modelSpec = new ArmorModelSpecNBT(armor);
-            heatStorage = new MuseHeatItemWrapper(armor, maxHeat);
+            heatStorage = new MPALibHeatItemWrapper(armor, maxHeat);
         }
 
         @Override

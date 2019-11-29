@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -29,7 +30,7 @@ package com.github.machinemuse.powersuits.client.model.block;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.machinemuse.powersuits.block.BlockLuxCapacitor;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.client.model.helper.ColoredQuadHelperThingie;
 import com.github.machinemuse.powersuits.client.model.helper.ModelLuxCapacitorHelper;
 import com.github.machinemuse.powersuits.basemod.MPSItems;
@@ -150,7 +151,7 @@ public class ModelLuxCapacitor implements IBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return MuseIcon.luxCapacitorTexture;
+        return MPSIcon.luxCapacitorTexture;
     }
 
     @Override

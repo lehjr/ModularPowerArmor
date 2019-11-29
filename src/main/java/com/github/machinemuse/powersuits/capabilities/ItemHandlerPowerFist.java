@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -66,7 +67,7 @@ public class ItemHandlerPowerFist extends ItemStackHandler {
     }
 
     public void updateFromNBT() {
-        final NBTTagCompound itemTag = NBTUtils.getMuseItemTag(container);
+        final NBTTagCompound itemTag = NBTUtils.getItemTag(container);
 
         // TODO: edit to hold other things like emulated tools
         if (itemTag != null && itemTag.hasKey(TAG_ITEMS, Constants.NBT.TAG_COMPOUND)) {
@@ -85,7 +86,7 @@ public class ItemHandlerPowerFist extends ItemStackHandler {
     @Override
     protected void onContentsChanged(final int slot) {
         super.onContentsChanged(slot);
-        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(container);
+        NBTTagCompound itemTag = NBTUtils.getItemTag(container);
         itemTag.setTag(TAG_ITEMS, serializeNBT());
     }
 }

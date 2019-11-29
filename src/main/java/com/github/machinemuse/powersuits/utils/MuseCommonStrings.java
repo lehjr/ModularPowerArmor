@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -147,7 +148,7 @@ public abstract class MuseCommonStrings {
     }
 
     public static List<String> getItemInstalledModules(EntityPlayer player, ItemStack stack) {
-        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+        NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
         List<String> modules = new LinkedList();
         for (IPowerModule module : ModuleManager.INSTANCE.getValidModulesForItem(stack)) {
             if (ModuleManager.INSTANCE.tagHasModule(itemTag, module.getDataName())) {

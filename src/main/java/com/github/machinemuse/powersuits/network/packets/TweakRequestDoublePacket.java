@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -27,7 +28,7 @@
 package com.github.machinemuse.powersuits.network.packets;
 
 import com.github.lehjr.mpalib.nbt.NBTUtils;
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -57,16 +58,16 @@ public class TweakRequestDoublePacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.itemSlot = buf.readInt();
-        this.moduleName = MuseByteBufferUtils.readUTF8String(buf);
-        this.tweakName = MuseByteBufferUtils.readUTF8String(buf);
+        this.moduleName = MPALibByteBufferUtils.readUTF8String(buf);
+        this.tweakName = MPALibByteBufferUtils.readUTF8String(buf);
         this.tweakValue =buf.readDouble();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.itemSlot);
-        MuseByteBufferUtils.writeUTF8String(buf, this.moduleName);
-        MuseByteBufferUtils.writeUTF8String(buf, this.tweakName);
+        MPALibByteBufferUtils.writeUTF8String(buf, this.moduleName);
+        MPALibByteBufferUtils.writeUTF8String(buf, this.tweakName);
         buf.writeDouble(this.tweakValue);
     }
 
@@ -82,10 +83,10 @@ public class TweakRequestDoublePacket implements IMessage {
                     double tweakValue = message.tweakValue;
                     if (moduleName != null && tweakName != null) {
                         ItemStack stack = player.inventory.getStackInSlot(itemSlot);
-                        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+                        NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
 
                         if (itemTag != null && ModuleManager.INSTANCE.tagHasModule(itemTag, moduleName)) {
-                            NBTUtils.removeMuseValuesTag(stack);
+                            NBTUtils.removeValuesTag(stack);
                             NBTTagCompound moduleTag = itemTag.getCompoundTag(moduleName);
                             moduleTag.setDouble(tweakName, tweakValue);
                         }

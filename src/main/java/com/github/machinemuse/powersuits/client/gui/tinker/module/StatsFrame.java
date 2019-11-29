@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -48,7 +49,7 @@ public class StatsFrame extends ScrollableFrame {
                       Colour borderColour, Colour insideColour, ItemStack stack) {
         super(topleft, bottomright, borderColour, insideColour);
         this.stack = stack;
-        this.properties = NBTUtils.getMuseItemTag(stack);
+        this.properties = NBTUtils.getItemTag(stack);
         this.propertiesToList = NBTTagAccessor.getMap(properties).keySet();
     }
 

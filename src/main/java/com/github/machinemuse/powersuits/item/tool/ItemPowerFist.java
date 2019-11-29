@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -31,7 +32,7 @@ import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
-import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
+import com.github.lehjr.mpalib.capabilities.heat.MPALibHeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
@@ -495,7 +496,7 @@ public class ItemPowerFist extends MPSItemElectricTool
     static class PowerToolCap implements ICapabilityProvider {
         ItemStack fist;
         ForgeEnergyItemWrapper energyStorage;
-        MuseHeatItemWrapper heatStorage;
+        MPALibHeatItemWrapper heatStorage;
         IHandHeldModelSpecNBT modelSpec;
         ItemHandlerPowerFist powerFistItemHandler;
         double maxHeat;
@@ -504,7 +505,7 @@ public class ItemPowerFist extends MPSItemElectricTool
             fist = fistIn;
             maxHeat = MPSConfig.INSTANCE.getBaseMaxHeatPowerFist();
             energyStorage =  new ForgeEnergyItemWrapper(fist, ModuleManager.INSTANCE);
-            heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
+            heatStorage = new MPALibHeatItemWrapper(fist, maxHeat);
             modelSpec = new PowerFistSpecNBT(fist);
             powerFistItemHandler = new ItemHandlerPowerFist(fist);
         }

@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -101,7 +102,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     }
 
     public NBTTagCompound getItemTag() {
-        return NBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
+        return NBTUtils.getItemTag(this.getSelectedItem().getStack());
     }
 
 

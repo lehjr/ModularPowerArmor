@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -33,7 +34,7 @@ import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.legacy.module.IPlayerTickModule;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.item.armor.ItemPowerArmorHelmet;
 import com.github.machinemuse.powersuits.item.component.ItemComponent;
@@ -102,6 +103,6 @@ public class AdvancedSolarGenerator extends PowerModuleBase implements IPlayerTi
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.advSolarGenerator;
+        return MPSIcon.advSolarGenerator;
     }
 }

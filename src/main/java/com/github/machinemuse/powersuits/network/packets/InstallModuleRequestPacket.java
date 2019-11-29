@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -30,7 +31,7 @@ import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import io.netty.buffer.ByteBuf;
@@ -68,13 +69,13 @@ public class InstallModuleRequestPacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.itemSlot = buf.readInt();
-        this.moduleName = MuseByteBufferUtils.readUTF8String(buf);
+        this.moduleName = MPALibByteBufferUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(itemSlot);
-        MuseByteBufferUtils.writeUTF8String(buf, moduleName);
+        MPALibByteBufferUtils.writeUTF8String(buf, moduleName);
     }
 
     public static class Handler implements IMessageHandler<InstallModuleRequestPacket, IMessage> {
@@ -94,7 +95,7 @@ public class InstallModuleRequestPacket implements IMessage {
                         } else {
                             NonNullList<ItemStack> cost = ModuleManager.INSTANCE.getInstallCost(moduleName);
                             if ((!ModuleManager.INSTANCE.itemHasModule(stack, moduleName) && ItemUtils.hasInInventory(cost, player.inventory)) || player.capabilities.isCreativeMode) {
-                                NBTUtils.removeMuseValuesTag(stack);
+                                NBTUtils.removeValuesTag(stack);
                                 ModuleManager.INSTANCE.itemAddModule(stack, moduleType);
                                 for (ItemStack stackInCost : cost) {
                                     ElectricItemUtils.givePlayerEnergy(player, MPSConfig.INSTANCE.rfValueOfComponent(stackInCost));

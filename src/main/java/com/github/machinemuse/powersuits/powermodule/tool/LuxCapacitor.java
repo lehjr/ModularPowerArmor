@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -33,7 +34,7 @@ import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.entity.EntityLuxCapacitor;
 import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
@@ -116,6 +117,6 @@ public class LuxCapacitor extends PowerModuleBase implements IRightClickModule {
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.luxCapacitor;
+        return MPSIcon.luxCapacitor;
     }
 }

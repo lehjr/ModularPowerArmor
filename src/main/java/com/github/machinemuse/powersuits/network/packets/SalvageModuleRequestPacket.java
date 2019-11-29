@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -32,7 +33,7 @@ import com.github.lehjr.mpalib.legacy.module.IPowerModule;
 import com.github.lehjr.mpalib.legacy.module.IRightClickModule;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import io.netty.buffer.ByteBuf;
@@ -71,13 +72,13 @@ public class SalvageModuleRequestPacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.itemSlot = buf.readInt();
-        this.moduleName = MuseByteBufferUtils.readUTF8String(buf);
+        this.moduleName = MPALibByteBufferUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(itemSlot);
-        MuseByteBufferUtils.writeUTF8String(buf, moduleName);
+        MPALibByteBufferUtils.writeUTF8String(buf, moduleName);
     }
 
     public static class Handler implements IMessageHandler<SalvageModuleRequestPacket, IMessage> {
@@ -92,7 +93,7 @@ public class SalvageModuleRequestPacket implements IMessage {
                         ItemStack stack = player.inventory.getStackInSlot(itemSlot);
                         NonNullList<ItemStack> refund = ModuleManager.INSTANCE.getInstallCost(moduleName);
                         if (ModuleManager.INSTANCE.itemHasModule(stack, moduleName)) {
-                            NBTUtils.removeMuseValuesTag(stack);
+                            NBTUtils.removeValuesTag(stack);
                             ModuleManager.INSTANCE.removeModule(stack, moduleName);
                             for (ItemStack refundItem : refund) {
                                 if (MathUtils.nextDouble() < MPSConfig.INSTANCE.getSalvageChance()) {

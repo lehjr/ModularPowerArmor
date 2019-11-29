@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -29,7 +30,7 @@ package com.github.machinemuse.powersuits.powermodule.environmental;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.machinemuse.powersuits.api.constants.MPSModuleConstants;
-import com.github.machinemuse.powersuits.client.event.MuseIcon;
+import com.github.machinemuse.powersuits.client.event.MPSIcon;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import com.github.machinemuse.powersuits.powermodule.PowerModuleBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -63,6 +64,6 @@ public class ApiaristArmorModule extends PowerModuleBase {
 
     @Override
     public TextureAtlasSprite getIcon(ItemStack item) {
-        return MuseIcon.apiaristArmor;
+        return MPSIcon.apiaristArmor;
     }
 }

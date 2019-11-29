@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -52,7 +53,7 @@ public class PowerFistSpecNBT extends ModelSpecNBT implements IHandHeldModelSpec
     @Override
     public NBTTagCompound getPresetTagOrNull() {
         BiMap<String, NBTTagCompound> presetMap = MPSConfig.INSTANCE.getCosmeticPresets(getItemStack());
-        NBTTagCompound itemTag = NBTUtils.getMuseItemTag(getItemStack());
+        NBTTagCompound itemTag = NBTUtils.getItemTag(getItemStack());
         String presetName = itemTag.getString(MPALIbConstants.TAG_COSMETIC_PRESET);
         if (presetName != null && !presetName.isEmpty()) {
             return presetMap.getOrDefault(presetName, null);

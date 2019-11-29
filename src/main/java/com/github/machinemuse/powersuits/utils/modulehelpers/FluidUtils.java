@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -249,14 +250,14 @@ public class FluidUtils {
 // I think this was for the power fist and the personal shrinking device...
 //    public static void setLiquid(@Nonnull ItemStack stack, String id) {
 //        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+//            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
 //            itemTag.setString(TAG_LIQUID, id);
 //        }
 //    }
 //
 //    public static String getLiquid(@Nonnull ItemStack stack) {
 //        if (!stack.isEmpty() && stack.getItem() instanceof IModularItem) {
-//            NBTTagCompound itemTag = NBTUtils.getMuseItemTag(stack);
+//            NBTTagCompound itemTag = NBTUtils.getItemTag(stack);
 //            String s = itemTag.getString(TAG_LIQUID);
 //            if (s != null) {
 //                return s;

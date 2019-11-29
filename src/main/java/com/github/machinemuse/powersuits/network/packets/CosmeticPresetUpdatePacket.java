@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -26,7 +27,7 @@
 
 package com.github.machinemuse.powersuits.network.packets;
 
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.config.CosmeticPresetSaveLoad;
 import com.github.machinemuse.powersuits.config.MPSConfig;
 import com.github.machinemuse.powersuits.config.MPSServerSettings;
@@ -62,16 +63,16 @@ public class CosmeticPresetUpdatePacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.registryName = new ResourceLocation(MuseByteBufferUtils.readUTF8String(buf));
-        this.name = MuseByteBufferUtils.readUTF8String(buf);
-        this.cosmeticSettings = MuseByteBufferUtils.readCompressedNBT(buf);
+        this.registryName = new ResourceLocation(MPALibByteBufferUtils.readUTF8String(buf));
+        this.name = MPALibByteBufferUtils.readUTF8String(buf);
+        this.cosmeticSettings = MPALibByteBufferUtils.readCompressedNBT(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        MuseByteBufferUtils.writeUTF8String(buf, registryName.toString());
-        MuseByteBufferUtils.writeUTF8String(buf, name);
-        MuseByteBufferUtils.writeCompressedNBT(buf, cosmeticSettings);
+        MPALibByteBufferUtils.writeUTF8String(buf, registryName.toString());
+        MPALibByteBufferUtils.writeUTF8String(buf, name);
+        MPALibByteBufferUtils.writeCompressedNBT(buf, cosmeticSettings);
     }
 
     public static class Handler implements IMessageHandler<CosmeticPresetUpdatePacket, IMessage> {

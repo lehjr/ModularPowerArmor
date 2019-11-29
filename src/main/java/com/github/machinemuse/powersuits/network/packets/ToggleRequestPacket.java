@@ -1,4 +1,5 @@
 /*
+ * ModularPowersuits (Maintenance builds by lehjr)
  * Copyright (c) 2019 MachineMuse, Lehjr
  * All rights reserved.
  *
@@ -26,7 +27,7 @@
 
 package com.github.machinemuse.powersuits.network.packets;
 
-import com.github.lehjr.mpalib.network.MuseByteBufferUtils;
+import com.github.lehjr.mpalib.network.MPALibByteBufferUtils;
 import com.github.machinemuse.powersuits.basemod.ModuleManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,13 +50,13 @@ public class ToggleRequestPacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.module = MuseByteBufferUtils.readUTF8String(buf);
+        this.module = MPALibByteBufferUtils.readUTF8String(buf);
         this.active = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        MuseByteBufferUtils.writeUTF8String(buf, module);
+        MPALibByteBufferUtils.writeUTF8String(buf, module);
         buf.writeBoolean(active);
     }
 
