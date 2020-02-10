@@ -1,6 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
-import com.google.common.util.concurrent.AtomicDouble;
+import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.hud.meters.*;
@@ -9,12 +14,7 @@ import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +28,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,7 +38,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author MachineMuse
  */
 public class ClientTickHandler {
-    public ArrayList<String> modules;
     protected HeatMeter heat = null;
     protected HeatMeter energy = null;
     protected WaterMeter water = null;
@@ -68,9 +66,9 @@ public class ClientTickHandler {
     @SubscribeEvent
     public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null)
+        if (minecraft.player == null) {
             return;
-
+        }
 
         int yOffsetString = 18;
         double yOffsetIcon = 16.0;
@@ -86,7 +84,6 @@ public class ClientTickHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             PlayerEntity player = minecraft.player;
-            modules = new ArrayList<>();
             if (player != null && minecraft.isGuiEnabled() && minecraft.currentScreen == null) {
                 Minecraft mc = minecraft;
                 MainWindow screen = mc.mainWindow;

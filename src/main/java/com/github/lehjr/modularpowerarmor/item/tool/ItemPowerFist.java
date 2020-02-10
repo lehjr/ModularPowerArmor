@@ -1,5 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.tool;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatStorage;
 import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
@@ -13,13 +17,8 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.UseAction;

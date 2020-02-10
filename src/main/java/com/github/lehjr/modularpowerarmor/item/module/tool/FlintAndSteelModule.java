@@ -1,5 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -7,9 +10,6 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

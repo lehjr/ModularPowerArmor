@@ -1,5 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatWrapper;
 import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
@@ -11,9 +14,6 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.google.common.collect.HashBiMap;
+import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
+import com.google.common.collect.HashBiMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

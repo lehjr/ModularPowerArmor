@@ -1,22 +1,22 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.client.gui.obsolete.ScrollableLabel;
+import com.github.lehjr.modularpowerarmor.client.gui.obsolete.ScrollableRectangle;
+import com.github.lehjr.modularpowerarmor.client.gui.obsolete.ScrollableSlider;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.MusePacketColourInfo;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.gui.GuiIcons;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableLabel;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableSlider;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableLabel;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableRectangle;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableSlider;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketColourInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
@@ -79,12 +79,12 @@ public class ColourPickerFrame extends ScrollableFrame {
         this.aslider = getScrollableSlider("alpha", bslider, 3);
 
         // box 4 is for the color icon stuff
-        this.colourBox = new ScrollableColourBox(new MuseRelativeRect(border.left(), this.aslider.bottom(), this.border.right(), this.aslider.bottom()+ 25));
+        this.colourBox = new ScrollableColourBox(new RelativeRect(border.left(), this.aslider.bottom(), this.border.right(), this.aslider.bottom()+ 25));
         this.colourBox.setMeBelow(aslider);
         rectangles[4] = colourBox;
 
         // box 5 is the label
-        MuseRelativeRect colourLabelBox = new MuseRelativeRect(border.left(), this.colourBox.bottom(), this.border.right(), this.colourBox.bottom() + 20);
+        RelativeRect colourLabelBox = new RelativeRect(border.left(), this.colourBox.bottom(), this.border.right(), this.colourBox.bottom() + 20);
         this.colourLabel = new ScrollableLabel(
                 new ClickableLabel(COLOUR_PREFIX, new Point2D(colourLabelBox.centerx(), colourLabelBox.centery())), colourLabelBox);
 
@@ -97,7 +97,7 @@ public class ColourPickerFrame extends ScrollableFrame {
     }
 
     public ScrollableSlider getScrollableSlider(String id, ScrollableRectangle prev, int index) {
-        MuseRelativeRect newborder = new MuseRelativeRect(border.left(), prev != null ? prev.bottom() : this.border.top(),
+        RelativeRect newborder = new RelativeRect(border.left(), prev != null ? prev.bottom() : this.border.top(),
                 this.border.right(), (prev != null ? prev.bottom() : this.border.top()) + 18);
         ClickableSlider slider =
                 new ClickableSlider(new Point2D(newborder.centerx(), newborder.centery()), newborder.width() - 15, id,
@@ -174,7 +174,7 @@ public class ColourPickerFrame extends ScrollableFrame {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        if (this.isVisibile()) {
+        if (this.isVisible()) {
             this.currentscrollpixels = Math.min(currentscrollpixels, getMaxScrollPixels());
 
             if (colours().length > selectedColour) {
@@ -243,7 +243,7 @@ public class ColourPickerFrame extends ScrollableFrame {
     }
 
     class ScrollableColourBox extends ScrollableRectangle {
-        public ScrollableColourBox(MuseRelativeRect relativeRect) {
+        public ScrollableColourBox(RelativeRect relativeRect) {
             super(relativeRect);
         }
 

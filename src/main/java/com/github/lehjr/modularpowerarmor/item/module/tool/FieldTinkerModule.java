@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.containers.providers.TinkerContainerProvider;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.containers.providers.TinkerContainerProvider;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;

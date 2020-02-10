@@ -1,12 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableTinkerSlider;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
@@ -17,7 +18,6 @@ import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditi
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

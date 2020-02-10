@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.misc;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -7,7 +8,6 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -77,10 +77,6 @@ public class AdditionalInfo {
                     double energyArmor = pm.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_ENERGY);
 //                    double toughness = pm.applyPropertyModifiers(MPSConstants)
                     double knockbackResistance = pm.applyPropertyModifiers(MPAConstants.KNOCKBACK_RESISTANCE);
-
-
-
-
 
                 }
             });

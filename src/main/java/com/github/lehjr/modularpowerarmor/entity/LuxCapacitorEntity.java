@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.util.ClientRecipeBook;

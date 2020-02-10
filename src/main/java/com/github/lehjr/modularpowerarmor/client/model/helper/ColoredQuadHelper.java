@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
-import com.google.common.base.Objects;
 import com.github.lehjr.mpalib.math.Colour;
+import com.google.common.base.Objects;
 import net.minecraft.util.Direction;
 
 import javax.annotation.Nullable;

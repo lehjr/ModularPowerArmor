@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
-import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.GhostRecipe;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;

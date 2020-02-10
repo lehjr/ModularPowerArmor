@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.containers;
 
-import com.google.common.collect.Lists;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.inventory.container.RecipeBookContainer;

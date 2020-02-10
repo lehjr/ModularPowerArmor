@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
-import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

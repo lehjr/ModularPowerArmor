@@ -1,6 +1,10 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.google.common.util.concurrent.AtomicDouble;
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
@@ -9,11 +13,7 @@ import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.player.PlayerUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;

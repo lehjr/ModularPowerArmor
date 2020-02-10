@@ -1,5 +1,10 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.event.MovementManager;
+import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -9,11 +14,6 @@ import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.event.MovementManager;
-import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

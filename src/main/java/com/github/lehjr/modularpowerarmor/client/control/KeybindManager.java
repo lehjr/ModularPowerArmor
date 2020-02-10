@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;

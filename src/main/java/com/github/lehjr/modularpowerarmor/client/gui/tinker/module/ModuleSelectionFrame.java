@@ -1,18 +1,18 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAModules;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.MPAModules;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -39,7 +39,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         if (categories.containsKey(category)) {
             return categories.get(category);
         } else {
-            MuseRelativeRect position = new MuseRelativeRect(
+            RelativeRect position = new RelativeRect(
                     border.left() + 4,
                     border.top() + 4,
                     border.right() - 4,

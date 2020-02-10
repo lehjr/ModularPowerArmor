@@ -1,5 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
+import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -11,15 +15,11 @@ import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
+import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
-import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;

@@ -1,7 +1,11 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.sound.Musique;
@@ -9,10 +13,6 @@ import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.player.PlayerUtils;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorBoots;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorLeggings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;

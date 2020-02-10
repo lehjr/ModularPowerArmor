@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
-import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
-import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
+import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;

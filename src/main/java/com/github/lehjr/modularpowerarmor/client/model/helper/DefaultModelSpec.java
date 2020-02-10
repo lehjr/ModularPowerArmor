@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
-import com.github.lehjr.mpalib.client.render.modelspec.*;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.client.render.modelspec.*;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

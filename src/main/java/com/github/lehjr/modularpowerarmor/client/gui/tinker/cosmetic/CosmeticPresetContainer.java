@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
-import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -63,7 +63,7 @@ public class CosmeticPresetContainer extends ScrollableFrame {
     }
 
     public CosmeticPresetSelectionSubframe createNewFrame(String label, CosmeticPresetSelectionSubframe prev) {
-        MuseRelativeRect newborder = new MuseRelativeRect(this.border.left() + 8, this.border.top() + 10, this.border.right(), this.border.top() + 24);
+        RelativeRect newborder = new RelativeRect(this.border.left() + 8, this.border.top() + 10, this.border.right(), this.border.top() + 24);
         newborder.setMeBelow((prev != null) ? prev.border : null);
         return new CosmeticPresetSelectionSubframe(label, new Point2D(newborder.left(), newborder.centery()),  this.itemSelect, newborder);
     }
@@ -105,33 +105,9 @@ public class CosmeticPresetContainer extends ScrollableFrame {
 //        }
 //    }
 
-    public void hide () {
-        visibile = false;
-    }
-
-    public void show() {
-        visibile = true;
-    }
-
-    public boolean isVisibile() {
-        return visibile;
-    }
-
-    public void enable() {
-        enabled = true;
-    }
-
-    public void disable() {
-        enabled = false;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)  {
-        if (visibile) {
+        if (isVisible()) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();
             GL11.glTranslated(0.0, (double) (-this.currentscrollpixels), 0.0);

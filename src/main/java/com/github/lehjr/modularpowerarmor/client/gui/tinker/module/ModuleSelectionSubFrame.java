@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,10 +19,10 @@ import java.util.List;
 
 public class ModuleSelectionSubFrame {
     protected List<ClickableModule> moduleButtons;
-    protected MuseRelativeRect border;
+    protected RelativeRect border;
     protected EnumModuleCategory category;
 
-    public ModuleSelectionSubFrame(EnumModuleCategory category, MuseRelativeRect border) {
+    public ModuleSelectionSubFrame(EnumModuleCategory category, RelativeRect border) {
         this.category = category;
         this.border = border;
         this.moduleButtons = new ArrayList<>();

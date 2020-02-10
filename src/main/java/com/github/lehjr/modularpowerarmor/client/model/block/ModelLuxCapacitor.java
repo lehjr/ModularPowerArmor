@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
-import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
+import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.math.Colour;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;

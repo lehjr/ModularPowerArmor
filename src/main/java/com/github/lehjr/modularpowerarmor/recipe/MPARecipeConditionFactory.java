@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.recipe;
 
-import com.github.lehjr.mpalib.misc.ModCompatibility;
-import com.google.gson.JsonObject;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.mpalib.misc.ModCompatibility;
+import com.google.gson.JsonObject;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;

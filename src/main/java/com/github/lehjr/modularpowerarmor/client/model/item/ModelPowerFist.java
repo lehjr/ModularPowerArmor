@@ -1,6 +1,8 @@
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
-import com.google.common.collect.ImmutableList;
+import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
@@ -12,9 +14,7 @@ import com.github.lehjr.mpalib.client.render.modelspec.ModelSpec;
 import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
-import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;

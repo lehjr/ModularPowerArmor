@@ -1,16 +1,5 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
-import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
-import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
-import com.github.lehjr.mpalib.client.sound.Musique;
-import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.mpalib.string.StringUtils;
 import com.github.lehjr.modularpowerarmor.client.gui.common.InventoryFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
@@ -18,6 +7,17 @@ import com.github.lehjr.modularpowerarmor.containers.IHideableSlot;
 import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.reworked_crafting_packets.CPlaceRecipePacket;
+import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.GhostRecipe;
 import net.minecraft.client.gui.recipebook.IRecipeUpdateListener;
@@ -336,18 +336,6 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             }
         }
     }
-
-
-
-    // this.timesInventoryChanged = minecraft.player.inventory.getTimesChanged(); <-- move to init
-
-    // move this to update
-    /*
-    public void tick() {
-
-    }
-    *
-     */
 
     public void updateStackedContents() {
         this.stackedContents.clear();

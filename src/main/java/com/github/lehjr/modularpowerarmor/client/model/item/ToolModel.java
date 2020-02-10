@@ -6,11 +6,11 @@
 
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
-import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.client.render.TextureUtils;
-import com.github.lehjr.mpalib.client.render.RenderState;
-import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererPlasmaBolt;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.client.render.RenderState;
+import com.github.lehjr.mpalib.client.render.TextureUtils;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;

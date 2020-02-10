@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;

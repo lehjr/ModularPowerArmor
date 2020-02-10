@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.containers;
 
-import com.google.common.collect.Lists;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.google.common.collect.Lists;
 import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

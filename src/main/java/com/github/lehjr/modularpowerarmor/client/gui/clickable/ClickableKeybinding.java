@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.clickable;
 
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
@@ -10,7 +11,6 @@ import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ToggleRequestPacket;
 import com.github.lehjr.mpalib.string.StringUtils;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;

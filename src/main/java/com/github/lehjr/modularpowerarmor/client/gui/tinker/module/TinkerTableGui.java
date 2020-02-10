@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
+import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import com.github.lehjr.mpalib.client.gui.ContainerGui;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
-import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -53,7 +53,8 @@ public class TinkerTableGui extends ContainerGui<TinkerTableContainer> {
         frames.add(itemSelectFrame);
 
         moduleSelectFrame = new ModuleSelectionFrame(itemSelectFrame,
-                new Point2D(absX(-0.75F), absY(-0.95f)), new Point2D(absX(-0.05F), absY(0.75f)),
+                new Point2D(absX(-0.75F), absY(-0.95f)),
+                new Point2D(absX(-0.05F), absY(0.75f)),
                 Colour.DARKBLUE.withAlpha(0.8),
                 Colour.LIGHTBLUE.withAlpha(0.8));
         frames.add(moduleSelectFrame);

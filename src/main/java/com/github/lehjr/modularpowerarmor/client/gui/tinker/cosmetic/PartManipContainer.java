@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.client.render.modelspec.SpecBase;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -90,7 +90,7 @@ public class PartManipContainer extends ScrollableFrame {
     }
 
     public PartSpecManipSubFrame createNewFrame(SpecBase modelspec, PartSpecManipSubFrame prev) {
-        MuseRelativeRect newborder = new MuseRelativeRect(
+        RelativeRect newborder = new RelativeRect(
                 border.finalLeft() + 4,
                 border.finalTop() + 4,
                 border.finalRight(),
@@ -102,7 +102,7 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        if (this.isEnabled() && this.isVisibile()) {
+        if (this.isEnabled() && this.isVisible()) {
             if (button == 0) {
                 for (PartSpecManipSubFrame frame : modelframes) {
                     if (frame.tryMouseClick(x, y + currentscrollpixels))
@@ -147,7 +147,7 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        if (this.isVisibile()) {
+        if (this.isVisible()) {
             super.preRender(mouseX, mouseY, partialTicks);
             GL11.glPushMatrix();
             GL11.glTranslated(0.0, -this.currentscrollpixels, 0.0);

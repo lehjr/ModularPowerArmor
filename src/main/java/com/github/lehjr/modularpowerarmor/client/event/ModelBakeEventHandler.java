@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
 
-import com.google.common.collect.ImmutableMap;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.model.block.TinkerTableModel;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.modularpowerarmor.client.model.item.ModelPowerFist;
+import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;

@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -96,8 +96,6 @@ public class CosmeticGui extends ContainerlessGui {
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHTBLUE.withAlpha(0.8F));
         frames.add(partframe);
-
-
 
         tabSelectFrame = new TabSelectFrame(player, 2);
         frames.add(tabSelectFrame);

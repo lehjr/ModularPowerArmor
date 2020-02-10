@@ -1,22 +1,22 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
-import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.gui.GuiIcons;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.client.gui.geometry.MuseRelativeRect;
-import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.RenderState;
+import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.math.MathUtils;
-import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.MobEntity;
@@ -40,12 +40,12 @@ public class PartSpecManipSubFrame {
     public SpecBase model;
     public ColourPickerFrame colourframe;
     public ItemSelectionFrame itemSelector;
-    public MuseRelativeRect border;
+    public RelativeRect border;
     public List<PartSpecBase> partSpecs;
     public boolean open;
     Minecraft minecraft;
 
-    public PartSpecManipSubFrame(SpecBase model, ColourPickerFrame colourframe, ItemSelectionFrame itemSelector, MuseRelativeRect border) {
+    public PartSpecManipSubFrame(SpecBase model, ColourPickerFrame colourframe, ItemSelectionFrame itemSelector, RelativeRect border) {
         this.model = model;
         this.colourframe = colourframe;
         this.itemSelector = itemSelector;

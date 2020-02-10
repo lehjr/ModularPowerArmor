@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;

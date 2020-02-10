@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.render.item.armor;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
+import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
@@ -8,8 +9,7 @@ import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.client.render.modelspec.PartSpecBase;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
-import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
-import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;

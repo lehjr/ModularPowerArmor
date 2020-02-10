@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
-import com.google.common.collect.Lists;
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.*;
 import net.minecraft.client.renderer.RenderHelper;

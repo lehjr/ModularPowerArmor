@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.recipebook.RecipeList;

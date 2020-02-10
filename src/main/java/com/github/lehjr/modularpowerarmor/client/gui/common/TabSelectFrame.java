@@ -1,15 +1,15 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
-import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
-import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.modularpowerarmor.client.gui.keybind.TinkerKeybindGui;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic.CosmeticGui;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.ContainerGuiOpenPacket;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
+import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.client.gui.geometry.Rect;
+import com.github.lehjr.mpalib.client.sound.Musique;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;

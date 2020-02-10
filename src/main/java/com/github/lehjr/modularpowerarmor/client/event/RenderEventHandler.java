@@ -1,5 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
+import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
@@ -8,12 +14,6 @@ import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
 import com.github.lehjr.mpalib.item.ItemUtils;
 import com.github.lehjr.mpalib.math.Colour;
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;

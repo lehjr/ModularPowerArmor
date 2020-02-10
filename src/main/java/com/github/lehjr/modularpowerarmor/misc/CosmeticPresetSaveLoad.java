@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.misc;
 
+import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

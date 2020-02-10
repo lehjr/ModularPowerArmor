@@ -1,17 +1,17 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
+import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.FlyFromPointToPoint2D;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableFrame;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.math.MathUtils;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
@@ -186,8 +186,9 @@ public class ItemSelectionFrame extends ScrollableFrame {
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        if (super.mouseClicked(x, y, button))
+        if (super.mouseClicked(x, y, button)) {
             return true;
+        }
 
         if (border.containsPoint(x, y)) {
             y += currentscrollpixels;
