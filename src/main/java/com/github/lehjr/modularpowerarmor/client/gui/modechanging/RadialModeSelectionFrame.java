@@ -4,6 +4,7 @@ import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChanging
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
+import com.github.lehjr.mpalib.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.gui.geometry.SpiralPointToPoint2D;
@@ -154,5 +155,62 @@ public class RadialModeSelectionFrame implements IGuiFrame {
             return module.getToolTip();
         }
         return null;
+    }
+
+    @Override
+    public IRect getBorder() {
+        return rect;
+    }
+
+    boolean enabled = true;
+    @Override
+    public void setEnabled(boolean b) {
+        enabled = b;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    boolean visible = true;
+    @Override
+    public void setVisible(boolean b) {
+        visible = b;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public IRect setLeft(double v) {
+        return rect.setLeft(v);
+    }
+
+    @Override
+    public IRect setRight(double v) {
+        return rect.setRight(v);
+    }
+
+    @Override
+    public IRect setTop(double v) {
+        return rect.setTop(v);
+    }
+
+    @Override
+    public IRect setBottom(double v) {
+        return rect.setBottom(v);
+    }
+
+    @Override
+    public IRect setWidth(double v) {
+        return rect.setWidth(v);
+    }
+
+    @Override
+    public IRect setHeight(double v) {
+        return rect.setHeight(v);
     }
 }

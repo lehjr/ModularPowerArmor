@@ -13,6 +13,7 @@ import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
+import com.github.lehjr.mpalib.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.render.RenderState;
@@ -352,5 +353,62 @@ public class KeybindConfigFrame implements IGuiFrame {
         KeyBinding keybind = new KeyBinding(name, key.getKeyCode(), KeybindKeyHandler.mps);
         ClickableKeybinding clickie = new ClickableKeybinding(keybind, newKeybindButton.getPosition().plus(new Point2D(0, -20)), free, false);
         KeybindManager.getKeybindings().add(clickie);
+    }
+
+    @Override
+    public IRect getBorder() {
+        return rect;
+    }
+
+    boolean enabled = true;
+    @Override
+    public void setEnabled(boolean b) {
+        enabled = b;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    boolean visible = true;
+    @Override
+    public void setVisible(boolean b) {
+        visible = b;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public IRect setLeft(double v) {
+        return rect.setLeft(v);
+    }
+
+    @Override
+    public IRect setRight(double v) {
+        return rect.setRight(v);
+    }
+
+    @Override
+    public IRect setTop(double v) {
+        return rect.setTop(v);
+    }
+
+    @Override
+    public IRect setBottom(double v) {
+        return rect.setBottom(v);
+    }
+
+    @Override
+    public IRect setWidth(double v) {
+        return rect.setWidth(v);
+    }
+
+    @Override
+    public IRect setHeight(double v) {
+        return rect.setHeight(v);
     }
 }

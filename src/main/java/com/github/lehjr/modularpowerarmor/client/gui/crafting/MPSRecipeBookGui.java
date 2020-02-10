@@ -352,7 +352,7 @@ public class MPSRecipeBookGui extends RecipeBookGui {
                     }
 
                     this.ghostRecipe.clear();
-                    this.mc.playerController.func_203413_a(this.mc.player.openContainer.windowId, irecipe, Screen.hasShiftDown());
+                    this.mc.playerController.sendPlaceRecipePacket(this.mc.player.openContainer.windowId, irecipe, Screen.hasShiftDown());
                     if (!this.isOffsetNextToMainGUI()) {
                         this.setVisible(false);
                     }

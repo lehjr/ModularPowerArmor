@@ -3,6 +3,7 @@ package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.math.Colour;
@@ -22,11 +23,9 @@ import java.util.List;
  * <p>
  * Ported to Java by lehjr on 11/2/16.
  */
-public class PlayerModelViewFrame implements IGuiFrame {
+public class PlayerModelViewFrame extends ScrollableFrame {
     Minecraft minecraft;
-
     ItemSelectionFrame itemSelector;
-    DrawableRect border;
     double anchorx = 0;
     double anchory = 0;
     int dragging = -1;
@@ -41,9 +40,9 @@ public class PlayerModelViewFrame implements IGuiFrame {
     private float oldMouseX = 20F;
     private float oldMouseY = 20F;
 
-    public PlayerModelViewFrame(ItemSelectionFrame itemSelector, Point2D topleft, Point2D bottomright, Colour borderColour, Colour insideColour) {
-        this.itemSelector = itemSelector;
-        this.border = new DrawableRect(topleft, bottomright, borderColour, insideColour);
+    public PlayerModelViewFrame(ItemSelectionFrame itemSelector, Point2D topleft, Point2D bottomright, Colour backgroundColour, Colour borderColour) {
+        super(topleft, bottomright, backgroundColour, borderColour);
+          this.itemSelector = itemSelector;
         this.minecraft = Minecraft.getInstance();
     }
 

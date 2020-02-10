@@ -7,9 +7,11 @@ import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.ContainerGuiOpenPacket;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.frame.IGuiFrame;
+import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
@@ -23,12 +25,12 @@ import java.util.List;
  * <p>
  * Ported to Java by lehjr on 10/19/16.
  */
-public class TabSelectFrame extends Rect implements IGuiFrame {
+public class TabSelectFrame extends ScrollableFrame {
     PlayerEntity player;
     List<ClickableButton> buttons = new ArrayList<>();
 
     public TabSelectFrame(PlayerEntity player, int exclude) {
-        super(0, 0, 0, 0);
+        super(new Point2D(0, 0), new Point2D(0, 0), Colour.WHITE.withAlpha(0), Colour.WHITE.withAlpha(0));
         this.player = player;
         ClickableButton button;
         if (exclude != 0) {
@@ -91,7 +93,7 @@ public class TabSelectFrame extends Rect implements IGuiFrame {
     public Rect setLeft(double value) {
         super.setLeft(value);
         init();
-        return this;
+        return this.border;
     }
 
     @Override

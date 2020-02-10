@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.modularpowerarmor.client.gui.obsolete.ScrollableLabel;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
@@ -8,7 +9,6 @@ import com.github.lehjr.mpalib.client.gui.clickable.ClickableLabel;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
-import com.github.lehjr.mpalib.client.gui.scrollable.ScrollableLabel;
 import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
 import net.minecraft.client.Minecraft;
