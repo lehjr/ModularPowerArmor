@@ -7,7 +7,7 @@ import com.github.lehjr.modularpowerarmor.client.model.block.ModelLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.model.block.TinkerTableModel;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.modularpowerarmor.client.model.item.ModelPowerFist;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -43,42 +43,42 @@ public enum ModelBakeEventHandler {
         MPSModelHelper.loadArmorModels(null, event.getModelLoader());
 
         // New Lux Capacitor Inventory Model
-        IModel tinkertableUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        IModel tinkertableUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
                 "models/block/powerarmor_workbench.obj"));
 
         // new Tinker Table Inventory Model
-        IModel luxCapacitorBaseUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        IModel luxCapacitorBaseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
         "models/block/luxcapacitor/luxcapacitor_base.obj"));
 
-        IModel luxcapacitorLenseUnbaked = MuseModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        IModel luxcapacitorLenseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
         "models/block/luxcapacitor/luxcapacitor_lens.obj"));
 
         modelRegistry.put(
                 new ModelResourceLocation(MPARegistryNames.TINKER_TABLE_REG_NAME, "inventory"),
                 new TinkerTableModel(tinkertableUnbaked.bake(
                         event.getModelLoader(),
-                        MuseModelHelper.defaultTextureGetter(),
+                        ModelHelper.defaultTextureGetter(),
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
         modelRegistry.put(
                 new ModelResourceLocation(MPARegistryNames.LUX_CAPACITOR_REG_NAME, "inventory"),
                 new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                         event.getModelLoader(),
-                        MuseModelHelper.defaultTextureGetter(),
+                        ModelHelper.defaultTextureGetter(),
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM),
                         luxcapacitorLenseUnbaked.bake(
                                 event.getModelLoader(),
-                                MuseModelHelper.defaultTextureGetter(),
+                                ModelHelper.defaultTextureGetter(),
                                 ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
         luxCapModel = new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                 event.getModelLoader(),
-                MuseModelHelper.defaultTextureGetter(),
+                ModelHelper.defaultTextureGetter(),
                 TRSRTransformation.getRotation(Direction.DOWN),
                 DefaultVertexFormats.ITEM),
                 luxcapacitorLenseUnbaked.bake(
                         event.getModelLoader(),
-                        MuseModelHelper.defaultTextureGetter(),
+                        ModelHelper.defaultTextureGetter(),
                         TRSRTransformation.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM));
 
 
@@ -87,11 +87,11 @@ public enum ModelBakeEventHandler {
                     new ModelResourceLocation(MPARegistryNames.LUX_CAPACITOR_REG_NAME, "facing=" + facing.getName()),
                     new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                             event.getModelLoader(),
-                            MuseModelHelper.defaultTextureGetter(),
+                            ModelHelper.defaultTextureGetter(),
                             TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM),
                             luxcapacitorLenseUnbaked.bake(
                                     event.getModelLoader(),
-                                    MuseModelHelper.defaultTextureGetter(),
+                                    ModelHelper.defaultTextureGetter(),
                                     TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
 
             if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
@@ -104,7 +104,7 @@ public enum ModelBakeEventHandler {
 
                     new TinkerTableModel(tinkertableUnbaked.bake(
                             event.getModelLoader(),
-                            MuseModelHelper.defaultTextureGetter(),
+                            ModelHelper.defaultTextureGetter(),
                             TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
         }
     }
@@ -114,25 +114,25 @@ public enum ModelBakeEventHandler {
 
         // first person and third person models rotated to so that the side away from the player is the same as when it is placed
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
+                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
 
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-                MuseModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
+                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
+                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,
-                MuseModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
+                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
 
         builder.put(ItemCameraTransforms.TransformType.GUI,
-                MuseModelHelper.get(-0.0625F, 0.25F, 0, 30, 225, 0, 0.625f));
+                ModelHelper.get(-0.0625F, 0.25F, 0, 30, 225, 0, 0.625f));
 
         builder.put(ItemCameraTransforms.TransformType.GROUND,
-                MuseModelHelper.get(0, 3, 0, 0, 0, 0, 0.25f));
+                ModelHelper.get(0, 3, 0, 0, 0, 0, 0.25f));
 
         builder.put(ItemCameraTransforms.TransformType.FIXED,
-                MuseModelHelper.get(0, 0, 0, 0, 0, 0, 0.5f));
+                ModelHelper.get(0, 0, 0, 0, 0, 0, 0.5f));
 
         return new SimpleModelState(builder.build());
     }

@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -158,7 +158,7 @@ public class ModelTransformCalibration {
                 System.out.println("xrot: " + angleX + ", yrot: " + angleY + ", zrot: " + angleZ);
                 System.out.println("scaleModifier: " + scalemodifier);
 
-                System.out.println("MuseModelHelper.get(" + xOffest +", " + yOffest + ", " + zOffest + ", " + angleX + ", " + angleY+ ", " + angleZ + ", " + scalemodifier + ")" );
+                System.out.println("ModelHelper.get(" + xOffest +", " + yOffest + ", " + zOffest + ", " + angleX + ", " + angleY+ ", " + angleZ + ", " + scalemodifier + ")" );
 
 
                 tap = true;
@@ -177,7 +177,7 @@ public class ModelTransformCalibration {
 
     public TRSRTransformation getTransform() {
         transformCalibration();
-        return MuseModelHelper.get(xOffest, yOffest, zOffest, angleX, angleY, angleZ, scalemodifier);
+        return ModelHelper.get(xOffest, yOffest, zOffest, angleX, angleY, angleZ, scalemodifier);
     }
 
 

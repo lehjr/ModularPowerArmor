@@ -48,7 +48,7 @@ public class MusePacketCosmeticInfo {
             String tagName = message.tagName;
             CompoundNBT tagData = message.tagData;
             player.inventory.getStackInSlot(itemSlot).getCapability(ModelSpecNBTCapability.RENDER).ifPresent(render->{
-                render.setMuseRenderTag(tagData, tagName);
+                render.setRenderTag(tagData, tagName);
             });
         });
         ctx.get().setPacketHandled(true);

@@ -204,7 +204,7 @@
 ////    void checkAndFixItem(ClickableItem clickie) {
 ////        if (clickie != null) {
 ////            ItemStack itemStack = clickie.getItem();
-////            CompoundNBT itemNBT = MuseNBTUtils.getMuseItemTag(itemStack);
+////            CompoundNBT itemNBT = NBTUtils.getMuseItemTag(itemStack);
 ////            if (itemNBT.contains(MPALIbConstants.TAG_RENDER,Constants.NBT.TAG_COMPOUND)) {
 ////                BiMap<String, CompoundNBT> presetMap = CommonConfig.moduleConfig.getCosmeticPresets(itemStack);
 ////                if (presetMap.containsValue(itemNBT.getCompound(MPALIbConstants.TAG_RENDER))) {
@@ -291,7 +291,7 @@
 ////                            if (save) {
 ////                                if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
 ////                                    // get the render tag for the item
-////                                    CompoundNBT nbt = MPSModelHelper.getMuseRenderTag(itemStack).copy();
+////                                    CompoundNBT nbt = MPSModelHelper.getRenderTag(itemStack).copy();
 ////                                    MPSPackets.sendToServer(new MusePacketCosmeticPresetUpdate(itemStack.getItem().getRegistryName(), name, nbt));
 ////                                }
 ////                            }
@@ -317,7 +317,7 @@
 ////                    if (saveButton.hitBox(x, y)) {
 ////                        if (isValidItem(getSelectedItem(), getEquipmentSlot())) {
 ////                            isEditing = true;
-////                            CompoundNBT nbt = MPSModelHelper.getMuseRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
+////                            CompoundNBT nbt = MPSModelHelper.getRenderTag(getSelectedItem().getItem(), getEquipmentSlot());
 ////                            MPSPackets.sendToServer(new MusePacketCosmeticInfo(Minecraft.getInstance().player.getEntityId(), this.getSelectedItem().inventorySlot, MPALIbConstants.TAG_RENDER, nbt));
 ////                        }
 ////                    } else if (resetButton.hitBox(x, y)) {

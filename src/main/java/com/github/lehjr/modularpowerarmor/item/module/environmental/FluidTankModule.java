@@ -9,7 +9,7 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -72,7 +72,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
             @Nullable
             public FluidStack getFluid() {
-                CompoundNBT tagCompound = MuseNBTUtils.getMuseModuleTag(module);
+                CompoundNBT tagCompound = NBTUtils.getModuleTag(module);
                 if (tagCompound == null || !tagCompound.contains(FLUID_NBT_KEY)) {
                     return null;
                 }
@@ -81,7 +81,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
             @Override
             protected void onContentsChanged() {
-                MuseNBTUtils.getMuseModuleTag(module).put(FLUID_NBT_KEY, writeToNBT(new CompoundNBT()));
+                NBTUtils.getModuleTag(module).put(FLUID_NBT_KEY, writeToNBT(new CompoundNBT()));
             }
 
             @Nonnull

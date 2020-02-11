@@ -11,7 +11,7 @@ import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -51,8 +51,8 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
     protected ClickableButton salvageButton;
     protected InventoryFrame craftingGrid;
     protected boolean craftingGridIsVisible = false;
-    private ClickableMuseArrow forwardArrow;
-    private ClickableMuseArrow backArrow;
+    private ClickableArrow forwardArrow;
+    private ClickableArrow backArrow;
     List<IRecipe> recipeList = new ArrayList<>();
     private int recipeIndex = -1;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
@@ -86,11 +86,11 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         double sizey = border.bottom() - border.top();
         mc = Minecraft.getInstance();
 
-        forwardArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         forwardArrow.setDrawShaft(false);
         forwardArrow.setOnPressed(press-> setRecipe(recipeIndex +1));
 
-        backArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        backArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         backArrow.setDrawShaft(false);
         backArrow.setDirection(DrawableArrow.ArrowDirection.LEFT);
         backArrow.setOnPressed(press-> setRecipe(recipeIndex -1));

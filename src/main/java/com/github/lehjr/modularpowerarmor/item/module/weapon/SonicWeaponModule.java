@@ -9,7 +9,7 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -64,20 +64,20 @@ public class SonicWeaponModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack itemStackIn) {
-                double timer = MuseNBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
+                double timer = NBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
                 if (timer > 0)
-                    MuseNBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
+                    NBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, timer - 1 > 0 ? timer - 1 : 0);
             }
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (hand == Hand.MAIN_HAND) {
                     double range = 64;
-                    double timer = MuseNBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
+                    double timer = NBTUtils.getModularItemDoubleOrZero(itemStackIn, MPAConstants.TIMER);
                     double energyConsumption = getEnergyUsage();
                     if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption && timer == 0) {
                         ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
-                        MuseNBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, 10);
+                        NBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, 10);
 
                         HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.RAILGUN_HEAT_EMISSION));
                         RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);

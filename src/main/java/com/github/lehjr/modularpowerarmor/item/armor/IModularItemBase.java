@@ -20,7 +20,7 @@
 //public interface IModularItemBase {
 //    default Colour getColorFromItemStack(ItemStack stack) {
 //        try {
-//            CompoundNBT renderTag = MPSModelHelper.getMuseRenderTag(stack);
+//            CompoundNBT renderTag = MPSModelHelper.getRenderTag(stack);
 //            if (renderTag.contains(MPALIbConstants.NBT_TEXTURESPEC_TAG)) {
 //                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG));
 //                CompoundNBT specTag = renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG);

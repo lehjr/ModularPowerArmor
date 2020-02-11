@@ -4,7 +4,7 @@ import com.github.lehjr.forge.obj.MPALibOBJModel;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.string.StringUtils;
@@ -184,7 +184,7 @@ public enum ModelSpecXMLReader {
                             modelState = TRSRTransformation.identity();
                     }
 
-                    MPALibOBJModel.MPALIbOBJBakedModel bakedModel = (MPALibOBJModel.MPALIbOBJBakedModel) MuseModelHelper.loadBakedModel(new ResourceLocation(modelLocation), modelState, bakery);
+                    MPALibOBJModel.MPALIbOBJBakedModel bakedModel = (MPALibOBJModel.MPALIbOBJBakedModel) ModelHelper.loadBakedModel(new ResourceLocation(modelLocation), modelState, bakery);
 
                     // ModelSpec stuff
                     if (bakedModel != null && bakedModel instanceof MPALibOBJModel.MPALIbOBJBakedModel) {

@@ -5,7 +5,7 @@
 //import com.google.common.cache.CacheLoader;
 //import com.google.common.cache.LoadingCache;
 //import com.google.common.collect.ImmutableList;
-//import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+//import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 //import com.github.lehjr.mpalib.math.Colour;
 //import net.machinemuse.modularpowerarmor.basemod.MPSConstants;
 //import net.machinemuse.modularpowerarmor.basemod.MPSObjects;
@@ -42,27 +42,27 @@
 //                }
 //
 //                public IBakedModel getBase(@Nullable Direction facing) {
-//                    return MuseModelHelper.loadBakedModel(baseModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
+//                    return ModelHelper.loadBakedModel(baseModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
 //                }
 //
 //                public IBakedModel getLens(@Nullable Direction facing) {
-//                    return MuseModelHelper.loadBakedModel(lensModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
+//                    return ModelHelper.loadBakedModel(lensModelLocation, TRSRTransformation.from((facing != null) ? facing : Direction.NORTH));
 //                }
 //
 //                List<BakedQuad> getBaseQuads(@Nullable Direction facing) {
 //                    facing = (facing != null) ? facing : Direction.NORTH;
 //
 //                    TRSRTransformation transform = TRSRTransformation.from(facing);
-//                    IBakedModel bakedModel = MuseModelHelper.loadBakedModel(baseModelLocation, transform);
+//                    IBakedModel bakedModel = ModelHelper.loadBakedModel(baseModelLocation, transform);
 //                    return bakedModel.getQuads(MPSObjects.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
 //                }
 //
 //                List<BakedQuad> getLensColoredQuads(Colour color, @Nullable Direction facing) {
 //                    facing = (facing != null) ? facing : Direction.NORTH;
 //                    TRSRTransformation transform = TRSRTransformation.from(facing);
-//                    IBakedModel bakedModel = MuseModelHelper.loadBakedModel(lensModelLocation, transform);
+//                    IBakedModel bakedModel = ModelHelper.loadBakedModel(lensModelLocation, transform);
 //                    List<BakedQuad> quads = bakedModel.getQuads(MPSObjects.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing), null, new Random());
-//                    return MuseModelHelper.getColoredQuadsWithGlow(quads, color, true);
+//                    return ModelHelper.getColoredQuadsWithGlow(quads, color, true);
 //                }
 //
 //                List<BakedQuad> getQuads(Colour color, @Nullable Direction facing) {

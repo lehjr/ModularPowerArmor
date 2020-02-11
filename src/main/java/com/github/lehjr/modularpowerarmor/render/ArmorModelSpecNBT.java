@@ -5,7 +5,7 @@ import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
 import com.github.lehjr.mpalib.client.render.modelspec.*;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -25,7 +25,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
 
     @Override
     public EnumSpecType getSpecType() {
-        CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(getItemStack());
+        CompoundNBT itemTag = NBTUtils.getMuseItemTag(getItemStack());
         CompoundNBT renderTag = itemTag.getCompound(MPALIbConstants.TAG_RENDER);
         if (renderTag == null || renderTag.isEmpty()) {
               renderTag = getDefaultRenderTag();
@@ -127,7 +127,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
 
     @Override
     public String getArmorTexture() {
-        CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(getItemStack());
+        CompoundNBT itemTag = NBTUtils.getMuseItemTag(getItemStack());
         CompoundNBT renderTag = itemTag.getCompound(MPALIbConstants.TAG_RENDER);
         try {
             TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG));

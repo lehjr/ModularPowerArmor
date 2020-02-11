@@ -36,11 +36,11 @@
 //            String presetName = message.presetName;
 //
 //            player.inventory.getStackInSlot(itemSlot).getCapability(ModelSpecNBTCapability.RENDER).ifPresent(render-> {
-//                render.getMuseRenderTag();
+//                render.getRenderTag();
 //
 //
 //                        // fixme preset stuff again
-////                    CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
+////                    CompoundNBT itemTag = NBTUtils.getMuseItemTag(stack);
 ////                    itemTag.remove(MPALIbConstants.TAG_RENDER);
 ////                    itemTag.putString(MPALIbConstants.TAG_COSMETIC_PRESET, presetName);
 //            });

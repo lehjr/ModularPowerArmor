@@ -117,7 +117,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             return null;
         }
         return itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).map(spec->{
-            CompoundNBT renderSpec = spec.getMuseRenderTag();
+            CompoundNBT renderSpec = spec.getRenderTag();
             if (renderSpec != null && !renderSpec.isEmpty()) {
                 return new IntArrayNBT(spec.getColorArray());
             }
@@ -130,7 +130,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             return null;
         }
         return itemSelector.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).map(spec->{
-            CompoundNBT renderSpec = spec.getMuseRenderTag();
+            CompoundNBT renderSpec = spec.getRenderTag();
             renderSpec.put(MPALIbConstants.TAG_COLOURS, new IntArrayNBT(intList));
             ClientPlayerEntity player = Minecraft.getInstance().player;
             if (player.world.isRemote) {

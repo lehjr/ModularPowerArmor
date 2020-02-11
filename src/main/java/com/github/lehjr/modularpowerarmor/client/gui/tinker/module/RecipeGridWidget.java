@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -26,8 +26,8 @@ public class RecipeGridWidget {
     Colour backgroundColourDisabled;
     Colour gridColour;
     int currentIndex;
-    ClickableMuseArrow forwardArrow;
-    ClickableMuseArrow backArrow;
+    ClickableArrow forwardArrow;
+    ClickableArrow backArrow;
     ResourceLocation moduleName;
     List<DrawableTile> tiles;
 

@@ -11,7 +11,7 @@ import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -40,19 +40,19 @@ public class AutoFeederModule extends AbstractPowerModule {
     }
 
     public static double getFoodLevel(@Nonnull ItemStack stack) {
-        return MuseNBTUtils.getModuleDoubleOrZero(stack, TAG_FOOD);
+        return NBTUtils.getModuleDoubleOrZero(stack, TAG_FOOD);
     }
 
     public static void setFoodLevel(@Nonnull ItemStack stack, double d) {
-        MuseNBTUtils.setModuleDoubleOrRemove(stack,TAG_FOOD, d);
+        NBTUtils.setModuleDoubleOrRemove(stack,TAG_FOOD, d);
     }
 
     public static double getSaturationLevel(@Nonnull ItemStack stack) {
-        return MuseNBTUtils.getModuleDoubleOrZero(stack, TAG_SATURATION);
+        return NBTUtils.getModuleDoubleOrZero(stack, TAG_SATURATION);
     }
 
     public static void setSaturationLevel(@Nonnull ItemStack stack, double d) {
-        MuseNBTUtils.setModuleDoubleOrRemove(stack, TAG_SATURATION, d);
+        NBTUtils.setModuleDoubleOrRemove(stack, TAG_SATURATION, d);
     }
 
     public class CapProvider implements ICapabilityProvider {

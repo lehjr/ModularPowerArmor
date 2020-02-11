@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
@@ -23,8 +23,8 @@ public class MPSRecipeBookPage extends RecipeBookPage {
     private Minecraft minecraft;
     private final List<IRecipeUpdateListener> listeners = Lists.newArrayList();
     private List<RecipeList> recipeLists;
-    private ClickableMuseArrow forwardArrow;
-    private ClickableMuseArrow backArrow;
+    private ClickableArrow forwardArrow;
+    private ClickableArrow backArrow;
     private int totalPages;
     private int currentPage;
     private RecipeBook recipeBook;
@@ -40,10 +40,10 @@ public class MPSRecipeBookPage extends RecipeBookPage {
             this.buttons.add(new MPSRecipeWidget());
         }
 
-        forwardArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         forwardArrow.setDrawShaft(false);
 
-        backArrow = new ClickableMuseArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
+        backArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
         backArrow.setDrawShaft(false);
         backArrow.setDirection(DrawableArrow.ArrowDirection.LEFT);
     }

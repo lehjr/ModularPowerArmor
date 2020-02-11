@@ -7,7 +7,7 @@ import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelPartSpec;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.client.render.modelspec.ModelSpec;
@@ -86,7 +86,7 @@ public class ModelPowerFist implements IDynamicBakedModel {
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         itemStack.getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBTCap -> {
             if (specNBTCap instanceof IHandHeldModelSpecNBT) {
-                CompoundNBT renderSpec = specNBTCap.getMuseRenderTag();
+                CompoundNBT renderSpec = specNBTCap.getRenderTag();
 
                 // Set the tag on the item so this lookup isn't happening on every loop.
                 if (renderSpec == null || renderSpec.isEmpty()) {
@@ -111,7 +111,7 @@ public class ModelPowerFist implements IDynamicBakedModel {
                         }
 
                         if (slot != -1) {
-                            specNBTCap.setMuseRenderTag(renderSpec, MPALIbConstants.TAG_RENDER);
+                            specNBTCap.setRenderTag(renderSpec, MPALIbConstants.TAG_RENDER);
                             MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(slot, MPALIbConstants.TAG_RENDER, renderSpec));
                         } else {
                             System.out.println(" stack not found");
@@ -146,7 +146,7 @@ public class ModelPowerFist implements IDynamicBakedModel {
 
                                 if ((!isFiring && (itemState.equals("all") || itemState.equals("normal"))) ||
                                         (isFiring && (itemState.equals("all") || itemState.equals("firing"))))
-                                    builder.addAll(MuseModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
+                                    builder.addAll(ModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getQuads(), partColor, transform, glow));
                             }
                         }
                     }

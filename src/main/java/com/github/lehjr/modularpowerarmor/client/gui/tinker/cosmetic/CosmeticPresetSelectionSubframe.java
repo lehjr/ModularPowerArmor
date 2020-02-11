@@ -10,7 +10,7 @@ import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
-import com.github.lehjr.mpalib.nbt.MuseNBTUtils;
+import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -76,7 +76,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     }
 
     public CompoundNBT getItemTag() {
-        return MuseNBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
+        return NBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
     }
 
 

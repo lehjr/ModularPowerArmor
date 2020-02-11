@@ -100,7 +100,7 @@ public class PartSpecManipSubFrame {
         AtomicReference<CompoundNBT> specTag = new AtomicReference<>(null);
 
         getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBT->{
-            CompoundNBT renderTag = specNBT.getMuseRenderTag();
+            CompoundNBT renderTag = specNBT.getRenderTag();
 
             if (renderTag != null && !renderTag.isEmpty()) {
                 // there can be many ModelPartSpecs
@@ -140,10 +140,10 @@ public class PartSpecManipSubFrame {
             // update the render tag client side. The server side update is called below.
             if (getSelectedItem() != null) {
                 this.getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBT->{
-                    CompoundNBT renderTag  = specNBT.getMuseRenderTag();
+                    CompoundNBT renderTag  = specNBT.getRenderTag();
                     if (renderTag != null && !renderTag.isEmpty()) {
                         renderTag.put(name, nbt);
-                        specNBT.setMuseRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                        specNBT.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
                     }
                 });
             }

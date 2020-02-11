@@ -157,7 +157,7 @@ public class CosmeticPresetSaveLoad {
 
         return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec->{
             // get the render tag for the item
-            CompoundNBT renderTag =spec.getMuseRenderTag().copy();
+            CompoundNBT renderTag =spec.getRenderTag().copy();
             if (renderTag != null) {
                 return savePreset(itemStack.getItem().getRegistryName(), presetName, renderTag);
             }

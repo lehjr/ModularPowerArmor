@@ -6,7 +6,7 @@ import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
 import com.github.lehjr.mpalib.client.gui.ContainerGui;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableMuseArrow;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -46,7 +46,7 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
     protected InventoryFrame craftingGrid, mainInventory, hotbar;
 
     protected DrawableRelativeRect result;
-    protected ClickableMuseArrow arrow;
+    protected ClickableArrow arrow;
     protected TexturedButton recipeBookButton;
     protected TabSelectFrame tabSelectFrame;
     final int slotWidth = 18;
@@ -99,7 +99,7 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
         }});
         frames.add(hotbar);
 
-        arrow = new ClickableMuseArrow(0, 0, 0, 0, true, gridBackGound, Colour.WHITE, gridBorderColour);
+        arrow = new ClickableArrow(0, 0, 0, 0, true, gridBackGound, Colour.WHITE, gridBorderColour);
         arrow.show();
 
         recipeBookButton = new TexturedButton(

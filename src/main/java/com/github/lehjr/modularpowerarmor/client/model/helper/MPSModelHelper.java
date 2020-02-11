@@ -37,7 +37,7 @@ public class MPSModelHelper {
     }
 
 //    public static boolean hasHighPolyModel(ItemStack stack, EquipmentSlotType slot) {
-//        CompoundNBT renderTag = getMuseRenderTag(stack, slot);
+//        CompoundNBT renderTag = getRenderTag(stack, slot);
 //
 //        // any tag other than the colours or texSpec tag is a ModelPartSpec tag
 //        for (String tagName : renderTag.keySet()) {
@@ -49,8 +49,8 @@ public class MPSModelHelper {
 //        return false;
 //    }
 
-//    public static CompoundNBT getMuseRenderTag(@Nonnull ItemStack stack, EquipmentSlotType armorSlot) {
-//        CompoundNBT itemTag = MuseNBTUtils.getMuseItemTag(stack);
+//    public static CompoundNBT getRenderTag(@Nonnull ItemStack stack, EquipmentSlotType armorSlot) {
+//        CompoundNBT itemTag = NBTUtils.getMuseItemTag(stack);
 //        CompoundNBT renderTag = new CompoundNBT();
 ////        if (itemTag.contains(MPALIbConstants.TAG_RENDER, Constants.NBT.TAG_COMPOUND))
 ////            renderTag = itemTag.getCompound(MPALIbConstants.TAG_RENDER);
@@ -72,23 +72,23 @@ public class MPSModelHelper {
 //        return renderTag;
 //    }
 
-//    public static CompoundNBT getMuseRenderTag(@Nonnull ItemStack stack) {
+//    public static CompoundNBT getRenderTag(@Nonnull ItemStack stack) {
 //        EquipmentSlotType slot = stack.getEquipmentSlot();
 //
 //        if (slot != null)
-//            return getMuseRenderTag(stack, slot);
+//            return getRenderTag(stack, slot);
 //
 //        if (!stack.isEmpty()) {
 //            if (stack.getItem() instanceof ItemPowerArmor)
-//                return getMuseRenderTag(stack, ((ItemPowerArmor) stack.getItem()).getEquipmentSlot());
+//                return getRenderTag(stack, ((ItemPowerArmor) stack.getItem()).getEquipmentSlot());
 //            if (stack.getItem() instanceof ItemPowerFist)
-//                return getMuseRenderTag(stack, EquipmentSlotType.MAINHAND);
+//                return getRenderTag(stack, EquipmentSlotType.MAINHAND);
 //        }
 //        return new CompoundNBT();
 //    }
 
 //    public static String getArmorTexture(ItemStack stack, EquipmentSlotType slot) {
-//        CompoundNBT renderTag = getMuseRenderTag(stack, slot);
+//        CompoundNBT renderTag = getRenderTag(stack, slot);
 //        try {
 //            TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG));
 //            return partSpec.getTextureLocation();

@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
 import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
-import com.github.lehjr.mpalib.client.model.helper.MuseModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -55,25 +55,25 @@ public class TinkerTableModel implements IDynamicBakedModel {
 
         // first person and third person models rotated to so that the side away from the player is the same as when it is placed
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
+                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
 
         builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-                MuseModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
+                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,
-                MuseModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
+                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
 
         builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,
-                MuseModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
+                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
 
         builder.put(ItemCameraTransforms.TransformType.GUI,
-                MuseModelHelper.get(-0.0625F, 0.25F, 0, 30, 225, 0, 0.625f));
+                ModelHelper.get(-0.0625F, 0.25F, 0, 30, 225, 0, 0.625f));
 
         builder.put(ItemCameraTransforms.TransformType.GROUND,
-                MuseModelHelper.get(0, 3, 0, 0, 0, 0, 0.25f));
+                ModelHelper.get(0, 3, 0, 0, 0, 0, 0.25f));
 
         builder.put(ItemCameraTransforms.TransformType.FIXED,
-                MuseModelHelper.get(0, 0, 0, 0, 0, 0, 0.5f));
+                ModelHelper.get(0, 0, 0, 0, 0, 0, 0.5f));
 
         return new SimpleModelState(builder.build());
     }

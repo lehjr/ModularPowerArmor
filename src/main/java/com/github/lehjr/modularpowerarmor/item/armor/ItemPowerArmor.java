@@ -149,7 +149,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
 
         return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
 
-            CompoundNBT renderTag = spec.getMuseRenderTag();
+            CompoundNBT renderTag = spec.getRenderTag();
             PlayerEntity player = (PlayerEntity) entityLiving;
 
             // only triggered by this client's player looking at their own equipped armor
@@ -158,7 +158,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
                     if (player.inventory.getStackInSlot(i).equals(itemStack)) {
                         renderTag = spec.getDefaultRenderTag();
                         if (renderTag != null && !renderTag.isEmpty()) {
-                            spec.setMuseRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
                             MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(i, MPALIbConstants.TAG_RENDER, renderTag));
                         }
                         break;
@@ -166,7 +166,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
                 }
             }
 
-            if (spec.getMuseRenderTag() != null &&
+            if (spec.getRenderTag() != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
                 return _default;
             }
