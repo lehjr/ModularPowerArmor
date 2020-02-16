@@ -122,7 +122,7 @@ public class HarvestEventHandler {
 
     @SubscribeEvent
     public static void handHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-        System.out.println("doing something here");
+//        System.out.println("doing something here");
 
 
         if (event.getHarvester() != null) {

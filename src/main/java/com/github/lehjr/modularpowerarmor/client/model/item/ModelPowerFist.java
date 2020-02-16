@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.client.model.item;
 
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
+import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
@@ -112,7 +112,7 @@ public class ModelPowerFist implements IDynamicBakedModel {
 
                         if (slot != -1) {
                             specNBTCap.setRenderTag(renderSpec, MPALIbConstants.TAG_RENDER);
-                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(slot, MPALIbConstants.TAG_RENDER, renderSpec));
+                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(slot, MPALIbConstants.TAG_RENDER, renderSpec));
                         } else {
                             System.out.println(" stack not found");
                         }

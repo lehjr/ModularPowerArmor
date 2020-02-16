@@ -34,16 +34,12 @@ public class MPARecipeConditionFactory implements ICondition {
                 case "enderio_recipes_enabled":
                     return CommonConfig.RECIPES_USE_ENDERIO.get();
 
-                // Original recipe loading code set priority for TechReborn recipes instead of Gregtech or Industrialcraft
-                // Tech Reborn
-                case "tech_reborn_recipes_enabled":
-                    return CommonConfig.RECIPES_USE_TECH_REBORN.get();
+                // IC2 - Development appears to be dead
+//                case "ic2_recipes_enabled":
+//                    return (ModCompatibility.isIndustrialCraftExpLoaded() &&
+//                            /*!ModCompatibility.isGregTechLoaded() &&*/
+//                            /* !ModCompatibility.isTechRebornLoaded()) */ CommonConfig.RECIPES_USE_IC2.get());
 
-                // IC2
-                case "ic2_recipes_enabled":
-                    return (ModCompatibility.isIndustrialCraftExpLoaded() &&
-                            /*!ModCompatibility.isGregTechLoaded() &&*/
-                            /* !ModCompatibility.isTechRebornLoaded()) */ CommonConfig.RECIPES_USE_IC2.get());
                 // IC2 Classic
                 case "ic2_classic_recipes_enabled":
                     return (ModCompatibility.isIndustrialCraftClassicLoaded()&&

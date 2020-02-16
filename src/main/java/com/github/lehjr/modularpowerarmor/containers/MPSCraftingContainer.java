@@ -24,7 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.Optional;
 
-public class MPSCraftingContainer extends MPSRecipeBookContainer<CraftingInventory> {
+public class MPSCraftingContainer extends MPARecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftingInventory;
     private final CraftResultInventory resultInventory;
     private final PlayerEntity player;

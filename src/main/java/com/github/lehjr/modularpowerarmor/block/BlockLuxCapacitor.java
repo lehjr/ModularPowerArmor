@@ -77,19 +77,6 @@ public class BlockLuxCapacitor extends DirectionalBlock {
 //        }, new TranslationTextComponent(""));
 //    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public int getHarvestLevel(BlockState state) {
         return 0;

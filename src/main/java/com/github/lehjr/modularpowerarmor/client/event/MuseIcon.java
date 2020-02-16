@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.client.event;
 
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
@@ -123,7 +122,7 @@ public class MuseIcon {
     }
 
     public static void registerIcons(TextureStitchEvent.Pre event) {
-        MPALibLogger.logger.info("doing something here also: .... ");
+//        MPALibLogger.logger.info("doing something here also: .... ");
 //        /* Armor -------------------------------------------------------------------------------------- */
 //        apiaristArmor = register(event, "modules/silkwisp");
 //        basicPlating = register(event, "modules/basicplating2");

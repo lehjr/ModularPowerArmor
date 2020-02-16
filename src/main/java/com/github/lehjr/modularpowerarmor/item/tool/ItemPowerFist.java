@@ -172,14 +172,14 @@ public class ItemPowerFist extends AbstractElectricTool {
 
     @Override
     public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
-        System.out.println("doing something here");
+//        System.out.println("doing something here");
 
         return false;
     }
 
     @Override
     public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {
-        System.out.println("doing something here");
+//        System.out.println("doing something here");
 
         return oldStack.isItemEqual(newStack);
     }

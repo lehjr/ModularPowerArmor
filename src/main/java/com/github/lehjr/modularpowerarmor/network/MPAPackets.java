@@ -18,7 +18,7 @@ public class MPAPackets {
             PROTOCOL_VERSION::equals
     );
 
-    public static void registerMPSPackets() {
+    public static void registerMPAPackets() {
         int i = 0;
         CHANNEL_INSTANCE.registerMessage(
                 i++,
@@ -29,10 +29,10 @@ public class MPAPackets {
 
         CHANNEL_INSTANCE.registerMessage(
                 i++,
-                MusePacketCosmeticInfo.class,
-                MusePacketCosmeticInfo::encode,
-                MusePacketCosmeticInfo::decode,
-                MusePacketCosmeticInfo::handle);
+                CosmeticInfoPacket.class,
+                CosmeticInfoPacket::encode,
+                CosmeticInfoPacket::decode,
+                CosmeticInfoPacket::handle);
 
 //        CHANNEL_INSTANCE.registerMessage(
 //                i++,

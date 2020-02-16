@@ -31,10 +31,10 @@ import java.util.*;
 
 /**
  * Looks like slots have to be populated in the container's constructor.
- * This means that only equiped
+ * This means that only equipped ... fixme: ...what?
  *
  */
-public class TinkerTableContainer extends MPSRecipeBookContainer<CraftingInventory> implements IModularItemToSlotMapProvider {
+public class TinkerTableContainer extends MPARecipeBookContainer<CraftingInventory> implements IModularItemToSlotMapProvider {
     private final CraftingInventory craftingInventory;
     private final CraftResultInventory resultInventory;
     private final PlayerEntity player;

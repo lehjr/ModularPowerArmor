@@ -5,8 +5,8 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
 
-public abstract class MPSRecipeBookContainer<C> extends RecipeBookContainer {
-    public MPSRecipeBookContainer(ContainerType containerType, int windowId) {
+public abstract class MPARecipeBookContainer<C> extends RecipeBookContainer {
+    public MPARecipeBookContainer(ContainerType containerType, int windowId) {
         super(containerType, windowId);
     }
 

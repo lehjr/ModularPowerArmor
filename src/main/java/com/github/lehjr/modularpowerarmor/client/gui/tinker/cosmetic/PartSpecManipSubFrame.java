@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
+import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
@@ -181,7 +181,7 @@ public class PartSpecManipSubFrame {
                 if (oldindex >= index && oldindex > 0) {
                     spec.setColourIndex(tagdata, oldindex - 1);
                     if (player.world.isRemote) {
-                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
                     }
                 }
             }
@@ -268,7 +268,7 @@ public class PartSpecManipSubFrame {
                 // removes the associated tag from the render tag making the part not isEnabled
                 case 0: {
                     tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
+                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
 
                     this.updateItems();
                     return true;
@@ -281,7 +281,7 @@ public class PartSpecManipSubFrame {
                     if (spec instanceof ModelPartSpec) {
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
                     }
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
 
                     this.updateItems();
                     return true;
@@ -293,7 +293,7 @@ public class PartSpecManipSubFrame {
                         tagname = ModelRegistry.getInstance().makeName(spec);
                         tagdata = this.getOrMakeSpecTag(spec);
                         ((ModelPartSpec) spec).setGlow(tagdata, true);
-                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
                         this.updateItems();
                         return true;
                     }
@@ -311,7 +311,7 @@ public class PartSpecManipSubFrame {
             tagname = spec instanceof TexturePartSpec ? MPALIbConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
-            MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(this.getSelectedItem().inventorySlot, tagname, tagdata));
+            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
             return true;
         }
         return false;

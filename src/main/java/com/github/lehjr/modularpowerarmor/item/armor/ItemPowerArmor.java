@@ -5,7 +5,7 @@ import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
 import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.MusePacketCosmeticInfo;
+import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
@@ -159,7 +159,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
                         renderTag = spec.getDefaultRenderTag();
                         if (renderTag != null && !renderTag.isEmpty()) {
                             spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new MusePacketCosmeticInfo(i, MPALIbConstants.TAG_RENDER, renderTag));
+                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
                         }
                         break;
                     }

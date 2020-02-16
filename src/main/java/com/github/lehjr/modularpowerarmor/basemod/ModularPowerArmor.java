@@ -93,7 +93,7 @@ public class ModularPowerArmor {
 
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
-        MPAPackets.registerMPSPackets();
+        MPAPackets.registerMPAPackets();
 //        registerCraftingCondition("thermal_expansion_recipes_enabled");
 //        registerCraftingCondition("enderio_recipes_enabled");
 //        registerCraftingCondition("tech_reborn_recipes_enabled");
