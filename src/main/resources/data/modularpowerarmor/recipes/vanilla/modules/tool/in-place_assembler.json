@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:axe"
+    "item": "modularpowerarmor:portable_crafting_table"
   },
   "conditions": [
     {
@@ -11,22 +11,19 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "   ",
-    "COC",
-    "IMI"
+    " C ",
+    "OMO",
+    " O "
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_wiring"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:crafting_table"
     },
     "M": {
-      "item": "modularpowerarmor:component_solenoid"
+      "item": "modularpowerarmor:component_control_circuit"
     },
     "O": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "modularpowerarmor:component_wiring"
     }
   }
 }

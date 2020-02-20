@@ -1,0 +1,32 @@
+{
+  "result": {
+    "item": "modularpowerarmor:pickaxe"
+  },
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " I ",
+    "COC",
+    "IMI"
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_wiring"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "M": {
+      "item": "modularpowerarmor:component_solenoid"
+    },
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
+    }
+  }
+}

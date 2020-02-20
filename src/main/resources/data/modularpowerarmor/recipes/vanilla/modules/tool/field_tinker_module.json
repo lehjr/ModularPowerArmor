@@ -1,11 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:battery_advanced",
-    "nbt": {
-      "MMModModule": {
-        "energy": 4000000
-      }
-    }
+    "item": "modularpowerarmor:field_tinkerer"
   },
   "conditions": [
     {
@@ -16,16 +11,22 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "CCC",
+    " T ",
     "COC",
-    "CMC"
+    "IMI"
   ],
   "key": {
     "C": {
       "item": "modularpowerarmor:component_wiring"
     },
+    "T": {
+      "item": "modularpowerarmor:tinkertable"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "M": {
-      "item": "modularpowerarmor:component_capacitor_mv"
+      "item": "modularpowerarmor:component_solenoid"
     },
     "O": {
       "item": "modularpowerarmor:component_control_circuit"

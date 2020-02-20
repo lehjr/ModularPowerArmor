@@ -1,0 +1,35 @@
+{
+  "result": {
+    "item": "modularpowerarmor:flint_and_steel"
+  },
+  "conditions": [
+    {
+      "type": "modularpowerarmor:conditional",
+      "condition": "vanilla_recipes_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " F ",
+    "COC",
+    "IMI"
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_wiring"
+    },
+    "F": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "M": {
+      "item": "modularpowerarmor:component_solenoid"
+    },
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
+    }
+  }
+}

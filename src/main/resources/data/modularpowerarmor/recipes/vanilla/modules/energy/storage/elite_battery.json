@@ -1,4 +1,12 @@
 {
+  "result": {
+    "item": "modularpowerarmor:battery_elite",
+    "nbt": {
+      "MMModModule": {
+        "energy": 40000000
+      }
+    }
+  },
   "conditions": [
     {
       "type": "modularpowerarmor:conditional",
@@ -6,23 +14,21 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "mirrored": true,
   "pattern": [
-    "WWW",
-    "WCW",
-    "WHW"
+    "CCC",
+    "COC",
+    "CMC"
   ],
   "key": {
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item": "modularpowerarmor:component_wiring"
     },
-    "W": {
-      "item":"modularpowerarmor:component_wiring"
-    },
-    "H": {
+    "M": {
       "item": "modularpowerarmor:component_capacitor_hv"
+    },
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
     }
-  },
-  "result": {
-    "item": "modularpowerarmor:battery_elite"
   }
 }

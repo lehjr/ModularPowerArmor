@@ -99,11 +99,12 @@ public class ModularPowerArmor {
 //        registerCraftingCondition("tech_reborn_recipes_enabled");
 //        registerCraftingCondition("ic2_recipes_enabled");
 //        registerCraftingCondition("vanilla_recipes_enabled");
+        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
     }
 
     @SubscribeEvent
     public void setupRecipeConditionHandler(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
+//        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
     }
 
     // client preInit

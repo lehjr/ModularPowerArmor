@@ -1,11 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:battery_advanced",
-    "nbt": {
-      "MMModModule": {
-        "energy": 4000000
-      }
-    }
+    "item": "modularpowerarmor:hoe"
   },
   "conditions": [
     {
@@ -16,16 +11,19 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "CCC",
+    " I ",
     "COC",
-    "CMC"
+    " M "
   ],
   "key": {
     "C": {
       "item": "modularpowerarmor:component_wiring"
     },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "M": {
-      "item": "modularpowerarmor:component_capacitor_mv"
+      "item": "modularpowerarmor:component_solenoid"
     },
     "O": {
       "item": "modularpowerarmor:component_control_circuit"

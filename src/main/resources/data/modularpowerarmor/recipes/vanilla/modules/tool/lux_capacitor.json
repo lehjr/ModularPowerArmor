@@ -1,11 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:battery_advanced",
-    "nbt": {
-      "MMModModule": {
-        "energy": 4000000
-      }
-    }
+    "item": "modularpowerarmor:luxcapacitor_module"
   },
   "conditions": [
     {
@@ -16,16 +11,22 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "CCC",
+    "IRI",
     "COC",
-    "CMC"
+    "GIG"
   ],
   "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
     "C": {
       "item": "modularpowerarmor:component_wiring"
     },
-    "M": {
-      "item": "modularpowerarmor:component_capacitor_mv"
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "O": {
       "item": "modularpowerarmor:component_control_circuit"
