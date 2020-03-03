@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
-import com.github.lehjr.modularpowerarmor.client.gui.common.InventoryFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.containers.IHideableSlot;
@@ -8,10 +7,11 @@ import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.reworked_crafting_packets.CPlaceRecipePacket;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
-import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
+import com.github.lehjr.mpalib.client.gui.frame.InventoryFrame;
 import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
@@ -266,7 +266,6 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                 border.right() -7,
                 border.finalTop() + 5  + craftingGridSize);
 
-
         Point2D arrowsCenter =
                 // center of crafting grid
                 new Point2D(border.right() -14 - craftingGridSize/2,
@@ -276,10 +275,6 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
         this.forwardArrow.setTargetDimensions(arrowsCenter.plus(10, -10), new Point2D(12, 17));
         this.backArrow.setTargetDimensions(arrowsCenter.plus(-10, -10), new Point2D(12, 17));
     }
-
-
-
-
 
     @Override
     public void update(double x, double y) {
@@ -305,8 +300,8 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
             // fixme: show conflicts, but where... maybe in the summary frame
             // fixme: add cooldown timer for changes to this logic. Sometimes the grid shows for a frame or 2 when it shoudlnt
             if (selectedModule.isInstalled()) {
-                salvageButton.enableAndShow();
-                installButton.disableAndHide();
+                this.salvageButton.enableAndShow();
+                this.installButton.disableAndHide();
                 craftAndInstallButton.disableAndHide();
                 craftingGridHide();
             } else if (player.abilities.isCreativeMode ||
@@ -321,6 +316,7 @@ public class InstallSalvageFrame extends ScrollableFrame implements IRecipeUpdat
                 salvageButton.disableAndHide();
                 installButton.disableAndHide();
                 craftAndInstallButton.show();
+
                 if (recipeList.isEmpty()) {
                     recipeIndex = -1;
                     craftAndInstallButton.disable();

@@ -4,8 +4,7 @@
     "custom": { "flip-v": true },
     "model": "modularpowerarmor:block/powerarmor_workbench.obj",
     "textures": {
-      "layer0" : "modularpowerarmor:block/modularpowerarmorworkbench",
-      "particle": "modularpowerarmor:block/modularpowerarmorworkbench"
+      "all" : "modularpowerarmor:block/modularpowerarmorworkbench"
     }
   }
 }

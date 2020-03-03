@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class MPACreativeTab extends ItemGroup {
     public MPACreativeTab() {
-        super(MPAConstants.MODID);
+        super(MPAConstants.MOD_ID);
     }
 
     @OnlyIn(Dist.CLIENT)

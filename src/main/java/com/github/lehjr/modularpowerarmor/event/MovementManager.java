@@ -5,6 +5,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
@@ -16,8 +17,10 @@ import com.github.lehjr.mpalib.player.PlayerUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -29,6 +32,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
+import top.theillusivec4.caelus.api.CaelusAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +75,7 @@ public class MovementManager {
                             movementResistance.set(kin.applyPropertyModifiers(MPAConstants.MOVEMENT_RESISTANCE));
                         });
         });
+
         multiplier -= movementResistance.get();
         // player walking speed: 0.10000000149011612
         // player sprintint speed: 0.13000001

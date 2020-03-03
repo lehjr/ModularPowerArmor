@@ -1,10 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.misc;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
 import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
 import com.github.lehjr.mpalib.string.StringUtils;
@@ -20,12 +17,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class AdditionalInfo {
@@ -42,22 +43,75 @@ public class AdditionalInfo {
      *                         their settings.
      */
     public static void addInformation(@Nonnull ItemStack stack, World worldIn, List currentTipList, ITooltipFlag advancedToolTips) {
+        if (worldIn == null) {
+            return;
+        }
+
         // TODO: remove enchantment labels.
         if (currentTipList.contains(I18n.format("silkTouch"))) {
             currentTipList.remove(I18n.format("silkTouch"));
         }
 
-        // Mode changing item such as power fist
+        // Modular Item Check
         stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-            if(iItemHandler instanceof IModeChangingItem) {
-                ItemStack activeModule = ((IModeChangingItem) iItemHandler).getActiveModule();
-                if (!activeModule.isEmpty()) {
-                    ITextComponent localizedName = activeModule.getDisplayName();
-                    currentTipList.add(
-                            new TranslationTextComponent("tooltip.modularpowerarmor.mode").appendText(" ")
-                            .appendSibling(localizedName.applyTextStyle(TextFormatting.RED)));
+            // base class
+            if(iItemHandler instanceof IModularItem) {
+                // Mode changing item such as power fist
+                if (iItemHandler instanceof IModeChangingItem) {
+                    ItemStack activeModule = ((IModeChangingItem) iItemHandler).getActiveModule();
+                    if (!activeModule.isEmpty()) {
+                        ITextComponent localizedName = activeModule.getDisplayName();
+                        currentTipList.add(
+                                new TranslationTextComponent("tooltip.modularpowerarmor.mode").appendText(" ")
+                                        .appendSibling(localizedName.applyTextStyle(TextFormatting.RED)));
+                    } else {
+                        currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.changeModes"));
+                    }
+                }
+
+                if (doAdditionalInfo()) {
+                    List<ITextComponent> installed = new ArrayList<>();
+                    Map<ITextComponent, FluidInfo> fluids = new HashMap<>();
+
+                    if(iItemHandler instanceof IModularItem) {
+                        for (ItemStack module : ((IModularItem) iItemHandler).getInstalledModules()) {
+                            installed.add(module.getDisplayName().applyTextStyle(TextFormatting.LIGHT_PURPLE));
+
+                            // check mpodule for fluid
+                            module.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fluidHandler ->{
+                                int numTanks = fluidHandler.getTanks();
+
+                                for(int i=0; i < numTanks; i++) {
+                                    FluidStack fluidStack = fluidHandler.getFluidInTank(i);
+                                    if (fluidStack.isEmpty()) {
+                                        continue;
+                                    }
+                                    int capacity = fluidHandler.getTankCapacity(i);
+
+                                    ITextComponent fluidName = fluidHandler.getFluidInTank(i).getDisplayName();
+                                    FluidInfo fluidInfo = fluids.getOrDefault(fluidName, new FluidInfo(fluidName)).addAmmount(fluidStack.getAmount()).addMax(capacity);
+                                    fluids.put(fluidName, fluidInfo);
+                                }
+                            });
+                        }
+                    }
+
+                    if (fluids.size() > 0) {
+                        for(FluidInfo info : fluids.values()) {
+                            currentTipList.add(info.getOutput());
+                        }
+                    }
+
+                    if (installed.size() == 0) {
+                        String message = I18n.format("tooltip.modularpowerarmor.noModules");
+                        currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
+                    } else {
+                        currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.installedModules"));
+                        currentTipList.addAll(installed);
+                    }
                 } else {
-                    currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.changeModes"));
+                    currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.pressShift")
+                            .applyTextStyles(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
                 }
             }
         });
@@ -69,56 +123,46 @@ public class AdditionalInfo {
                     + StringUtils.formatNumberShort(adapter.getMaxEnergyStored());
             currentTipList.add(new StringTextComponent(energyinfo).applyTextStyles(new TextFormatting[]{TextFormatting.AQUA, TextFormatting.ITALIC}));
         }
+    }
 
-        if (doAdditionalInfo()) {
-            stack.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
-                if (pm.getCategory() == EnumModuleCategory.ARMOR) {
-                    double pysArmor = pm.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_PHYSICAL);
-                    double energyArmor = pm.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_ENERGY);
-//                    double toughness = pm.applyPropertyModifiers(MPSConstants)
-                    double knockbackResistance = pm.applyPropertyModifiers(MPAConstants.KNOCKBACK_RESISTANCE);
+    static class FluidInfo {
+        ITextComponent displayName;
+        int currentAmount=0;
+        int maxAmount=0;
 
-                }
-            });
+        FluidInfo(ITextComponent displayName) {
+            this.displayName = displayName;
+        }
 
+        public ITextComponent getDisplayName() {
+            return displayName;
+        }
 
+        public int getMaxAmount() {
+            return maxAmount;
+        }
 
+        public int getCurrentAmount() {
+            return currentAmount;
+        }
 
+        public FluidInfo addMax(int maxAmountIn) {
+            maxAmount += maxAmountIn;
+            return this;
+        }
 
-            // FIXME: fluids???
-            // this is just some random info on the fluids installed
-//            if (stack.getItem() instanceof ItemPowerArmorChestplate) {
-//
-//                // TODO: tooltip label for fluids if fluids found
-//
-//                // Water tank info
-//                FluidUtils fluidUtils = new FluidUtils(player, stack, MPSModuleConstants.MODULE_BASIC_COOLING_SYSTEM__DATANAME);
-//                List<String> fluidInfo = fluidUtils.getFluidDisplayString();
-//                if (!fluidInfo.isEmpty())
-//                    currentTipList.addAll(fluidInfo);
-//
-//                // advanced fluid tank info
-//                fluidUtils = new FluidUtils(player, stack, MPSModuleConstants.MODULE_ADVANCED_COOLING_SYSTEM__DATANAME);
-//                fluidInfo = fluidUtils.getFluidDisplayString();
-//                if (!fluidInfo.isEmpty())
-//                    currentTipList.addAll(fluidInfo);
-//            }
+        public FluidInfo addAmmount(int currentAmountIn) {
+            currentAmount += currentAmountIn;
+            return this;
+        }
 
-            List<ITextComponent> installed = getItemInstalledModules(stack);
-            if (installed.size() == 0) {
-                String message = I18n.format("tooltip.modularpowerarmor.noModules");
-                currentTipList.addAll(StringUtils.wrapStringToLength(message, 30));
-            } else {
-                currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.installedModules"));
-                currentTipList.addAll(installed);
-            }
-
-
-        } else {
-            currentTipList.add(new TranslationTextComponent("tooltip.modularpowerarmor.pressShift")
-                    .applyTextStyles(new TextFormatting[]{TextFormatting.GRAY, TextFormatting.ITALIC}));
+        public ITextComponent getOutput() {
+            return displayName.appendText(": ").appendText(new StringBuilder(currentAmount).append("/").append(maxAmount).toString())
+                    .applyTextStyles(new TextFormatting[]{TextFormatting.DARK_AQUA, TextFormatting.ITALIC});
         }
     }
+
+
 
     public static String additionalInfoInstructions() {
         String message = I18n.format("tooltip.modularpowerarmor.pressShift");

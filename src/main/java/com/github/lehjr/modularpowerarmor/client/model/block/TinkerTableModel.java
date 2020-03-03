@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
-import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
+import com.github.lehjr.mpalib.client.model.helper.ModelTransformCalibration;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;

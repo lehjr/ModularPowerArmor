@@ -726,7 +726,7 @@ public class CommonConfig {
         }
 
         // drop the prefix for MPS modules and replace "dots" with underscores
-        final String itemPrefix = "item." + MPAConstants.MODID + ".";
+        final String itemPrefix = "item." + MPAConstants.MOD_ID + ".";
         String itemTranslationKeyToConfigKey(String translationKey) {
             if (translationKey.startsWith(itemPrefix )){
                 translationKey = translationKey.substring(itemPrefix .length());

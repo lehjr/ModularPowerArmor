@@ -8,7 +8,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = MPAConstants.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MPAConstants.MOD_ID, value = Dist.CLIENT)
 public class SoundDictionary {
     private static final String SOUND_PREFIX = "modularpowerarmor:";
     public static SoundEvent SOUND_EVENT_GLIDER = registerSound("glider");
@@ -40,7 +40,7 @@ public class SoundDictionary {
     }
 
     private static SoundEvent registerSound(String soundName) {
-        ResourceLocation location = new ResourceLocation(MPAConstants.MODID, soundName);
+        ResourceLocation location = new ResourceLocation(MPAConstants.MOD_ID, soundName);
         SoundEvent event = new SoundEvent(location).setRegistryName(location);
         return event;
     }

@@ -1,17 +1,18 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.client.gui.common.InventoryFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
 import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
-import com.github.lehjr.mpalib.client.gui.ContainerGui;
+import com.github.lehjr.mpalib.client.gui.ExtendedContainerScreen;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
+import com.github.lehjr.mpalib.client.gui.frame.InventoryFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.math.Colour;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.IRecipeShownListener;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,7 @@ import java.util.stream.IntStream;
 
 
 @OnlyIn(Dist.CLIENT)
-public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implements IRecipeShownListener {
+public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContainer> implements IRecipeShownListener {
     /** the recipe book */
     private final MPSRecipeBookGui recipeBookGui = new MPSRecipeBookGui();
     /** determins if the recipe book gui will be over the crafting gui */
@@ -42,7 +43,6 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
     protected final Colour gridBorderColour = Colour.LIGHTBLUE.withAlpha(0.8);
     protected final Colour gridBackGound = new Colour(0.545D, 0.545D, 0.545D, 1);
 
-//    protected final Colour gridBackGound = Colour.DARKBLUE.withAlpha(0.8);
     protected InventoryFrame craftingGrid, mainInventory, hotbar;
 
     protected DrawableRelativeRect result;
@@ -53,14 +53,13 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
     final int slotHeight = 18;
     int spacer = 7;
 
-
     /**
      * Fun fact: initializing GUI element placement values in the constructor is meaningless because the placement
      *  values aren't set until init()
      */
     public TinkerCraftingGUI(MPSCraftingContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title);
-
+        this.minecraft = Minecraft.getInstance();
         PlayerEntity player = getMinecraft().player;
 
         tabSelectFrame = new TabSelectFrame(player, 3);
@@ -256,14 +255,6 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
 
     @Override
     protected boolean isPointInRegion(int targetPosX, int targetPosY, int targetWidth, int targetHeight, double mouseX, double mouseY) {
-
-//        System.out.println("p_195359_1_: " + p_195359_1_);
-//        System.out.println("p_195359_2_: " + p_195359_2_);
-//        System.out.println("p_195359_3_: " + p_195359_3_);
-//        System.out.println("p_195359_4_: " + p_195359_4_);
-//        System.out.println("p_195359_5_: " + p_195359_5_);
-
-
         return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.isPointInRegion(targetPosX, targetPosY, targetWidth, targetHeight, mouseX, mouseY);
     }
 
@@ -273,7 +264,6 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
             return true;
 
         if (this.recipeBookButton.mouseClicked(mouseX, mouseY, button)) {
-//            recipeBookButton.onPressed();
             return true;
         }
 
@@ -289,18 +279,6 @@ public class TinkerCraftingGUI extends ContainerGui<MPSCraftingContainer> implem
     }
 
     double yVal = 37;
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double dWheel) {
-//        System.out.println("mouseX, mouseY: <" + mouseX + ", " + mouseY + ">");
-//        System.out.println("guiTopLeft " + new Point2D(getGuiLeft(), getGuiTop()));
-//        System.out.println("xSize: " + xSize);
-//        yVal += dWheel;
-//        System.out.println("yVal: " + yVal);
-
-
-        return false;
-    }
 
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int scaledWidth, int scaledHeight, int button) {

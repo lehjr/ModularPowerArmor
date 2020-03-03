@@ -3,11 +3,12 @@ package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
-import com.github.lehjr.mpalib.client.gui.ContainerGui;
+import com.github.lehjr.mpalib.client.gui.ExtendedContainerScreen;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -22,11 +23,10 @@ import java.util.List;
  *
  *
  */
-public class TinkerTableGui extends ContainerGui<TinkerTableContainer> {
+public class TinkerTableGui extends ExtendedContainerScreen<TinkerTableContainer>{
     final int spacer = 7;
 
     TinkerTableContainer container;
-    PlayerEntity player;
     protected DrawableRect backgroundRect;
     protected ItemSelectionFrame itemSelectFrame;
     protected ModuleSelectionFrame moduleSelectFrame;
@@ -37,7 +37,8 @@ public class TinkerTableGui extends ContainerGui<TinkerTableContainer> {
 
     public TinkerTableGui(TinkerTableContainer containerIn, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(containerIn, playerInventory, titleIn);
-        this.player = playerInventory.player;
+        this.minecraft = Minecraft.getInstance();
+        PlayerEntity player = getMinecraft().player;
         this.container = containerIn;
         rescale();
         backgroundRect = new DrawableRect(absX(-1), absY(-1), absX(1), absY(1), true,

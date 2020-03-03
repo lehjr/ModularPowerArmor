@@ -12,7 +12,7 @@ public class MPAPackets {
     private static final String PROTOCOL_VERSION = "1";
 
     public static final SimpleChannel CHANNEL_INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(MPAConstants.MODID, "data"),
+            new ResourceLocation(MPAConstants.MOD_ID, "data"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

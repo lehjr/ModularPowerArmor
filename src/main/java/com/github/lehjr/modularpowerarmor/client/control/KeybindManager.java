@@ -129,7 +129,7 @@ public enum KeybindManager {
                 } else if (line.contains("~") && workingKeybinding != null) {
                     String[] exploded = line.split("~");
                     Point2D position = new Point2D(Double.parseDouble(exploded[1]), Double.parseDouble(exploded[2]));
-                    ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(MPAConstants.MODID, exploded[0])));
+                    ItemStack module = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(MPAConstants.MOD_ID, exploded[0])));
                     if (!module.isEmpty()) {
                         ClickableModule cmodule = new ClickableModule(module, position, -1, EnumModuleCategory.NONE);
                         workingKeybinding.bindModule(cmodule);

@@ -8,9 +8,7 @@ import com.github.lehjr.modularpowerarmor.client.model.block.TinkerTableModel;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.modularpowerarmor.client.model.item.ModelPowerFist;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -18,9 +16,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.SimpleModelState;
-import net.minecraftforge.common.model.IModelPart;
-import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -42,16 +37,18 @@ public enum ModelBakeEventHandler {
 
         MPSModelHelper.loadArmorModels(null, event.getModelLoader());
 
-        // New Lux Capacitor Inventory Model
-        IModel tinkertableUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        // Tinker Table Inventory Model
+        IModel tinkertableUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MOD_ID,
                 "models/block/powerarmor_workbench.obj"));
 
-        // new Tinker Table Inventory Model
-        IModel luxCapacitorBaseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        // Lux Capacitor Base Model
+        IModel luxCapacitorBaseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MOD_ID,
         "models/block/luxcapacitor/luxcapacitor_base.obj"));
 
-        IModel luxcapacitorLenseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MODID,
+        // Lux Capacitor Lens Model
+        IModel luxcapacitorLenseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MOD_ID,
         "models/block/luxcapacitor/luxcapacitor_lens.obj"));
+
 
         modelRegistry.put(
                 new ModelResourceLocation(MPARegistryNames.TINKER_TABLE_REG_NAME, "inventory"),
@@ -94,46 +91,15 @@ public enum ModelBakeEventHandler {
                                     ModelHelper.defaultTextureGetter(),
                                     TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
 
-            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP))
+            if (facing.equals(Direction.DOWN) || facing.equals(Direction.UP)) {
                 continue;
-
-//            MPALibLogger.logger.info("MPS model location: " + new ModelResourceLocation(
-//                    MPSRegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()).toString());
+            }
 
             modelRegistry.put(new ModelResourceLocation(MPARegistryNames.TINKER_TABLE_REG_NAME, "facing=" + facing.getName()),
-
                     new TinkerTableModel(tinkertableUnbaked.bake(
                             event.getModelLoader(),
                             ModelHelper.defaultTextureGetter(),
                             TRSRTransformation.getRotation(facing), DefaultVertexFormats.ITEM)));
         }
-    }
-
-    public IModelState getModelState() {
-        ImmutableMap.Builder<IModelPart, TRSRTransformation> builder = ImmutableMap.builder();
-
-        // first person and third person models rotated to so that the side away from the player is the same as when it is placed
-        builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,
-                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
-
-        builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-                ModelHelper.get(0, 0, 0, 0, 135, 0, 0.4f));
-
-        builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,
-                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
-
-        builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,
-                ModelHelper.get(0, 2.5f, 0, 75, -135, 0, 0.375f));
-
-        builder.put(ItemCameraTransforms.TransformType.GUI,
-                ModelHelper.get(-0.0625F, 0.25F, 0, 30, 225, 0, 0.625f));
-
-        builder.put(ItemCameraTransforms.TransformType.GROUND,
-                ModelHelper.get(0, 3, 0, 0, 0, 0, 0.25f));
-
-        builder.put(ItemCameraTransforms.TransformType.FIXED,
-                ModelHelper.get(0, 0, 0, 0, 0, 0, 0.5f));
-
-        return new SimpleModelState(builder.build());
     }
 }

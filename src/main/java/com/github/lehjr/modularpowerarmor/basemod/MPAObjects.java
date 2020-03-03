@@ -44,7 +44,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
-import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MODID;
+import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MOD_ID;
 import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
 
 
@@ -353,13 +353,13 @@ public enum MPAObjects {
     public static TileEntityType<TileEntityLuxCapacitor> capacitorTileEntityType = null;
 
     // Entities -----------------------------------------------------------------------------------
-    @ObjectHolder(MODID + ":luxcapacitor_entity")
+    @ObjectHolder(MOD_ID + ":luxcapacitor_entity")
     public static EntityType<LuxCapacitorEntity> LUX_CAPACITOR_ENTITY_TYPE;
 
-    @ObjectHolder(MODID + ":plasma_bolt")
+    @ObjectHolder(MOD_ID + ":plasma_bolt")
     public static EntityType<PlasmaBoltEntity> PLASMA_BOLT_ENTITY_TYPE;
 
-    @ObjectHolder(MODID + ":spinning_blade")
+    @ObjectHolder(MOD_ID + ":spinning_blade")
     public static EntityType<SpinningBladeEntity> SPINNING_BLADE_ENTITY_TYPE;
 
     /**

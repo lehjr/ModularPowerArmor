@@ -10,7 +10,7 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 public class MPARecipeConditionFactory implements ICondition {
-    static final ResourceLocation NAME = new ResourceLocation(MPAConstants.MODID, "conditional");
+    static final ResourceLocation NAME = new ResourceLocation(MPAConstants.MOD_ID, "conditional");
 
     String conditionName;
 

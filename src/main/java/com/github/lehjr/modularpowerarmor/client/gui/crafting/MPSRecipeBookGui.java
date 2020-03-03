@@ -53,9 +53,9 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             Colour.DARKBLUE.withAlpha(0.8),
             Colour.LIGHTBLUE.withAlpha(0.8));
 
-    protected static final ResourceLocation RECIPE_BOOK = new ResourceLocation(MPAConstants.MODID,"textures/gui/recipe_book.png");
+    protected static final ResourceLocation RECIPE_BOOK = new ResourceLocation(MPAConstants.MOD_ID,"textures/gui/recipe_book.png");
 
-    protected static final ResourceLocation SEARCH_ICON = new ResourceLocation(MPAConstants.MODID,"textures/gui/search.png");
+    protected static final ResourceLocation SEARCH_ICON = new ResourceLocation(MPAConstants.MOD_ID,"textures/gui/search.png");
 
     private int xOffset;
     private int width;

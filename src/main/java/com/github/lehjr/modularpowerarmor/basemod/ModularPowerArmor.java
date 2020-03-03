@@ -27,24 +27,20 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(MPAConstants.MODID)
+@Mod(MPAConstants.MOD_ID)
 public class ModularPowerArmor {
     public ModularPowerArmor() {
         // TODO: revisit and see if a server config is needed too (not that server config only initializes with a server running and is stored with the saved world
@@ -94,22 +90,17 @@ public class ModularPowerArmor {
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
         MPAPackets.registerMPAPackets();
-//        registerCraftingCondition("thermal_expansion_recipes_enabled");
-//        registerCraftingCondition("enderio_recipes_enabled");
-//        registerCraftingCondition("tech_reborn_recipes_enabled");
-//        registerCraftingCondition("ic2_recipes_enabled");
-//        registerCraftingCondition("vanilla_recipes_enabled");
         CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
     }
 
-    @SubscribeEvent
-    public void setupRecipeConditionHandler(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-//        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
-    }
+//    @SubscribeEvent
+//    public void setupRecipeConditionHandler(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+////        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
+//    }
 
     // client preInit
     private void setupClient(final FMLClientSetupEvent event) {
-        MPALibOBJLoader.INSTANCE.addDomain(MPAConstants.MODID.toLowerCase());
+        MPALibOBJLoader.INSTANCE.addDomain(MPAConstants.MOD_ID.toLowerCase());
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
@@ -130,13 +121,13 @@ public class ModularPowerArmor {
         ScreenManager.registerFactory(MPAObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class
-    @Mod.EventBusSubscriber
-    public static class ServerEvents {
-        @SubscribeEvent
-        public static void onServerStarting(FMLServerStartingEvent event) {
-            // do something when the server starts
-//            MPALibLogger.logInfo("HELLO from server starting");
-        }
-    }
+//    // You can use EventBusSubscriber to automatically subscribe events on the contained class
+//    @Mod.EventBusSubscriber
+//    public static class ServerEvents {
+//        @SubscribeEvent
+//        public static void onServerStarting(FMLServerStartingEvent event) {
+//            // do something when the server starts
+////            MPALibLogger.logInfo("HELLO from server starting");
+//        }
+//    }
 }

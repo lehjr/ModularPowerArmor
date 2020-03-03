@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
 import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
@@ -8,10 +9,14 @@ import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.client.render.modelspec.EnumSpecType;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
@@ -28,6 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -78,50 +84,48 @@ public class ItemPowerArmor extends ItemElectricArmor {
             return multimap;
         }
 
-//        AtomicDouble armorVal = new AtomicDouble(0);
-//        AtomicDouble toughnessVal = new AtomicDouble(0);
-//        AtomicDouble knockbackResistance = new AtomicDouble(0);
-//
-//        itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-//            if (iItemHandler instanceof IModularItem) {
-//                // Armor **should** only occupy one slot
-//                Pair<Integer, Integer> range = ((IModularItem) iItemHandler).getRangeForCategory(EnumModuleCategory.ARMOR);
-//                if (range != null) {
-//                    for (int i = range.getLeft(); i < range.getRight(); i++) {
-//                        iItemHandler.getStackInSlot(i).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm -> {
-//                            if (pm.isAllowed()) {
-//                                // physical armor and hybrid energy/physical armor
-//                                double armorDouble = pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_PHYSICAL);
-//                                double knockBack = 0;
-//
-//                                if (pm instanceof IToggleableModule && ((IToggleableModule) pm).isModuleOnline()) {
-//                                    armorDouble += pm.applyPropertyModifiers(MPSConstants.ARMOR_VALUE_ENERGY);
-//                                }
-//
-//                                if (armorDouble > 0) {
-//                                    knockBack = pm.applyPropertyModifiers(MPSConstants.KNOCKBACK_RESISTANCE);
-//                                    armorVal.getAndAdd(armorDouble);
-//                                }
-//
-//                                if (knockBack > 0) {
-//                                    knockbackResistance.getAndAdd(knockBack);
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        });
-//
-//        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", armorVal.get(), AttributeModifier.Operation.ADDITION));
-//        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", knockbackResistance.get(), AttributeModifier.Operation.ADDITION));
-//        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", toughnessVal.get(), AttributeModifier.Operation.ADDITION));
-//
+        AtomicDouble armorVal = new AtomicDouble(0);
+        AtomicDouble toughnessVal = new AtomicDouble(0);
+        AtomicDouble knockbackResistance = new AtomicDouble(0);
 
+        itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+            if (iItemHandler instanceof IModularItem) {
+                // Armor **should** only occupy one slot
+                Pair<Integer, Integer> range = ((IModularItem) iItemHandler).getRangeForCategory(EnumModuleCategory.ARMOR);
+                if (range != null) {
+                    for (int i = range.getLeft(); i < range.getRight(); i++) {
+                        iItemHandler.getStackInSlot(i).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm -> {
+                            if (pm.isAllowed()) {
+                                // physical armor and hybrid energy/physical armor
+                                double armorDouble = pm.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_PHYSICAL);
+                                double knockBack = 0;
 
-        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", 6, AttributeModifier.Operation.ADDITION));
-        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", 0.25, AttributeModifier.Operation.ADDITION));
-        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", 2.5, AttributeModifier.Operation.ADDITION));
+                                if (pm instanceof IToggleableModule && ((IToggleableModule) pm).isModuleOnline()) {
+                                    armorDouble += pm.applyPropertyModifiers(MPAConstants.ARMOR_VALUE_ENERGY);
+                                }
+
+                                if (armorDouble > 0) {
+                                    knockBack = pm.applyPropertyModifiers(MPAConstants.KNOCKBACK_RESISTANCE);
+                                    armorVal.getAndAdd(armorDouble);
+                                }
+
+                                if (knockBack > 0) {
+                                    knockbackResistance.getAndAdd(knockBack);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", armorVal.get(), AttributeModifier.Operation.ADDITION));
+        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", knockbackResistance.get(), AttributeModifier.Operation.ADDITION));
+        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", toughnessVal.get(), AttributeModifier.Operation.ADDITION));
+
+//        multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor modifier", 6, AttributeModifier.Operation.ADDITION));
+//        multimap.put(SharedMonsterAttributes.KNOCKBACK_RESISTANCE.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Knockback resistance", 0.25, AttributeModifier.Operation.ADDITION));
+//        multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor toughness", 2.5, AttributeModifier.Operation.ADDITION));
 
         return multimap;
     }
@@ -172,19 +176,16 @@ public class ItemPowerArmor extends ItemElectricArmor {
             }
 
             BipedModel model = ArmorModelInstance.getInstance();
-            if (slot == EquipmentSlotType.CHEST && itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
+            ItemStack chestplate = entityLiving.getItemStackFromSlot(EquipmentSlotType.CHEST);
+            if (chestplate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
                     iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
                             .isModuleOnline(new ResourceLocation(MPARegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
-//                System.out.println("setting active camoflage on");
-
                 ((HighPolyArmor) model).setVisibleSection(null);
             } else {
                 if (renderTag != null) {
                     ((HighPolyArmor) model).setVisibleSection(slot);
                     ((HighPolyArmor) model).setRenderSpec(renderTag);
                 }
-
-//                System.out.println("render tag: " + renderTag);
             }
             return model;
         }).orElse(_default);

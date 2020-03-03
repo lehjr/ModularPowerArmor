@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
 public class MPAConstants {
-    public static final String MODID = "modularpowerarmor";
+    public static final String MOD_ID = "modularpowerarmor";
 
-    public static final String RESOURCE_PREFIX = MPAConstants.MODID + ":";
+    public static final String RESOURCE_PREFIX = MPAConstants.MOD_ID + ":";
     public static final String TEXTURE_PREFIX = RESOURCE_PREFIX + "textures/";
-    public static final String RESOURCE_DOMAIN = MODID.toLowerCase();
+    public static final String RESOURCE_DOMAIN = MOD_ID.toLowerCase();
 
         // temporary locations until model spec system up and running
     public static final String SEBK_AMROR_PANTS = TEXTURE_PREFIX + "item/armor/sebkarmorpants.png";
@@ -14,7 +14,7 @@ public class MPAConstants {
     public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
 
 
-    public static final String CONFIG_PREFIX = "config." + MODID + ".";
+    public static final String CONFIG_PREFIX = "config." + MOD_ID + ".";
 
     /** HUD --------------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";

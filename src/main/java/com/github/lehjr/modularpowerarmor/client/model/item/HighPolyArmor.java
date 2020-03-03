@@ -5,11 +5,13 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -65,8 +67,6 @@ public class HighPolyArmor extends BipedModel {
     }
 
     public void clearAndAddChildWithInitialOffsets(RendererModel mr, float xo, float yo, float zo) {
-        System.out.println("doing something here");
-
         mr.cubeList.clear();
         RenderPart rp = new RenderPart(this, mr);
         mr.addChild(rp);
@@ -92,49 +92,16 @@ public class HighPolyArmor extends BipedModel {
     public void prep(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         try {
             LivingEntity entLive = (LivingEntity) entityIn;
-            ItemStack stack = entLive.getActiveItemStack();
-
-            // set pose for main hand, whichever hand that is
-            if (entLive.getHeldItemMainhand().isEmpty()) {
-                if (getMainHand(entLive) == HandSide.RIGHT)
-                    this.rightArmPose = ArmPose.EMPTY;
-                else
-                    this.leftArmPose = ArmPose.EMPTY;
+            ItemStack mainStack = entLive.getHeldItemMainhand();
+            ItemStack offStack = entLive.getHeldItemOffhand();
+            ArmPose armPose = this.getArmPose(entLive, mainStack, offStack, Hand.MAIN_HAND);
+            ArmPose armPose1 = this.getArmPose(entLive, mainStack, offStack, Hand.OFF_HAND);
+            if (entLive.getPrimaryHand() == HandSide.RIGHT) {
+                this.rightArmPose = armPose;
+                this.leftArmPose = armPose1;
             } else {
-                if (getMainHand(entLive) == HandSide.RIGHT)
-                    this.rightArmPose = ArmPose.ITEM;
-                else
-                    this.leftArmPose = ArmPose.ITEM;
-            }
-
-            // the "offhand" is the other hand
-            if (entLive.getHeldItemOffhand().isEmpty()) {
-                if (getMainHand(entLive) == HandSide.RIGHT)
-                    this.rightArmPose = ArmPose.EMPTY;
-                else
-                    this.leftArmPose = ArmPose.EMPTY;
-            } else {
-                if (getMainHand(entLive) == HandSide.RIGHT)
-                    this.rightArmPose = ArmPose.ITEM;
-                else
-                    this.leftArmPose = ArmPose.ITEM;
-            }
-
-            isSneak = entLive.isSneaking();
-            PlayerEntity entPlayer = (PlayerEntity) entLive;
-            if ((!stack.isEmpty()) && (entPlayer.getItemInUseCount() > 0)) {
-                UseAction UseAction = stack.getUseAction();
-                if (UseAction == UseAction.BLOCK) {
-                    if (getMainHand(entLive) == HandSide.LEFT)
-                        this.leftArmPose = ArmPose.BLOCK;
-                    else
-                        this.rightArmPose = ArmPose.BLOCK;
-                } else if (UseAction == UseAction.BOW) {
-                    if (getMainHand(entLive) == HandSide.LEFT)
-                        this.leftArmPose = ArmPose.BOW_AND_ARROW;
-                    else
-                        this.rightArmPose = ArmPose.BOW_AND_ARROW;
-                }
+                this.rightArmPose = armPose1;
+                this.leftArmPose = armPose;
             }
         } catch (Exception ignored) {
         }
@@ -160,14 +127,56 @@ public class HighPolyArmor extends BipedModel {
 //        isSneak = false;
     }
 
-    
+    /**
+     * From vanilla player renderer
+     * @param player
+     * @param mainhandStack
+     * @param offhandStack
+     * @param hand
+     * @return
+     */
+    private ArmPose getArmPose(LivingEntity player, ItemStack mainhandStack, ItemStack offhandStack, Hand hand) {
+        ArmPose armpose = ArmPose.EMPTY;
+        ItemStack itemstack = hand == Hand.MAIN_HAND ? mainhandStack : offhandStack;
+        if (!itemstack.isEmpty()) {
+            armpose = ArmPose.ITEM;
+            if (player.getItemInUseCount() > 0) {
+                UseAction useaction = itemstack.getUseAction();
+                if (useaction == UseAction.BLOCK) {
+                    armpose = ArmPose.BLOCK;
+                } else if (useaction == UseAction.BOW) {
+                    armpose = ArmPose.BOW_AND_ARROW;
+                } else if (useaction == UseAction.SPEAR) {
+                    armpose = ArmPose.THROW_SPEAR;
+                } else if (useaction == UseAction.CROSSBOW && hand == player.getActiveHand()) {
+                    armpose = ArmPose.CROSSBOW_CHARGE;
+                }
+            } else {
+                boolean flag3 = mainhandStack.getItem() == Items.CROSSBOW;
+                boolean flag = CrossbowItem.isCharged(mainhandStack);
+                boolean flag1 = offhandStack.getItem() == Items.CROSSBOW;
+                boolean flag2 = CrossbowItem.isCharged(offhandStack);
+                if (flag3 && flag) {
+                    armpose = ArmPose.CROSSBOW_HOLD;
+                }
+
+                if (flag1 && flag2 && mainhandStack.getItem().getUseAction(mainhandStack) == UseAction.NONE) {
+                    armpose = ArmPose.CROSSBOW_HOLD;
+                }
+            }
+        }
+        return armpose;
+    }
 
     @Override
     protected HandSide func_217147_a(LivingEntity p_217147_1_) {
         return super.func_217147_a(p_217147_1_);
     }
-//
-//    @Override
+
+    protected HandSide getOffHand(Entity entityIn) {
+        return super.func_217147_a((LivingEntity) entityIn) == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT;
+    }
+
     protected HandSide getMainHand(Entity entityIn) {
         return  super.func_217147_a((LivingEntity) entityIn);
     }

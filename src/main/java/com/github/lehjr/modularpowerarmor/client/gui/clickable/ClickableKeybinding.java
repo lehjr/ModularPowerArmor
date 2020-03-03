@@ -79,7 +79,7 @@ public class ClickableKeybinding extends ClickableButton {
         }
         toggleval = !toggleval;
     }
-//
+
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);

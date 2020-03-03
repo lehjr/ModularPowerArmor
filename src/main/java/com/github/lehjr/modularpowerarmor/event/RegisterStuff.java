@@ -53,7 +53,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MODID;
+import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MOD_ID;
 import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
 
 //import com.github.lehjr.modularpowerarmor.containers.ModularItemContainer;
@@ -230,11 +230,11 @@ public enum RegisterStuff {
 
                 EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
                         .setCustomClientFactory((spawnEntity, world) -> MPAObjects.SPINNING_BLADE_ENTITY_TYPE.create(world))
-                        .build(MODID +":spinning_blade").setRegistryName(MODID +":spinning_blade"),
+                        .build(MOD_ID +":spinning_blade").setRegistryName(MOD_ID +":spinning_blade"),
 
                 EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
                         .setCustomClientFactory((spawnEntity, world) -> MPAObjects.PLASMA_BOLT_ENTITY_TYPE.create(world))
-                        .build(MODID +":plasma_bolt").setRegistryName(MODID +":plasma_bolt")
+                        .build(MOD_ID +":plasma_bolt").setRegistryName(MOD_ID +":plasma_bolt")
         );
     }
 
