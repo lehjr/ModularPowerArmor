@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
+import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -66,7 +66,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
                 int energyConsumption = (int) Math.round(applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION));
                 if (energy > energyConsumption && player.getAir() < 10) {
                     if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
-                        Musique.playClientSound(SoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f);
+                        Musique.playClientSound(MPASoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f);
                     }
                     ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);
                     player.setAir(300);

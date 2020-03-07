@@ -9,37 +9,30 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = MPAConstants.MOD_ID, value = Dist.CLIENT)
-public class SoundDictionary {
-    private static final String SOUND_PREFIX = "modularpowerarmor:";
-    public static SoundEvent SOUND_EVENT_GLIDER = registerSound("glider");
-    public static SoundEvent SOUND_EVENT_GUI_INSTALL = registerSound("gui_install");
-    public static SoundEvent SOUND_EVENT_GUI_SELECT = registerSound("gui_select");
-    public static SoundEvent SOUND_EVENT_JETBOOTS = registerSound("jet_boots");
-    public static SoundEvent SOUND_EVENT_JETPACK = registerSound("jetpack");
-    public static SoundEvent SOUND_EVENT_JUMP_ASSIST = registerSound("jump_assist");
-    public static SoundEvent SOUND_EVENT_MPS_BOOP = registerSound("mmmps_boop");
-    public static SoundEvent SOUND_EVENT_SWIM_ASSIST = registerSound("swim_assist");
-    public static SoundEvent SOUND_EVENT_ELECTROLYZER = registerSound("water_electrolyzer");
+public class MPASoundDictionary {
+    public static SoundEvent SOUND_EVENT_GLIDER = initSound("glider");
+    public static SoundEvent SOUND_EVENT_JETBOOTS = initSound("jet_boots");
+    public static SoundEvent SOUND_EVENT_JETPACK = initSound("jetpack");
+    public static SoundEvent SOUND_EVENT_JUMP_ASSIST = initSound("jump_assist");
+    public static SoundEvent SOUND_EVENT_SWIM_ASSIST = initSound("swim_assist");
+    public static SoundEvent SOUND_EVENT_ELECTROLYZER = initSound("water_electrolyzer");
 
     static {
-        new SoundDictionary();
+        new MPASoundDictionary();
     }
 
     @SubscribeEvent
     public static void registerSoundEvent(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().registerAll(
                 SOUND_EVENT_GLIDER,
-                SOUND_EVENT_GUI_INSTALL,
-                SOUND_EVENT_GUI_SELECT,
                 SOUND_EVENT_JETBOOTS,
                 SOUND_EVENT_JETPACK,
                 SOUND_EVENT_JUMP_ASSIST,
-                SOUND_EVENT_MPS_BOOP,
                 SOUND_EVENT_SWIM_ASSIST,
                 SOUND_EVENT_ELECTROLYZER);
     }
 
-    private static SoundEvent registerSound(String soundName) {
+    private static SoundEvent initSound(String soundName) {
         ResourceLocation location = new ResourceLocation(MPAConstants.MOD_ID, soundName);
         SoundEvent event = new SoundEvent(location).setRegistryName(location);
         return event;

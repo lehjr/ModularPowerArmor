@@ -8,24 +8,6 @@
       }
     ]
   },
-  "gui_install":{
-    "category":"master",
-    "sounds":[
-      {
-        "name":"modularpowerarmor:gui_install",
-        "stream":false
-      }
-    ]
-  },
-  "gui_select":{
-    "category":"master",
-    "sounds":[
-      {
-        "name":"modularpowerarmor:gui_select",
-        "stream":false
-      }
-    ]
-  },
   "jet_boots":{
     "category":"master",
     "sounds":[
@@ -49,15 +31,6 @@
     "sounds":[
       {
         "name":"modularpowerarmor:jump_assist",
-        "stream":false
-      }
-    ]
-  },
-  "mmmps_boop":{
-    "category":"master",
-    "sounds":[
-      {
-        "name":"modularpowerarmor:mmmps_boop",
         "stream":false
       }
     ]

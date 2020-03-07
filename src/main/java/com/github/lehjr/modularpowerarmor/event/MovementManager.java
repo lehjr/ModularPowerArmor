@@ -4,12 +4,12 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
-import com.github.lehjr.modularpowerarmor.client.sound.SoundDictionary;
-import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmorChestplate;
+import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
@@ -17,10 +17,8 @@ import com.github.lehjr.mpalib.player.PlayerUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -32,7 +30,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
-import top.theillusivec4.caelus.api.CaelusAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -250,7 +247,7 @@ public class MovementManager {
                     double drain = jumper.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
                     if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
-                        Musique.playerSound(player, SoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
+                        Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
                     }
 
                     if (drain < avail) {
