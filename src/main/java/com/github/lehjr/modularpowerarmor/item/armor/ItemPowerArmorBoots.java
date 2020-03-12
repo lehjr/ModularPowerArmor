@@ -23,7 +23,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
@@ -46,7 +45,6 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
     class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         IModularItem modularItemCap;
-        IEnergyStorage energyStorage;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatFeet());
@@ -54,7 +52,6 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
             this.modularItemCap = new ModularArmorCap();
-            this.energyStorage = this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
             this.modelSpec = new ArmorModelSpecNBT(armor);
             this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
@@ -78,7 +75,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
             if (cap == ModelSpecNBTCapability.RENDER) {
                 return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> energyStorage));
+            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
         }
 
         class ModularArmorCap extends ModularItem {

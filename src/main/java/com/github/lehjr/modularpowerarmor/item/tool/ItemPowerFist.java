@@ -274,7 +274,6 @@ public class ItemPowerFist extends AbstractElectricTool {
     class PowerToolCap implements ICapabilityProvider {
         ItemStack fist;
         IModeChangingItem modeChangingItem;
-        IEnergyStorage energyStorage;
         IHeatStorage heatStorage;
         IHandHeldModelSpecNBT modelSpec;
         double maxHeat = CommonConfig.baseMaxHeatPowerFist();
@@ -292,7 +291,6 @@ public class ItemPowerFist extends AbstractElectricTool {
                 rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
                 this.setRangedWrapperMap(rangedWrapperMap);
             }};
-            this.energyStorage = this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
             this.modelSpec = new PowerFistSpecNBT(fist);
         }

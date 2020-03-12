@@ -25,7 +25,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
@@ -53,7 +52,6 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
     class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         IModularItem modularItemCap;
-        IEnergyStorage energyStorage;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         IFluidHandlerItem fluidHandler;
@@ -62,7 +60,6 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
             this.modularItemCap = new ModularArmorCap();
-            this.energyStorage = this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
             this.fluidHandler = modularItemCap.getOnlineModuleOrEmpty(fluidTank).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(new EmptyFluidHandler());
             this.modelSpec = new ArmorModelSpecNBT(armor);
@@ -92,7 +89,7 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
                 return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, LazyOptional.of(()->fluidHandler));
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
+            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
         }
 
         class ModularArmorCap extends ModularItem {
@@ -102,7 +99,7 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
                  * Limit only Armor, Energy Storage and Energy Generation
                  *
                  * This cuts down on overhead for accessing the most commonly used values
-                */
+                 */
                 Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
                 rangedWrapperMap.put(EnumModuleCategory.ARMOR,new MPALibRangedWrapper(this, 0, 1));
                 rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE,new MPALibRangedWrapper(this, 1, 2));

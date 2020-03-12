@@ -46,7 +46,6 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor {
     class PowerArmorCap implements ICapabilityProvider {
         ItemStack armor;
         IModularItem modularItemCap;
-        IEnergyStorage energyStorage;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
         AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatHelmet());
@@ -68,8 +67,6 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor {
                 rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
                 setRangedWrapperMap(rangedWrapperMap);
             }};
-
-            this.energyStorage = this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper());
             this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
             this.modelSpec = new ArmorModelSpecNBT(armor);
             this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
