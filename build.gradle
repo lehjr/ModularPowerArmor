@@ -35,6 +35,14 @@ repositories {
     maven {
         url = "https://maven.theillusivec4.top/"
     }
+
+    maven { // TOP
+        name 'tterrag maven'
+        url "https://maven.tterrag.com/"
+    }
+
+
+//    maven {url "http://tehnut.info/maven"} // waila
 //    flatDir {
 //        dirs 'libs'
 //    }
@@ -94,6 +102,15 @@ dependencies {
 
 //    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
 //    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
+
+    //
+//    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}") // Hwyla-forge-1.10.6-B67_1.14.4.jar
+
+
+//    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
+    runtimeOnly fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
+        transitive = false
+    })
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

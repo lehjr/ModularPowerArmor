@@ -93,9 +93,12 @@ public class ItemSelectionFrame extends ScrollableFrame {
 
     private void loadIndices() {
         indices = new ArrayList<>();
-        for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            if(player.inventory.getStackInSlot(i).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(m-> m instanceof IModularItem).orElse(false)) {
-                indices.add(i);
+        for(int index = 0; index < player.inventory.getSizeInventory(); index++) {
+            // only load equipped items.
+            if (index > 35 || player.inventory.currentItem == index) {
+                if (player.inventory.getStackInSlot(index).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(m -> m instanceof IModularItem).orElse(false)) {
+                    indices.add(index);
+                }
             }
         }
     }
@@ -112,6 +115,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
                 button.containerIndex = slotIndex;
                 itemButtons.add(button);
             }
+            // cosmetic preset gui doesn't use a container.
         } else if (indices != null && !indices.isEmpty()) {
             itemButtons = new ArrayList<>();
             Iterator<Point2D> pointiterator = itemPoints.iterator();
@@ -129,13 +133,13 @@ public class ItemSelectionFrame extends ScrollableFrame {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.currentscrollpixels = Math.min(currentscrollpixels, getMaxScrollPixels());
-            super.preRender(mouseX, mouseY, partialTicks);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, -currentscrollpixels, 0);
-            drawItems(mouseX, mouseY, partialTicks);
-            drawSelection(mouseX, mouseY, partialTicks);
-            GL11.glPopMatrix();
-            super.postRender(mouseX, mouseY, partialTicks);
+        super.preRender(mouseX, mouseY, partialTicks);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0, -currentscrollpixels, 0);
+        drawItems(mouseX, mouseY, partialTicks);
+        drawSelection(mouseX, mouseY, partialTicks);
+        GL11.glPopMatrix();
+        super.postRender(mouseX, mouseY, partialTicks);
     }
 
     @Override

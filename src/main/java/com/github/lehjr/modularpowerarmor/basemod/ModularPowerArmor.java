@@ -70,8 +70,8 @@ public class ModularPowerArmor {
 
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);
-        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handHarvestDrops);
-        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBlockBreak);
+//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handHarvestDrops);
+//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBlockBreak);
 
 
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {

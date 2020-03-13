@@ -19,13 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class HarvestEventHandler {
-    @SubscribeEvent
-    public static void handleBlockBreak(BlockEvent.BreakEvent event) {
-        System.out.println("handleHarvestCheck");
-
-    }
-
-
+//    @SubscribeEvent
+//    public static void handleBlockBreak(BlockEvent.BreakEvent event) {
+////        System.out.println("block break event");
+//        event.getPlayer();
+//    }
 
     @SubscribeEvent
     public static void handleHarvestCheck(PlayerEvent.HarvestCheck event) {
@@ -119,45 +117,42 @@ public class HarvestEventHandler {
 //    public void onBlockBreak(BlockEvent.BreakEvent e) {
 //
 //    }
-
-    @SubscribeEvent
-    public static void handHarvestDrops(BlockEvent.HarvestDropsEvent event) {
-//        System.out.println("doing something here");
-
-
-        if (event.getHarvester() != null) {
-            PlayerEntity player = event.getHarvester();
-            player.getHeldItemMainhand().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-                if(iItemHandler instanceof IModeChangingItem) {
-                    List<ItemStack> originalDrops = event.getDrops();
-                    for (ItemStack item:  originalDrops) {
-                        System.out.println(item.serializeNBT());
-                    }
-
-                    NonNullList<ItemStack> test = NonNullList.create();
-                    test.addAll(event.getDrops());
-
-                    event.setResult(new BlockEvent.HarvestDropsEvent(
-                            (World)event.getWorld(),
-                            event.getPos(),
-                            event.getState(),
-                            event.getFortuneLevel(),
-                            event.getDropChance(),
-                            test,
-                            event.getHarvester(),
-                            true).getResult());
-
-                    List<ItemStack> newList = event.getDrops();
-
-                    for (ItemStack item:  newList) {
-                        System.out.println(item.serializeNBT());
-                    }
-
-                    System.out.println("new drops size: " + newList.size());
-
-                    System.out.println("new list same as old list? : " + Objects.equals(originalDrops, newList));
-                }
-            });
-        }
-    }
+//
+//    @SubscribeEvent
+//    public static void handHarvestDrops(BlockEvent.HarvestDropsEvent event) {
+//        if (event.getHarvester() != null) {
+//            PlayerEntity player = event.getHarvester();
+//            player.getHeldItemMainhand().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+//                if(iItemHandler instanceof IModeChangingItem) {
+//                    List<ItemStack> originalDrops = event.getDrops();
+//                    for (ItemStack item:  originalDrops) {
+//                        System.out.println(item.serializeNBT());
+//                    }
+//
+//                    NonNullList<ItemStack> test = NonNullList.create();
+//                    test.addAll(event.getDrops());
+//
+//                    event.setResult(new BlockEvent.HarvestDropsEvent(
+//                            (World)event.getWorld(),
+//                            event.getPos(),
+//                            event.getState(),
+//                            event.getFortuneLevel(),
+//                            event.getDropChance(),
+//                            test,
+//                            event.getHarvester(),
+//                            true).getResult());
+//
+//                    List<ItemStack> newList = event.getDrops();
+//
+//                    for (ItemStack item:  newList) {
+//                        System.out.println(item.serializeNBT());
+//                    }
+//
+//                    System.out.println("new drops size: " + newList.size());
+//
+//                    System.out.println("new list same as old list? : " + Objects.equals(originalDrops, newList));
+//                }
+//            });
+//        }
+//    }
 }

@@ -10,6 +10,7 @@ import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.ModeChangingModularItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.MPALibRangedWrapper;
+import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
@@ -17,6 +18,7 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -38,8 +41,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ItemPowerFist extends AbstractElectricTool {
     public ItemPowerFist(String regName) {
@@ -80,9 +82,26 @@ public class ItemPowerFist extends AbstractElectricTool {
         return true;
     }
 
+    @Override
+    public Set<ToolType> getToolTypes(ItemStack itemStack) {
+        return itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            Set<ToolType> retSet = new HashSet<>();
+            if (iItemHandler instanceof IModeChangingItem) {
+                if (!((IModeChangingItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(MPARegistryNames.MODULE_PICKAXE__REGNAME)).isEmpty()) {
+                    retSet.add(ToolType.PICKAXE);
+                }
 
+                if (!((IModeChangingItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(MPARegistryNames.MODULE_AXE__REGNAME)).isEmpty()) {
+                    retSet.add(ToolType.AXE);
+                }
 
-
+                if (!((IModeChangingItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(MPARegistryNames.MODULE_SHOVEL__REGNAME)).isEmpty()) {
+                    retSet.add(ToolType.SHOVEL);
+                }
+            }
+            return retSet;
+        }).orElse(new HashSet<>());
+    }
 
     /**
      * Current implementations of this method in child classes do not use the
@@ -120,29 +139,6 @@ public class ItemPowerFist extends AbstractElectricTool {
         return true;
     }
 
-
-
-    //    @Override // TODO?
-//    public IItemTier getTier() {
-//        return super.getTier();
-//    }
-
-
-//    @Override
-//    public boolean canPlayerBreakBlockWhileHolding(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_, PlayerEntity p_195938_4_) {
-//        System.out.println("doing something here");
-//
-//        return super.canPlayerBreakBlockWhileHolding(p_195938_1_, p_195938_2_, p_195938_3_, p_195938_4_);
-//    }
-
-
-//    @Override
-//    public boolean onBlockDestroyed(ItemStack itemStack, World world, BlockState state, BlockPos pos, LivingEntity player) {
-//        System.out.println("doing something here");
-//
-//        return super.onBlockDestroyed(itemStack, world, state, pos, player);
-//    }
-
     /**
      * Called before a block is broken.  Return true to prevent default block harvesting.
      *
@@ -172,98 +168,65 @@ public class ItemPowerFist extends AbstractElectricTool {
 
     @Override
     public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
-//        System.out.println("doing something here");
-
         return false;
     }
 
     @Override
     public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack) {
-//        System.out.println("doing something here");
-
         return oldStack.isItemEqual(newStack);
     }
 
-//    // Only fires on blocks that need a tool
-//    @Override
-//    public int getHarvestLevel(ItemStack itemStack, ToolType toolType, @Nullable PlayerEntity player, @Nullable BlockState state) {
-//
-//        System.out.println("super level pass: " + super.getHarvestLevel(itemStack, toolType, player, state));
-//
-//
-//        int retVal = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
-//            if (iItemHandler instanceof IModeChangingItem) {
-//                int highestVal = 0;
-//                for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
-//                    int val = module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
-//                        if (pm instanceof IBlockBreakingModule) {
-//                            return ((IBlockBreakingModule) pm).getEmulatedTool().getHarvestLevel(toolType, player, state);
-//                        }
-//                        return 0;
-//                    }).orElse(0);
-//                    if (val > highestVal) {
-//                        highestVal = val;
-//                    }
-//                }
-//                return highestVal;
-//            }
-//            return 0;
-//        }).orElse(0);
-//
-//
-////        System.out.println("retVal: " + retVal);
-////        System.out.println("itemstack: " + itemStack);
-////        System.out.println("toolType: " + toolType);
-////        System.out.println("player: " + player);
-////        System.out.println("state.block: " + state.getBlock());
-////        System.out.println("state.harvest level: " + state.getHarvestLevel());
-////        System.out.println("state.harvest tool: " + state.getHarvestTool().getName());
-////        System.out.println("state.getMaterial is Wood: " + state.getMaterial().equals(Material.WOOD));
-////        System.out.println("state.getMaterial requires Tool: " + !state.getMaterial().isToolNotRequired());
-//
-////        return retVal;
-//
-//
-//        return 100;
-//    }
+    // Only fires on blocks that need a tool
+    @Override
+    public int getHarvestLevel(ItemStack itemStack, ToolType toolType, @Nullable PlayerEntity player, @Nullable BlockState state) {
+        return itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            if (iItemHandler instanceof IModeChangingItem) {
+                int highestVal = 0;
+                for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
+                    int val = module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+                        if (pm instanceof IBlockBreakingModule) {
+                            return ((IBlockBreakingModule) pm).getEmulatedTool().getHarvestLevel(toolType, player, state);
+                        }
+                        return -1;
+                    }).orElse(-1);
+                    if (val > highestVal) {
+                        highestVal = val;
+                    }
+                }
+                return highestVal;
+            }
+            return -1;
+        }).orElse(-1);
+    }
 
-//    @Override
-//    public boolean canHarvestBlock(BlockState p_150897_1_) {
-//
-//        System.out.println("canHarvestBlock: " + super.canHarvestBlock(p_150897_1_));
-//        return super.canHarvestBlock(p_150897_1_);
-//    }
-//
-//    @Override
-//    public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-//        System.out.println("canHarvestBlock: " + super.canHarvestBlock(stack, state));
-//
-//        return super.canHarvestBlock(stack, state);
-//    }
-
-    // this might be what we need
-
-//    @Override
-//    public boolean canHarvestBlock(ItemStack itemStack, BlockState state) {
-//        boolean retVal = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
-//                    if (iItemHandler instanceof IModeChangingItem) {
-//                        for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
-//                            boolean val = module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
-//                                if (pm instanceof IBlockBreakingModule) {
-//                                    if (((IBlockBreakingModule) pm).getEmulatedTool().canHarvestBlock(state))
-//                                        return true;
-//                                }
-//                                return false;
-//                            }).orElse(false);
-//
-//                        }
-//                        return false;
-//                    }
-//                    return false;
-//                }).orElse(false);
-//        System.out.println("retVal: " + retVal);
-//        return retVal;
-//    }
+    /**
+     * Needed for overriding behaviour with modules
+     * @param itemStack
+     * @param state
+     * @return
+     */
+    @Override
+    public boolean canHarvestBlock(ItemStack itemStack, BlockState state) {
+        boolean retVal = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            if (iItemHandler instanceof IModeChangingItem) {
+                for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
+                    if(module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+                        if (pm instanceof IBlockBreakingModule) {
+                            if (((IBlockBreakingModule) pm).getEmulatedTool().canHarvestBlock(state)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }).orElse(false)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }).orElse(false);
+        return retVal;
+    }
 
     @Nullable
     @Override
