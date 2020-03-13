@@ -6,15 +6,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "centralizedmaterials:zinc_block"
+          "name": "modularpowerarmor:tinkertable"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
         }
-      ],
-      "name": "sdpool0"
+      ]
     }
   ]
 }
