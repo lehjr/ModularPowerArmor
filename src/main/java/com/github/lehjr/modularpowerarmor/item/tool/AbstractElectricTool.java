@@ -35,4 +35,9 @@ public class AbstractElectricTool extends ToolItem {
             AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
+
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
 }

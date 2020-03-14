@@ -28,4 +28,9 @@ public class ItemElectricArmor extends ArmorItem {
             AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
+
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
 }

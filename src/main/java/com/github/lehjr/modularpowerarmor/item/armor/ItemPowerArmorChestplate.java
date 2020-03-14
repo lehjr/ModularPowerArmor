@@ -54,14 +54,12 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         IModularItem modularItemCap;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
-        IFluidHandlerItem fluidHandler;
         AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatChest());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
             this.modularItemCap = new ModularArmorCap();
             this.modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.getAndAdd(m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
-            this.fluidHandler = modularItemCap.getOnlineModuleOrEmpty(fluidTank).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(new EmptyFluidHandler());
             this.modelSpec = new ArmorModelSpecNBT(armor);
             this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
         }
@@ -77,6 +75,7 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
                 modularItemCap.updateFromNBT();
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
             }
+
             if (cap == HeatCapability.HEAT) {
                 heatStorage.updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
@@ -87,7 +86,8 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
             }
 
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
-                return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap, LazyOptional.of(()->fluidHandler));
+                return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap,
+                        LazyOptional.of(()->modularItemCap.getOnlineModuleOrEmpty(fluidTank).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(new EmptyFluidHandler())));
             }
             return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
         }

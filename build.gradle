@@ -41,11 +41,9 @@ repositories {
         url "https://maven.tterrag.com/"
     }
 
-
-//    maven {url "http://tehnut.info/maven"} // waila
-//    flatDir {
-//        dirs 'libs'
-//    }
+    flatDir {
+        dirs 'mods'
+    }
 }
 
 minecraft {
@@ -103,17 +101,34 @@ dependencies {
 //    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
 //    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
 
-    //
-//    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}_${minecraft_version}") // Hwyla-forge-1.10.6-B67_1.14.4.jar
-
-
 //    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
     runtimeOnly fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
         transitive = false
     })
 
+    // almost works, but no
+/*
+SilentLib-1.14.4-4.4.0+44.jar
+files(...) dependencies are not deobfuscated. Use a flatDir repository instead: https://docs.gradle.org/current/userguide/repository_types.html#sec:flat_dir_resolver
+Cannot deobfuscate dependency of type DefaultSelfResolvingDependency_Decorated, using obfuscated version!
+SilentMechanisms-1.14.4-0.6.13+49.jar
+files(...) dependencies are not deobfuscated. Use a flatDir repository instead: https://docs.gradle.org/current/userguide/repository_types.html#sec:flat_dir_resolver
+Cannot deobfuscate dependency of type DefaultSelfResolvingDependency_Decorated, using obfuscated version!
+New Dep: net.minecraftforge:forge:1.14.4-28.2.3_mapped_snapshot_20200119-1.14.4_at_a5f094ffe7a783ab5ac828fa111f5692fc8c1705
+ */
+//    fileTree(dir: 'mods', include: ['*.jar'], each: {
+//        File file ->
+//            println file.name
+//            runtimeOnly fg.deobf(files(file.name))
+//    })
+
+//    compile fileTree(include: ['*.jar'], dir: 'mods')
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
+
+
+
 
 jar {
     manifest {

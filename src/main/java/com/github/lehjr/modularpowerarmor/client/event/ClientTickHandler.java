@@ -21,14 +21,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This handler is called before/after the game processes input events and
@@ -38,11 +42,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author MachineMuse
  */
 public class ClientTickHandler {
-    protected HeatMeter heat = null;
-    protected HeatMeter energy = null;
-    protected WaterMeter water = null;
+    protected HeatMeter heatMeter = null;
+    protected HeatMeter energyMeter = null;
+    protected WaterMeter waterMeter = null;
     protected FluidMeter fluidMeter = null;
-    protected PlasmaChargeMeter plasma = null;
+    protected PlasmaChargeMeter plasmaMeter = null;
     MPAObjects mpsi = MPAObjects.INSTANCE;
     static final ItemStack food = new ItemStack(Items.COOKED_BEEF);
     static final ResourceLocation autoFeederReg = new ResourceLocation(MPARegistryNames.MODULE_AUTO_FEEDER__REGNAME);
@@ -167,33 +171,34 @@ public class ClientTickHandler {
                 // heat
                 double maxHeat = HeatUtils.getPlayerMaxHeat(player);
                 double currHeat = HeatUtils.getPlayerHeat(player);
-                String currHeatStr = StringUtils.formatNumberShort(currHeat);
+                String currHeatStr = StringUtils.formatNumberShort(currHeat) + "RF";
                 String maxHeatStr = StringUtils.formatNumberShort(maxHeat);
 
-                // Fluid
-                AtomicDouble currFluid = new AtomicDouble(0);
-                AtomicDouble maxFluid = new AtomicDouble(0);
-                String currFluidStr = "";
-                String maxFluidStr = "";
+                // Water
+                AtomicDouble currWater = new AtomicDouble(0);
+                AtomicDouble maxWater = new AtomicDouble(0);
+                AtomicReference<String> currWaterStr = new AtomicReference<>("");
+                AtomicReference<String> maxWaterStr = new AtomicReference<>("");
 
-//                player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fh -> {
-//                              for (IFluidTankProperties prop : fh.getTankProperties()) {
-//                                  FluidStack stack = prop.getContents();
-//                                  if (stack!= null) {
-//                                      fluidMeter = new FluidMeter(stack.getFluid());
-//                                      maxFluid.getAndAdd(prop.getCapacity());
-//                                      currFluid.addAndGet(stack.amount);
-//                                  }
-//                              }
-//                });
+                player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fh -> {
+                    for (int i = 0; i < fh.getTanks(); i++) {
+                        maxWater.getAndAdd(fh.getTankCapacity(i));
+                        FluidStack fluidStack = fh.getFluidInTank(i);
+                        currWater.addAndGet(fluidStack.getAmount());
+                        waterMeter = new WaterMeter();
+                        currWaterStr.set(StringUtils.formatNumberShort(currWater.get()));
+                        maxWaterStr.set(StringUtils.formatNumberShort(maxWater.get()));
+                    }
+                });
 
                 // Plasma
                 AtomicDouble currentPlasma = new AtomicDouble(0);
                 AtomicDouble maxPlasma = new AtomicDouble(0);
-                if (player.isHandActive())
+                if (player.isHandActive()) {
                     player.getHeldItem(player.getActiveHand()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modechanging -> {
-                        if (!(modechanging instanceof IModeChangingItem))
+                        if (!(modechanging instanceof IModeChangingItem)) {
                             return;
+                        }
 
                         ItemStack module = ((IModeChangingItem) modechanging).getActiveModule();
                         int actualCount = 0;
@@ -206,7 +211,7 @@ public class ClientTickHandler {
                                 currentPlasma.getAndAdd((actualCount > 50 ? 50 : actualCount) * 2);
                                 maxPlasma.getAndAdd(100);
 
-                            // Ore Scanner or whatever
+                                // Ore Scanner or whatever
                             } else {
                                 actualCount = (maxDuration - player.getItemInUseCount());
                                 currentPlasma.getAndAdd((actualCount > 40 ? 40 : actualCount) * 2.5);
@@ -214,62 +219,62 @@ public class ClientTickHandler {
                             }
                         }
                     });
-                String currPlasmaStr = StringUtils.formatNumberShort(currentPlasma.get());
+                }
+                String currPlasmaStr = StringUtils.formatNumberShort(currentPlasma.get()) + "%";
                 String maxPlasmaStr = StringUtils.formatNumberShort(maxPlasma.get());
-
 
                 if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {
                     int numMeters = 0;
 
                     if (maxEnergy > 0) {
                         numMeters++;
-                        if (energy == null) {
-                            energy = new EnergyMeter();
+                        if (energyMeter == null) {
+                            energyMeter = new EnergyMeter();
                         }
-                    } else energy = null;
+                    } else energyMeter = null;
 
                     if (maxHeat > 0) {
                         numMeters++;
-                        if (heat == null)
-                            heat = new HeatMeter();
-                    } else heat = null;
+                        if (heatMeter == null)
+                            heatMeter = new HeatMeter();
+                    } else heatMeter = null;
 
-                    if (maxFluid.get() > 0 && fluidMeter != null) {
+                    if (maxWater.get() > 0 && waterMeter != null) {
                         numMeters++;
                      }
 
                     if (maxPlasma.get() > 0 /* && drawPlasmaMeter */) {
                         numMeters++;
-                        if (plasma == null) {
-                            plasma = new PlasmaChargeMeter();
+                        if (plasmaMeter == null) {
+                            plasmaMeter = new PlasmaChargeMeter();
                         }
-                    } else plasma = null;
+                    } else plasmaMeter = null;
 
                     double stringX = left - 2;
                     final int totalMeters = numMeters;
                     //"(totalMeters-numMeters) * 8" = 0 for whichever of these is first,
                     //but including it won't hurt and this makes it easier to swap them around.
 
-                    if (energy != null) {
-                        energy.draw(left, top + (totalMeters - numMeters) * 8, currEnergy / maxEnergy);
+                    if (energyMeter != null) {
+                        energyMeter.draw(left, top + (totalMeters - numMeters) * 8, currEnergy / maxEnergy);
                         Renderer.drawRightAlignedString(currEnergyStr, stringX, top);
                         numMeters--;
                     }
 
-                    if (heat != null) {
-                        heat.draw(left, top + (totalMeters - numMeters) * 8, MathUtils.clampDouble(currHeat, 0, maxHeat) / maxHeat);
+                    if (heatMeter != null) {
+                        heatMeter.draw(left, top + (totalMeters - numMeters) * 8, MathUtils.clampDouble(currHeat, 0, maxHeat) / maxHeat);
                         Renderer.drawRightAlignedString(currHeatStr, stringX, top + (totalMeters - numMeters) * 8);
                         numMeters--;
                     }
 
-                    if (fluidMeter != null) {
-                        fluidMeter.draw(left, top + (totalMeters - numMeters) * 8, currFluid.get() / maxFluid.get());
-                        Renderer.drawRightAlignedString(currFluidStr, stringX, top + (totalMeters - numMeters) * 8);
+                    if (waterMeter != null) {
+                        waterMeter.draw(left, top + (totalMeters - numMeters) * 8, MathUtils.clampDouble(currWater.get(), 0, maxWater.get()) / maxWater.get());
+                        Renderer.drawRightAlignedString(currWaterStr.get(), stringX, top + (totalMeters - numMeters) * 8);
                         numMeters--;
                     }
 
-                    if (plasma != null) {
-                        plasma.draw(left, top + (totalMeters - numMeters) * 8, currentPlasma.get() / maxPlasma.get());
+                    if (plasmaMeter != null) {
+                        plasmaMeter.draw(left, top + (totalMeters - numMeters) * 8, currentPlasma.get() / maxPlasma.get());
                         Renderer.drawRightAlignedString(currPlasmaStr, stringX, top + (totalMeters - numMeters) * 8);
                     }
 
@@ -283,8 +288,8 @@ public class ClientTickHandler {
                     Renderer.drawString(currHeatStr + '/' + maxHeatStr + " C", 2, 2 + (numReadouts * 9));
                     numReadouts += 1;
 
-                    if (maxFluid.get() > 0) {
-                        Renderer.drawString(currFluidStr + '/' + maxFluidStr + " buckets", 2, 2 + (numReadouts * 9));
+                    if (maxWater.get() > 0) {
+                        Renderer.drawString(currWaterStr.get() + '/' + maxWaterStr.get() + " buckets", 2, 2 + (numReadouts * 9));
                         numReadouts += 1;
                     }
 

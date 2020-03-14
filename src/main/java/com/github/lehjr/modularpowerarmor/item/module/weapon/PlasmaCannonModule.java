@@ -68,24 +68,16 @@ public class PlasmaCannonModule extends AbstractPowerModule {
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                System.out.println("doing somethign here");
-
                 if (hand == Hand.MAIN_HAND && ElectricItemUtils.getPlayerEnergy(playerIn) > getEnergyUsage()) {
-                    System.out.println("doing somethign here");
-
                     playerIn.setActiveHand(hand);
                     return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
                 }
-                System.out.println("doing somethign here");
                 return new ActionResult<>(ActionResultType.PASS, playerIn.getHeldItem(hand));
             }
 
             @Override
             public void onPlayerStoppedUsing(ItemStack itemStack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 int chargeTicks = (int) MathUtils.clampDouble(itemStack.getUseDuration() - timeLeft, 10, 50);
-                System.out.println("time left: " + timeLeft);
-
-
                 if (!worldIn.isRemote) {
                     double energyConsumption = getEnergyUsage()* chargeTicks;
                     if (entityLiving instanceof PlayerEntity) {
