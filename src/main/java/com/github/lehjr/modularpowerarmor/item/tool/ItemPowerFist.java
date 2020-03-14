@@ -36,12 +36,14 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ItemPowerFist extends AbstractElectricTool {
     public ItemPowerFist(String regName) {
@@ -118,18 +120,16 @@ public class ItemPowerFist extends AbstractElectricTool {
                 if (iItemHandler instanceof IModeChangingItem) {
                     ((IModeChangingItem) iItemHandler).getOnlineModuleOrEmpty(new ResourceLocation(MPARegistryNames.MODULE_MELEE_ASSIST__REGNAME))
                             .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
-                        if (pm instanceof IModeChangingItem) {
-                            PlayerEntity player = (PlayerEntity) attacker;
-                            double drain = pm.applyPropertyModifiers(MPAConstants.PUNCH_ENERGY);
-                            if (ElectricItemUtils.getPlayerEnergy(player) > drain) {
-                                ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
-                                double damage = pm.applyPropertyModifiers(MPAConstants.PUNCH_DAMAGE);
-                                double knockback = pm.applyPropertyModifiers(MPAConstants.PUNCH_KNOCKBACK);
-                                DamageSource damageSource = DamageSource.causePlayerDamage(player);
-                                if (target.attackEntityFrom(damageSource, (float) (int) damage)) {
-                                    Vec3d lookVec = player.getLookVec();
-                                    target.addVelocity(lookVec.x * knockback, Math.abs(lookVec.y + 0.2f) * knockback, lookVec.z * knockback);
-                                }
+                        PlayerEntity player = (PlayerEntity) attacker;
+                        double drain = pm.applyPropertyModifiers(MPAConstants.PUNCH_ENERGY);
+                        if (ElectricItemUtils.getPlayerEnergy(player) > drain) {
+                            ElectricItemUtils.drainPlayerEnergy(player, (int) drain);
+                            double damage = pm.applyPropertyModifiers(MPAConstants.PUNCH_DAMAGE);
+                            double knockback = pm.applyPropertyModifiers(MPAConstants.PUNCH_KNOCKBACK);
+                            DamageSource damageSource = DamageSource.causePlayerDamage(player);
+                            if (target.attackEntityFrom(damageSource, (float) (int) damage)) {
+                                Vec3d lookVec = player.getLookVec();
+                                target.addVelocity(lookVec.x * knockback, Math.abs(lookVec.y + 0.2f) * knockback, lookVec.z * knockback);
                             }
                         }
                     });
