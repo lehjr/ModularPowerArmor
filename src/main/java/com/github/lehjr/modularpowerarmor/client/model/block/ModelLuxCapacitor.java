@@ -1,7 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.model.block;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
+import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.collect.ImmutableList;
@@ -12,6 +16,7 @@ import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,6 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -56,10 +62,19 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         builder.addAll(baseModel.getQuads(state, side, rand, extraData));
 
-        colour = extraData.hasProperty(BlockLuxCapacitor.COLOUR_PROP) ? new Colour(extraData.getData(BlockLuxCapacitor.COLOUR_PROP)) : BlockLuxCapacitor.defaultColor;
+        if (extraData.hasProperty(BlockLuxCapacitor.COLOUR_PROP)) {
+            colour = new Colour(extraData.getData(BlockLuxCapacitor.COLOUR_PROP));
+        }
 
+        if (colour == null) {
+            colour = BlockLuxCapacitor.defaultColor;
+        }
         builder.addAll(ModelHelper.getColoredQuadsWithGlow(lensModel.getQuads(state, side, rand, extraData), colour, true));
         return builder.build();
+    }
+
+    public void setColour(Colour colourIn) {
+        colour = colourIn;
     }
 
     @Override
@@ -90,9 +105,9 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         TRSRTransformation transform = modelState.apply(Optional.of(cameraTransformType)).orElse(TRSRTransformation.identity());
-        if (transform != TRSRTransformation.identity())
+        if (transform != TRSRTransformation.identity()) {
             return Pair.of(this, transform.getMatrixVec());
-
+        }
         return Pair.of(this, transform.getMatrixVec());
     }
 
@@ -131,6 +146,14 @@ public class ModelLuxCapacitor implements IDynamicBakedModel {
         @Nullable
         @Override
         public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
+            setColour(
+                    stack.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+                        double red = pm.applyPropertyModifiers(MPAConstants.RED_HUE);
+                        double green = pm.applyPropertyModifiers(MPAConstants.GREEN_HUE);
+                        double blue = pm.applyPropertyModifiers(MPAConstants.BLUE_HUE);
+                        double alpha = pm.applyPropertyModifiers(MPAConstants.OPACITY);
+                        return new Colour(red, green, blue, alpha);
+                    }).orElse(null));
             return ModelLuxCapacitor.this.wrapper;
         }
     }

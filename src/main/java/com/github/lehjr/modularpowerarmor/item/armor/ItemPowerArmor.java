@@ -68,12 +68,11 @@ public class ItemPowerArmor extends ItemElectricArmor {
             UUID.randomUUID(),
             UUID.randomUUID()};
 
-//    @Override
-//    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slotType) {
-//        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slotType);
 
-//        return multimap;
-//    }
+    @Override
+    public int getDamageReduceAmount() {
+        return super.getDamageReduceAmount();
+    }
 
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack itemStack) {

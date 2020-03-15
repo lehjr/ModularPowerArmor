@@ -58,7 +58,25 @@ public enum ModelBakeEventHandler {
                         ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
 
         modelRegistry.put(
+                new ModelResourceLocation(MPARegistryNames.MODULE_FIELD_TINKER__REGNAME, "inventory"),
+                new TinkerTableModel(tinkertableUnbaked.bake(
+                        event.getModelLoader(),
+                        ModelHelper.defaultTextureGetter(),
+                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
+
+        modelRegistry.put(
                 new ModelResourceLocation(MPARegistryNames.LUX_CAPACITOR_REG_NAME, "inventory"),
+                new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
+                        event.getModelLoader(),
+                        ModelHelper.defaultTextureGetter(),
+                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM),
+                        luxcapacitorLenseUnbaked.bake(
+                                event.getModelLoader(),
+                                ModelHelper.defaultTextureGetter(),
+                                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
+
+        modelRegistry.put(
+                new ModelResourceLocation(MPARegistryNames.MODULE_LUX_CAPACITOR__REGNAME, "inventory"),
                 new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
                         event.getModelLoader(),
                         ModelHelper.defaultTextureGetter(),

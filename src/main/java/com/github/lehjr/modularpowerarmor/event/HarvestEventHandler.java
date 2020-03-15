@@ -90,22 +90,22 @@ public class HarvestEventHandler {
     @SubscribeEvent
     public static void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
         // Note: here we can actually get the position if needed. we can't easily om the harvest check.
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         ItemStack stack = player.inventory.getCurrentItem();
         stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
             BlockState state = event.getState();
 
             // wait... what is this again?
-            if (event.getNewSpeed() < event.getOriginalSpeed())
+            if (event.getNewSpeed() < event.getOriginalSpeed()) {
                 event.setNewSpeed(event.getOriginalSpeed());
+            }
             int playerEnergy = ElectricItemUtils.getPlayerEnergy(player);
             for (ItemStack module : ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
                 module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm -> {
                     if(pm instanceof IBlockBreakingModule && ((IBlockBreakingModule) pm).canHarvestBlock(stack, state, player, event.getPos(), playerEnergy)) {
-                        System.out.println("module: " + pm.getModuleStack());
-
-                        if (event.getNewSpeed() == 0)
+                        if (event.getNewSpeed() == 0) {
                             event.setNewSpeed(1);
+                        }
                         ((IBlockBreakingModule) pm).handleBreakSpeed(event);
                     }
                 });
