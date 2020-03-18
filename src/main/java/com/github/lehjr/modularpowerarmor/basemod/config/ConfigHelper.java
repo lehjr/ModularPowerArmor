@@ -6,6 +6,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ConfigHelper {
@@ -18,17 +19,17 @@ public class ConfigHelper {
 
     public static File setupConfigFile(String fileName) {
         Path configFile = FMLPaths.CONFIGDIR.get().resolve("lehjr").resolve(MPAConstants.MOD_ID).resolve(fileName);
-        File cfgFile = configFile.toFile();
         try {
-            if (!cfgFile.getParentFile().exists())
-                cfgFile.getParentFile().mkdirs();
-            if (!cfgFile.exists())
-                cfgFile.createNewFile();
+            Files.createDirectories(configFile.getParent());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (configFolder == null)
+
+        File cfgFile = configFile.toFile();
+
+        if (configFolder == null) {
             configFolder = cfgFile.getParentFile();
+        }
 
         return cfgFile;
     }

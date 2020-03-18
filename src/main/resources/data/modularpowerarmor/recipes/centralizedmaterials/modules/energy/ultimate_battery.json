@@ -1,0 +1,42 @@
+{
+  "result": {
+    "item": "modularpowerarmor:battery_ultimate",
+    "nbt": {
+      "MMModModule": {
+        "energy": 100000000
+      }
+    }
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "FBF",
+    "OCO",
+    "FBF"
+  ],
+  "key": {
+    "B": {
+      "item": "modularpowerarmor:battery_elite",
+      "nbt": {
+        "MMModModule": {
+          "energy": 50000000
+        }
+      }
+    },
+    "C": {
+      "item": "modularpowerarmor:component_control_circuit"
+    },
+    "F": {
+      "tag": "forge:ingots/steel"
+    },
+    "O": {
+      "tag": "forge:wiring"
+    }
+  }
+}

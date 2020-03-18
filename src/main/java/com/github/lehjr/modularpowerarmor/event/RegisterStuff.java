@@ -25,10 +25,7 @@ import com.github.lehjr.modularpowerarmor.item.module.energy.generation.KineticG
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.storage.EnergyStorageModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AOEPickUpgradeModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AquaAffinityModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.FortuneModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.ItemModuleSilkTouch;
+import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.*;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
 import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;
@@ -56,8 +53,6 @@ import net.minecraftforge.fml.common.Mod;
 import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MOD_ID;
 import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
 
-//import com.github.lehjr.modularpowerarmor.containers.ModularItemContainer;
-
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public enum RegisterStuff {
     INSTANCE;
@@ -82,14 +77,7 @@ public enum RegisterStuff {
                 new ItemComponent(COMPONENT__SERVO__REGNAME),
                 new ItemComponent(COMPONENT__GLIDER_WING__REGNAME),
                 new ItemComponent(COMPONENT__ION_THRUSTER__REGNAME),
-                new ItemComponent(COMPONENT__LV_CAPACITOR__REGNAME),
-                new ItemComponent(COMPONENT__MV_CAPACITOR___REGNAME),
-                new ItemComponent(COMPONENT__HV_CAPACITOR___REGNAME),
-                new ItemComponent(COMPONENT__EV_CAPACITOR___REGNAME),
                 new ItemComponent(COMPONENT__PARACHUTE__REGNAME),
-                new ItemComponent(COMPONENT__LEATHER_PLATING__REGNAME),
-                new ItemComponent(COMPONENT__IRON_PLATING__REGNAME),
-                new ItemComponent(COMPONENT__DIAMOND_PLATING__REGNAME),
                 new ItemComponent(COMPONENT__FIELD_EMITTER__REGNAME),
                 new ItemComponent(COMPONENT__LASER_EMITTER__REGNAME),
                 new ItemComponent(COMPONENT__CARBON_MYOFIBER__REGNAME),
@@ -168,6 +156,7 @@ public enum RegisterStuff {
                 new AOEPickUpgradeModule(MODULE_AOE_PICK_UPGRADE__REGNAME),
                 new ItemModuleSilkTouch(MODULE_SILK_TOUCH__REGNAME),
                 new FortuneModule(MODULE_FORTUNE_REGNAME),
+                new VeinMinerModule(MODULE_VEIN_MINER_REGNAME),
 
                 // Tools --------------------------------------------------------------------------
                 new AquaAffinityModule(MODULE_AQUA_AFFINITY__REGNAME),

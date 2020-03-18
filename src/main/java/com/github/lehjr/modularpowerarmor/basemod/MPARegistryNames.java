@@ -28,14 +28,7 @@ public class MPARegistryNames {
     public static final String COMPONENT__SERVO__REGNAME = MOD_ID + ":component_servo";
     public static final String COMPONENT__GLIDER_WING__REGNAME = MOD_ID + ":component_glider_wing";
     public static final String COMPONENT__ION_THRUSTER__REGNAME = MOD_ID + ":component_ion_thruster";
-    public static final String COMPONENT__LV_CAPACITOR__REGNAME = MOD_ID + ":component_capacitor_lv";
-    public static final String COMPONENT__MV_CAPACITOR___REGNAME = MOD_ID + ":component_capacitor_mv";
-    public static final String COMPONENT__HV_CAPACITOR___REGNAME = MOD_ID + ":component_capacitor_hv";
-    public static final String COMPONENT__EV_CAPACITOR___REGNAME = MOD_ID + ":component_capacitor_ev";
     public static final String COMPONENT__PARACHUTE__REGNAME = MOD_ID + ":component_parachute";
-    public static final String COMPONENT__LEATHER_PLATING__REGNAME = MOD_ID + ":component_plating_leather";
-    public static final String COMPONENT__IRON_PLATING__REGNAME = MOD_ID + ":component_plating_iron";
-    public static final String COMPONENT__DIAMOND_PLATING__REGNAME = MOD_ID + ":component_plating_diamond";
     public static final String COMPONENT__FIELD_EMITTER__REGNAME = MOD_ID + ":component_field_emitter";
     public static final String COMPONENT__LASER_EMITTER__REGNAME = MOD_ID + ":component_laser_emitter";
     public static final String COMPONENT__CARBON_MYOFIBER__REGNAME = MOD_ID + ":component_carbon_myofiber";
@@ -110,6 +103,7 @@ public class MPARegistryNames {
     public static final String MODULE_AOE_PICK_UPGRADE__REGNAME = MOD_ID + ":aoe_pick_upgrade"; // no icon
     public static final String MODULE_SILK_TOUCH__REGNAME = MOD_ID + ":silk_touch";
     public static final String MODULE_FORTUNE_REGNAME = MOD_ID + ":fortune";
+    public static final String MODULE_VEIN_MINER_REGNAME = MOD_ID + ":vein_miner";
 
     // Tools --------------------------------------------------------------------------------------
     public static final String MODULE_AQUA_AFFINITY__REGNAME = MOD_ID + ":aqua_affinity";

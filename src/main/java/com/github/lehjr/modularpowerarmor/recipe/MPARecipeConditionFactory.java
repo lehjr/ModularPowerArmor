@@ -26,34 +26,9 @@ public class MPARecipeConditionFactory implements ICondition {
     @Override
     public boolean test() {
             switch (conditionName) {
-                // Thermal Expansion
-                case "thermal_expansion_recipes_enabled":
-                    return CommonConfig.RECIPES_USE_THERMAL_EXPANSION.get();
-
-                // EnderIO
-                case "enderio_recipes_enabled":
-                    return CommonConfig.RECIPES_USE_ENDERIO.get();
-
-                // IC2 - Development appears to be dead
-//                case "ic2_recipes_enabled":
-//                    return (ModCompatibility.isIndustrialCraftExpLoaded() &&
-//                            /*!ModCompatibility.isGregTechLoaded() &&*/
-//                            /* !ModCompatibility.isTechRebornLoaded()) */ CommonConfig.RECIPES_USE_IC2.get());
-
-                // IC2 Classic
-                case "ic2_classic_recipes_enabled":
-                    return (ModCompatibility.isIndustrialCraftClassicLoaded()&&
-                            /*!ModCompatibility.isGregTechLoaded() &&*/
-                            /* !ModCompatibility.isTechRebornLoaded()) */ CommonConfig.RECIPES_USE_IC2.get());
                 // Vanilla reciples only as fallback
                 case "vanilla_recipes_enabled":
-                    return (CommonConfig.RECIPES_USE_VANILLA.get() ||
-                                // or as a fallback
-                                !((CommonConfig.RECIPES_USE_THERMAL_EXPANSION.get() && ModCompatibility.isThermalExpansionLoaded()) ||
-                                        (CommonConfig.RECIPES_USE_ENDERIO.get() && ModCompatibility.isEnderIOLoaded()) ||
-                                        (CommonConfig.RECIPES_USE_IC2.get() && ModCompatibility.isIndustrialCraftLoaded()) ||
-                                        (CommonConfig.RECIPES_USE_TECH_REBORN.get() && ModCompatibility.isTechRebornLoaded())));
-                        // Either enabled in config
+                    return (CommonConfig.RECIPES_USE_VANILLA.get());
                     }
         return false;
     }

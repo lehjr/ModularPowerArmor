@@ -93,28 +93,9 @@ public enum MPAObjects {
     @ObjectHolder(COMPONENT__ION_THRUSTER__REGNAME)
     public static final ItemComponent ion_thruster = null;
 
-    @ObjectHolder(COMPONENT__LV_CAPACITOR__REGNAME)
-    public static final ItemComponent lv_capacitor = null;
-
-    @ObjectHolder(COMPONENT__MV_CAPACITOR___REGNAME)
-    public static final ItemComponent mv_capacitor = null;
-
-    @ObjectHolder(COMPONENT__HV_CAPACITOR___REGNAME)
-    public static final ItemComponent hv_capacitor = null;
-
-    @ObjectHolder(COMPONENT__EV_CAPACITOR___REGNAME)
-    public static final ItemComponent ev_capacitor = null;
-
     @ObjectHolder(COMPONENT__PARACHUTE__REGNAME)
     public static final ItemComponent component_parachute = null;
 
-    @ObjectHolder(COMPONENT__LEATHER_PLATING__REGNAME)
-    public static final ItemComponent leatherPlating = null;
-
-    @ObjectHolder(COMPONENT__IRON_PLATING__REGNAME)
-    public static final ItemComponent ironPlating = null;
-
-    @ObjectHolder(COMPONENT__DIAMOND_PLATING__REGNAME)
     public static final ItemComponent diamondPlating = null;
 
     @ObjectHolder(COMPONENT__FIELD_EMITTER__REGNAME)
@@ -352,7 +333,9 @@ public enum MPAObjects {
     @ObjectHolder(LUX_CAPACITOR_REG_NAME + "_tile")
     public static TileEntityType<TileEntityLuxCapacitor> capacitorTileEntityType = null;
 
-    // Entities -----------------------------------------------------------------------------------
+    /**
+     * Entities -----------------------------------------------------------------------------------
+     */
     @ObjectHolder(MOD_ID + ":luxcapacitor_entity")
     public static EntityType<LuxCapacitorEntity> LUX_CAPACITOR_ENTITY_TYPE;
 

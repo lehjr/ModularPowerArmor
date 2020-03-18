@@ -35,11 +35,12 @@ public class MPAConstants {
     public static final String CONFIG_PREFIX_GENERAL = CONFIG_PREFIX + "general.";
     public static final String CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS = CONFIG_PREFIX_GENERAL + "allowConflictingKeybinds";
     public static final String CONFIG_GENERAL_MAX_FLYING_SPEED = CONFIG_PREFIX_GENERAL + "maxFlyingSpeed";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_HELMET = CONFIG_PREFIX_GENERAL + "maxModulesHelmet";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_CHESTPLATE = CONFIG_PREFIX_GENERAL + "maxModulesChestplate";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_LEGGINGS = CONFIG_PREFIX_GENERAL +  "maxModulesLeggings";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_FEET = CONFIG_PREFIX_GENERAL +  "maxModulesFeet";
-    public static final String CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxModulesPowerFist";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_HELMET = CONFIG_PREFIX_GENERAL + "maxHeatBaseHelmet";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_CHESTPLATE = CONFIG_PREFIX_GENERAL + "maxHeatBaseChestplate";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_LEGGINGS = CONFIG_PREFIX_GENERAL +  "maxHeatBaseLeggings";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_FEET = CONFIG_PREFIX_GENERAL +  "maxHeatBaseFeet";
+    public static final String CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxHeatBasePowerFist";
+    public static final String CONFIG_GENERAL_VEIN_MINER_ORE_LIST = CONFIG_PREFIX_GENERAL +  "maxVeinMinerOreList";
 
     /** Recipes ----------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_RECIPES = CONFIG_PREFIX + "recipes.";

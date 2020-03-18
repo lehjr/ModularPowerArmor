@@ -5,6 +5,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.io.FileUtils;
@@ -12,10 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Common settings for Server and Client. Synced from server to client.
@@ -69,12 +67,18 @@ public class CommonConfig {
     }
 
 
-    public static ForgeConfigSpec.BooleanValue
-            RECIPES_USE_VANILLA,
-            RECIPES_USE_THERMAL_EXPANSION,
-            RECIPES_USE_ENDERIO,
-            RECIPES_USE_TECH_REBORN,
-            RECIPES_USE_IC2;
+    public static ForgeConfigSpec.BooleanValue RECIPES_USE_VANILLA;
+
+    static ForgeConfigSpec.ConfigValue<List<String>> GENERAL_VEIN_MINER_ORE_LIST;
+
+    public static List<ResourceLocation> getOreList() {
+        List<String> ores = Optional.ofNullable(commonConfig != null? GENERAL_VEIN_MINER_ORE_LIST.get() : null).orElse(new ArrayList<>());
+        List<ResourceLocation> retList = new ArrayList<>();
+        ores.forEach(ore-> {
+            retList.add(new ResourceLocation(ore));;
+        });
+        return retList;
+    }
 
     /**
      * Settings that are controlled by the server and synced to client
@@ -108,24 +112,50 @@ public class CommonConfig {
                     .defineInRange("maximumFlyingSpeedmps", 25.0, 0, Double.MAX_VALUE);
 
             GENERAL_BASE_MAX_HEAT_POWERFIST = builder.comment("PowerFist Base Heat Cap")
-                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_MODULES_POWERFIST)
+                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST)
                     .defineInRange("baseMaxHeatPowerFist", 5.0, 0, 5000);
 
             GENERAL_BASE_MAX_HEAT_HELMET = builder.comment("Power Armor Helmet Heat Cap")
-                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_MODULES_HELMET)
+                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_HELMET)
                     .defineInRange("baseMaxHeatHelmet", 5.0, 0, 5000);
 
             GENERAL_BASE_MAX_HEAT_CHEST = builder.comment("Power Armor Chestplate Heat Cap")
-                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_MODULES_CHESTPLATE)
+                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_CHESTPLATE)
                     .defineInRange("baseMaxHeatChest", 20.0, 0, 5000);
 
             GENERAL_BASE_MAX_HEAT_LEGS = builder.comment("Power Armor Leggings Heat Cap")
-                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_MODULES_LEGGINGS)
+                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_LEGGINGS)
                     .defineInRange("baseMaxHeatLegs", 15.0, 0, 5000);
 
             GENERAL_BASE_MAX_HEAT_FEET = builder.comment("Power Armor Boots Heat Cap")
-                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_MODULES_FEET)
+                    .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_FEET)
                     .defineInRange("baseMaxHeatFeet", 5.0, 0, 5000);
+
+            GENERAL_VEIN_MINER_ORE_LIST = builder
+                    .comment("Ore tag list for vein miner module.")
+                    .translation(MPAConstants.CONFIG_GENERAL_VEIN_MINER_ORE_LIST)
+                    .worldRestart()
+                    .define("oresCommon", Arrays.asList(
+                            // metals
+                            "forge:ores/iron",
+                            "forge:ores/copper",
+                            "forge:ores/tin",
+                            "forge:ores/lead",
+                            "forge:ores/aluminum",
+                            "forge:ores/aluminium",
+                            "forge:ores/silver",
+                            "forge:ores/gold",
+                            "forge:ores/cinnabar",
+                            "forge:ores/zinc",
+                            "forge:ores/uranium",
+                            "forge:ores/platinum",
+                            "forge:ores/bismuth",
+
+                            // non-metal
+                            "forge:ores/coal",
+                            "forge:ores/redstone",
+                            "minecraft:glowstone"
+                    ));
             builder.pop();
 
             /** Recipes ----------------------------------------------------------------------------------------------- */
@@ -135,31 +165,6 @@ public class CommonConfig {
                     .translation(MPAConstants.CONFIG_RECIPES_USE_VANILLA)
                     .worldRestart()
                     .define("useVanillaRecipes", true);
-
-
-            RECIPES_USE_THERMAL_EXPANSION = builder
-                    .comment("Use recipes for Thermal Expansion")
-                    .translation(MPAConstants.CONFIG_RECIPES_USE_THERMAL_EXPANSION)
-                    .worldRestart()
-                    .define("useThermalExpansionRecipes", true);
-
-            RECIPES_USE_ENDERIO = builder
-                    .comment("Use recipes for EnderIO")
-                    .translation(MPAConstants.CONFIG_RECIPES_USE_ENDERIO)
-                    .worldRestart()
-                    .define("useEnderIORecipes", true);
-
-            RECIPES_USE_TECH_REBORN = builder
-                    .comment("Use recipes for TechReborn")
-                    .translation(MPAConstants.CONFIG_RECIPES_USE_TECH_REBORN)
-                    .worldRestart()
-                    .define("useTechRebornRecipes", true);
-
-            RECIPES_USE_IC2 = builder
-                    .comment("Use recipes for IndustrialCraft 2")
-                    .translation(MPAConstants.CONFIG_RECIPES_USE_IC2)
-                    .worldRestart()
-                    .define("useIC2Recipes", true);
             builder.pop();
 
             /** Modules --------------------------------------------------------------------------------------------------- */
@@ -472,8 +477,6 @@ public class CommonConfig {
             builder.pop();
             builder.pop();
             builder.pop();
-
-
         }
     }
 
