@@ -1,0 +1,29 @@
+{
+  "result": {
+    "item": "modularpowerarmor:component_field_emitter"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "CFC",
+    "FOF",
+    "CFC"
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_solenoid"
+    },
+    "F": {
+      "tag": "forge:ender_pearls"
+    },
+    "O": {
+      "tag": "forge:solenoid"
+    }
+  }
+}

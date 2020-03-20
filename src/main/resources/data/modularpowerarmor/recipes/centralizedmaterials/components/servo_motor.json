@@ -1,0 +1,29 @@
+{
+  "result": {
+    "item": "modularpowerarmor:component_servo"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " C ",
+    "FSF",
+    " C "
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_solenoid"
+    },
+    "S": {
+      "tag": "forge:ingots/steel"
+    },
+    "F": {
+      "tag": "forge:wiring"
+    }
+  }
+}

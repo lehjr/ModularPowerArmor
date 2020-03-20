@@ -1,0 +1,38 @@
+{
+  "result": {
+    "item": "modularpowerarmor:component_laser_emitter"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "GLR",
+    "LC#",
+    "B##"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:green_dye"
+    },
+    "B": {
+      "item": "minecraft:blue_dye"
+    },
+    "C": {
+      "item": "modularpowerarmor:component_wiring"
+    },
+    "#": {
+      "item": "minecraft:red_dye"
+    },
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "L": {
+      "item": "minecraft:glass"
+    }
+  }
+}

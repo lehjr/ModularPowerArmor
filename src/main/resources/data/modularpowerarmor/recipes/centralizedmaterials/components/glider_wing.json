@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "modularpowerarmor:component_glider_wing"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " FF",
+    "FFO",
+    "F  "
+  ],
+  "key": {
+    "F": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "O": {
+      "tag": "forge:wiring"
+    }
+  }
+}

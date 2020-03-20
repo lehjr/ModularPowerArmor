@@ -10,7 +10,7 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
 public class MPARecipeConditionFactory implements ICondition {
-    static final ResourceLocation NAME = new ResourceLocation(MPAConstants.MOD_ID, "conditional");
+    static final ResourceLocation NAME = new ResourceLocation(MPAConstants.MOD_ID, "flag");
 
     String conditionName;
 
@@ -48,7 +48,7 @@ public class MPARecipeConditionFactory implements ICondition {
 
         @Override
         public MPARecipeConditionFactory read(JsonObject json) {
-            return new MPARecipeConditionFactory(JSONUtils.getString(json, "condition"));
+            return new MPARecipeConditionFactory(JSONUtils.getString(json, "flag"));
         }
 
         @Override

@@ -1,0 +1,35 @@
+{
+  "result": {
+    "item": "modularpowerarmor:component_control_circuit"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "FOF",
+    "RGO",
+    "ERF"
+  ],
+  "key": {
+    "R": {
+      "tag": "forge:dusts/redstone"
+    },
+    "E": {
+      "tag": "forge:ingots/electrum"
+    },
+    "F": {
+      "tag": "forge:wiring"
+    },
+    "G": {
+      "tag": "forge:dusts/glowstone"
+    },
+    "O": {
+      "tag": "forge:dyes/green"
+    }
+  }
+}
