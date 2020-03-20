@@ -16,10 +16,10 @@
       "tag": "forge:dyes/blue"
     },
     "G": {
-      "item": "minecraft:glass_pane"
+      "tag": "forge:glass_panes"
     },
     "L": {
-      "item": "minecraft:lapis_block"
+      "tag": "forge:storage_blocks/lapis"
     },
     "I": {
       "tag": "forge:ingots/iron"

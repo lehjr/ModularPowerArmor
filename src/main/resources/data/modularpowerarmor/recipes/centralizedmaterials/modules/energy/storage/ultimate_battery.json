@@ -1,9 +1,9 @@
 {
   "result": {
-    "item": "modularpowerarmor:battery_advanced",
+    "item": "modularpowerarmor:battery_ultimate",
     "nbt": {
       "MMModModule": {
-        "energy": 4000000
+        "energy": 125000000
       }
     }
   },
@@ -16,22 +16,27 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "FOF",
-    "RCR",
-    "FOF"
+    "FBF",
+    "BCB",
+    "BOB"
   ],
   "key": {
-    "R": {
-      "tag": "forge:wiring"
+    "B": {
+      "item": "modularpowerarmor:battery_elite",
+      "nbt": {
+        "MMModModule": {
+          "energy": 25000000
+        }
+      }
     },
     "C": {
       "item": "modularpowerarmor:component_control_circuit"
     },
     "F": {
-      "tag": "forge:ingots/steel"
+      "tag": "forge:ingots/electrum"
     },
     "O": {
-      "tag": "forge:dusts/glowstone"
+      "tag": "forge:wiring"
     }
   }
 }

@@ -4,29 +4,32 @@
   },
   "conditions": [
     {
-      "type": "modularpowerarmor:flag",
-      "flag": "vanilla_recipes_enabled"
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
     }
   ],
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "FOC",
-    "CMF",
-    "FOC"
+    "CFO",
+    "OMR",
+    "RFO"
   ],
   "key": {
+    "R": {
+      "tag": "forge:solenoid"
+    },
     "C": {
-      "item": "modularpowerarmor:component_computer_chip"
+      "item": "modularpowerarmor:component_solenoid"
     },
     "F": {
-      "tag": "forge:solenoid"
+      "tag": "forge:ingots/copper"
     },
     "M": {
       "item": "modularpowerarmor:component_control_circuit"
     },
     "O": {
-      "tag": "forge:ingots/gold"
+      "item": "modularpowerarmor:component_computer_chip"
     }
   }
 }

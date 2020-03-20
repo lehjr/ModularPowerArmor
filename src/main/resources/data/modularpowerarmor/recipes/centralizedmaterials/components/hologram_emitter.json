@@ -11,28 +11,28 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "GLR",
-    "LC#",
-    "B##"
+    "#B!",
+    "BWB",
+    "@B&"
   ],
   "key": {
-    "R": {
-      "item": "minecraft:green_dye"
-    },
     "B": {
-      "item": "minecraft:blue_dye"
+      "item": "minecraft:glass"
     },
-    "C": {
-      "item": "modularpowerarmor:component_wiring"
+    "W": {
+      "item":"modularpowerarmor:component_wiring"
     },
     "#": {
-      "item": "minecraft:red_dye"
+      "tag": "forge:dusts/glowstone"
     },
-    "G": {
-      "item": "minecraft:glowstone_dust"
+    "!": {
+      "tag":"forge:dyes/green"
     },
-    "L": {
-      "item": "minecraft:glass"
+    "@": {
+      "tag":"forge:dyes/blue"
+    },
+    "&": {
+      "tag":"forge:dyes/red"
     }
   }
 }

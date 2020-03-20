@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:component_parachute"
+    "item": "modularpowerarmor:portable_crafting_table"
   },
   "conditions": [
     {
@@ -11,19 +11,19 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "MMM",
-    "F F",
-    "O O"
+    " C ",
+    "FOF",
+    " F "
   ],
   "key": {
-    "F": {
-      "tag": "forge:string"
+    "C": {
+      "item": "minecraft:crafting_table"
     },
-    "M": {
-      "tag": "minecraft:wool"
+    "F": {
+      "tag": "forge:wiring"
     },
     "O": {
-      "tag": "forge:ingots/aluminium"
+      "item": "modularpowerarmor:component_control_circuit"
     }
   }
 }

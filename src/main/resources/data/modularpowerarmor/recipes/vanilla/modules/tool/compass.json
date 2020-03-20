@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:plasma_cannon"
+    "item": "modularpowerarmor:compass"
   },
   "conditions": [
     {
@@ -11,22 +11,19 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "FOC",
-    "FMC",
-    "FOC"
+    " C ",
+    "FOF",
+    " F "
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_computer_chip"
+      "item": "minecraft:compass"
     },
     "F": {
-      "tag": "forge:solenoid"
-    },
-    "M": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "tag": "forge:wiring"
     },
     "O": {
-      "tag": "forge:ingots/gold"
+      "item": "modularpowerarmor:component_control_circuit"
     }
   }
 }

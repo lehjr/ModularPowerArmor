@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:component_parachute"
+    "item": "modularpowerarmor:component_artificial_muscle"
   },
   "conditions": [
     {
@@ -11,19 +11,13 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "MMM",
-    "F F",
-    "O O"
+    "CCC",
+    "CCC",
+    "CCC"
   ],
   "key": {
-    "F": {
-      "tag": "forge:string"
-    },
-    "M": {
-      "tag": "minecraft:wool"
-    },
-    "O": {
-      "tag": "forge:ingots/aluminium"
+    "C": {
+      "item": "modularpowerarmor:component_carbon_myofiber"
     }
   }
 }

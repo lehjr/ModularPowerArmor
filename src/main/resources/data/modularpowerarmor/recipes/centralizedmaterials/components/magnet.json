@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:component_parachute"
+    "item": "modularpowerarmor:component_magnet"
   },
   "conditions": [
     {
@@ -11,19 +11,16 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "MMM",
-    "F F",
-    "O O"
+    "FFF",
+    "OOO",
+    "FFF"
   ],
   "key": {
     "F": {
-      "tag": "forge:string"
-    },
-    "M": {
-      "tag": "minecraft:wool"
+      "tag": "forge:ingots/steel"
     },
     "O": {
-      "tag": "forge:ingots/aluminium"
+      "tag": "forge:solenoid"
     }
   }
 }

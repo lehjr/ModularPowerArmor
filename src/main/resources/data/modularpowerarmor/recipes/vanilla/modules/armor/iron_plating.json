@@ -1,4 +1,7 @@
 {
+  "result": {
+    "item": "modularpowerarmor:plating_iron"
+  },
   "conditions": [
     {
       "type": "modularpowerarmor:flag",
@@ -6,20 +9,18 @@
     }
   ],
   "type": "minecraft:crafting_shaped",
+  "mirrored": true,
   "pattern": [
-    "WW",
-    "IW",
-    "WW"
+    "FF ",
+    "OF ",
+    "FF "
   ],
   "key": {
-    "W": {
-      "tag": "forge:wiring"
+    "F": {
+      "tag": "forge:ingots/iron"
     },
-    "I": {
-      "item": "modularpowerarmor:component_plating_iron"
+    "O": {
+      "tag": "forge:wiring"
     }
-  },
-  "result": {
-    "item": "modularpowerarmor:plating_iron"
   }
 }

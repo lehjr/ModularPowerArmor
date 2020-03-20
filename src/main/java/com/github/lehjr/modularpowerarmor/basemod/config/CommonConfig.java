@@ -269,14 +269,14 @@ public class CommonConfig {
             builder.pop();
             builder.push("Energy Storage");
             builder.push("battery_elite");
-            builder.defineInRange("base_maxEnergy", 50000000, 0, 2147483647);
+            builder.defineInRange("base_maxEnergy", 25000000, 0, 2147483647);
             builder.define("isAllowed", true);
-            builder.defineInRange("base_maxTransfer", 50000000, 0, 2147483647);
+            builder.defineInRange("base_maxTransfer", 25000000, 0, 2147483647);
             builder.pop();
             builder.push("battery_ultimate");
-            builder.defineInRange("base_maxEnergy", 100000000, 0, 2147483647);
+            builder.defineInRange("base_maxEnergy", 125000000, 0, 2147483647);
             builder.define("isAllowed", true);
-            builder.defineInRange("base_maxTransfer", 100000000, 0, 2147483647);
+            builder.defineInRange("base_maxTransfer", 125000000, 0, 2147483647);
             builder.pop();
             builder.push("battery_basic");
             builder.defineInRange("base_maxEnergy", 1000000, 0, 2147483647);

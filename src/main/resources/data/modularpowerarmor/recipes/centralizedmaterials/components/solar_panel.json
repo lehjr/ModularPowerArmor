@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:component_parachute"
+    "item": "modularpowerarmor:component_solar_panel"
   },
   "conditions": [
     {
@@ -11,18 +11,21 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "MMM",
-    "F F",
-    "O O"
+    "BGB",
+    "GLG",
+    "III"
   ],
   "key": {
-    "F": {
-      "tag": "forge:string"
+    "B": {
+      "tag": "forge:dyes/blue"
     },
-    "M": {
-      "tag": "minecraft:wool"
+    "G": {
+      "tag": "forge:glass_panes"
     },
-    "O": {
+    "L": {
+      "tag": "forge:storage_blocks/lapis"
+    },
+    "I": {
       "tag": "forge:ingots/aluminium"
     }
   }

@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:component_parachute"
+    "item": "modularpowerarmor:component_myofiber_gel"
   },
   "conditions": [
     {
@@ -11,19 +11,16 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "MMM",
-    "F F",
-    "O O"
+    " M ",
+    "FMF",
+    "FMF"
   ],
   "key": {
     "F": {
-      "tag": "forge:string"
+      "tag": "forge:ingots/steel"
     },
     "M": {
-      "tag": "minecraft:wool"
-    },
-    "O": {
-      "tag": "forge:ingots/aluminium"
+      "item": "minecraft:magma_cream"
     }
   }
 }

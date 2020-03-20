@@ -1,11 +1,11 @@
 {
   "result": {
+    "item": "modularpowerarmor:battery_basic",
     "nbt": {
       "MMModModule": {
         "energy": 800000
       }
-    },
-    "item": "modularpowerarmor:battery_basic"
+    }
   },
   "conditions": [
     {
@@ -16,19 +16,22 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    "CCC",
-    "COC",
-    "CMC"
+    "FOF",
+    "RCR",
+    "FOF"
   ],
   "key": {
-    "C": {
-      "item": "modularpowerarmor:component_wiring"
+    "R": {
+      "tag": "forge:dusts/redstone"
     },
-    "M": {
-      "item": "modularpowerarmor:component_capacitor_lv"
+    "C": {
+      "item": "modularpowerarmor:component_control_circuit"
+    },
+    "F": {
+      "tag": "forge:ingots/iron"
     },
     "O": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "tag": "forge:wiring"
     }
   }
 }
