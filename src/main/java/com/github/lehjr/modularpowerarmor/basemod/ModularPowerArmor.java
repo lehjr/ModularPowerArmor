@@ -16,10 +16,7 @@ import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererSpi
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
-import com.github.lehjr.modularpowerarmor.event.HarvestEventHandler;
-import com.github.lehjr.modularpowerarmor.event.PlayerLoginHandler;
-import com.github.lehjr.modularpowerarmor.event.PlayerUpdateHandler;
-import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
+import com.github.lehjr.modularpowerarmor.event.*;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import net.minecraft.block.Block;
@@ -67,6 +64,7 @@ public class ModularPowerArmor {
         modEventBus.addGenericListener(ContainerType.class, RegisterStuff.INSTANCE::registerContainerTypes);
 
         MinecraftForge.EVENT_BUS.addListener(PlayerLoginHandler::onPlayerLogin);
+        MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::handleEntityDamageEvent);
 
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);

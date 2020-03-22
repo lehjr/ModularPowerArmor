@@ -33,4 +33,9 @@ public class ItemElectricArmor extends ArmorItem {
     public boolean isDamageable() {
         return false;
     }
+
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+
+    }
 }
