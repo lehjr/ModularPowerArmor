@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
+import com.github.lehjr.mpalib.capabilities.energy.IEnergyWrapper;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatStorage;
 import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
@@ -36,7 +37,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -265,14 +268,28 @@ public class ItemPowerFist extends AbstractElectricTool {
                 modeChangingItem.updateFromNBT();
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modeChangingItem));
             }
+
             if (cap == HeatCapability.HEAT) {
                 ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
+                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
             }
+
             if (cap == ModelSpecNBTCapability.RENDER) {
                 return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
-                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
+
+            Pair range = modeChangingItem.getRangeForCategory(EnumModuleCategory.ENERGY_STORAGE);
+
+            for (int i = (int) range.getLeft(); i < (int) range.getRight(); i++)  {
+                ItemStack battery = modeChangingItem.getStackInSlot(i);
+                if (battery.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                    return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> battery.getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
+                }
+            }
+            return LazyOptional.empty();
+//
+//            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
+//                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
         }
 
         class EmptyEnergyWrapper extends EnergyStorage {
@@ -280,6 +297,11 @@ public class ItemPowerFist extends AbstractElectricTool {
                 super(0);
             }
         }
+
+
+
+
+
     }
 
     @Override

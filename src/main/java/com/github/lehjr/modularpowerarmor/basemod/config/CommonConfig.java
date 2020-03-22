@@ -69,13 +69,24 @@ public class CommonConfig {
 
     public static ForgeConfigSpec.BooleanValue RECIPES_USE_VANILLA;
 
-    static ForgeConfigSpec.ConfigValue<List<String>> GENERAL_VEIN_MINER_ORE_LIST;
+    static ForgeConfigSpec.ConfigValue<List<String>>
+            GENERAL_VEIN_MINER_ORE_LIST,
+            GENERAL_VEIN_MINER_BLOCK_LIST;
 
     public static List<ResourceLocation> getOreList() {
         List<String> ores = Optional.ofNullable(commonConfig != null? GENERAL_VEIN_MINER_ORE_LIST.get() : null).orElse(new ArrayList<>());
         List<ResourceLocation> retList = new ArrayList<>();
         ores.forEach(ore-> {
             retList.add(new ResourceLocation(ore));;
+        });
+        return retList;
+    }
+
+    public static List<ResourceLocation> getBlockList() {
+        List<String> blocks = Optional.ofNullable(commonConfig != null? GENERAL_VEIN_MINER_BLOCK_LIST.get() : null).orElse(new ArrayList<>());
+        List<ResourceLocation> retList = new ArrayList<>();
+        blocks.forEach(block-> {
+            retList.add(new ResourceLocation(block));;
         });
         return retList;
     }
@@ -135,7 +146,7 @@ public class CommonConfig {
                     .comment("Ore tag list for vein miner module.")
                     .translation(MPAConstants.CONFIG_GENERAL_VEIN_MINER_ORE_LIST)
                     .worldRestart()
-                    .define("oresCommon", Arrays.asList(
+                    .define("veinMinerOres", Arrays.asList(
                             // metals
                             "forge:ores/iron",
                             "forge:ores/copper",
@@ -154,8 +165,19 @@ public class CommonConfig {
                             // non-metal
                             "forge:ores/coal",
                             "forge:ores/redstone",
-                            "minecraft:glowstone"
+                            "minecraft:glowstone",
+                            "forge:ores/diamond", // fixme!!!? test
+                            "forge:ores/lapis"
                     ));
+
+            GENERAL_VEIN_MINER_BLOCK_LIST = builder
+                    .comment("Block registry name whitelist for the vein miner module. \n" +
+                            "Use for blocks that don't have an ore tag or to fine tune which blocks to break")
+                    .translation(MPAConstants.CONFIG_GENERAL_VEIN_MINER_BLOCK_LIST)
+                    .worldRestart()
+                    .define("veinMinerBlocks", Arrays.asList(
+                          ));
+
             builder.pop();
 
             /** Recipes ----------------------------------------------------------------------------------------------- */

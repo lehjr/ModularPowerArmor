@@ -159,7 +159,6 @@ public class ClientTickHandler {
 
                 // Meters ---------------------------------------------------------------------------------------------
                 double top = (double) screen.getScaledHeight() / 2.0 - (double) 16;
-//    	double left = screen.getScaledWidth() - 2;
                 double left = screen.getScaledWidth() - 34;
 
                 // energy
@@ -171,7 +170,7 @@ public class ClientTickHandler {
                 // heat
                 double maxHeat = HeatUtils.getPlayerMaxHeat(player);
                 double currHeat = HeatUtils.getPlayerHeat(player);
-                String currHeatStr = StringUtils.formatNumberShort(currHeat) + "RF";
+                String currHeatStr = StringUtils.formatNumberShort(currHeat);
                 String maxHeatStr = StringUtils.formatNumberShort(maxHeat);
 
                 // Water
@@ -183,11 +182,13 @@ public class ClientTickHandler {
                 player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fh -> {
                     for (int i = 0; i < fh.getTanks(); i++) {
                         maxWater.getAndAdd(fh.getTankCapacity(i));
-                        FluidStack fluidStack = fh.getFluidInTank(i);
-                        currWater.addAndGet(fluidStack.getAmount());
-                        waterMeter = new WaterMeter();
-                        currWaterStr.set(StringUtils.formatNumberShort(currWater.get()));
-                        maxWaterStr.set(StringUtils.formatNumberShort(maxWater.get()));
+                        if (maxWater.get() > 0) {
+                            FluidStack fluidStack = fh.getFluidInTank(i);
+                            currWater.addAndGet(fluidStack.getAmount());
+                            waterMeter = new WaterMeter();
+                            currWaterStr.set(StringUtils.formatNumberShort(currWater.get()));
+                            maxWaterStr.set(StringUtils.formatNumberShort(maxWater.get()));
+                        }
                     }
                 });
 

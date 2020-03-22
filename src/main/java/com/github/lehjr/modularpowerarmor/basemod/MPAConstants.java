@@ -41,6 +41,7 @@ public class MPAConstants {
     public static final String CONFIG_GENERAL_BASE_MAX_HEAT_FEET = CONFIG_PREFIX_GENERAL +  "maxHeatBaseFeet";
     public static final String CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST = CONFIG_PREFIX_GENERAL +  "maxHeatBasePowerFist";
     public static final String CONFIG_GENERAL_VEIN_MINER_ORE_LIST = CONFIG_PREFIX_GENERAL +  "maxVeinMinerOreList";
+    public static final String CONFIG_GENERAL_VEIN_MINER_BLOCK_LIST = CONFIG_PREFIX_GENERAL +  "maxVeinMinerBlockList";
 
     /** Recipes ----------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_RECIPES = CONFIG_PREFIX + "recipes.";

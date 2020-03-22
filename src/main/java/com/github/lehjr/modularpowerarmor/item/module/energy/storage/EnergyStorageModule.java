@@ -53,8 +53,9 @@ public class EnergyStorageModule extends AbstractPowerModule {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == PowerModuleCapability.POWER_MODULE)
-                return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> moduleCap));
+            if (cap == PowerModuleCapability.POWER_MODULE) {
+                return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
+            }
             if (cap == CapabilityEnergy.ENERGY) {
                 energyStorage.updateFromNBT();
             }

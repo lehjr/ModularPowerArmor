@@ -142,7 +142,7 @@ public class VeinMinerModule extends AbstractPowerModule {
                     }
                 }
 
-                if (isOre) {
+                if (isOre || CommonConfig.getBlockList().contains(block.getRegistryName())) {
                     int energyRequired = this.getEnergyUsage() + bbModuleEnergyUsage.get();
 
                     // does player have enough energy to break first block?
