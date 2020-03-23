@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
@@ -52,7 +53,7 @@ public class VeinMinerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
         }
 
@@ -132,7 +133,7 @@ public class VeinMinerModule extends AbstractPowerModule {
                 });
 
                 // check if block is an ore
-                List<ResourceLocation> defaultOreTags = CommonConfigX.getOreList();
+                List<ResourceLocation> defaultOreTags = CommonConfig.getOreList();
                 Set<ResourceLocation> oretags = player.world.getBlockState(posIn).getBlock().getTags();
                 boolean isOre = false;
                 for ( ResourceLocation location : oretags ) {
@@ -142,12 +143,7 @@ public class VeinMinerModule extends AbstractPowerModule {
                     }
                 }
 
-                player.sendMessage(new StringTextComponent("block regName: " + block.getRegistryName()));
-                player.sendMessage(new StringTextComponent("isBlock in blocklist: " + (CommonConfigX.getBlockList().contains(block.getRegistryName()))));
-                player.sendMessage(new StringTextComponent("blocklist size: " + (CommonConfigX.getBlockList().size())));
-
-
-                if (isOre || CommonConfigX.getBlockList().contains(block.getRegistryName())) {
+                if (isOre || CommonConfig.getBlockList().contains(block.getRegistryName())) {
                     int energyRequired = this.getEnergyUsage() + bbModuleEnergyUsage.get();
 
                     // does player have enough energy to break first block?

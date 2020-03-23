@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.IItemStackUpdate;
@@ -56,7 +57,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig, true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig, true);
             this.ticker.addBasePropertyInteger(MPAConstants.FLUID_TANK_SIZE, 20000);
 //            this.ticker.addBasePropertyDouble(ACTIVATION_PERCENT, 0.5);
 //            this.ticker.addTradeoffPropertyDouble("Activation Percent", ACTIVATION_PERCENT, 0.5, "%");

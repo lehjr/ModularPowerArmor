@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -45,7 +46,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION, 2000);
             this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
             this.ticker.addBasePropertyDouble(MPAConstants.MOVEMENT_RESISTANCE, 0.01);

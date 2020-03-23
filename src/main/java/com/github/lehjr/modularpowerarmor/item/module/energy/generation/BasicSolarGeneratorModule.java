@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -41,7 +42,7 @@ public class BasicSolarGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, CommonConfigX.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION_DAY, 15000, "RF");
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION_NIGHT, 1500, "RF");
         }

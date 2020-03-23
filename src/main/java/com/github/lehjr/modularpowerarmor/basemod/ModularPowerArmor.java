@@ -82,9 +82,6 @@ public class ModularPowerArmor {
         });
     }
 
-
-
-
     // preInit
     private void setup(final FMLCommonSetupEvent event) {
         MPAPackets.registerMPAPackets();

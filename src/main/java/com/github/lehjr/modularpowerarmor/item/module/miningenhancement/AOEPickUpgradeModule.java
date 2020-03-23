@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
@@ -55,7 +56,7 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
             this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.DIAMETER, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(MPAConstants.DIAMETER, MPAConstants.AOE_MINING_RADIUS, 5, "m", 2, 1);

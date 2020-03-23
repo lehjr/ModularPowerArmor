@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatStorage;
@@ -239,7 +240,7 @@ public class ItemPowerFist extends AbstractElectricTool {
         IModeChangingItem modeChangingItem;
         IHeatStorage heatStorage;
         IHandHeldModelSpecNBT modelSpec;
-        double maxHeat = CommonConfigX.baseMaxHeatPowerFist();
+        double maxHeat = CommonConfig.baseMaxHeatPowerFist();
 
         public PowerToolCap(@Nonnull ItemStack fist) {
             this.fist = fist;

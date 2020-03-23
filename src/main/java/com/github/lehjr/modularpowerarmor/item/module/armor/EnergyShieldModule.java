@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -39,8 +40,8 @@ public class EnergyShieldModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            if (CommonConfigX.moduleConfig != null) {
-                ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfigX.moduleConfig, true);
+            if (CommonConfig.moduleConfig != null) {
+                ticker = new Ticker(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig, true);
                 ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.ARMOR_VALUE_ENERGY, 6, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
                 ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.ARMOR_ENERGY_CONSUMPTION, 5000, "RF");
                 ticker.addTradeoffPropertyDouble(MPAConstants.MODULE_FIELD_STRENGTH, MPAConstants.MAXIMUM_HEAT, 500, "");

@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
@@ -30,7 +31,7 @@ public class DiamondPlatingModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfigX.moduleConfig);
+            moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig);
             moduleCap.addBasePropertyDouble(MPAConstants.ARMOR_VALUE_PHYSICAL, 5, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
             moduleCap.addBasePropertyDouble(MPAConstants.MAXIMUM_HEAT, 400);
             moduleCap.addBasePropertyDouble(MPAConstants.KNOCKBACK_RESISTANCE, 0.25, "");

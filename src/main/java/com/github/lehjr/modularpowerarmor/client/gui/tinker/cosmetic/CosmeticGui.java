@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.cosmetic;
 
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
 import com.github.lehjr.mpalib.client.gui.ContainerlessGui;
@@ -41,7 +42,7 @@ public class CosmeticGui extends ContainerlessGui {
         this.player = inventory.player;
         this.minecraft = Minecraft.getInstance();
 
-        usingCosmeticPresets = !CommonConfigX.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get();
+        usingCosmeticPresets = !CommonConfig.COSMETIC_USE_LEGACY_COSMETIC_SYSTEM.get();
         if (usingCosmeticPresets) {
             // check if player is the server owner
             if (minecraft.isSingleplayer()) {

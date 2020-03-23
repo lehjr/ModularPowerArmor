@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
@@ -208,7 +209,7 @@ public class MovementManager {
         double horzm2 = player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z;
 
         // currently comes out to 0.0625
-        double horizontalLimit = CommonConfigX.GENERAL_MAX_FLYING_SPEED.get() * CommonConfigX.GENERAL_MAX_FLYING_SPEED.get() / 400;
+        double horizontalLimit = CommonConfig.GENERAL_MAX_FLYING_SPEED.get() * CommonConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
 
 //        double playerVelocity = Math.abs(player.getMotion().x) + Math.abs(player.getMotion().y) + Math.abs(player.getMotion().z);
 

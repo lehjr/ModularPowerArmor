@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatWrapper;
@@ -46,7 +47,7 @@ public class ItemPowerArmorBoots extends ItemPowerArmor {
         IModularItem modularItemCap;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
-        AtomicDouble maxHeat = new AtomicDouble(CommonConfigX.baseMaxHeatFeet());
+        AtomicDouble maxHeat = new AtomicDouble(CommonConfig.baseMaxHeatFeet());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
