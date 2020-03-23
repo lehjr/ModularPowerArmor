@@ -17,7 +17,7 @@
   ],
   "key": {
     "C": {
-      "item": "centralizedmaterials:copper_ingot"
+      "tag": "forge:ingots/copper"
     },
     "F": {
       "tag": "forge:solenoid"
