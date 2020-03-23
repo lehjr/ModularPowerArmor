@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.render;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBT;
@@ -91,7 +90,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && CommonConfigX.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {
                                 /*

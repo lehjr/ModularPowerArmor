@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.enchantment.IEnchantmentModule;
@@ -44,7 +43,7 @@ public class ItemModuleSilkTouch extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
             this.miningEnhancement.addBasePropertyDouble(MPAConstants.SILK_TOUCH_ENERGY_CONSUMPTION, 2500, "RF");
         }
 

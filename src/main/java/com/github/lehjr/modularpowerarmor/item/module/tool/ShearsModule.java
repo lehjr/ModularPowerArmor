@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
@@ -71,7 +70,7 @@ public class ShearsModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
             this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.rightClick.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
         }

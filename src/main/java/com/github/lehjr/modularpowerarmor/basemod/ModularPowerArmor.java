@@ -36,13 +36,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-// The value here should match an entry in the META-INF/mods.toml file
-// The value here should match an entry in the META-INF/mods.toml file`
 @Mod(MPAConstants.MOD_ID)
 public class ModularPowerArmor {
     public ModularPowerArmor() {
-        // TODO: revisit and see if a server config is needed too (not that server config only initializes with a server running and is stored with the saved world
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_SPEC, ConfigHelper.setupConfigFile("modularpowerarmor-common.toml").getAbsolutePath());
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC, ClientConfig.clientFile.getAbsolutePath());
 
@@ -85,6 +81,9 @@ public class ModularPowerArmor {
             }
         });
     }
+
+
+
 
     // preInit
     private void setup(final FMLCommonSetupEvent event) {

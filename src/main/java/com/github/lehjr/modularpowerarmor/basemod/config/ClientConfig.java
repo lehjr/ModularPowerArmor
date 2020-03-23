@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.basemod.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +21,20 @@ public class ClientConfig {
         CLIENT_SPEC = clientSpecPair.getRight();
         CLIENT_CONFIG = clientSpecPair.getLeft();
         clientFile = ConfigHelper.setupConfigFile("modularpowerarmor-client-only.toml");
-        CLIENT_SPEC.setConfig(CommentedFileConfig.of(clientFile));
+
+
+        final CommentedFileConfig configData = CommentedFileConfig.builder(clientFile)
+                .sync()
+                .autosave()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+
+        configData.load();
+//        CLIENT_SPEC.setConfig(CommentedFileConfig.of(clientFile));
+        CLIENT_SPEC.setConfig(configData);
+
+
+
     }
 
     /** HUD ---------------------------------------------------------------------------------------*/

@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -52,7 +51,7 @@ public class JetPackModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig);
 
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/t");
             this.ticker.addBasePropertyDouble(MPAConstants.JETPACK_THRUST, 0, "N");

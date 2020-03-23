@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.special;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -38,7 +37,7 @@ public class CompassModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig, true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, CommonConfigX.moduleConfig, true);
         }
 
         @Nonnull

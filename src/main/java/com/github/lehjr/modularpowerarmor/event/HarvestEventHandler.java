@@ -7,16 +7,11 @@ import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import java.util.List;
-import java.util.Objects;
 
 public class HarvestEventHandler {
 //    @SubscribeEvent

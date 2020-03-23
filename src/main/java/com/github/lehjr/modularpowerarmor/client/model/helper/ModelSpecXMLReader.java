@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
 import com.github.lehjr.forge.obj.MPALibOBJModel;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
@@ -104,7 +103,7 @@ public enum ModelSpecXMLReader {
 
                                 case ARMOR_MODEL:
                                     // only allow these models if allowed by config
-                                    if (CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                                    if (CommonConfigX.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
                                         parseModelSpec(specNode, event, bakery, EnumSpecType.ARMOR_MODEL, specName, isDefault);
                                     }
                                     break;

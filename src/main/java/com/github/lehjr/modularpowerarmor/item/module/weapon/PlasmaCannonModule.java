@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -46,7 +45,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
             this.rightClickie.addBasePropertyDouble(MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
             this.rightClickie.addBasePropertyDouble(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
             this.rightClickie.addTradeoffPropertyDouble(MPAConstants.AMPERAGE, MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");

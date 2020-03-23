@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -35,7 +34,7 @@ public class ShockAbsorberModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfig.moduleConfig, true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, CommonConfigX.moduleConfig, true);
             this.moduleToggle.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/m");
             this.moduleToggle.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 100);
             this.moduleToggle.addBasePropertyDouble(MPAConstants.MULTIPLIER, 0, "%");

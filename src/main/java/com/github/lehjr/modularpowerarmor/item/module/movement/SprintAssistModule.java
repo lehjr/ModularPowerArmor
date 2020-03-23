@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -42,7 +41,7 @@ public class SprintAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfigX.moduleConfig);
 
             this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
             this.ticker.addTradeoffPropertyDouble(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);

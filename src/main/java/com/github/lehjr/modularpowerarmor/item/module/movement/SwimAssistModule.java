@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -45,7 +44,7 @@ public class SwimAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfigX.moduleConfig);
             this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }

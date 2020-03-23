@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
@@ -47,7 +46,7 @@ public class GliderModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig);
 
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0);
             this.ticker.addBasePropertyDouble(MPAConstants.JETBOOTS_THRUST, 0);

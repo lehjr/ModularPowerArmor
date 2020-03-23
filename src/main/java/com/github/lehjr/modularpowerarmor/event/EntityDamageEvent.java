@@ -1,8 +1,6 @@
 package com.github.lehjr.modularpowerarmor.event;
 
 import com.google.common.eventbus.Subscribe;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 
 public class EntityDamageEvent {

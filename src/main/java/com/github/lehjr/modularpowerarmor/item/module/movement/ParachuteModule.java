@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -41,7 +40,7 @@ public class ParachuteModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig);
             this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
             this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }

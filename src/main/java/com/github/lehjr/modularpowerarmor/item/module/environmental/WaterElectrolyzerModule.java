@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALibConfig;
@@ -42,7 +41,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfigX.moduleConfig);
             this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
         }
 

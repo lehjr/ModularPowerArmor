@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
@@ -44,7 +43,7 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfigX.moduleConfig);
             this.rightClickie.addBasePropertyDouble(MPAConstants.BLADE_ENERGY, 5000, "RF");
             this.rightClickie.addBasePropertyDouble(MPAConstants.BLADE_DAMAGE, 6, "pt");
         }

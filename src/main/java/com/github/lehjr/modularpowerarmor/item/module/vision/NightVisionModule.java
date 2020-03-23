@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.vision;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -44,7 +43,7 @@ public class NightVisionModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfigX.moduleConfig);
         }
 
         @Nonnull

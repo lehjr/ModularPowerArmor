@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -43,7 +42,7 @@ public class CoolingSystemModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig, true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfigX.moduleConfig, true);
             this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.COOLING_BONUS, 1, "%");
             this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 40, "RF/t");
         }

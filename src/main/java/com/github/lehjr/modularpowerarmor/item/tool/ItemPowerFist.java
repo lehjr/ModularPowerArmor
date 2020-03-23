@@ -2,9 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
-import com.github.lehjr.mpalib.capabilities.energy.IEnergyWrapper;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatStorage;
 import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
@@ -37,7 +35,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -242,7 +239,7 @@ public class ItemPowerFist extends AbstractElectricTool {
         IModeChangingItem modeChangingItem;
         IHeatStorage heatStorage;
         IHandHeldModelSpecNBT modelSpec;
-        double maxHeat = CommonConfig.baseMaxHeatPowerFist();
+        double maxHeat = CommonConfigX.baseMaxHeatPowerFist();
 
         public PowerToolCap(@Nonnull ItemStack fist) {
             this.fist = fist;
