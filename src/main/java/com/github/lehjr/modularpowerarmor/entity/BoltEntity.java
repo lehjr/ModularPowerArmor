@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
+import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -10,7 +11,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -39,10 +39,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * TODO:
+ *  - remove/adjust bolt arch
+ *  - adjust bolt velocity
+ *  - change bolt hit/miss sounds
+ *  - restore particle trail
+ *  - remove on impact with entity or solid blocks
+ *
+ *
+ *  Notes:
+ *  - arrow/crossbow code spawns entity then calls shoot method before adding to world
+ *  - Velocity for crossbow is 1.6F, accuracy is this mess (float)(14 - this.world.getDifficulty().getId() * 4)
+ *  - bow uses charge calculation based on charge for velocity, but innacuracy of 1
+ *
+ *  quick research suggests average crossbow velocity of 91 meters per second
+ *  rail gun velocity appears to be be around 3000 meters per second
+ *
+ *  */
 public class BoltEntity extends Entity implements IProjectile {
-    private static final DataParameter<Byte> CRITICAL = EntityDataManager.createKey(AbstractArrowEntity.class, DataSerializers.BYTE);
-    protected static final DataParameter<Optional<UUID>> field_212362_a = EntityDataManager.createKey(AbstractArrowEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Byte> PIERCE_LEVEL = EntityDataManager.createKey(AbstractArrowEntity.class, DataSerializers.BYTE);
+    private static final DataParameter<Byte> CRITICAL = EntityDataManager.createKey(BoltEntity.class, DataSerializers.BYTE);
+    protected static final DataParameter<Optional<UUID>> field_212362_a = EntityDataManager.createKey(BoltEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Byte> PIERCE_LEVEL = EntityDataManager.createKey(BoltEntity.class, DataSerializers.BYTE);
 
     public LivingEntity shootingEntity;
     public UUID shootingEntityUUID;
@@ -66,47 +84,11 @@ public class BoltEntity extends Entity implements IProjectile {
 
     private IntOpenHashSet piercedEntities;
     private List<Entity> hitEntities;
+    private BlockPos startPos;
 
     // default constructor
    public BoltEntity(EntityType<? extends BoltEntity> type, World world) {
         super(type, world);
-    }
-
-    protected BoltEntity(EntityType<? extends BoltEntity> type, double x, double y, double z, World worldIn) {
-        this(type, worldIn);
-        this.setPosition(x, y, z);
-    }
-
-    protected BoltEntity(EntityType<? extends BoltEntity> type, LivingEntity shooter, World worldIn) {
-        this(type, shooter.posX, shooter.posY + (double)shooter.getEyeHeight() - (double)0.1F, shooter.posZ, worldIn);
-        this.setShooter(shooter);
-    }
-
-    /// OK above
-    public BoltEntity(EntityType<? extends BoltEntity> type, double posX, double posY, double posZ, double accelX, double accelY, double accelZ, World world) {
-        this(type, world);
-        this.setLocationAndAngles(posX, posY, posZ, this.rotationYaw, this.rotationPitch);
-        this.setPosition(posX, posY, posZ);
-        double d0 = (double) MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
-        this.accelerationX = accelX / d0 * 0.1D;
-        this.accelerationY = accelY / d0 * 0.1D;
-        this.accelerationZ = accelZ / d0 * 0.1D;
-    }
-
-    // damaging projectile entity
-    public BoltEntity(EntityType<? extends BoltEntity> type, LivingEntity shootingEntity, double accelX, double accelY, double accelZ, World world) {
-        this(type, world);
-        this.shootingEntity = shootingEntity;
-        this.setLocationAndAngles(shootingEntity.posX, shootingEntity.posY, shootingEntity.posZ, shootingEntity.rotationYaw, shootingEntity.rotationPitch);
-        this.setPosition(this.posX, this.posY, this.posZ);
-        this.setMotion(Vec3d.ZERO);
-        accelX = accelX + this.rand.nextGaussian() * 0.4D;
-        accelY = accelY + this.rand.nextGaussian() * 0.4D;
-        accelZ = accelZ + this.rand.nextGaussian() * 0.4D;
-        double d0 = (double)MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
-        this.accelerationX = accelX / d0 * 0.1D;
-        this.accelerationY = accelY / d0 * 0.1D;
-        this.accelerationZ = accelZ / d0 * 0.1D;
     }
 
     public BoltEntity(World world, LivingEntity shootingEntity, double damageIn, double knockback) {
@@ -116,7 +98,6 @@ public class BoltEntity extends Entity implements IProjectile {
         this.shootingEntityUUID = shootingEntity.getUniqueID();
         this.damage = damageIn;
         Vec3d direction = shootingEntity.getLookVec().normalize();
-
         double scale = 1.0;
         this.setMotion(
                 direction.x * scale,
@@ -134,21 +115,29 @@ public class BoltEntity extends Entity implements IProjectile {
         this.posX = shootingEntity.posX + direction.x * xoffset - direction.y * horzx * yoffset - horzz * zoffset;
         this.posY = shootingEntity.posY + shootingEntity.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
         this.posZ = shootingEntity.posZ + direction.z * xoffset - direction.y * horzz * yoffset + horzx * zoffset;
+        this.startPos = this.getPosition();
         this.setBoundingBox(new AxisAlignedBB(posX - r, posY - r, posZ - r, posX + r, posY + r, posZ + r));
     }
 
-    public void setKnockbackStrength(double knockbackStrengthIn) {
-        this.knockbackStrength = knockbackStrengthIn;
+    public void shoot(Entity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy) {
+        float f = -MathHelper.sin(yaw * ((float)Math.PI / 180F)) * MathHelper.cos(pitch * ((float)Math.PI / 180F));
+        float f1 = -MathHelper.sin(pitch * ((float)Math.PI / 180F));
+        float f2 = MathHelper.cos(yaw * ((float)Math.PI / 180F)) * MathHelper.cos(pitch * ((float)Math.PI / 180F));
+        this.shoot(f, f1, f2, velocity, inaccuracy);
+        this.setMotion(this.getMotion().add(shooter.getMotion().x, shooter.onGround ? 0.0D : shooter.getMotion().y, shooter.getMotion().z));
     }
 
-    public void setShooter(@Nullable LivingEntity entityIn) {
-        this.shootingEntity = entityIn;
-        if (entityIn != null) {
-            this.shootingEntityUUID = entityIn.getUniqueID();
-        }
+    @Override
+    public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
+        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale(velocity);
+        this.setMotion(vec3d);
+        float f = MathHelper.sqrt(horizontalMag(vec3d));
+        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, f) * (double)(180F / (float)Math.PI));
+        this.prevRotationYaw = this.rotationYaw;
+        this.prevRotationPitch = this.rotationPitch;
+        this.ticksInGround = 0;
     }
-
-
 
 
 
@@ -219,21 +208,27 @@ public class BoltEntity extends Entity implements IProjectile {
         boolean flag = this.getNoClip();
         Vec3d vec3d = this.getMotion();
 
-//        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
-//            float f = MathHelper.sqrt(horizontalMag(vec3d));
-//            this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
-//            this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, (double)f) * (double)(180F / (float)Math.PI));
-//            this.prevRotationYaw = this.rotationYaw;
-//            this.prevRotationPitch = this.rotationPitch;
-//        }
+        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
+            float f = MathHelper.sqrt(horizontalMag(vec3d));
+            this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+            this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, f) * (double)(180F / (float)Math.PI));
+            this.prevRotationYaw = this.rotationYaw;
+            this.prevRotationPitch = this.rotationPitch;
+        }
 
         BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
         BlockState blockstate = this.world.getBlockState(blockpos);
         if (!blockstate.isAir(this.world, blockpos) && !flag) {
+            System.out.println("doing something here");
+
+
             VoxelShape voxelshape = blockstate.getCollisionShape(this.world, blockpos);
             if (!voxelshape.isEmpty()) {
                 for(AxisAlignedBB axisalignedbb : voxelshape.toBoundingBoxList()) {
                     if (axisalignedbb.offset(blockpos).contains(new Vec3d(this.posX, this.posY, this.posZ))) {
+                        System.out.println("in ground");
+
+
                         this.inGround = true;
                         break;
                     }
@@ -245,22 +240,33 @@ public class BoltEntity extends Entity implements IProjectile {
             --this.arrowShake;
         }
 
+
+        System.out.println("doing something here");
+
         if (this.isWet()) {
             this.extinguish();
         }
 
+        System.out.println("doing something here");
+
         if (this.inGround && !flag) {
+
+
+            System.out.println("doing something here");
+
             if (this.inBlockState != blockstate && this.world.areCollisionShapesEmpty(this.getBoundingBox().grow(0.06D))) {
                 this.inGround = false;
-                this.setMotion(vec3d.mul((double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F)));
+                this.setMotion(vec3d.mul(this.rand.nextFloat() * 0.2F, this.rand.nextFloat() * 0.2F, this.rand.nextFloat() * 0.2F));
                 this.ticksInGround = 0;
                 this.ticksInAir = 0;
             } else if (!this.world.isRemote) {
-                this.tryDespawn();
+                this.remove();
             }
 
             ++this.timeInGround;
         } else {
+            System.out.println("doing something here");
+
             this.timeInGround = 0;
             ++this.ticksInAir;
             Vec3d vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
@@ -270,7 +276,11 @@ public class BoltEntity extends Entity implements IProjectile {
                 vec3d2 = raytraceresult.getHitVec();
             }
 
-            while(!this.removed) {
+            while(this.isAlive()) {
+                System.out.println("doing something here");
+
+
+
                 EntityRayTraceResult entityraytraceresult = this.rayTraceEntities(vec3d1, vec3d2);
                 if (entityraytraceresult != null) {
                     raytraceresult = entityraytraceresult;
@@ -317,8 +327,7 @@ public class BoltEntity extends Entity implements IProjectile {
                 this.rotationYaw = (float)(MathHelper.atan2(d1, d0) * (double)(180F / (float)Math.PI));
             }
 
-            for(this.rotationPitch = (float)(MathHelper.atan2(d2, (double)f4) * (double)(180F / (float)Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
-                ;
+            for(this.rotationPitch = (float)(MathHelper.atan2(d2, f4) * (double)(180F / (float)Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
             }
 
             while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
@@ -346,7 +355,7 @@ public class BoltEntity extends Entity implements IProjectile {
                 f1 = this.getWaterDrag();
             }
 
-            this.setMotion(vec3d.scale((double)f1));
+            this.setMotion(vec3d.scale(f1));
             if (!this.hasNoGravity() && !flag) {
                 Vec3d vec3d3 = this.getMotion();
                 this.setMotion(vec3d3.x, vec3d3.y - (double)0.05F, vec3d3.z);
@@ -354,6 +363,22 @@ public class BoltEntity extends Entity implements IProjectile {
 
             this.setPosition(this.posX, this.posY, this.posZ);
             this.doBlockCollisions();
+        }
+
+
+        if (this.world.isRemote) {
+            if (this.inGround) {
+                if (this.timeInGround % 5 == 0) {
+                    this.spawnPotionParticles(1);
+                }
+            } else {
+                this.spawnPotionParticles(2);
+            }
+        } else if (this.inGround
+                && this.timeInGround != 0
+                && this.timeInGround >= 600) {
+            this.world.setEntityState(this, (byte)0);
+//            this.dataManager.set(COLOR, -1);
         }
     }
 
@@ -451,24 +476,7 @@ public class BoltEntity extends Entity implements IProjectile {
         this.dataManager.register(PIERCE_LEVEL, (byte)0);
     }
 
-    public void shoot(Entity shooter, float pitch, float yaw, float p_184547_4_, float velocity, float inaccuracy) {
-        float f = -MathHelper.sin(yaw * ((float)Math.PI / 180F)) * MathHelper.cos(pitch * ((float)Math.PI / 180F));
-        float f1 = -MathHelper.sin(pitch * ((float)Math.PI / 180F));
-        float f2 = MathHelper.cos(yaw * ((float)Math.PI / 180F)) * MathHelper.cos(pitch * ((float)Math.PI / 180F));
-        this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
-        this.setMotion(this.getMotion().add(shooter.getMotion().x, shooter.onGround ? 0.0D : shooter.getMotion().y, shooter.getMotion().z));
-    }
 
-    public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
-        this.setMotion(vec3d);
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
-        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, (double)f) * (double)(180F / (float)Math.PI));
-        this.prevRotationYaw = this.rotationYaw;
-        this.prevRotationPitch = this.rotationPitch;
-        this.ticksInGround = 0;
-    }
 
     @OnlyIn(Dist.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
@@ -481,7 +489,7 @@ public class BoltEntity extends Entity implements IProjectile {
         this.setMotion(x, y, z);
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
             float f = MathHelper.sqrt(x * x + z * z);
-            this.rotationPitch = (float)(MathHelper.atan2(y, (double)f) * (double)(180F / (float)Math.PI));
+            this.rotationPitch = (float)(MathHelper.atan2(y, f) * (double)(180F / (float)Math.PI));
             this.rotationYaw = (float)(MathHelper.atan2(x, z) * (double)(180F / (float)Math.PI));
             this.prevRotationPitch = this.rotationPitch;
             this.prevRotationYaw = this.rotationYaw;
@@ -490,15 +498,6 @@ public class BoltEntity extends Entity implements IProjectile {
         }
     }
 
-
-
-    protected void tryDespawn() {
-        ++this.ticksInGround;
-        if (this.ticksInGround >= 1200) {
-            this.remove();
-        }
-
-    }
 
     protected void onHit(RayTraceResult raytraceResultIn) {
         RayTraceResult.Type raytraceresult$type = raytraceResultIn.getType();
@@ -510,7 +509,7 @@ public class BoltEntity extends Entity implements IProjectile {
             this.inBlockState = blockstate;
             Vec3d vec3d = blockraytraceresult.getHitVec().subtract(this.posX, this.posY, this.posZ);
             this.setMotion(vec3d);
-            Vec3d vec3d1 = vec3d.normalize().scale((double)0.05F);
+            Vec3d vec3d1 = vec3d.normalize().scale(0.05F);
             this.posX -= vec3d1.x;
             this.posY -= vec3d1.y;
             this.posZ -= vec3d1.z;
@@ -519,15 +518,15 @@ public class BoltEntity extends Entity implements IProjectile {
             this.arrowShake = 7;
             this.setIsCritical(false);
             this.setPierceLevel((byte)0);
-            this.setHitSound(SoundEvents.ENTITY_ARROW_HIT);
+            this.setHitSound(SoundEvents.ENTITY_GENERIC_EXPLODE);
             this.setShotFromCrossbow(false);
             this.func_213870_w();
             blockstate.onProjectileCollision(this.world, blockstate, blockraytraceresult, this);
         }
     }
 
-    protected void onEntityHit(EntityRayTraceResult p_213868_1_) {
-        Entity entity = p_213868_1_.getEntity();
+    protected void onEntityHit(EntityRayTraceResult result) {
+        Entity entity = result.getEntity();
         float f = (float)this.getMotion().length();
         int i = MathHelper.ceil(Math.max((double)f * this.damage, 0.0D));
         if (this.getPierceLevel() > 0) {
@@ -575,7 +574,7 @@ public class BoltEntity extends Entity implements IProjectile {
                 }
 
                 if (this.knockbackStrength > 0) {
-                    Vec3d vec3d = this.getMotion().mul(1.0D, 0.0D, 1.0D).normalize().scale((double)this.knockbackStrength * 0.6D);
+                    Vec3d vec3d = this.getMotion().mul(1.0D, 0.0D, 1.0D).normalize().scale(this.knockbackStrength * 0.6D);
                     if (vec3d.lengthSquared() > 0.0D) {
                         livingentity.addVelocity(vec3d.x, 0.1D, vec3d.z);
                     }
@@ -634,7 +633,7 @@ public class BoltEntity extends Entity implements IProjectile {
 
 
     protected SoundEvent getHitEntitySound() {
-        return SoundEvents.ENTITY_ARROW_HIT;
+        return SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE;
     }
 
     protected final SoundEvent getHitGroundSound() {
@@ -770,31 +769,7 @@ public class BoltEntity extends Entity implements IProjectile {
 //    }
 //
 //
-//    public void drawParticleStreamTo(LivingEntity source, World world, double x, double y, double z) {
-//        if (source != null) {
-//            Vec3d direction = source.getLookVec().normalize();
-//            double xoffset = 1.3f;
-//            double yoffset = -.2;
-//            double zoffset = 0.3f;
-//            Vec3d horzdir = direction.normalize();
-//            horzdir = new Vec3d(horzdir.x, 0, horzdir.z);
-//            horzdir = horzdir.normalize();
-//            double cx = source.posX + direction.x * xoffset - direction.y * horzdir.x * yoffset - horzdir.z * zoffset;
-//            double cy = source.posY + source.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
-//            double cz = source.posZ + direction.z * xoffset - direction.y * horzdir.z * yoffset + horzdir.x * zoffset;
-//            double dx = x - cx;
-//            double dy = y - cy;
-//            double dz = z - cz;
-//            double ratio = Math.sqrt(dx * dx + dy * dy + dz * dz);
-//
-//            while (Math.abs(cx - x) > Math.abs(dx / ratio)) {
-//                world.addParticle(ParticleTypes.MYCELIUM, cx, cy, cz, 0.0D, 0.0D, 0.0D);
-//                cx += dx * 0.1 / ratio;
-//                cy += dy * 0.1 / ratio;
-//                cz += dz * 0.1 / ratio;
-//            }
-//        }
-//    }
+
 
 
 //    public int getMaxLifetime() {
@@ -945,8 +920,8 @@ public class BoltEntity extends Entity implements IProjectile {
 
     public void writeAdditional(CompoundNBT compound) {
         Vec3d vec3d = this.getMotion();
-        compound.put("direction", this.newDoubleNBTList(new double[]{vec3d.x, vec3d.y, vec3d.z}));
-        compound.put("power", this.newDoubleNBTList(new double[]{this.accelerationX, this.accelerationY, this.accelerationZ}));
+        compound.put("direction", this.newDoubleNBTList(vec3d.x, vec3d.y, vec3d.z));
+        compound.put("power", this.newDoubleNBTList(this.accelerationX, this.accelerationY, this.accelerationZ));
         compound.putInt("life", this.ticksAlive);
 
 
@@ -1006,25 +981,9 @@ public class BoltEntity extends Entity implements IProjectile {
         }
     }
 
-    // AbstractArrowEntity
-    @OnlyIn(Dist.CLIENT)
-    public boolean isInRangeToRenderDist(double distance) {
-        double d0 = this.getBoundingBox().getAverageEdgeLength() * 10.0D;
-        if (Double.isNaN(d0)) {
-            d0 = 1.0D;
-        }
 
-        d0 = d0 * 64.0D * getRenderDistanceWeight();
-        return distance < d0 * d0;
-    }
 
-    @Nullable
-    public Entity getShooter() {
-        if (shootingEntity != null) {
-            return shootingEntity;
-        }
-        return this.shootingEntityUUID != null && this.world instanceof ServerWorld ? ((ServerWorld)this.world).getEntityByUuid(this.shootingEntityUUID) : null;
-    }
+
 
     /* // abstract projectile
     public IPacket<?> createSpawnPacket() {
@@ -1039,6 +998,80 @@ public class BoltEntity extends Entity implements IProjectile {
         return new SSpawnObjectPacket(this, entity == null ? 0 : entity.getEntityId());
     }
      */
+
+
+    private void spawnPotionParticles(int particleCount) {
+        int i = Colour.WHITE.getInt();
+        System.out.println("particle count: " + particleCount);
+
+
+        if (i != -1 && particleCount > 0) {
+            double d0 = (double)(i >> 16 & 255) / 255.0D;
+            double d1 = (double)(i >> 8 & 255) / 255.0D;
+            double d2 = (double)(i >> 0 & 255) / 255.0D;
+
+            for(int j = 0; j < particleCount; ++j) {
+                this.world.addParticle(ParticleTypes.ENTITY_EFFECT,
+                        this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.getWidth(),
+                        this.posY + this.rand.nextDouble() * (double)this.getHeight(),
+                        this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.getWidth(), d0, d1, d2);
+            }
+        }
+    }
+
+    public void drawParticleStreamTo(LivingEntity source, World world, double x, double y, double z) {
+        if (source != null) {
+            Vec3d direction = source.getLookVec().normalize();
+            double xoffset = 1.3f;
+            double yoffset = -.2;
+            double zoffset = 0.3f;
+            Vec3d horzdir = direction.normalize();
+            horzdir = new Vec3d(horzdir.x, 0, horzdir.z);
+            horzdir = horzdir.normalize();
+            double cx = source.posX + direction.x * xoffset - direction.y * horzdir.x * yoffset - horzdir.z * zoffset;
+            double cy = source.posY + source.getEyeHeight() + direction.y * xoffset + (1 - Math.abs(direction.y)) * yoffset;
+            double cz = source.posZ + direction.z * xoffset - direction.y * horzdir.z * yoffset + horzdir.x * zoffset;
+            double dx = x - cx;
+            double dy = y - cy;
+            double dz = z - cz;
+            double ratio = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            while (Math.abs(cx - x) > Math.abs(dx / ratio)) {
+                world.addParticle(ParticleTypes.MYCELIUM, cx, cy, cz, 0.0D, 0.0D, 0.0D);
+                cx += dx * 0.1 / ratio;
+                cy += dy * 0.1 / ratio;
+                cz += dz * 0.1 / ratio;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    // AbstractArrowEntity
+    @OnlyIn(Dist.CLIENT)
+    public boolean isInRangeToRenderDist(double distance) {
+        double d0 = this.getBoundingBox().getAverageEdgeLength() * 10.0D;
+        if (Double.isNaN(d0)) {
+            d0 = 1.0D;
+        }
+
+        d0 = d0 * 64.0D * getRenderDistanceWeight();
+        return distance > 2 && distance < d0 * d0;
+    }
+
+    @Nullable
+    public Entity getShooter() {
+        if (shootingEntity != null) {
+            return shootingEntity;
+        }
+        return this.shootingEntityUUID != null && this.world instanceof ServerWorld ? ((ServerWorld)this.world).getEntityByUuid(this.shootingEntityUUID) : null;
+    }
 
     public static DamageSource causeBoltDamage(BoltEntity bolt, @Nullable Entity shooter) {
         return (new IndirectEntityDamageSource("bolt", bolt, shooter)).setProjectile();

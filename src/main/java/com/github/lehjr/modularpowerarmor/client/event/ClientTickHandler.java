@@ -220,7 +220,7 @@ public class ClientTickHandler {
                         }
                     });
                 }
-                String currPlasmaStr = StringUtils.formatNumberShort(currentPlasma.get()) + "%";
+                String currPlasmaStr = StringUtils.formatNumberShort((int)currentPlasma.get()) + "%";
                 String maxPlasmaStr = StringUtils.formatNumberShort(maxPlasma.get());
 
                 if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {

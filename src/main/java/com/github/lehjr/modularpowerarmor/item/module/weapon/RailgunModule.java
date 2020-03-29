@@ -16,7 +16,10 @@ import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.ItemStack;
@@ -98,17 +101,19 @@ public class RailgunModule extends AbstractPowerModule {
 
                         NBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, 10);
                         HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.RAILGUN_HEAT_EMISSION));
-                        double damage = applyPropertyModifiers(MPAConstants.RAILGUN_TOTAL_IMPULSE) / 100.0;
+                        float velocity = (float) applyPropertyModifiers(MPAConstants.RAILGUN_TOTAL_IMPULSE);
+                        double damage = velocity/100;
                         double knockback = damage / 20.0;
-                        Vec3d lookVec = playerIn.getLookVec();
-
                         BoltEntity bolt = new BoltEntity(worldIn, playerIn, damage, knockback);
+
+                        float inaccuracy = 1;
+                        Vec3d lookVec = playerIn.getLookVec().normalize();
+                        bolt.shoot(lookVec.getX(), lookVec.getY(), lookVec.getZ(), velocity, inaccuracy);
                         worldIn.addEntity(bolt);
                     }
-                    playerIn.setActiveHand(hand);
                     return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
                 }
-                return new ActionResult(ActionResultType.PASS, itemStackIn);
+                return new ActionResult(ActionResultType.FAIL, itemStackIn);
             }
 
 
