@@ -10,9 +10,11 @@ import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.gui.crafting.TinkerCraftingGUI;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
-import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererLuxCapacitorEntity;
-import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererPlasmaBolt;
-import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererSpinningBlade;
+import com.github.lehjr.modularpowerarmor.client.render.entity.BoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.render.entity.LuxCapacitorEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.render.entity.SpinningBladeEntityRenderer;
+import com.github.lehjr.modularpowerarmor.entity.BoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
@@ -106,10 +108,10 @@ public class ModularPowerArmor {
         MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
         MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
 
-
-        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
-        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
-        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
+        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, LuxCapacitorEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, PlasmaBoltEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, SpinningBladeEntityRenderer::new);
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);

@@ -4,8 +4,8 @@
   },
   "conditions": [
     {
-      "type": "modularpowerarmor:flag",
-      "flag": "vanilla_recipes_enabled"
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -13,7 +13,7 @@
   "pattern": [
     " F ",
     " C ",
-    "I I"
+    "O O"
   ],
   "key": {
     "C": {
@@ -22,8 +22,8 @@
     "F": {
       "tag": "forge:servo"
     },
-    "I": {
-      "tag": "forge:ingots/iron"
+    "O": {
+      "tag": "forge:ingots/steel"
     }
   }
 }

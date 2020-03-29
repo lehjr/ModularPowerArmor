@@ -1,0 +1,29 @@
+{
+  "result": {
+    "item": "modularpowerarmor:vein_miner"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    "CFC",
+    "FOF",
+    "CFC"
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_computer_chip"
+    },
+    "F": {
+      "tag": "forge:solenoid"
+    },
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
+    }
+  }
+}

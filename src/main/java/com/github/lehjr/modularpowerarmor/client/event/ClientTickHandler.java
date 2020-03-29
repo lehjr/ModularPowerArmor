@@ -113,7 +113,7 @@ public class ClientTickHandler {
                     ItemStack clock = ((IModularItem) h).getOnlineModuleOrEmpty(clockReg);
                     if (!clock.isEmpty()) {
                         String ampm;
-                        long time = player.world.getGameTime();
+                        long time = player.world.getDayTime();
                         long hour = ((time % 24000) / 1000);
                         if (ClientConfig.HUD_USE_24_HOUR_CLOCK.get()) {
                             if (hour < 19) {

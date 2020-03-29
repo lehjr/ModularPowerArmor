@@ -6,7 +6,7 @@
 
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
-import com.github.lehjr.modularpowerarmor.client.render.entity.EntityRendererPlasmaBolt;
+import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.TextureUtils;
@@ -557,7 +557,7 @@ public class ToolModel extends Model {
         if (boltSize != 0) {
             GL11.glTranslated(-1, 1, 16);
             GL11.glPushMatrix();
-            EntityRendererPlasmaBolt.doRender(boltSize);
+            PlasmaBoltEntityRenderer.doRender(boltSize);
             GL11.glPopMatrix();
         }
 

@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:melee_assist"
+    "item": "modularpowerarmor:vein_miner"
   },
   "conditions": [
     {
@@ -11,19 +11,19 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    " F ",
-    " C ",
-    "I I"
+    "CFC",
+    "FOF",
+    "CFC"
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "modularpowerarmor:component_computer_chip"
     },
     "F": {
-      "tag": "forge:servo"
+      "tag": "forge:solenoid"
     },
-    "I": {
-      "tag": "forge:ingots/iron"
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
     }
   }
 }

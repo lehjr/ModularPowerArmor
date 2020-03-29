@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:melee_assist"
+    "item": "modularpowerarmor:aoe_pick_upgrade"
   },
   "conditions": [
     {
@@ -11,19 +11,16 @@
   "type": "minecraft:crafting_shaped",
   "mirrored": true,
   "pattern": [
-    " F ",
-    " C ",
-    "I I"
+    "FFF",
+    "FCF",
+    "FFF"
   ],
   "key": {
     "C": {
       "item": "modularpowerarmor:component_control_circuit"
     },
     "F": {
-      "tag": "forge:servo"
-    },
-    "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "forge:solenoid"
     }
   }
 }

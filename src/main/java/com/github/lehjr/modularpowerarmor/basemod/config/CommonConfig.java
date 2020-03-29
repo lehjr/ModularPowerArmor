@@ -167,7 +167,8 @@ public class CommonConfig {
                             "forge:ores/redstone",
                             "minecraft:glowstone",
                             "forge:ores/diamond",
-                            "forge:ores/lapis"
+                            "forge:ores/lapis",
+                            "forge:ores/quartz"
                     ), o -> o instanceof String && !((String) o).isEmpty());
 
             GENERAL_VEIN_MINER_BLOCK_LIST = builder

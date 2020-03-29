@@ -36,6 +36,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -276,22 +277,51 @@ public class ItemPowerFist extends AbstractElectricTool {
                 return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
 
-            Pair range = modeChangingItem.getRangeForCategory(EnumModuleCategory.ENERGY_STORAGE);
-
-            for (int i = (int) range.getLeft(); i < (int) range.getRight(); i++)  {
-                ItemStack battery = modeChangingItem.getStackInSlot(i);
-                if (battery.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-                    return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> battery.getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-                }
+            if (cap == CapabilityEnergy.ENERGY) {
+                IEnergyStorage energyStorage = modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).map(m->m).orElse(new EmptyEnergyWrapper());
+                return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()->energyStorage));
             }
+
             return LazyOptional.empty();
+
 //
-//            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
-//                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
+//
+//            if (cap == CapabilityEnergy.ENERGY) {
+//                return
+//
+//
+//                Pair range = modeChangingItem.getRangeForCategory(EnumModuleCategory.ENERGY_STORAGE);
+//
+//                for (int i = (int) range.getLeft(); i < (int) range.getRight(); i++)  {
+//                    ItemStack battery = modeChangingItem.getStackInSlot(i);
+//                    if (battery.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+//                        return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> battery.getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
+//                    }
+//                }
+//            }
+//
+//            return LazyOptional.empty();
+////
+////            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
+////                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
         }
 
+
+
+
+
         class EmptyEnergyWrapper extends EnergyStorage {
+            int energyStorage;
+
+
             public EmptyEnergyWrapper() {
+
+
+
+
+
+
+
                 super(0);
             }
         }

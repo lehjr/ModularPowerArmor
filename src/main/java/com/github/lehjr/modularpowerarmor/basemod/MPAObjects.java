@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
 import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
 import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
+import com.github.lehjr.modularpowerarmor.entity.BoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
@@ -23,10 +24,7 @@ import com.github.lehjr.modularpowerarmor.item.module.energy.generation.KineticG
 import com.github.lehjr.modularpowerarmor.item.module.energy.generation.ThermalGeneratorModule;
 import com.github.lehjr.modularpowerarmor.item.module.energy.storage.EnergyStorageModule;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AOEPickUpgradeModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.AquaAffinityModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.FortuneModule;
-import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.ItemModuleSilkTouch;
+import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.*;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
 import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;
@@ -259,6 +257,9 @@ public enum MPAObjects {
     @ObjectHolder(MODULE_FORTUNE_REGNAME)
     public static final FortuneModule fortuneModule = null;
 
+    @ObjectHolder(MODULE_VEIN_MINER_REGNAME)
+    public static final VeinMinerModule veinMiner = null;
+
     // Tools --------------------------------------------------------------------------------------
     @ObjectHolder(MODULE_AQUA_AFFINITY__REGNAME)
     public static final AquaAffinityModule aquaAffinity = null;
@@ -341,6 +342,9 @@ public enum MPAObjects {
 
     @ObjectHolder(MOD_ID + ":plasma_bolt")
     public static EntityType<PlasmaBoltEntity> PLASMA_BOLT_ENTITY_TYPE;
+
+    @ObjectHolder(MOD_ID + ":bolt")
+    public static EntityType<BoltEntity> BOLT_ENTITY_TYPE;
 
     @ObjectHolder(MOD_ID + ":spinning_blade")
     public static EntityType<SpinningBladeEntity> SPINNING_BLADE_ENTITY_TYPE;

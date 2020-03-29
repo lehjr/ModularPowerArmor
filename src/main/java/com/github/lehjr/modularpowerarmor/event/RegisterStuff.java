@@ -6,6 +6,7 @@ import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
 import com.github.lehjr.modularpowerarmor.containers.MPSCraftingContainer;
 import com.github.lehjr.modularpowerarmor.containers.TinkerTableContainer;
+import com.github.lehjr.modularpowerarmor.entity.BoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
@@ -223,7 +224,11 @@ public enum RegisterStuff {
 
                 EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
                         .setCustomClientFactory((spawnEntity, world) -> MPAObjects.PLASMA_BOLT_ENTITY_TYPE.create(world))
-                        .build(MOD_ID +":plasma_bolt").setRegistryName(MOD_ID +":plasma_bolt")
+                        .build(MOD_ID +":plasma_bolt").setRegistryName(MOD_ID +":plasma_bolt"),
+
+                EntityType.Builder.<BoltEntity>create(BoltEntity::new, EntityClassification.MISC)
+                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.BOLT_ENTITY_TYPE.create(world))
+                        .build(MOD_ID +":bolt").setRegistryName(MOD_ID +":bolt")
         );
     }
 
