@@ -76,6 +76,28 @@ public class ItemPowerFist extends AbstractElectricTool {
 //        return 50.0F;
 //    }
 
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack powerFist, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+        int playerEnergy = ElectricItemUtils.getPlayerEnergy((PlayerEntity)entityLiving);
+        return powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            if (iItemHandler instanceof IModeChangingItem) {
+                for (ItemStack module :  ((IModeChangingItem) iItemHandler).getInstalledModulesOfType(IBlockBreakingModule.class)) {
+                    if(module.getCapability(PowerModuleCapability.POWER_MODULE).map(pm->{
+                        if (pm instanceof IBlockBreakingModule) {
+                            return ((IBlockBreakingModule) pm).onBlockDestroyed(powerFist, worldIn, state, pos, entityLiving, playerEnergy);
+                        }
+                        return false;
+                    }).orElse(false)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }).orElse(false);
+    }
+
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
@@ -236,53 +258,53 @@ public class ItemPowerFist extends AbstractElectricTool {
         return new PowerToolCap(stack);
     }
 
-    class PowerToolCap implements ICapabilityProvider {
-        ItemStack fist;
-        IModeChangingItem modeChangingItem;
-        IHeatStorage heatStorage;
-        IHandHeldModelSpecNBT modelSpec;
-        double maxHeat = CommonConfig.baseMaxHeatPowerFist();
+class PowerToolCap implements ICapabilityProvider {
+    ItemStack fist;
+    IModeChangingItem modeChangingItem;
+    IHeatStorage heatStorage;
+    IHandHeldModelSpecNBT modelSpec;
+    double maxHeat = CommonConfig.baseMaxHeatPowerFist();
 
-        public PowerToolCap(@Nonnull ItemStack fist) {
-            this.fist = fist;
-            this.modeChangingItem = new ModeChangingModularItem(fist, 40)  {{
-                /*
-                 * Limit only Armor, Energy Storage and Energy Generation
-                 *
-                 * This cuts down on overhead for accessing the most commonly used values
-                 */
-                Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
-                rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE, new MPALibRangedWrapper(this, 0, 1));
-                rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
-                this.setRangedWrapperMap(rangedWrapperMap);
-            }};
-            this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
-            this.modelSpec = new PowerFistSpecNBT(fist);
+    public PowerToolCap(@Nonnull ItemStack fist) {
+        this.fist = fist;
+        this.modeChangingItem = new ModeChangingModularItem(fist, 40)  {{
+            /*
+             * Limit only Armor, Energy Storage and Energy Generation
+             *
+             * This cuts down on overhead for accessing the most commonly used values
+             */
+            Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
+            rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE, new MPALibRangedWrapper(this, 0, 1));
+            rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
+            this.setRangedWrapperMap(rangedWrapperMap);
+        }};
+        this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
+        this.modelSpec = new PowerFistSpecNBT(fist);
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            modeChangingItem.updateFromNBT();
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modeChangingItem));
         }
 
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-                modeChangingItem.updateFromNBT();
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modeChangingItem));
-            }
+        if (cap == HeatCapability.HEAT) {
+            ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
+            return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
+        }
 
-            if (cap == HeatCapability.HEAT) {
-                ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
-                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
-            }
+        if (cap == ModelSpecNBTCapability.RENDER) {
+            return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
+        }
 
-            if (cap == ModelSpecNBTCapability.RENDER) {
-                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
-            }
+        if (cap == CapabilityEnergy.ENERGY) {
+            IEnergyStorage energyStorage = modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).map(m->m).orElse(new EmptyEnergyWrapper());
+            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()->energyStorage));
+        }
 
-            if (cap == CapabilityEnergy.ENERGY) {
-                IEnergyStorage energyStorage = modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).map(m->m).orElse(new EmptyEnergyWrapper());
-                return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()->energyStorage));
-            }
-
-            return LazyOptional.empty();
+        return LazyOptional.empty();
 
 //
 //
@@ -304,33 +326,33 @@ public class ItemPowerFist extends AbstractElectricTool {
 ////
 ////            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
 ////                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-        }
-
-
-
-
-
-        class EmptyEnergyWrapper extends EnergyStorage {
-            int energyStorage;
-
-
-            public EmptyEnergyWrapper() {
-
-
-
-
-
-
-
-                super(0);
-            }
-        }
-
-
-
-
-
     }
+
+
+
+
+
+    class EmptyEnergyWrapper extends EnergyStorage {
+        int energyStorage;
+
+
+        public EmptyEnergyWrapper() {
+
+
+
+
+
+
+
+            super(0);
+        }
+    }
+
+
+
+
+
+}
 
     @Override
     public UseAction getUseAction(ItemStack stack) {

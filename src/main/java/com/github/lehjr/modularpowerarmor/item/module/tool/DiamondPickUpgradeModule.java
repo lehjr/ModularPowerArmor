@@ -56,9 +56,9 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
             this.module = module;
             this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
             this.blockBreaking.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.blockBreaking.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
-            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
+//            this.blockBreaking.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 10, "x");
+//            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
+//            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
         }
 
         @Nonnull
@@ -73,11 +73,11 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
             }
 
             @Override
-            public boolean canHarvestBlock(@Nonnull ItemStack modeChangingStack, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
+            public boolean canHarvestBlock(@Nonnull ItemStack powerFist, BlockState state, PlayerEntity player, BlockPos pos, int playerEnergy) {
                 AtomicBoolean canHarvest = new AtomicBoolean(false);
-                modeChangingStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(powerFist -> {
-                    if (powerFist instanceof IModeChangingItem) {
-                        ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
+                powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
+                    if (modeChanging instanceof IModeChangingItem) {
+                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
                         if (!pickaxeModule.isEmpty()) {
                             int energyUsage = pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
                                 if (m instanceof IBlockBreakingModule) {
@@ -87,7 +87,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                             }).orElse(0);
                             canHarvest.set(pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
                                 if (m instanceof IBlockBreakingModule) {
-                                    return !((IBlockBreakingModule) m).canHarvestBlock(modeChangingStack, state, player, pos, playerEnergy) &&
+                                    return !((IBlockBreakingModule) m).canHarvestBlock(powerFist, state, player, pos, playerEnergy) &&
                                             playerEnergy >= energyUsage && ToolHelpers.isToolEffective(player.getEntityWorld(), pos, getEmulatedTool());
                                 }
                                 return false;
@@ -99,12 +99,12 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
             }
 
             @Override
-            public boolean onBlockDestroyed(ItemStack modeChangingStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
-                if (this.canHarvestBlock(modeChangingStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
+            public boolean onBlockDestroyed(ItemStack powerFist, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
+                if (this.canHarvestBlock(powerFist, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
                     AtomicInteger energyUsage = new AtomicInteger(0);
-                    modeChangingStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(powerFist -> {
-                        if (powerFist instanceof IModeChangingItem) {
-                            ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
+                    powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
+                        if (modeChanging instanceof IModeChangingItem) {
+                            ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
                             if (!pickaxeModule.isEmpty()) {
                                 energyUsage.set(pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
                                     if (m instanceof IBlockBreakingModule) {
@@ -128,12 +128,12 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
 
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
-                PlayerEntity player = event.getEntityPlayer();
-                ItemStack modeChangingStack = player.getActiveItemStack();
+                PlayerEntity player = event.getPlayer();
+                ItemStack powerFist = player.getHeldItemMainhand();
                 AtomicDouble newSpeed = new AtomicDouble(event.getNewSpeed());
-                modeChangingStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(powerFist -> {
-                    if (powerFist instanceof IModeChangingItem) {
-                        ItemStack pickaxeModule = ((IModeChangingItem) powerFist).getOnlineModuleOrEmpty(pickaxe);
+                powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
+                    if (modeChanging instanceof IModeChangingItem) {
+                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
                         if (!pickaxeModule.isEmpty()) {
                             newSpeed.set(newSpeed.get() *
                                     pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m ->

@@ -102,13 +102,12 @@ public class RailgunModule extends AbstractPowerModule {
                         NBTUtils.setModularItemDoubleOrRemove(itemStackIn, MPAConstants.TIMER, 10);
                         HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.RAILGUN_HEAT_EMISSION));
                         float velocity = (float) applyPropertyModifiers(MPAConstants.RAILGUN_TOTAL_IMPULSE);
-                        double damage = velocity/100;
-                        double knockback = damage / 20.0;
-                        BoltEntity bolt = new BoltEntity(worldIn, playerIn, damage, knockback);
 
-                        float inaccuracy = 1;
-                        Vec3d lookVec = playerIn.getLookVec().normalize();
-                        bolt.shoot(lookVec.getX(), lookVec.getY(), lookVec.getZ(), velocity, inaccuracy);
+                        BoltEntity bolt = new BoltEntity(worldIn, playerIn, velocity);
+//
+//                        float inaccuracy = 1;
+//                        Vec3d lookVec = playerIn.getLookVec().normalize();
+//                        bolt.shoot(lookVec.getX(), lookVec.getY(), lookVec.getZ(), velocity, inaccuracy);
                         worldIn.addEntity(bolt);
                     }
                     return new ActionResult(ActionResultType.SUCCESS, itemStackIn);

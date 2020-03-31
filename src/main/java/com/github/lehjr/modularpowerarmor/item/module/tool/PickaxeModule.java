@@ -65,6 +65,9 @@ public class PickaxeModule extends AbstractPowerModule {
 
             @Override
             public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
+                System.out.println("doing somethign here");
+
+
                 if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
                     ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, getEnergyUsage());
                     return true;
@@ -84,6 +87,9 @@ public class PickaxeModule extends AbstractPowerModule {
 
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
+                System.out.println("handling break speed");
+
+
                 event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(MPAConstants.HARVEST_SPEED)));
             }
         }

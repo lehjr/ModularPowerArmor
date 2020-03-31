@@ -47,11 +47,6 @@ public class BoltEntityRenderer<T extends BoltEntity> extends EntityRenderer<T> 
         float f7 = 0.3125F;
         float f8 = 0.05625F;
         GlStateManager.enableRescaleNormal();
-        float f9 = (float)entity.arrowShake - partialTicks;
-        if (f9 > 0.0F) {
-            float f10 = -MathHelper.sin(f9 * 3.0F) * f9;
-            GlStateManager.rotatef(f10, 0.0F, 0.0F, 1.0F);
-        }
 
         GlStateManager.rotatef(45.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.scalef(0.05625F, 0.05625F, 0.05625F);
