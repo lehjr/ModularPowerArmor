@@ -1,16 +1,15 @@
 package com.github.lehjr.modularpowerarmor.block;
 
-import com.github.lehjr.modularpowerarmor.containers.providers.TinkerContainerProvider;
 import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -19,14 +18,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockTinkerTable extends HorizontalBlock {
+    private static final ITextComponent title = new TranslationTextComponent("container.crafting", new Object[0]);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public BlockTinkerTable(String regName) {
         super(Block.Properties.create(Material.IRON)
                 .hardnessAndResistance(1.5F, 1000.0F)
@@ -37,13 +36,17 @@ public class BlockTinkerTable extends HorizontalBlock {
         setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
     }
 
-    private static final ITextComponent title = new TranslationTextComponent("container.crafting", new Object[0]);
 
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if(!world.isRemote)
-            NetworkHooks.openGui((ServerPlayerEntity) player,
-                    new TinkerContainerProvider(0), (buffer) -> buffer.writeInt(0));
-        return true;
+    //    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+//        if(!world.isRemote)
+//            NetworkHooks.openGui((ServerPlayerEntity) player,
+//                    new TinkerContainerProvider(0), (buffer) -> buffer.writeInt(0));
+//        return true;
+//    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
@@ -78,30 +81,9 @@ public class BlockTinkerTable extends HorizontalBlock {
         return BlockRenderType.MODEL;
     }
 
-//    @SuppressWarnings( "deprecation" )
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face) {
-//        return BlockFaceShape.UNDEFINED;
-//    }
-//
-//    @Override
-//    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-//        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-//    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return super.getDrops(state, builder);
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 }

@@ -1,5 +1,3 @@
 {
-  "forge_marker": 1,
-  "parent" : "modularpowerarmor:block/tinkertable",
-  "transform": "forge:default-block"
+  "parent" : "modularpowerarmor:block/tinkertable"
 }

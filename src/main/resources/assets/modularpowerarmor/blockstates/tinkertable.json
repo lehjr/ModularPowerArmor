@@ -1,21 +1,8 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "custom": { "flip-v": true },
-    "textures": {
-      "all" : "modularpowerarmor:block/modularpowerarmorworkbench"
-    },
-    "model": "modularpowerarmor:powerarmor_workbench.obj" ,
-    "uvlock": false
-  },
   "variants": {
-    "facing" : [{
-      "north": {},
-      "south": {"y": 180},
-      "west": {"y": 90},
-      "east": {"y": 270}
-    }],
-    "inventory": [{
-    }]
+    "facing=east": { "model": "modularpowerarmor:block/tinkertable", "y": 90 },
+    "facing=west": { "model": "modularpowerarmor:block/tinkertable", "y": 270 },
+    "facing=north": { "model": "modularpowerarmor:block/tinkertable", "y": 0 },
+    "facing=south": { "model": "modularpowerarmor:block/tinkertable", "y": 180 }
   }
 }
