@@ -1,18 +1,28 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
+import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
+import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
+import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
+import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
+import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
+import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
+import com.github.lehjr.modularpowerarmor.client.gui.crafting.TinkerCraftingGUI;
+import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
+import com.github.lehjr.modularpowerarmor.event.*;
+import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -31,6 +41,10 @@ public class ModularPowerArmor {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public ModularPowerArmor() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_SPEC, ConfigHelper.setupConfigFile("modularpowerarmor-common.toml").getAbsolutePath());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC, ClientConfig.clientFile.getAbsolutePath());
+
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.register(this);
         modEventBus.register(RegisterStuff.INSTANCE);
@@ -51,22 +65,64 @@ public class ModularPowerArmor {
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        MinecraftForge.EVENT_BUS.addListener(PlayerLoginHandler::onPlayerLogin);
+        MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::handleEntityDamageEvent);
+
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
+        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);
+//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handHarvestDrops);
+//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBlockBreak);
+
+
+
+        modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
+            new RuntimeException("Got config " + event.getConfig() + " name " + event.getConfig().getModId() + ":" + event.getConfig().getFileName());
+            final ModConfig config = event.getConfig();
+            if (config.getSpec() == ClientConfig.CLIENT_SPEC) {
+//
+            } else if (config.getSpec() == CommonConfig.COMMON_SPEC) {
+                CommonConfig.commonConfig = config;
+                CommonConfig.setLoadingDone();
+                CommonConfig.finishBuilder();
+                CosmeticPresetSaveLoad.copyPresetsFromJar();
+            }
+        });
     }
 
+    // preInit
     private void setup(final FMLCommonSetupEvent event) {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+        MPAPackets.registerMPAPackets();
+        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
     }
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+    private void setupClient(final FMLClientSetupEvent event) {
+//        MPALibOBJLoader.INSTANCE.addDomain(MPAConstants.MOD_ID.toLowerCase());
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
+        modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
+
+        MinecraftForge.EVENT_BUS.register(RenderEventHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+        MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
+
+        System.out.println("FIXME!!");
+//        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
+//        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, LuxCapacitorEntityRenderer::new);
+//        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, PlasmaBoltEntityRenderer::new);
+//        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, SpinningBladeEntityRenderer::new);
+
+//        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
+        ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
+        ScreenManager.registerFactory(MPAObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
     }
+
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod

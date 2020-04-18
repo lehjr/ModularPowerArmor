@@ -10,10 +10,10 @@ import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.gui.crafting.TinkerCraftingGUI;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
-import com.github.lehjr.modularpowerarmor.client.render.entity.BoltEntityRenderer;
-import com.github.lehjr.modularpowerarmor.client.render.entity.LuxCapacitorEntityRenderer;
-import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
-import com.github.lehjr.modularpowerarmor.client.render.entity.SpinningBladeEntityRenderer;
+import com.github.lehjr.modularpowerarmor.render.entity.BoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.render.entity.LuxCapacitorEntityRenderer;
+import com.github.lehjr.modularpowerarmor.render.entity.PlasmaBoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.render.entity.SpinningBladeEntityRenderer;
 import com.github.lehjr.modularpowerarmor.entity.BoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
@@ -84,39 +84,13 @@ public class ModularPowerArmor {
         });
     }
 
-    // preInit
-    private void setup(final FMLCommonSetupEvent event) {
-        MPAPackets.registerMPAPackets();
-        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
-    }
 
 //    @SubscribeEvent
 //    public void setupRecipeConditionHandler(RegistryEvent.Register<IRecipeSerializer<?>> event) {
 ////        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
 //    }
 
-    // client preInit
-    private void setupClient(final FMLClientSetupEvent event) {
-        MPALibOBJLoader.INSTANCE.addDomain(MPAConstants.MOD_ID.toLowerCase());
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
-        modEventBus.addListener(RenderEventHandler.INSTANCE::preTextureStitch);
-
-        MinecraftForge.EVENT_BUS.register(RenderEventHandler.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
-        MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
-        MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
-
-        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, LuxCapacitorEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, PlasmaBoltEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, SpinningBladeEntityRenderer::new);
-
-//        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
-        ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
-        ScreenManager.registerFactory(MPAObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
-    }
 
 //    // You can use EventBusSubscriber to automatically subscribe events on the contained class
 //    @Mod.EventBusSubscriber

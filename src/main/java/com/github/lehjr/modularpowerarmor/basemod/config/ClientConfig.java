@@ -1,0 +1,105 @@
+package com.github.lehjr.modularpowerarmor.basemod.config;
+
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+import java.util.Optional;
+
+/**
+ * Client only settings
+ */
+public class ClientConfig {
+    public static final ClientSettings CLIENT_CONFIG;
+    public static final ForgeConfigSpec CLIENT_SPEC;
+    public static File clientFile;
+
+    static {
+        final Pair<ClientSettings, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(ClientSettings::new);
+        CLIENT_SPEC = clientSpecPair.getRight();
+        CLIENT_CONFIG = clientSpecPair.getLeft();
+        clientFile = ConfigHelper.setupConfigFile("modularpowerarmor-client-only.toml");
+
+
+        final CommentedFileConfig configData = CommentedFileConfig.builder(clientFile)
+                .sync()
+                .autosave()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+
+        configData.load();
+//        CLIENT_SPEC.setConfig(CommentedFileConfig.of(clientFile));
+        CLIENT_SPEC.setConfig(configData);
+    }
+
+    /** HUD ---------------------------------------------------------------------------------------*/
+    public static ForgeConfigSpec.BooleanValue
+            HUD_USE_GRAPHICAL_METERS,
+            HUD_TOGGLE_MODULE_SPAM,
+            HUD_DISPLAY_HUD,
+            HUD_USE_24_HOUR_CLOCK;
+
+    /** General ----------------------------------------------------------------------------------- */
+    public static ForgeConfigSpec.BooleanValue
+            GENERAL_ALLOW_CONFLICTING_KEYBINDS;
+
+    private static ForgeConfigSpec.DoubleValue
+            HUD_KEYBIND_X,
+            HUD_KEYBIND_Y;
+
+    public static float getHudKeybindX() {
+        double val = Optional.ofNullable(CLIENT_SPEC != null ? HUD_KEYBIND_X.get() : null).orElse(8.0);
+        return (float) val;
+    }
+
+    public static float getHudKeybindY() {
+        double val = Optional.ofNullable(CLIENT_SPEC != null ? HUD_KEYBIND_Y.get() : null).orElse(32.0);
+        return (float) val;
+    }
+
+    public static class ClientSettings {
+        ClientSettings(ForgeConfigSpec.Builder builder) {
+            // HUD ------------------------------------------------------------------------------------
+            builder.comment("HUD settings").push("HUD");
+            HUD_USE_GRAPHICAL_METERS = builder
+                    .comment("Use Graphical Meters")
+                    .translation(MPAConstants.CONFIG_HUD_USE_GRAPHICAL_METERS)
+                    .define("useGraphicalMeters", true);
+
+            HUD_TOGGLE_MODULE_SPAM = builder
+                    .comment("Chat message when toggling module")
+                    .translation(MPAConstants.CONFIG_HUD_TOGGLE_MODULE_SPAM)
+                    .define("toggleModuleSpam", false);
+
+            HUD_DISPLAY_HUD = builder
+                    .comment("Display HUD")
+                    .translation(MPAConstants.CONFIG_HUD_DISPLAY_HUD)
+                    .define("keybind_HUD_on", true);
+
+            HUD_KEYBIND_X = builder
+                    .comment("x position")
+                    .translation(MPAConstants.CONFIG_HUD_KEYBIND_HUD_X)
+                    .defineInRange("keybindHUDx", 8.0, 0, Double.MAX_VALUE);
+
+            HUD_KEYBIND_Y = builder
+                    .comment("x position")
+                    .translation(MPAConstants.CONFIG_HUD_KEYBIND_HUD_Y)
+                    .defineInRange("keybindHUDy", 32.0, 0, Double.MAX_VALUE);
+
+            HUD_USE_24_HOUR_CLOCK = builder
+                    .comment("Use a 24h clock instead of 12h")
+                    .translation(MPAConstants.CONFIG_HUD_USE_24_HOUR_CLOCK)
+                    .define("use24hClock", false);
+            builder.pop();
+
+            builder.comment("General settings").push("General");
+            GENERAL_ALLOW_CONFLICTING_KEYBINDS = builder
+                    .comment("Allow Conflicting Keybinds")
+                    .translation(MPAConstants.CONFIG_GENERAL_ALLOW_CONFLICTING_KEYBINDS)
+                    .define("allowConflictingKeybinds", true);
+        }
+    }
+}
