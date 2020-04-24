@@ -98,7 +98,7 @@ public class PartManipContainer extends ScrollableFrame {
                 border.finalTop() + 10
         );
         newborder.setMeBelow((prev != null) ? prev.border : null);
-        return new PartSpecManipSubFrame(modelspec, this.colourSelect, this.itemSelect, newborder);
+        return new PartSpecManipSubFrame(modelspec, this.colourSelect, this.itemSelect, newborder, this.zLevel);
     }
 
     @Override

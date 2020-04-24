@@ -31,15 +31,16 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     protected float radius;
     protected ItemStack stack;
     Rect rect;
+    float zLevel;
 
-    public RadialModeSelectionFrame(Point2F topleft, Point2F bottomright, PlayerEntity player) {
+    public RadialModeSelectionFrame(Point2F topleft, Point2F bottomright, PlayerEntity player, float zLevel) {
         spawnTime = System.currentTimeMillis();
         this.player = player;
         rect = new Rect(topleft, bottomright);
         center = rect.center();
         this.radius = Math.min(rect.height(), rect.width());
         this.stack = player.inventory.getCurrentItem();
-
+        this.zLevel = zLevel;
         loadItems();
     }
 
@@ -86,16 +87,10 @@ public class RadialModeSelectionFrame implements IGuiFrame {
     public void render(int mouseX, int mouseY, float partialTicks) {
         //Draw the installed power fist modes
         for (ClickableModule mode : modeButtons) {
-            System.out.println("FIXMEEE!!!");
-
-            mode.render(mouseX, mouseY, partialTicks, Minecraft.getInstance().currentScreen.getBlitOffset());
+            mode.render(mouseX, mouseY, partialTicks, zLevel);
         }
         //Draw the selected mode indicator
         drawSelection();
-    }
-
-    public RadialModeSelectionFrame() {
-        spawnTime = System.currentTimeMillis();
     }
 
     private void loadItems() {
@@ -142,8 +137,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
         ClickableModule module = getSelectedModule();
         if (module != null) {
             Point2F pos = module.getPosition();
-            System.out.println("FIXMEEEE");
-            Renderer.drawCircleAround(pos.getX(), pos.getY(), 10, Minecraft.getInstance().currentScreen.getBlitOffset());
+            Renderer.drawCircleAround(pos.getX(), pos.getY(), 10, zLevel);
         }
     }
 

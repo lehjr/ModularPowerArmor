@@ -9,6 +9,7 @@ import com.github.lehjr.modularpowerarmor.network.packets.ColourInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
+import com.github.lehjr.mpalib.client.gui.GuiIcon;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableLabel;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableSlider;
 import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
@@ -185,9 +186,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             GL11.glPushMatrix();
             GL11.glTranslatef(0, -currentscrollpixels, 0);
             for (ScrollableRectangle f : rectangles) {
-                System.out.println("FIXME!!!!");
-
-                f.render(mouseX, mouseY, partialTicks, Minecraft.getInstance().currentScreen.getBlitOffset());
+                f.render(mouseX, mouseY, partialTicks, zLevel);
             }
             GL11.glPopMatrix();
             super.postRender(mouseX, mouseY, partialTicks);
@@ -292,15 +291,17 @@ public class ColourPickerFrame extends ScrollableFrame {
 
         @Override
         public void render(int mouseX, int mouseY, float partialTicks, float zLevel) {
+            GuiIcon icon = IconUtils.getIcon();
+
             // colours
             for (int i=0; i < colours().length; i++) {
-                IconUtils.getIcon().armorColourPatch.draw(this.left() + 8 + i * 8, this.centery() + 8 , new Colour(colours()[i]));
+                icon.armorColourPatch.draw(this.left() + 8 + i * 8, this.centery() + 8 , new Colour(colours()[i]));
             }
 
-            IconUtils.getIcon().armorColourPatch.draw(this.left() + 8 + colours().length * 8, this.centery() + 8, Colour.WHITE);
-            IconUtils.getIcon().selectedArmorOverlay.draw(this.left() + 8 + selectedColour * 8, this.centery() + 8, Colour.WHITE);
-            IconUtils.getIcon().minusSign.draw(this.left() + 8 + selectedColour * 8, this.centery(), Colour.RED);
-            IconUtils.getIcon().plusSign.draw(this.left() + 8 + colours().length * 8, this.centery() + 8, Colour.GREEN);
+            icon.armorColourPatch.draw(this.left() + 8 + colours().length * 8, this.centery() + 8, Colour.WHITE);
+            icon.selectedArmorOverlay.draw(this.left() + 8 + selectedColour * 8, this.centery() + 8, Colour.WHITE);
+            icon.minusSign.draw(this.left() + 8 + selectedColour * 8, this.centery(), Colour.RED);
+            icon.plusSign.draw(this.left() + 8 + colours().length * 8, this.centery() + 8, Colour.GREEN);
         }
     }
 }

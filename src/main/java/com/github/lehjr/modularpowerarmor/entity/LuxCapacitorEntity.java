@@ -5,42 +5,40 @@ import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
 import com.github.lehjr.mpalib.math.Colour;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-
 public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     public Colour color;
-    public LivingEntity shootingEntity;
 
     public LuxCapacitorEntity(EntityType<? extends LuxCapacitorEntity> entityType, World world) {
         super(entityType, world);
-        if (color == null)
-            color = Colour.WHITE;
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getThrower() {
-        LivingEntity other = super.getThrower();
-        return other != null ? other : this.shootingEntity;
+        this.setNoGravity(true);
+        if (color == null) {
+            color = BlockLuxCapacitor.defaultColor;
+        }
     }
 
     public LuxCapacitorEntity(World world, LivingEntity shootingEntity, Colour color) {
         super(MPAObjects.LUX_CAPACITOR_ENTITY_TYPE, shootingEntity, world);
-        this.shootingEntity = shootingEntity;
+        this.setNoGravity(true);
         this.color = color != null ? color : BlockLuxCapacitor.defaultColor;
         Vec3d direction = shootingEntity.getLookVec().normalize();
         double speed = 1.0;
@@ -64,18 +62,19 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
         this.setBoundingBox(new AxisAlignedBB(getPosX() - r, getPosY() - 0.0625, getPosZ() - r, getPosX() + r, getPosY() + 0.0625, getPosZ() + r));
     }
 
-    BlockItemUseContext getUseContext(BlockPos pos, Direction facing, BlockRayTraceResult hitResult) {
-        return new BlockItemUseContext(
-                new ItemUseContext(
-                        (PlayerEntity)this.getThrower(),
-                        this.getThrower().getActiveHand(),
-                        hitResult));
+    BlockState getBlockState(BlockPos pos, Direction facing) {
+        IFluidState ifluidstate = world.getFluidState(pos);
+        return MPAObjects.INSTANCE.luxCapacitor.getDefaultState().with(DirectionalBlock.FACING, facing)
+                .with(BlockLuxCapacitor.WATERLOGGED, Boolean.valueOf(ifluidstate.isTagged(FluidTags.WATER) && ifluidstate.getLevel() == 8));
     }
 
     @Override
     protected void onImpact(RayTraceResult hitResult) {
-        if (color == null)
-            color = Colour.WHITE;
+        if (color == null) {
+            System.out.println("using default colour");
+
+            color = BlockLuxCapacitor.defaultColor;
+        }
 
         if (this.isAlive() && hitResult.getType() == RayTraceResult.Type.BLOCK) {
             BlockRayTraceResult blockRayTrace = (BlockRayTraceResult)hitResult;
@@ -86,13 +85,13 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
             if (y > 0) {
                 BlockPos blockPos = new BlockPos(x, y, z);
                 if (MPAObjects.INSTANCE.luxCapacitor.getDefaultState().isValidPosition(world, blockPos)) {
-                    BlockState blockState = MPAObjects.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, blockRayTrace.getFace(), blockRayTrace));
+                    BlockState blockState = getBlockState(blockPos, blockRayTrace.getFace());
                     world.setBlockState(blockPos, blockState);
                     world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                 } else {
                     for (Direction facing : Direction.values()) {
                         if (MPAObjects.INSTANCE.luxCapacitor.getDefaultState().with(BlockLuxCapacitor.FACING, facing).isValidPosition(world, blockPos)) {
-                            BlockState blockState = MPAObjects.INSTANCE.luxCapacitor.getStateForPlacement(getUseContext(blockPos, facing, blockRayTrace));
+                            BlockState blockState = getBlockState(blockPos, facing);
                             world.setBlockState(blockPos, blockState);
                             world.setTileEntity(blockPos, new TileEntityLuxCapacitor(color));
                             break;
@@ -102,22 +101,6 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
                 this.remove();
             }
         }
-    }
-
-    /* using these to sync color between client and server, since without this, color isn't initialized */
-    @Override
-    public void writeSpawnData(PacketBuffer buffer) {
-        if (color == null)
-            color = Colour.WHITE;
-        buffer.writeInt(color.getInt());
-        buffer.writeUniqueId(getThrower().getUniqueID());
-
-    }
-
-    @Override
-    public void readSpawnData(PacketBuffer additionalData) {
-        this.color = new Colour(additionalData.readInt());
-        this.shootingEntity = this.world.getPlayerByUuid(additionalData.readUniqueId());
     }
 
     /**
@@ -132,6 +115,7 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
     protected void registerData() {
 
     }
+
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -143,5 +127,27 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
         if (this.ticksExisted > 400) {
             this.remove();
         }
+    }
+
+    /**
+     * Called by the server when constructing the spawn packet.
+     * Data should be added to the provided stream.
+     *
+     * @param buffer The packet data stream
+     */
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        buffer.writeInt(this.color.getInt());
+    }
+
+    /**
+     * Called by the client when it receives a Entity spawn packet.
+     * Data should be read out of the stream in the same way as it was written.
+     *
+     * @param additionalData The packet data stream
+     */
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        this.color = new Colour(additionalData.readInt());
     }
 }

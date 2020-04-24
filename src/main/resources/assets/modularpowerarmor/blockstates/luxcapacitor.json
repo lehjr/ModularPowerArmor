@@ -1,17 +1,18 @@
 {
   "variants": {
-    "facing=west,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 270 },
-    "facing=east,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 90 },
-    "facing=north,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 0 },
-    "facing=south,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 180 },
-    "facing=up,waterlogged=false" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 270},
-    "facing=down,waterlogged=false" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 90 },
+    "facing=west,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 90 },
+    "facing=east,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 270 },
+    "facing=north,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 180 },
+    "facing=south,waterlogged=false": { "model": "modularpowerarmor:block/luxcapacitor", "y": 0 },
+    "facing=up,waterlogged=false" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 90 },
+    "facing=down,waterlogged=false" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 270},
 
-    "facing=west,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 270 },
-    "facing=east,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 90 },
-    "facing=north,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 0 },
-    "facing=south,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 180 },
-    "facing=up,waterlogged=true" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 270},
-    "facing=down,waterlogged=true" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 90 }
+
+    "facing=west,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 90 },
+    "facing=east,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 270 },
+    "facing=north,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 180 },
+    "facing=south,waterlogged=true": { "model": "modularpowerarmor:block/luxcapacitor", "y": 0 },
+    "facing=up,waterlogged=true" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 90 },
+    "facing=down,waterlogged=true" : { "model": "modularpowerarmor:block/luxcapacitor", "x": 270}
   }
 }

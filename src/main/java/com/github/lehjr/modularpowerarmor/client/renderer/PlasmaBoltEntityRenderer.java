@@ -2,15 +2,22 @@ package com.github.lehjr.modularpowerarmor.client.renderer;
 
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableCircle;
+import com.github.lehjr.mpalib.client.render.RenderState;
+import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.nio.DoubleBuffer;
+
+import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
+import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
 
 public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEntity> {
     public static DoubleBuffer unrotatebuffer;
@@ -37,52 +44,52 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     }
 
     public static void doRender(double size) {
-//        GL11.glPushMatrix();
-//        Renderer.unRotate();
-//        double scale = size / 16.0;
-//        GL11.glScaled(scale, scale, scale);
-//        int millisPerCycle = 500;
-//        double timeScale = Math.cos((System.currentTimeMillis() % millisPerCycle) * 2.0 / millisPerCycle - 1.0);
-//        RenderState.glowOn();
-//        circle1.draw(4, 0, 0);
-//        GL11.glTranslated(0, 0, 0.001);
-//        circle2.draw(3 + timeScale / 2, 0, 0);
-//        GL11.glTranslated(0, 0, 0.001);
-//        circle3.draw(2 + timeScale, 0, 0);
-//        GL11.glTranslated(0, 0, 0.001);
-//        circle4.draw(1 + timeScale, 0, 0);
-//        for (int i = 0; i < 3; i++) {
-//            double angle1 = (Math.random() * 2 * Math.PI);
-//            double angle2 = (Math.random() * 2 * Math.PI);
-//            Renderer.drawLightning(Math.cos(angle1) * 0.5, Math.sin(angle1) * 0.5, 0, Math.cos(angle2) * 5, Math.sin(angle2) * 5, 1,
-//                    new Colour(1, 1, 1, 0.9));
-//        }
-//        RenderState.glowOff();
-//        GL11.glPopMatrix();
+        RenderSystem.popMatrix();
+        Renderer.unRotate();
+        double scale = size / 16.0;
+        RenderSystem.scaled(scale, scale, scale);
+        int millisPerCycle = 500;
+        double timeScale = Math.cos((System.currentTimeMillis() % millisPerCycle) * 2.0 / millisPerCycle - 1.0);
+        RenderState.glowOn();
+        circle1.draw(4, 0, 0, 0);
+        RenderSystem.translated(0, 0, 0.001);
+        circle2.draw(3 + timeScale / 2, 0, 0, 0);
+        RenderSystem.translated(0, 0, 0.001);
+        circle3.draw(2 + timeScale, 0, 0, 0);
+        RenderSystem.translated(0, 0, 0.001);
+        circle4.draw(1 + timeScale, 0, 0, 0);
+        for (int i = 0; i < 3; i++) {
+            double angle1 = (Math.random() * 2 * Math.PI);
+            double angle2 = (Math.random() * 2 * Math.PI);
+            Renderer.drawLightning(Math.cos(angle1) * 0.5, Math.sin(angle1) * 0.5, 0, Math.cos(angle2) * 5, Math.sin(angle2) * 5, 1,
+                    new Colour(1, 1, 1, 0.9F));
+        }
+        RenderState.glowOff();
+        RenderSystem.popMatrix();
     }
 
-//    public static void doRender(double boltSizeIn, ItemCameraTransforms.TransformType cameraTransformTypeIn) {
-//        if (boltSizeIn != 0) {
-//            GL11.glPushMatrix();
-//            if (cameraTransformTypeIn == FIRST_PERSON_RIGHT_HAND || cameraTransformTypeIn == FIRST_PERSON_LEFT_HAND) {
-//                GL11.glScaled(0.0625f, 0.0625f, 0.0625f); // negative scale mirrors the model
-//                GL11.glRotatef(-182, 1, 0, 0);
-//
-//            } else {
-//                GL11.glScaled(0.0625f, 0.0625f, 0.0625f);
-//                GL11.glTranslatef(0, 0, 20.3f);
-////                GL11.glTranslatef(0, 0, 1.3f);
-//                GL11.glRotatef(-196, 1, 0, 0);
-//            }
-//            //---
-//            GL11.glTranslated(-1, 1, 16);
-//            GL11.glPushMatrix();
-//            PlasmaBoltEntityRenderer.doRender(boltSizeIn);
-//            GL11.glPopMatrix();
-//            // ---
-//            GL11.glPopMatrix();
-//        }
-//    }
+    public static void doRender(double boltSizeIn, ItemCameraTransforms.TransformType cameraTransformTypeIn) {
+        if (boltSizeIn != 0) {
+            RenderSystem.pushMatrix();
+            if (cameraTransformTypeIn == FIRST_PERSON_RIGHT_HAND || cameraTransformTypeIn == FIRST_PERSON_LEFT_HAND) {
+                RenderSystem.scaled(0.0625f, 0.0625f, 0.0625f); // negative scale mirrors the model
+                RenderSystem.rotatef(-182, 1, 0, 0);
+
+            } else {
+                RenderSystem.scaled(0.0625f, 0.0625f, 0.0625f);
+                RenderSystem.translatef(0, 0, 20.3f);
+//                GL11.glTranslatef(0, 0, 1.3f);
+                RenderSystem.rotatef(-196, 1, 0, 0);
+            }
+            //---
+            RenderSystem.translated(-1, 1, 16);
+            RenderSystem.pushMatrix();
+            PlasmaBoltEntityRenderer.doRender(boltSizeIn);
+            RenderSystem.popMatrix();;
+            // ---
+            RenderSystem.popMatrix();
+        }
+    }
 
 
 
@@ -97,12 +104,29 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     @Override
     public void render(PlasmaBoltEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-//        double size = (entityIn.size) / 10.0;
+        double size = (entityIn.size) / 10.0;
+
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ());
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 //        GL11.glPushMatrix();
 //        GL11.glTranslated(x, y, z);
 //        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 //        GL11.glScalef(0.5F, 0.5F, 0.5F);
-//        doRender(size);
+
+
+
+        doRender(size);
+
+
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.popMatrix();
+
+
+
+
+
 //        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 //        GL11.glPopMatrix();
     }

@@ -21,6 +21,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ToolType;
@@ -32,12 +33,12 @@ public class BlockLuxCapacitor extends DirectionalBlock implements IWaterLoggabl
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final Colour defaultColor = new Colour(0.4F, 0.2F, 0.9F);
 
-    protected static final VoxelShape LUXCAPACITOR_EAST_AABB = Block.makeCuboidShape(12, 1, 1, 16, 15, 15);
-    protected static final VoxelShape LUXCAPACITOR_WEST_AABB = Block.makeCuboidShape(0, 1, 1, 4, 15, 15);
-    protected static final VoxelShape LUXCAPACITOR_SOUTH_AABB = Block.makeCuboidShape(1, 1, 12, 15, 15, 16);
-    protected static final VoxelShape LUXCAPACITOR_NORTH_AABB = Block.makeCuboidShape(1, 1, 0.0, 15, 15, 4);
-    protected static final VoxelShape LUXCAPACITOR_UP_AABB = Block.makeCuboidShape(1, 12, 1, 15, 16.0, 15);
-    protected static final VoxelShape LUXCAPACITOR_DOWN_AABB = Block.makeCuboidShape(1, 0.0, 1, 15, 4, 15);
+    protected static final VoxelShape LUXCAPACITOR_EAST_AABB = Block.makeCuboidShape(0, 1, 1, 4, 15, 15);
+    protected static final VoxelShape LUXCAPACITOR_WEST_AABB = Block.makeCuboidShape(12, 1, 1, 16, 15, 15);
+    protected static final VoxelShape LUXCAPACITOR_SOUTH_AABB = Block.makeCuboidShape(1, 1, 0.0, 15, 15, 4);
+    protected static final VoxelShape LUXCAPACITOR_NORTH_AABB = Block.makeCuboidShape(1, 1, 12, 15, 15, 16);
+    protected static final VoxelShape LUXCAPACITOR_UP_AABB = Block.makeCuboidShape(1, 0.0, 1, 15, 4, 15);
+    protected static final VoxelShape LUXCAPACITOR_DOWN_AABB = Block.makeCuboidShape(1, 12, 1, 15, 16.0, 15);
 
     public BlockLuxCapacitor(String regName) {
         super(Block.Properties.create(Material.IRON)
@@ -46,7 +47,7 @@ public class BlockLuxCapacitor extends DirectionalBlock implements IWaterLoggabl
                 .variableOpacity()
                 .lightValue(15));
         setRegistryName(regName);
-        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.DOWN));
+        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP));
     }
 
     @Override
@@ -68,7 +69,6 @@ public class BlockLuxCapacitor extends DirectionalBlock implements IWaterLoggabl
         return Fluids.EMPTY;
     }
 
-
     @Override
     public int getHarvestLevel(BlockState state) {
         return 0;
@@ -85,19 +85,20 @@ public class BlockLuxCapacitor extends DirectionalBlock implements IWaterLoggabl
         return state;
     }
 
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return NonNullList.create();
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection())
+        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite())
                 .with(WATERLOGGED, Boolean.valueOf(ifluidstate.isTagged(FluidTags.WATER) && ifluidstate.getLevel() == 8));
     }
 
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        Direction facing = state.has(FACING) ? state.get(FACING) : Direction.UP;
+        return hasEnoughSolidSide(worldIn, pos.offset(facing.getOpposite()), facing);
+    }
 
     @SuppressWarnings( "deprecation" )
     @Deprecated

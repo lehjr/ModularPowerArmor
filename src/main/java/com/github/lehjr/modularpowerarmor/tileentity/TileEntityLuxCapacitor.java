@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.tileentity;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
+import com.github.lehjr.modularpowerarmor.client.model.helper.LuxCapHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
@@ -42,10 +43,7 @@ public class TileEntityLuxCapacitor extends MPALibTileEntity {
     @Nonnull
     @Override
     public IModelData getModelData() {
-        ImmutableMap.Builder<String, IModelData > builder = ImmutableMap.builder();
-        builder.put("lightlens", OBJPartData.makeOBJPartData(true, true, color.getInt()));
-        builder.put("lightBase", OBJPartData.makeOBJPartData(false, true, Colour.WHITE.getInt()));
-        return new ModelDataMap.Builder().withInitial(OBJPartData.SUBMODEL_DATA, new OBJPartData(builder.build())).build();
+        return LuxCapHelper.getModelData(getColor().getInt());
     }
 
     @Override

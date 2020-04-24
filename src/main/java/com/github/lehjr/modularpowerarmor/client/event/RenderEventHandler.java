@@ -5,6 +5,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
@@ -26,8 +27,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-//import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
-
 public enum RenderEventHandler {
     INSTANCE;
     private static boolean ownFly = false;
@@ -42,10 +41,8 @@ public enum RenderEventHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void preTextureStitch(TextureStitchEvent.Pre event) {
-        System.out.println("fixme!!");
-
 //        MuseIcon.registerIcons(event);
-//        MPSModelHelper.loadArmorModels(event, null);
+        MPSModelHelper.loadArmorModels(event, null);
     }
 
     @OnlyIn(Dist.CLIENT)

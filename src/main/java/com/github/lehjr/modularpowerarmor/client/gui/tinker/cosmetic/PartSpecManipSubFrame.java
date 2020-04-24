@@ -9,14 +9,21 @@ import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.*;
+import com.github.lehjr.mpalib.client.gui.GuiIcon;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
+import com.github.lehjr.mpalib.client.render.IconUtils;
+import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.math.MathUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.nbt.CompoundNBT;
@@ -42,14 +49,20 @@ public class PartSpecManipSubFrame {
     public List<PartSpecBase> partSpecs;
     public boolean open;
     Minecraft minecraft;
+    float zLevel;
 
-    public PartSpecManipSubFrame(SpecBase model, ColourPickerFrame colourframe, ItemSelectionFrame itemSelector, RelativeRect border) {
+    public PartSpecManipSubFrame(SpecBase model,
+                                 ColourPickerFrame colourframe,
+                                 ItemSelectionFrame itemSelector,
+                                 RelativeRect border,
+                                 float zLevel) {
         this.model = model;
         this.colourframe = colourframe;
         this.itemSelector = itemSelector;
         this.border = border;
         this.partSpecs = this.getPartSpecs();
         this.open = true;
+        this.zLevel = zLevel;
         minecraft = Minecraft.getInstance();
     }
 
@@ -161,7 +174,7 @@ public class PartSpecManipSubFrame {
             if (open) {
                 int y = (int) (border.top() + 8);
                 for (PartSpecBase spec : partSpecs) {
-                    drawSpecPartial(border.left(), y, spec, min, max);
+                    drawSpecPartial(border.left(), y, spec);
                     y += 8;
                 }
             }
@@ -186,53 +199,62 @@ public class PartSpecManipSubFrame {
         }
     }
 
-    public void drawSpecPartial(double x, double y, PartSpecBase partSpec, double ymino, double ymaxo) {
-        System.out.println("fixme!!1");
+    public void drawSpecPartial(float x, float y, PartSpecBase partSpec) {
+        GuiIcon icon = IconUtils.getIcon();
+        CompoundNBT tag = this.getSpecTag(partSpec);
+        int selcomp = tag.isEmpty() ? 0 : (partSpec instanceof ModelPartSpec && ((ModelPartSpec) partSpec).getGlow(tag) ? 2 : 1);
+        int selcolour = partSpec.getColourIndex(tag);
 
-//        CompoundNBT tag = this.getSpecTag(partSpec);
-//        int selcomp = tag.isEmpty() ? 0 : (partSpec instanceof ModelPartSpec && ((ModelPartSpec) partSpec).getGlow(tag) ? 2 : 1);
-//        int selcolour = partSpec.getColourIndex(tag);
-//        new GuiIcons.TransparentArmor(x, y, null, null, ymino, null, ymaxo);
-//        new GuiIcons.NormalArmor(x + 8, y, null, null, ymino, null, ymaxo);
-//
-//        if (partSpec instanceof ModelPartSpec) {
-//            new GuiIcons.GlowArmor(x + 16, y, null, null, ymino, null, ymaxo);
-//        }
-//
-//        new GuiIcons.SelectedArmorOverlay(x + selcomp * 8, y, null, null, ymino, null, ymaxo);
-//
-//        double acc = (x + 28);
-//        for (int colour : colourframe.colours()) {
-//            new GuiIcons.ArmourColourPatch(acc, y, new Colour(colour), null, ymino, null, ymaxo);
-//            acc += 8;
-//        }
-//        double textstartx = acc;
-//
-//        if (selcomp > 0) {
-//            new GuiIcons.SelectedArmorOverlay(x + 28 + selcolour * 8, y, null, null, ymino, null, ymaxo);
-//        }
-//
-//        Renderer.drawString(partSpec.getDisaplayName().getFormattedText(), textstartx + 4, y);
+        icon.transparentArmor.draw(x, y, Colour.WHITE);
+
+        icon.normalArmor.draw(x+8, y, Colour.WHITE);
+
+        if (partSpec instanceof ModelPartSpec) {
+            icon.glowArmor.draw(x + 16, y, Colour.WHITE);
+        }
+
+        icon.selectedArmorOverlay.draw(x + selcomp * 8, y, Colour.WHITE);
+
+        float acc = (x + 28);
+        for (int colour : colourframe.colours()) {
+            icon.armorColourPatch.draw(acc, y, new Colour(colour));
+            acc += 8;
+        }
+
+        double textstartx = acc;
+        if (selcomp > 0) {
+            icon.selectedArmorOverlay.draw(x + 28 + selcolour * 8, y, Colour.WHITE);
+        }
+        Renderer.drawString(partSpec.getDisaplayName().getFormattedText(), textstartx + 4, y);
     }
 
     public void drawOpenArrow(double min, double max) {
-        System.out.println("fixme");
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
+        RenderState.glowOn();
 
-//        RenderState.texturelessOn();
-//        Colour.LIGHTBLUE.doGL();
-//        GL11.glBegin(4);
-//        if (this.open) {
-//            GL11.glVertex2d(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max));
-//            GL11.glVertex2d(this.border.left() + 5, MathUtils.clampDouble(this.border.top() + 7, min, max));
-//            GL11.glVertex2d(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 3, min, max));
-//        } else {
-//            GL11.glVertex2d(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max));
-//            GL11.glVertex2d(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 7, min, max));
-//            GL11.glVertex2d(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 5, min, max));
-//        }
-//        GL11.glEnd();
-//        Colour.WHITE.doGL();
-//        RenderState.texturelessOff();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR);
+        if (this.open) {
+            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+            buffer.pos(this.border.left() + 5, MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+            buffer.pos(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+        } else {
+            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+            buffer.pos(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 5, min, max), zLevel).color(Colour.LIGHTBLUE.r, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.b, Colour.LIGHTBLUE.a).endVertex();
+        }
+        tessellator.draw();
+
+        RenderState.glowOff();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableTexture();
     }
 
     public Rect getBorder() {

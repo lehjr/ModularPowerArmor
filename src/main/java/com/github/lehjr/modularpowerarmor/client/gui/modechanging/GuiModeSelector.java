@@ -22,7 +22,7 @@ public class GuiModeSelector extends ContainerlessGui {
         radialSelect = new RadialModeSelectionFrame(
                 new Point2F(absX(-0.5F), absY(-0.5F)),
                 new Point2F(absX(0.5F), absY(0.5F)),
-                player);
+                player, this.getBlitOffset());
         frames.add(radialSelect);
     }
 

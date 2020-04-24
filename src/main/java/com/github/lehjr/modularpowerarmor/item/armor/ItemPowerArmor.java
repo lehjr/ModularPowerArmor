@@ -2,6 +2,8 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
+import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
@@ -147,47 +149,47 @@ public class ItemPowerArmor extends ItemElectricArmor {
             return _default;
         }
 
-        return _default;
+//        return _default;
 
-//        return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
-//
-//            CompoundNBT renderTag = spec.getRenderTag();
-//            PlayerEntity player = (PlayerEntity) entityLiving;
-//
-//            // only triggered by this client's player looking at their own equipped armor
-//            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
-//                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-//                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
-//                        renderTag = spec.getDefaultRenderTag();
-//                        if (renderTag != null && !renderTag.isEmpty()) {
-//                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-//                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
-//                        }
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            if (spec.getRenderTag() != null &&
-//                    (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
-//                return _default;
-//            }
-//
-//
-//            BipedModel model = ArmorModelInstance.getInstance();
-//            ItemStack chestplate = entityLiving.getItemStackFromSlot(EquipmentSlotType.CHEST);
-//            if (chestplate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
-//                    iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
-//                            .isModuleOnline(new ResourceLocation(MPARegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
-//                ((HighPolyArmor) model).setVisibleSection(null);
-//            } else {
-//                if (renderTag != null) {
-//                    ((HighPolyArmor) model).setVisibleSection(slot);
-//                    ((HighPolyArmor) model).setRenderSpec(renderTag);
-//                }
-//            }
-//            return model;
-//        }).orElse(_default);
+        return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
+
+            CompoundNBT renderTag = spec.getRenderTag();
+            PlayerEntity player = (PlayerEntity) entityLiving;
+
+            // only triggered by this client's player looking at their own equipped armor
+            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
+                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
+                        renderTag = spec.getDefaultRenderTag();
+                        if (renderTag != null && !renderTag.isEmpty()) {
+                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (spec.getRenderTag() != null &&
+                    (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
+                return _default;
+            }
+
+
+            BipedModel model = ArmorModelInstance.getInstance();
+            ItemStack chestplate = entityLiving.getItemStackFromSlot(EquipmentSlotType.CHEST);
+            if (chestplate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler ->
+                    iItemHandler instanceof IModularItem && ((IModularItem) iItemHandler)
+                            .isModuleOnline(new ResourceLocation(MPARegistryNames.MODULE_ACTIVE_CAMOUFLAGE__REGNAME))).orElse(false)) {
+                ((HighPolyArmor) model).setVisibleSection(null);
+            } else {
+                if (renderTag != null) {
+                    ((HighPolyArmor) model).setVisibleSection(slot);
+                    ((HighPolyArmor) model).setRenderSpec(renderTag);
+                }
+            }
+            return model;
+        }).orElse(_default);
     }
 
     @Override

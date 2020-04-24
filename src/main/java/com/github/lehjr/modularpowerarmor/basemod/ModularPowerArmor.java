@@ -9,6 +9,10 @@ import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.gui.crafting.TinkerCraftingGUI;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
+import com.github.lehjr.modularpowerarmor.client.renderer.LuxCapacitorEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.renderer.PlasmaBoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.renderer.SpinningBladeEntityRenderer;
+import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.event.*;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
@@ -21,6 +25,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -114,9 +119,9 @@ public class ModularPowerArmor {
 
         System.out.println("FIXME!!");
 //        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, LuxCapacitorEntityRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, PlasmaBoltEntityRenderer::new);
-//        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, SpinningBladeEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.LUX_CAPACITOR_ENTITY_TYPE, LuxCapacitorEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.PLASMA_BOLT_ENTITY_TYPE, PlasmaBoltEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.SPINNING_BLADE_ENTITY_TYPE, SpinningBladeEntityRenderer::new);
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
