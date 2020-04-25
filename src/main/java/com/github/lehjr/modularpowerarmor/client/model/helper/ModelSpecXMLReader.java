@@ -10,12 +10,14 @@ import com.github.lehjr.mpalib.string.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import forge.OBJBakedCompositeModel;
 import forge.OBJModelConfiguration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IModelTransform;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -166,8 +168,9 @@ public enum ModelSpecXMLReader {
                 if (event != null) {
                     List<String> tempTextures = Arrays.asList(modelElement.getAttribute("textures").split(","));
                     for (String texture : tempTextures)
-                        if (!(textures.contains(texture)))
+                        if (!(textures.contains(texture))) {
                             textures.add(texture);
+                        }
                 } else {
                     String modelLocation = modelElement.getAttribute("file");
                     // IModelStates should be per model, not per spec
@@ -261,13 +264,12 @@ public enum ModelSpecXMLReader {
 
         // Register textures
         if (event != null) {
-
-            // FIXME!!! replace with .... ??? where do model textures go???? What atlas do they go to? Needs to match the one for the model texture getter
-//            if (event.getMap() == Minecraft.getInstance().getTextureMap()) {
-//                for (String texture : textures) {
-//                    event.addSprite(new ResourceLocation(texture));
-//                }
-//            }
+            // this is the atlas used
+            if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
+                for (String texture : textures) {
+                    event.addSprite(new ResourceLocation(texture));
+                }
+            }
         }
     }
 
@@ -280,11 +282,12 @@ public enum ModelSpecXMLReader {
         if (colour.a == 0)
             colour = colour.withAlpha(1.0F);
 
-        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EquipmentSlotType.Group.ARMOR))
+        if (!Objects.equals(slot, null) && Objects.equals(slot.getSlotType(), EquipmentSlotType.Group.ARMOR)) {
             textureSpec.put(slot.getName(),
                     new TexturePartSpec(textureSpec,
                             new SpecBinding(null, slot, "all"),
                             textureSpec.addColourIfNotExist(colour), slot.getName(), fileLocation));
+        }
     }
 
     /**
@@ -326,7 +329,7 @@ public enum ModelSpecXMLReader {
      */
     public static IModelTransform getIModelState(Node itemCameraTransformsNode) {
         ImmutableMap.Builder<ItemCameraTransforms.TransformType, TransformationMatrix> builder = ImmutableMap.builder();
-        NodeList transformationList = ((Element) itemCameraTransformsNode).getElementsByTagName("TransformationMatrix");
+        NodeList transformationList = ((Element) itemCameraTransformsNode).getElementsByTagName("transformationMatrix");
         for (int i = 0; i < transformationList.getLength(); i++) {
             Node transformationNode = transformationList.item(i);
             ItemCameraTransforms.TransformType transformType =

@@ -31,6 +31,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -52,6 +54,11 @@ public class PowerFistModel extends BakedModelWrapper {
 //        calibration = new ModelTransformCalibration();
     }
 
+    @Override
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
+        return this.getQuads(state, side, rand, EmptyModelData.INSTANCE);
+    }
+
     /**
      * We don't actually have any IModelData being passed here, so we can ignore the parameter.
      *
@@ -64,15 +71,15 @@ public class PowerFistModel extends BakedModelWrapper {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-//        if (side != null)
-//            return ImmutableList.of();
-//
-//        switch (modelcameraTransformType) {
-//            case GUI:
-//            case FIXED:
-//            case NONE:
-//                return originalModel.getQuads(state, side, rand, extraData);
-//        }
+        if (side != null)
+            return ImmutableList.of();
+
+        switch (modelcameraTransformType) {
+            case GUI:
+            case FIXED:
+            case NONE:
+                return originalModel.getQuads(state, side, rand, extraData);
+        }
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         itemStack.getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBTCap -> {
             if (specNBTCap instanceof IHandHeldModelSpecNBT) {
@@ -128,15 +135,17 @@ public class PowerFistModel extends BakedModelWrapper {
                                 String itemState = partSpec.getBinding().getItemState();
 
                                 int ix = partSpec.getColourIndex(nbt);
-                                if (ix < colours.length && ix >= 0)
+                                if (ix < colours.length && ix >= 0) {
                                     partColor = new Colour(colours[ix]);
-                                else
+                                } else {
                                     partColor = Colour.WHITE;
+                                }
                                 boolean glow = ((ModelPartSpec) partSpec).getGlow(nbt);
 
                                 if ((!isFiring && (itemState.equals("all") || itemState.equals("normal"))) ||
-                                        (isFiring && (itemState.equals("all") || itemState.equals("firing"))))
+                                        (isFiring && (itemState.equals("all") || itemState.equals("firing")))) {
                                     builder.addAll(ModelHelper.getColouredQuadsWithGlowAndTransform(((ModelPartSpec) partSpec).getPart().getQuads(state, side, rand, extraData), partColor, transform, glow));
+                                }
                             }
                         }
                     }
@@ -169,8 +178,9 @@ public class PowerFistModel extends BakedModelWrapper {
             case THIRD_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND:
             case THIRD_PERSON_RIGHT_HAND:
+                // transforms are supposed to be applied to the quads, from the individual parts but I don't know if that is working
                 return this;
-                //return PerspectiveMapWrapper.handlePerspective(this, TransformationMatrix.identity(), cameraTransformType, mat);
+
 //                return Pair.of(this, TransformationMatrix.blockCornerToCenter(TransformationMatrix.identity()).getMatrixVec());
             default:
                 return super.handlePerspective(cameraTransformType, mat);
@@ -208,13 +218,12 @@ public class PowerFistModel extends BakedModelWrapper {
                         if (!(modechanging instanceof IModeChangingItem)) {
                             return;
                         }
-
                         ItemStack module = ((IModeChangingItem) modechanging).getActiveModule();
                         int actualCount = 0;
 
                         int maxDuration = ((IModeChangingItem) modechanging).getModularItemStack().getUseDuration();
                         if (!module.isEmpty()) {
-                                actualCount = (maxDuration - player.getItemInUseCount());
+                            actualCount = (maxDuration - player.getItemInUseCount());
                         }
                         isFiring = actualCount > 0;
                     });
