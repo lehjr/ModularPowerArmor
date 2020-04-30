@@ -1,21 +1,16 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
-import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.math.Colour;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.gui.recipebook.RecipeWidget;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 

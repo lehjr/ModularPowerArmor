@@ -19,6 +19,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -129,18 +130,36 @@ public class ItemPowerArmor extends ItemElectricArmor {
         return multimap;
     }
 
+    /**
+     * This will work for the vanilla type models. This will not work for high polly models due to how the rendering works
+     * @param armor
+     * @param entity
+     * @param equipmentSlotType
+     * @param type
+     * @return
+     */
     @Nullable
     @Override
     public String getArmorTexture(ItemStack armor, Entity entity, EquipmentSlotType equipmentSlotType, String type) {
         if (type == "overlay") { // this is to allow a tint to be applied tot the armor
             return MPALIbConstants.BLANK_ARMOR_MODEL_PATH;
         }
+
         return armor.getCapability(ModelSpecNBTCapability.RENDER).map(spec->
                 spec instanceof IArmorModelSpecNBT ?
                         ((IArmorModelSpecNBT) spec).getArmorTexture() :
-                        MPALIbConstants.BLANK_ARMOR_MODEL_PATH).orElse(MPALIbConstants.BLANK_ARMOR_MODEL_PATH);
+                        AtlasTexture.LOCATION_BLOCKS_TEXTURE.toString())
+                .orElse(AtlasTexture.LOCATION_BLOCKS_TEXTURE.toString());
     }
 
+    /**
+     * This is probably not going to work for the high polly models. Instead this will need to be done with an armor layer for more control
+     * @param entityLiving
+     * @param itemStack
+     * @param armorSlot
+     * @param _default
+     * @return
+     */
     @Nullable
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -174,7 +193,6 @@ public class ItemPowerArmor extends ItemElectricArmor {
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
                 return _default;
             }
-
 
             BipedModel model = ArmorModelInstance.getInstance();
             ItemStack chestplate = entityLiving.getItemStackFromSlot(EquipmentSlotType.CHEST);

@@ -18,13 +18,13 @@ import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.math.Colour;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -183,12 +183,12 @@ public class ColourPickerFrame extends ScrollableFrame {
             }
 
             super.preRender(mouseX, mouseY, partialTicks);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(0, -currentscrollpixels, 0);
+            RenderSystem.pushMatrix();
+            RenderSystem.translatef(0, -currentscrollpixels, 0);
             for (ScrollableRectangle f : rectangles) {
                 f.render(mouseX, mouseY, partialTicks, zLevel);
             }
-            GL11.glPopMatrix();
+            RenderSystem.popMatrix();
             super.postRender(mouseX, mouseY, partialTicks);
         }
     }

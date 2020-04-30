@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
+import com.github.lehjr.modularpowerarmor.client.event.ArmorLayerSetup;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
@@ -12,12 +13,12 @@ import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGu
 import com.github.lehjr.modularpowerarmor.client.renderer.LuxCapacitorEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.renderer.PlasmaBoltEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.renderer.SpinningBladeEntityRenderer;
-import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.event.*;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -28,10 +29,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -54,21 +52,12 @@ public class ModularPowerArmor {
         modEventBus.register(this);
         modEventBus.register(RegisterStuff.INSTANCE);
 
-
-//        modEventBus.addGenericListener(Block.class, RegisterStuff.INSTANCE::registerBlocks);
-//        modEventBus.addGenericListener(Item.class, RegisterStuff.INSTANCE::registerItems);
-//        modEventBus.addGenericListener(TileEntityType.class, RegisterStuff.INSTANCE::registerTileEntities);
-//        modEventBus.addGenericListener(EntityType.class, RegisterStuff.INSTANCE::registerEntities);
-//        modEventBus.addGenericListener(ContainerType.class, RegisterStuff.INSTANCE::registerContainerTypes);
-
-
-
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+//        // Register the processIMC method for modloading
+//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
 
@@ -80,10 +69,6 @@ public class ModularPowerArmor {
 
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);
-//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handHarvestDrops);
-//        MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBlockBreak);
-
-
 
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
             new RuntimeException("Got config " + event.getConfig() + " name " + event.getConfig().getModId() + ":" + event.getConfig().getFileName());
@@ -106,7 +91,6 @@ public class ModularPowerArmor {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-//        MPALibOBJLoader.INSTANCE.addDomain(MPAConstants.MOD_ID.toLowerCase());
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modEventBus.addListener(ModelBakeEventHandler.INSTANCE::onModelBake);
@@ -129,36 +113,50 @@ public class ModularPowerArmor {
     }
 
 
-    private void enqueueIMC(final InterModEnqueueEvent event) {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("examplemod", "helloworld", () -> {
-            LOGGER.info("Hello world from the MDK");
-            return "Hello world";
-        });
-    }
+//    private void enqueueIMC(final InterModEnqueueEvent event) {
+//        // some example code to dispatch IMC to another mod
+//        InterModComms.sendTo("examplemod", "helloworld", () -> {
+//            LOGGER.info("Hello world from the MDK");
+//            return "Hello world";
+//        });
+//    }
+//
+//    private void processIMC(final InterModProcessEvent event) {
+//        // some example code to receive and process InterModComms from other mods
+//        LOGGER.info("Got IMC {}", event.getIMCStream().
+//                map(m -> m.getMessageSupplier().get()).
+//                collect(Collectors.toList()));
+//    }
 
-    private void processIMC(final InterModProcessEvent event) {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m -> m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
-
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
+    @Mod.EventBusSubscriber(modid = MPAConstants.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class MyStaticClientOnlyEventHandler {
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
+        public static void loadComplete(FMLLoadCompleteEvent evt) {
+            System.out.println("doing something here");
+
+            ArmorLayerSetup.loadComplete(evt);
         }
     }
+
+
+
+
+
+//    // You can use SubscribeEvent and let the Event Bus discover methods to call
+//    @SubscribeEvent
+//    public void onServerStarting(FMLServerStartingEvent event) {
+//        // do something when the server starts
+//        LOGGER.info("HELLO from server starting");
+//    }
+
+//    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
+//    // Event bus for receiving Registry Events)
+//    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+//    public static class RegistryEvents {
+//        @SubscribeEvent
+//        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
+//            // register a new block here
+//            LOGGER.info("HELLO from Register Block");
+//        }
+//    }
 }

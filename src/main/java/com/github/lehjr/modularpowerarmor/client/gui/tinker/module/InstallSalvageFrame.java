@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
-import com.github.lehjr.modularpowerarmor.container.IHideableSlot;
 import com.github.lehjr.modularpowerarmor.container.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.reworked_crafting_packets.CPlaceRecipePacket;
@@ -14,6 +13,7 @@ import com.github.lehjr.mpalib.client.gui.frame.InventoryFrame;
 import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableArrow;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
+import com.github.lehjr.mpalib.client.gui.slot.IHideableSlot;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.math.Colour;

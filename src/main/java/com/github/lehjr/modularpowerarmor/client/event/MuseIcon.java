@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.client.event;
 
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

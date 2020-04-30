@@ -5,8 +5,8 @@ import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CreativeInstallModuleRequestPacket;
 import com.github.lehjr.modularpowerarmor.network.packets.MoveModuleFromSlotToSlotPacket;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.client.gui.slot.*;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
-import com.github.lehjr.mpalib.client.gui.slot.ClickableModuleSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -94,111 +94,6 @@ public class TinkerTableContainer extends MPARecipeBookContainer<CraftingInvento
             if(slot instanceof IHideableSlot) {
                 ((IHideableSlot) slot).disable();
             }
-        }
-    }
-
-    class HideableSlotItemHandler extends SlotItemHandler implements IHideableSlot {
-        boolean isEnabled = false;
-        protected int parentSlot = -1;
-        public int xPos;
-        public int yPos;
-
-        public HideableSlotItemHandler(IItemHandler itemHandler, int parent, int index, int xPosition, int yPosition) {
-            super(itemHandler, index, xPosition, yPosition);
-            this.parentSlot = parent;
-            this.xPos = xPosition;
-            this.yPos = yPosition;
-        }
-
-        public int getParentSlot(){
-            return parentSlot;
-        }
-
-        @Override
-        public void enable() {
-            this.isEnabled = true;
-        }
-
-        @Override
-        public void disable() {
-            this.isEnabled = false;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return isEnabled;
-        }
-
-        @Override
-        public void setPosition(Point2F position) {
-            this.xPos = (int) position.getX();
-            this.yPos = (int) position.getY();
-        }
-    }
-
-    public class HideableSlot extends Slot implements IHideableSlot {
-        boolean isEnabled = false;
-        public int xPos;
-        public int yPos;
-
-        public HideableSlot(IInventory iInventory, int slotIndex, int xPosition, int yPosition) {
-            super(iInventory, slotIndex, xPosition, yPosition);
-            this.xPos = xPosition;
-            this.yPos = yPosition;
-        }
-
-        @Override
-        public void enable() {
-            this.isEnabled = true;
-        }
-
-        @Override
-        public void disable() {
-            this.isEnabled = false;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return isEnabled;
-        }
-
-        @Override
-        public void setPosition(Point2F position) {
-            this.xPos = (int) position.getX();
-            this.yPos = (int) position.getY();
-        }
-    }
-
-    class HideableResultSlot extends CraftingResultSlot implements IHideableSlot {
-        boolean isEnabled = false;
-        public int xPos;
-        public int yPos;
-
-        public HideableResultSlot(PlayerEntity playerEntity, CraftingInventory craftingInventory, IInventory inventory, int slotIndex, int xPosition, int yPosition) {
-            super(playerEntity, craftingInventory, inventory, slotIndex, xPosition, yPosition);
-            this.xPos = xPosition;
-            this.yPos = yPosition;
-        }
-
-        @Override
-        public void enable() {
-            this.isEnabled = true;
-        }
-
-        @Override
-        public void disable() {
-            this.isEnabled = false;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return isEnabled;
-        }
-
-        @Override
-        public void setPosition(Point2F position) {
-            this.xPos = (int) position.getX();
-            this.yPos = (int) position.getY();
         }
     }
 

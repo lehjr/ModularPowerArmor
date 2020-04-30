@@ -8,8 +8,8 @@ import com.github.lehjr.mpalib.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.math.Colour;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -150,12 +150,12 @@ public class PartManipContainer extends ScrollableFrame {
     public void render(int mouseX, int mouseY, float partialTicks) {
         if (this.isVisible()) {
             super.preRender(mouseX, mouseY, partialTicks);
-            GL11.glPushMatrix();
-            GL11.glTranslated(0.0, -this.currentscrollpixels, 0.0);
+            RenderSystem.pushMatrix();
+            RenderSystem.translated(0.0, -this.currentscrollpixels, 0.0);
             for (PartSpecManipSubFrame f : modelframes) {
                 f.drawPartial(currentscrollpixels + 4 + border.finalTop(), this.currentscrollpixels + border.finalBottom() - 4);
             }
-            GL11.glPopMatrix();
+            RenderSystem.popMatrix();
             super.postRender(mouseX, mouseY, partialTicks);
         }
     }

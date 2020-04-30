@@ -6,11 +6,8 @@ import com.github.lehjr.modularpowerarmor.client.model.helper.LuxCapHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.tileentity.MPALibTileEntity;
-import com.google.common.collect.ImmutableMap;
-import forge.OBJPartData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 
 import javax.annotation.Nonnull;
 

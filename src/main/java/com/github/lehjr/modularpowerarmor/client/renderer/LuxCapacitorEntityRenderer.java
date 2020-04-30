@@ -1,14 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.renderer;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-import com.github.lehjr.modularpowerarmor.client.model.helper.LuxCapHelper;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
-import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
@@ -20,9 +16,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nullable;

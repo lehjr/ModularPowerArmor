@@ -1,35 +1,32 @@
 package com.github.lehjr.modularpowerarmor.client.render.item.armor;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
-import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.ModelPartSpec;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.ModelRegistry;
+import com.github.lehjr.mpalib.capabilities.render.modelspec.ModelSpec;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.PartSpecBase;
-import com.github.lehjr.mpalib.client.model.helper.ModelHelper;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTTagAccessor;
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.common.model.TransformationHelper;
+import org.lwjgl.system.MemoryStack;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -40,6 +37,8 @@ import java.util.Random;
  */
 @OnlyIn(Dist.CLIENT)
 public class RenderPart extends ModelRenderer {
+    // replace division operation with multiplication
+    final float div255 = 0.003921569F;
     ModelRenderer parent;
 
     public RenderPart(Model base, ModelRenderer parent) {
@@ -47,247 +46,149 @@ public class RenderPart extends ModelRenderer {
         this.parent = parent;
     }
 
-//    @Override
-//    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
-//        System.out.println("doing something here");
-//
-//        super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
-//    }
-
     @Override
     public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        System.out.println("doing something here");
-
         if (this.showModel) {
-            CompoundNBT renderSpec = ((HighPolyArmor) (ArmorModelInstance.getInstance())).getRenderSpec();
-            if (renderSpec != null) {
-                int[] colours = renderSpec.getIntArray(MPALIbConstants.TAG_COLOURS);
+            matrixStackIn.push();
+            this.translateRotate(matrixStackIn);
+            this.doRendering(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+            matrixStackIn.pop();
+        }
+    }
 
-                if (colours.length == 0) {
-                    colours = new int[]{Colour.WHITE.getInt()};
-                }
+    @Override
+    public void translateRotate(MatrixStack matrixStackIn) {
+        matrixStackIn.translate(
+                this.rotationPointX * 0.0625F, // left/right??
+                this.rotationPointY * 0.0625F, // up/down
+                this.rotationPointZ * 0.0625F); // forward/backwards
+        if (this.rotateAngleZ != 0.0F) {
+            matrixStackIn.rotate(Vector3f.ZP.rotation(this.rotateAngleZ));
+        }
 
-                Colour partColor;
-                for (CompoundNBT nbt : NBTTagAccessor.getValues(renderSpec)) {
-                    PartSpecBase part = ModelRegistry.getInstance().getPart(nbt);
-                    if (part != null && part instanceof ModelPartSpec) {
-                        if (part.getBinding().getSlot() == ((HighPolyArmor) (ArmorModelInstance.getInstance())).getVisibleSection()
-                                && part.getBinding().getTarget().apply(ArmorModelInstance.getInstance()) == parent) {
-//                            IBakedModel modelPart = ((ModelPartSpec) part).getPart();
+        if (this.rotateAngleY != 0.0F) {
+            matrixStackIn.rotate(Vector3f.YP.rotation(this.rotateAngleY));
+        }
 
-                            IBakedModel modelPart = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(new ItemStack(MPAObjects.luxCapacitor), Minecraft.getInstance().player.world, (LivingEntity) null);
+        if (this.rotateAngleX != 0.0F) {
+            matrixStackIn.rotate(Vector3f.XP.rotation(this.rotateAngleX));
+        }
 
+        matrixStackIn.rotate(TransformationHelper.quatFromXYZ(new Vector3f(180, 0, 0), true));
+    }
 
-//                            int ix = part.getColourIndex(nbt);
-//                            // checks the range of the index to avoid errors OpenGL or crashing
-//                            if (ix < colours.length && ix >= 0) {
-//                                partColor = new Colour(colours[ix]);
-//                            } else {
-                                partColor = Colour.WHITE;
-//                            }
+    private void doRendering(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        CompoundNBT renderSpec = ArmorModelInstance.getInstance().getRenderSpec();
+        if (renderSpec != null) {
+            MatrixStack.Entry entry = matrixStackIn.getLast();
 
-                            matrixStackIn.push();
-                            this.translateRotate(matrixStackIn);
-                            renderModel(modelPart, packedLightIn, partColor, ((ModelPartSpec) part).getGlow(nbt), packedOverlayIn, matrixStackIn, bufferIn);
-                            matrixStackIn.pop();
+            int[] colours = renderSpec.getIntArray(MPALIbConstants.TAG_COLOURS);
 
+            if (colours.length == 0) {
+                colours = new int[]{Colour.WHITE.getInt()};
+            }
+
+            int partColor;
+            for (CompoundNBT nbt : NBTTagAccessor.getValues(renderSpec)) {
+                PartSpecBase part = ModelRegistry.getInstance().getPart(nbt);
+                if (part != null && part instanceof ModelPartSpec) {
+                    if (part.getBinding().getSlot() == ArmorModelInstance.getInstance().getVisibleSection()
+                            && part.getBinding().getTarget().apply(ArmorModelInstance.getInstance()) == parent) {
+                        int ix = part.getColourIndex(nbt);
+                        // checks the range of the index to avoid errors OpenGL or crashing
+                        if (ix < colours.length && ix >= 0) {
+                            partColor = colours[ix];
+                        } else {
+                            partColor = -1;
                         }
+
+                        TransformationMatrix transform = ((ModelSpec) part.spec).getTransform(ItemCameraTransforms.TransformType.NONE);
+
+                        // FIXME: not implemented yet
+                        if (transform != TransformationMatrix.identity()) {
+                            MatrixStack stack = new MatrixStack();
+                            transform.push(stack);
+                            // Apply the transformation to the real matrix stack
+                            Matrix4f tMat = stack.getLast().getMatrix();
+                            Matrix3f nMat = stack.getLast().getNormal();
+                            matrixStackIn.getLast().getMatrix().mul(tMat);
+                            matrixStackIn.getLast().getNormal().mul(nMat);
+                        }
+
+                        ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+                        Random random = new Random();
+                        long i = 42L;
+//                        Direction[] var7 = Direction.values();
+//                        int var8 = var7.length;
+//
+//                        for (int var9 = 0; var9 < var8; ++var9) {
+//                            Direction direction = var7[var9];
+//                            random.setSeed(42L);
+//                            builder.addAll(((ModelPartSpec) part).getPart().getQuads(null, direction, random));//, ItemCameraTransforms.TransformType.NONE, colour, glow));
+//                        }
+
+                        random.setSeed(i);
+                        builder.addAll(((ModelPartSpec) part).getPart().getQuads(null, null, random));//, TransformType.NONE, colour, glow));
+
+                        // TODO: optionally replaced packed light for glow
+
+                        renderQuads(entry, bufferIn, builder.build(), packedLightIn, OverlayTexture.NO_OVERLAY /*packedOverlayIn*/, partColor);
                     }
                 }
             }
         }
-
-//        System.out.println("showModel: " + this.showModel);
-//        System.out.println("is cubelist empty? " + cubeList.isEmpty()); // super won't render with empty cube list
-//        System.out.println("is childlist empty? " + childModels.isEmpty()); // super won't render with childlist cube list
-//        renderer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
     }
 
-    public void renderer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        matrixStackIn.push();
-        this.translateRotate(matrixStackIn);
-//        this.doRender(matrixStackIn.getLast(), bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void renderQuads(MatrixStack.Entry entry,
+                            IVertexBuilder bufferIn,
+                            List<BakedQuad> quadsIn,
+                            int combinedLightIn,
+                            int combinedOverlayIn, int colour) {
+        float a = (float) (colour >> 24 & 255) * div255;
+        float r = (float) (colour >> 16 & 255) * div255;
+        float g = (float) (colour >> 8 & 255) * div255;
+        float b = (float) (colour & 255) * div255;
 
-//        for(ModelRenderer modelrenderer : this.childModels) {
-//            modelrenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-//        }
-
-        matrixStackIn.pop();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public void renderItem(boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn, IBakedModel modelIn) {
-//            matrixStackIn.push();
-////            boolean flag = transformTypeIn == ItemCameraTransforms.TransformType.GUI;
-////            boolean flag1 = flag || transformTypeIn == ItemCameraTransforms.TransformType.GROUND || transformTypeIn == ItemCameraTransforms.TransformType.FIXED;
-//
-//            modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);
-//            matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-//            if (!modelIn.isBuiltInRenderer() && (itemStackIn.getItem() != Items.TRIDENT || flag1)) {
-//                RenderType rendertype = Atlases.getTranslucentBlockType();
-//                RenderType rendertype1;
-//                if (flag && Objects.equals(rendertype, Atlases.getTranslucentBlockType())) {
-//                    rendertype1 = Atlases.getTranslucentCullBlockType();
-//                } else {
-//                    rendertype1 = rendertype;
-//                }
-//
-//                IVertexBuilder ivertexbuilder = getBuffer(bufferIn, rendertype1, true, itemStackIn.hasEffect());
-//                this.renderModel(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
-//            }
-//
-//            matrixStackIn.pop();
-//    }
-//
-//    private void renderModel(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {
-//        Random random = new Random();
-//        long i = 42L;
-//
-//        for(Direction direction : Direction.values()) {
-//            random.setSeed(42L);
-//            this.renderQuads(matrixStackIn, bufferIn, modelIn.getQuads((BlockState)null, direction, random), stack, combinedLightIn, combinedOverlayIn);
-//        }
-//
-//        random.setSeed(42L);
-//        this.renderQuads(matrixStackIn, bufferIn, modelIn.getQuads((BlockState)null, (Direction)null, random), stack, combinedLightIn, combinedOverlayIn);
-//    }
-//
-//    public void renderQuads(MatrixStack matrixStackIn, IVertexBuilder bufferIn, List<BakedQuad> quadsIn, ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
-//        boolean flag = !itemStackIn.isEmpty();
-//        MatrixStack.Entry matrixstack$entry = matrixStackIn.getLast();
-//
-//        for(BakedQuad bakedquad : quadsIn) {
-//            int i = -1;
-//            if (flag && bakedquad.hasTintIndex()) {
-//                i = this.itemColors.getColor(itemStackIn, bakedquad.getTintIndex());
-//            }
-//
-//            float f = (float)(i >> 16 & 255) / 255.0F;
-//            float f1 = (float)(i >> 8 & 255) / 255.0F;
-//            float f2 = (float)(i & 255) / 255.0F;
-//            bufferIn.addVertexData(matrixstack$entry, bakedquad, f, f1, f2, combinedLightIn, combinedOverlayIn, true);
-//        }
-//
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public void renderer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-//        if (this.showModel) {
-//            if (!this.cubeList.isEmpty() || !this.childModels.isEmpty()) {
-//                matrixStackIn.push();
-//                this.translateRotate(matrixStackIn);
-//                this.doRender(matrixStackIn.getLast(), bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-//
-//                for(ModelRenderer modelrenderer : this.childModels) {
-//                    modelrenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-//                }
-//
-//                matrixStackIn.pop();
-//            }
-//        }
-//    }
-
-
-
-    private void renderModel(IBakedModel modelIn, int combinedLightIn, Colour color, boolean glow, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {
-        Random random = new Random();
-        long i = 42L;
-
-        for(Direction direction : Direction.values()) {
-            random.setSeed(42L);
-            List<BakedQuad> quads = modelIn.getQuads((BlockState)null, direction, random);
-            System.out.println("quads size (direction): " + quads.size());
-
-            this.renderQuads(matrixStackIn, bufferIn, ModelHelper.getColoredQuadsWithGlow(quads, color, glow), Colour.WHITE.withAlpha(1), combinedLightIn, combinedOverlayIn);
-        }
-        random.setSeed(42L);
-        List<BakedQuad> quads = modelIn.getQuads((BlockState)null, null, random);
-
-        System.out.println("quads size (null direction): " + quads.size());
-
-        this.renderQuads(matrixStackIn, bufferIn, quads, Colour.WHITE.withAlpha(1), combinedLightIn, combinedOverlayIn);
-    }
-
-    public void renderQuads(MatrixStack matrixStackIn, IVertexBuilder bufferIn, List<BakedQuad> quadsIn, Colour color, int combinedLightIn, int combinedOverlayIn) {
-        MatrixStack.Entry matrixStack = matrixStackIn.getLast();
-
-
-
-
-
-
-        for(BakedQuad bakedquad : quadsIn) {
-            int i = -1;
-//            if (flag && bakedquad.hasTintIndex()) {
-//                i = this.itemColors.getColor(itemStackIn, bakedquad.getTintIndex());
-//            }
-
-            float f = (float)(i >> 16 & 255) / 255.0F;
-            float f1 = (float)(i >> 8 & 255) / 255.0F;
-            float f2 = (float)(i & 255) / 255.0F;
-
-
-
-            bufferIn.addVertexData(matrixStack, bakedquad, f, f1, f2, combinedLightIn, combinedOverlayIn, true);
-//
-
-
-//            bufferIn.addVertexData(matrixStack, bakedquad, color.r, color.g, color.b, color.a, combinedLightIn, combinedOverlayIn, true);
+        for (BakedQuad bakedquad : quadsIn) {
+            addVertexData(bufferIn, entry, bakedquad, combinedLightIn, combinedOverlayIn, r, g, b, a);
         }
     }
 
+    // Copy of addQuad with alpha support
+    void addVertexData(IVertexBuilder bufferIn,
+                       MatrixStack.Entry matrixEntry,
+                       BakedQuad bakedQuad,
+                       int lightmapCoordIn,
+                       int overlayCoords, float red, float green, float blue, float alpha) {
+        int[] aint = bakedQuad.getVertexData();
+        Vec3i faceNormal = bakedQuad.getFace().getDirectionVec();
+        Vector3f normal = new Vector3f((float) faceNormal.getX(), (float) faceNormal.getY(), (float) faceNormal.getZ());
+        Matrix4f matrix4f = matrixEntry.getMatrix();// same as TexturedQuad renderer
+        normal.transform(matrixEntry.getNormal()); // normals different here
 
-    /*
-        @Override
-        public void render(float scale) {
-            CompoundNBT renderSpec = ((HighPolyArmor) (ArmorModelInstance.getInstance())).getRenderSpec();
-            if (renderSpec == null)
-                return;
+        int intSize = DefaultVertexFormats.BLOCK.getIntegerSize();
+        int vertexCount = aint.length / intSize;
 
+        try (MemoryStack memorystack = MemoryStack.stackPush()) {
+            ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormats.BLOCK.getSize());
+            IntBuffer intbuffer = bytebuffer.asIntBuffer();
 
+            for (int v = 0; v < vertexCount; ++v) {
+                ((Buffer) intbuffer).clear();
+                intbuffer.put(aint, v * 8, 8);
+                float f = bytebuffer.getFloat(0);
+                float f1 = bytebuffer.getFloat(4);
+                float f2 = bytebuffer.getFloat(8);
+                int lightmapCoord = bufferIn.applyBakedLighting(lightmapCoordIn, bytebuffer);
+                float f9 = bytebuffer.getFloat(16);
+                float f10 = bytebuffer.getFloat(20);
 
-
-
-
+                /** scaled like TexturedQuads, but using multiplication instead of division due to speed advantage.  */
+                Vector4f pos = new Vector4f(f * 0.0625F, f1 * 0.0625F, f2 * 0.0625F, 1.0F); // scales to 1/16 like the TexturedQuads but with multiplication (faster than division)
+                pos.transform(matrix4f);
+                bufferIn.applyBakedNormals(normal, bytebuffer, matrixEntry.getNormal());
+                bufferIn.addVertex(pos.getX(), pos.getY(), pos.getZ(), red, green, blue, alpha, f9, f10, overlayCoords, lightmapCoord, normal.getX(), normal.getY(), normal.getZ());
+            }
         }
-    */
-    private void applyTransform() {
-        System.out.println("fixme!!!");
-
-
-////        float degrad = (float) (180F / Math.PI);
-////        GL11.glTranslatef(rotationPointX, rotationPointY, rotationPointZ);
-////        GL11.glRotatef(rotateAngleZ * degrad, 0.0F, 0.0F, 1.0F);
-////        GL11.glRotatef(rotateAngleY * degrad, 0.0F, 1.0F, 0.0F);
-////        GL11.glRotatef(rotateAngleX * degrad, 1.0F, 0.0F, 0.0F);
-//        GlStateManager.rotatef(180, 1.0F, 0.0F, 0.0F);
-//        GlStateManager.translatef(offsetX, offsetY - 26, offsetZ);
     }
 }

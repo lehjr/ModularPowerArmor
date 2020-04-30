@@ -15,7 +15,7 @@ public class MPACreativeTab extends ItemGroup {
     @OnlyIn(Dist.CLIENT)
     @Override
     public ItemStack createIcon() {
-        Item item = null;//MPAObjects.INSTANCE.powerArmorHead;
+        Item item = MPAObjects.INSTANCE.powerArmorHead;
 
         if (item == null) {
             item = Items.DEBUG_STICK;

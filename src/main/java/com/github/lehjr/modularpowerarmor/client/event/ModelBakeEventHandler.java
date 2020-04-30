@@ -13,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Map;
-
 
 public enum ModelBakeEventHandler {
     INSTANCE;

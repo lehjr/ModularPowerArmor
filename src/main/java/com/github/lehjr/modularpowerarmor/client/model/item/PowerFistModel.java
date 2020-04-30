@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -156,17 +155,6 @@ public class PowerFistModel extends BakedModelWrapper {
     }
 
     /**
-     * When dealing with possibly multiple specs and color lists, new list needs to be created, since there is only one list per item.
-     */
-    static List<Integer> addNewColourstoList(List<Integer> colours, List<Integer> coloursToAdd) {
-        for (Integer i : coloursToAdd) {
-            if (!colours.contains(i))
-                colours.add(i);
-        }
-        return colours;
-    }
-
-    /**
      * this is great for single models or those that share the exact same transforms for the different camera transform
      * type. However, when dealing with quads from different models, it's useless.
      */
@@ -178,10 +166,7 @@ public class PowerFistModel extends BakedModelWrapper {
             case THIRD_PERSON_LEFT_HAND:
             case FIRST_PERSON_RIGHT_HAND:
             case THIRD_PERSON_RIGHT_HAND:
-                // transforms are supposed to be applied to the quads, from the individual parts but I don't know if that is working
                 return this;
-
-//                return Pair.of(this, TransformationMatrix.blockCornerToCenter(TransformationMatrix.identity()).getMatrixVec());
             default:
                 return super.handlePerspective(cameraTransformType, mat);
         }

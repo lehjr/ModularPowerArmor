@@ -10,20 +10,17 @@ import com.github.lehjr.mpalib.string.StringUtils;
 import com.google.common.collect.ImmutableMap;
 import forge.OBJBakedCompositeModel;
 import forge.OBJModelConfiguration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.IModelTransform;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.BlockModelConfiguration;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.common.model.TransformationHelper;
@@ -157,7 +154,7 @@ public enum ModelSpecXMLReader {
     public static void parseModelSpec(Node specNode, TextureStitchEvent.Pre event, ModelLoader bakery, EnumSpecType specType, String specName, boolean isDefault) {
         NodeList models = specNode.getOwnerDocument().getElementsByTagName(MPALIbConstants.TAG_MODEL);
         java.util.List<String> textures = new ArrayList<>();
-        IModelTransform modelState = null;
+        IModelTransform modelTransform = null;
 
         for (int i = 0; i < models.getLength(); i++) {
             Node modelNode = models.item(i);
@@ -178,14 +175,18 @@ public enum ModelSpecXMLReader {
                     // check for item camera transforms, then fall back on single transform for model
                     if (cameraTransformList.getLength() > 0) {
                         Node cameraTransformNode = cameraTransformList.item(0);
-                        modelState = getIModelState(cameraTransformNode);
+                        modelTransform = getIModelTransform(cameraTransformNode);
                     } else {
                         // Get the transform for the model and add to the registry
                         NodeList transformNodeList = modelElement.getElementsByTagName("transformationMatrix");
                         if (transformNodeList.getLength() > 0) {
-                            modelState = new SimpleModelTransform(getTransform(transformNodeList.item(0)));
+                            ImmutableMap.Builder<ItemCameraTransforms.TransformType, TransformationMatrix> builder = ImmutableMap.builder();
+                            builder.put(ItemCameraTransforms.TransformType.NONE, getTransform(transformNodeList.item(0)));
+                            modelTransform =  new SimpleModelTransform(builder.build());
+                            // TODO... check and see how this works.. not sure about this
+                            //modelTransform = new SimpleModelTransform(getTransform(transformNodeList.item(0)));
                         } else {
-                            modelState = SimpleModelTransform.IDENTITY;
+                            modelTransform = SimpleModelTransform.IDENTITY;
                         }
                     }
 
@@ -230,16 +231,16 @@ public enum ModelSpecXMLReader {
 
 
                     ModelHelper.loadBakedModel(
-                            new OBJModelConfiguration(modelLocation, modelState),
+                            new OBJModelConfiguration(modelLocation, modelTransform),
                             bakery,
                             bakery.defaultTextureGetter(),
-                            modelState,
+                            modelTransform,
                             ItemOverrideList.EMPTY,
                             new ResourceLocation(modelLocation));
 
                     // ModelSpec stuff
                     if (bakedModel != null && bakedModel instanceof OBJBakedCompositeModel) {
-                        ModelSpec modelspec = new ModelSpec(bakedModel, modelState, specName, isDefault, specType);
+                        ModelSpec modelspec = new ModelSpec(bakedModel, modelTransform, specName, isDefault, specType);
 
                         NodeList bindingNodeList = ((Element) modelNode).getElementsByTagName("binding");
                         if (bindingNodeList.getLength() > 0) {
@@ -327,7 +328,7 @@ public enum ModelSpecXMLReader {
      * @param itemCameraTransformsNode
      * @return
      */
-    public static IModelTransform getIModelState(Node itemCameraTransformsNode) {
+    public static IModelTransform getIModelTransform(Node itemCameraTransformsNode) {
         ImmutableMap.Builder<ItemCameraTransforms.TransformType, TransformationMatrix> builder = ImmutableMap.builder();
         NodeList transformationList = ((Element) itemCameraTransformsNode).getElementsByTagName("transformationMatrix");
         for (int i = 0; i < transformationList.getLength(); i++) {
