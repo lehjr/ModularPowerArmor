@@ -1,7 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableTile;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.math.Colour;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.recipebook.RecipeList;
 import net.minecraft.client.gui.recipebook.RecipeWidget;
@@ -11,6 +14,7 @@ import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeBook;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
@@ -56,37 +60,31 @@ public class MPSRecipeWidget extends RecipeWidget {
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTickTime) {
-        System.out.println("fixme!!!");
+        tile.setTargetDimensions(new Point2F(x, y), new Point2F(22, 22));
+        if (!this.list.containsCraftableRecipes()) {
+            tile.setBackgroundColour(disabledBackground);
+            tile.setBorderColour(disabledBorder);
+        } else {
+            tile.setBackgroundColour(enabledBackground);
+            tile.setBorderColour(enabledBorder);
+        }
+        tile.draw(Minecraft.getInstance().currentScreen.getBlitOffset());
 
-//        tile.setTargetDimensions(new Point2F(x, y), new Point2F(22, 22));
-//        if (!this.list.containsCraftableRecipes()) {
-//            tile.setBackgroundColour(disabledBackground);
-//            tile.setBorderColour(disabledBorder);
-//        } else {
-//            tile.setBackgroundColour(enabledBackground);
-//            tile.setBorderColour(enabledBorder);
-//        }
-//        tile.draw();
-//
-//        if (!Screen.hasControlDown()) {
-//            this.time += partialTickTime;
-//        }
-//
-//        RenderHelper.enableGUIStandardItemLighting();
-//        Minecraft minecraft = Minecraft.getInstance();
-////        GlStateManager.disableLighting();
-//        List<IRecipe<?>> list = this.getOrderedRecipes();
-//        this.currentIndex = MathHelper.floor(this.time / 30.0F) % list.size();
-//        ItemStack itemstack = list.get(this.currentIndex).getRecipeOutput();
-//        int k = 4;
-//        if (this.list.hasSingleResultItem() && this.getOrderedRecipes().size() > 1) {
-//            minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemstack, this.x + k + 1, this.y + k + 1);
-//            --k;
-//        }
-//
-//        minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemstack, this.x + k, this.y + k);
-//        GlStateManager.enableLighting();
-//        RenderHelper.disableStandardItemLighting();
+        if (!Screen.hasControlDown()) {
+            this.time += partialTickTime;
+        }
+
+        Minecraft minecraft = Minecraft.getInstance();
+        List<IRecipe<?>> list = this.getOrderedRecipes();
+        this.currentIndex = MathHelper.floor(this.time / 30.0F) % list.size();
+        ItemStack itemstack = list.get(this.currentIndex).getRecipeOutput();
+        int k = 4;
+        if (this.list.hasSingleResultItem() && this.getOrderedRecipes().size() > 1) {
+            minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemstack, this.x + k + 1, this.y + k + 1);
+            --k;
+        }
+
+        minecraft.getItemRenderer().renderItemAndEffectIntoGUI(itemstack, this.x + k, this.y + k);
     }
 
     private List<IRecipe<?>> getOrderedRecipes() {

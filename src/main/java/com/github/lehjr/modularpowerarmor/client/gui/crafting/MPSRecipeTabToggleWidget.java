@@ -1,9 +1,11 @@
 package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
+import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.math.Colour;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.RecipeTabToggleWidget;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.util.RecipeBookCategories;
@@ -26,20 +28,14 @@ public class MPSRecipeTabToggleWidget extends RecipeTabToggleWidget {
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
-        System.out.println("FIXME!!!");
+        int xChange = this.stateTriggered ? 2 : 0;
+        tabRectangle.setTargetDimensions(new Point2F(this.x - xChange, this.y), new Point2F(28+ xChange, 27));
+        tabRectangle.setBackgroundColour(this.stateTriggered ? activeColor : inactiveColor);
+        tabRectangle.draw(Minecraft.getInstance().currentScreen.getBlitOffset());
+        Minecraft minecraft = Minecraft.getInstance();
 
-//        int xChange = this.stateTriggered ? 2 : 0;
-//        tabRectangle.setTargetDimensions(new Point2F(this.x - xChange, this.y), new Point2F(28+ xChange, 27));
-//        tabRectangle.setBackgroundColour(this.stateTriggered ? activeColor : inactiveColor);
-//        tabRectangle.draw();
-//        Minecraft minecraft = Minecraft.getInstance();
-//
-//        // render the item models
-//        RenderHelper.enableGUIStandardItemLighting();
-//        GlStateManager.disableLighting();
-//        this.renderIcon(minecraft.getItemRenderer());
-//        GlStateManager.enableLighting();
-//        RenderHelper.disableStandardItemLighting();
+        // render the item models
+        this.renderIcon(minecraft.getItemRenderer());
     }
 
     @Override

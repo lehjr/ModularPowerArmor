@@ -48,6 +48,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         backArrow.setDirection(DrawableArrow.ArrowDirection.LEFT);
     }
 
+    @Override
     public void init(Minecraft minecraft, int x, int y) {
         this.minecraft = minecraft;
         this.recipeBook = minecraft.player.getRecipeBook();
@@ -60,18 +61,19 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         this.backArrow.setTargetDimensions(new Point2F(x + 38, y + 137), new Point2F(12, 17));
     }
 
+    @Override
     public void addListener(RecipeBookGui bookGui) {
         this.listeners.remove(bookGui);
         this.listeners.add(bookGui);
     }
 
+    @Override
     public void updateLists(List<RecipeList> recipeLists, boolean p_194192_2_) {
         this.recipeLists = recipeLists;
         this.totalPages = (int)Math.ceil((double)recipeLists.size() / 20.0D);
         if (this.totalPages <= this.currentPage || p_194192_2_) {
             this.currentPage = 0;
         }
-
         this.updateButtonsForPage();
     }
 
@@ -97,6 +99,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         this.backArrow.setVisible(this.totalPages > 1 && this.currentPage > 0);
     }
 
+    @Override
     public void render(int x, int y, int mouseX, int mouseY, float partialTicks) {
         if (this.totalPages > 1) {
             String s = this.currentPage + 1 + "/" + this.totalPages;
@@ -113,8 +116,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
                 this.hoveredButton = recipewidget;
             }
         }
-        System.out.println("fixme!!");
-
+ 
         float zLevel = Minecraft.getInstance().currentScreen.getBlitOffset();
 
         forwardArrow.render(mouseX, mouseY, partialTicks, zLevel);
@@ -122,6 +124,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         this.overlay.render(mouseX, mouseY, partialTicks);
     }
 
+    @Override
     public void renderTooltip(int mouseX, int mouseY) {
         if (this.minecraft.currentScreen != null && this.hoveredButton != null && !this.overlay.isVisible()) {
             this.minecraft.currentScreen.renderTooltip(this.hoveredButton.getToolTipText(this.minecraft.currentScreen), mouseX, mouseY);
@@ -191,7 +194,6 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         for(IRecipeUpdateListener irecipeupdatelistener : this.listeners) {
             irecipeupdatelistener.recipesShown(p_194195_1_);
         }
-
     }
 
     @Override

@@ -56,7 +56,7 @@ public class MPSCraftingContainer extends MPARecipeBookContainer<CraftingInvento
 
         // hotbar slots 37-45
         for(col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 180, 142));
         }
     }
 

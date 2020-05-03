@@ -2,8 +2,6 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.client.model.item.ArmorModelInstance;
-import com.github.lehjr.modularpowerarmor.client.model.item.HighPolyArmor;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
@@ -15,6 +13,8 @@ import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.EnumSpecType;
+import com.github.lehjr.mpalib.client.model.item.armor.ArmorModelInstance;
+import com.github.lehjr.mpalib.client.model.item.armor.HighPolyArmor;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.Minecraft;
@@ -171,7 +171,6 @@ public class ItemPowerArmor extends ItemElectricArmor {
 //        return _default;
 
         return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
-
             CompoundNBT renderTag = spec.getRenderTag();
             PlayerEntity player = (PlayerEntity) entityLiving;
 

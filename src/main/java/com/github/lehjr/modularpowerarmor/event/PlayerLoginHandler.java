@@ -22,6 +22,10 @@ public final class PlayerLoginHandler {
         if (player != null) {
             MPAPackets.CHANNEL_INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayerEntity) player), new OnClientLoginPacket());
         }
+
+
+
+
     }
 
 

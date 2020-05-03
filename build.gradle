@@ -50,7 +50,7 @@ minecraft {
     mappings channel: "snapshot", version: "${project.mcp_version}".toString()
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    accessTransformer = file('src/main/resources/META-INF/mpalib_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -155,7 +155,7 @@ jar {
                     "Implementation-Version"  : "${version}",
                     "Implementation-Vendor"   : "lehjr",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "FMLAT"                   : "mpalib_at.cfg"
+                    "FMLAT"                   : "accesstransformer.cfg"
         ],)
     }
 }

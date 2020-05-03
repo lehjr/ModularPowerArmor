@@ -111,6 +111,7 @@ public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContai
                 gridBorderColour,
                 gridBorderColour,
                 16,
+                16,
                 new ResourceLocation(MPAConstants.TEXTURE_PREFIX + "gui/recipe_book_button.png"));
         recipeBookButton.setEnabled(true);
         recipeBookButton.setVisible(true);
@@ -160,6 +161,7 @@ public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContai
         // do not call anything recipe book related before this
         this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
         this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+        this.recipeBookGui.setZLevel(getBlitOffset());
         backgroundRect.setTargetDimensions(new Point2F(getGuiLeft(), getGuiTop()), new Point2F(getXSize(), getYSize()));
 
         hotbar.setUlShift(getUlOffset());
@@ -173,9 +175,9 @@ public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContai
         mainInventory.setUlShift(getUlOffset());
         mainInventory.init(
                 backgroundRect.finalLeft() + spacer,
-                backgroundRect.finalBottom() - spacer - slotHeight - spacer - 3 * slotHeight,
+                backgroundRect.finalBottom() - spacer - slotHeight - 3.25F - 3 * slotHeight,
                 backgroundRect.finalLeft() + spacer + 9 * slotWidth,
-                backgroundRect.finalBottom() - spacer - slotHeight - spacer);
+                backgroundRect.finalBottom() - spacer - slotHeight - 3.25F);
 
         craftingGrid.setUlShift(getUlOffset());
         craftingGrid.init(

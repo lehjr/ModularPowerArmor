@@ -5,12 +5,14 @@ import com.github.lehjr.mpalib.client.gui.geometry.DrawableRelativeRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.math.Colour;
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.recipebook.GhostRecipe;
 import net.minecraft.client.gui.recipebook.RecipeBookGui;
 import net.minecraft.client.gui.recipebook.RecipeList;
+import net.minecraft.client.gui.recipebook.RecipeTabToggleWidget;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleWidget;
@@ -91,6 +93,11 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             this.initSearchBar(widthTooNarrow);
         }
         minecraft.keyboardListener.enableRepeatEvents(true);
+    }
+
+    private float zLevel = 0;
+    public void setZLevel(float zLevel) {
+        this.zLevel = zLevel;
     }
 
     int guiLeft = 0;
@@ -206,8 +213,8 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             p_193944_1_.canCraft(this.stackedContents, this.container.getWidth(), this.container.getHeight(), this.recipeBook);
         });
         List<RecipeList> list1 = Lists.newArrayList(list);
-        list1.removeIf((p_193952_0_) -> {
-            return !p_193952_0_.isNotEmpty();
+        list1.removeIf((recipeList) -> {
+            return !recipeList.isNotEmpty();
         });
         list1.removeIf((p_193953_0_) -> {
             return !p_193953_0_.containsValidRecipes();
@@ -239,12 +246,12 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             RecipeBookCategories recipebookcategories = MPSRecipeTabToggleWidget.func_201503_d();
             if (recipebookcategories != RecipeBookCategories.SEARCH && recipebookcategories != RecipeBookCategories.FURNACE_SEARCH) {
                 if (MPSRecipeTabToggleWidget.func_199500_a(this.recipeBook)) {
-                    MPSRecipeTabToggleWidget.setPosition(i, j + 27 * l++);
+                    MPSRecipeTabToggleWidget.setPosition(i, j + k * l++);
                     MPSRecipeTabToggleWidget.startAnimation(this.mc);
                 }
             } else {
                 MPSRecipeTabToggleWidget.visible = true;
-                MPSRecipeTabToggleWidget.setPosition(i, j + 27 * l++);
+                MPSRecipeTabToggleWidget.setPosition(i, j + k * l++);
             }
         }
     }
@@ -268,34 +275,30 @@ public class MPSRecipeBookGui extends RecipeBookGui {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        System.out.println("FIXME!!!!");
+        if (this.isVisible()) {
+            outerFrame.draw(zLevel);
+            innerFrame.draw(zLevel);
+            RenderSystem.pushMatrix();
+            RenderSystem.translatef(0.0F, 0.0F, 100.0F);
+            this.mc.getTextureManager().bindTexture(SEARCH_ICON);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            int x = (this.width - 147) / 2 - this.xOffset;
+            int y = (this.height - 166) / 2;
 
-//        if (this.isVisible()) {
-//            outerFrame.draw();
-//            innerFrame.draw();
-//
-//            RenderHelper.enableGUIStandardItemLighting();
-//            GlStateManager.disableLighting();
-//            GlStateManager.pushMatrix();
-//
-//            this.mc.getTextureManager().bindTexture(SEARCH_ICON);
-//            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//            int x = (this.width - 147) / 2 - this.xOffset;
-//            int y = (this.height - 166) / 2;
-//
-//            this.blit(x + 9, y + 11, 0, 0, 16, 16, 16, 16);
-//            this.searchBar.render(mouseX, mouseY, partialTicks);
-//            RenderHelper.disableStandardItemLighting();
-//
-//            // move this up to before the outer frame once the texture is no longer needed
-//            for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-//                MPSRecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
-//            }
-//
-//            this.toggleRecipesBtn.render(mouseX, mouseY, partialTicks);
-//            this.recipeBookPage.render(x, y, mouseX, mouseY, partialTicks);
-//            GlStateManager.popMatrix();
-//        }
+            this.blit(x + 9, y + 11, 0, 0, 16, 16, 16, 16);
+//            this.blit(x, y, 1, 1, 147, 166);
+            this.searchBar.render(mouseX, mouseY, partialTicks);
+
+            // move this up to before the outer frame once the texture is no longer needed
+            for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
+                MPSRecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
+            }
+
+            this.toggleRecipesBtn.render(mouseX, mouseY, partialTicks);
+            this.recipeBookPage.render(x, y, mouseX, mouseY, partialTicks);
+            RenderSystem.popMatrix();
+        }
+
     }
 
     @Override
