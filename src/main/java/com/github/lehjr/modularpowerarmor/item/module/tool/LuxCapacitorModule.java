@@ -1,4 +1,4 @@
-package com.github.lehjr.modularpowerarmor.item.tool;
+package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
@@ -65,11 +65,11 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
-                playerIn.setActiveHand(hand);
-                if (!worldIn.isRemote) {
-                    float energyConsumption = getEnergyUsage();
-                    HeatUtils.heatPlayer(playerIn, energyConsumption / 500);
-                    if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
+                float energyConsumption = getEnergyUsage();
+                if (ElectricItemUtils.getPlayerEnergy(playerIn) > energyConsumption) {
+                    if (!worldIn.isRemote) {
+                        HeatUtils.heatPlayer(playerIn, energyConsumption / 500);
+
                         ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
 
                         float red = applyPropertyModifiers(MPAConstants.RED_HUE);

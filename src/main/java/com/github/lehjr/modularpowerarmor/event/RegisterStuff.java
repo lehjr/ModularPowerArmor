@@ -35,7 +35,7 @@ import com.github.lehjr.modularpowerarmor.item.module.vision.BinocularsModule;
 import com.github.lehjr.modularpowerarmor.item.module.vision.NightVisionModule;
 import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
-import com.github.lehjr.modularpowerarmor.item.tool.LuxCapacitorModule;
+import com.github.lehjr.modularpowerarmor.item.module.tool.LuxCapacitorModule;
 import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.Block;

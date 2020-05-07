@@ -166,6 +166,7 @@ public class CommonConfig {
                             "forge:ores/uranium",
                             "forge:ores/platinum",
                             "forge:ores/bismuth",
+                            "forge:ores/osmium",
 
                             // non-metal
                             "forge:ores/coal",
