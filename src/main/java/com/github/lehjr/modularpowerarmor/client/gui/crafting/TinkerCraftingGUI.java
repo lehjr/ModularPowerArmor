@@ -115,8 +115,8 @@ public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContai
                 new ResourceLocation(MPAConstants.TEXTURE_PREFIX + "gui/recipe_book_button.png"));
         recipeBookButton.setEnabled(true);
         recipeBookButton.setVisible(true);
-        recipeBookButton.setTextureOffsetX(-8.0F);
-        recipeBookButton.setTextureOffsetY(-8.0F);
+//        recipeBookButton.setTextureOffsetX(-8.0F);
+//        recipeBookButton.setTextureOffsetY(-8.0F);
     }
 
     private void guiElementsMoveLeft(float moveAmmount) {
