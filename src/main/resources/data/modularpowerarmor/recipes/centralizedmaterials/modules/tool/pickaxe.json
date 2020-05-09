@@ -1,0 +1,32 @@
+{
+  "result": {
+    "item": "modularpowerarmor:pickaxe"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " F ",
+    "COC",
+    "FMF"
+  ],
+  "key": {
+    "C": {
+      "item": "modularpowerarmor:component_wiring"
+    },
+    "F": {
+      "tag": "forge:ingots/steel"
+    },
+    "M": {
+      "tag": "forge:solenoid"
+    },
+    "O": {
+      "item": "modularpowerarmor:component_control_circuit"
+    }
+  }
+}

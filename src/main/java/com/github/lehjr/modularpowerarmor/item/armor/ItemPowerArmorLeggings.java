@@ -47,43 +47,11 @@ public class ItemPowerArmorLeggings extends ItemPowerArmor {
         IModularItem modularItemCap;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
-        AtomicReference<Float> maxHeat = new AtomicReference<>(CommonConfig.baseMaxHeatLegs());
+        AtomicReference<Float> maxHeat = new AtomicReference<>(CommonConfig.baseMaxHeatHelmet());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
-            this.modularItemCap = new ModularArmorCap();
-            this.modularItemCap.getStackInSlot(0)
-                    .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
-                            maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
-            this.modelSpec = new ArmorModelSpecNBT(armor);
-            this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
-        }
-
-        @Nonnull
-        @Override
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-            if (cap == null) {
-                return LazyOptional.empty();
-            }
-
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-                modularItemCap.updateFromNBT();
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
-            }
-            if (cap == HeatCapability.HEAT) {
-                heatStorage.updateFromNBT();
-                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
-            }
-            if (cap == ModelSpecNBTCapability.RENDER) {
-                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
-            }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-        }
-
-        class ModularArmorCap extends ModularItem {
-            public ModularArmorCap() {
-                super(armor, 10);
-
+            this.modularItemCap = new ModularItem(armor, 10) {{
                 /*
                  * Limit only Armor, Energy Storage and Energy Generation
                  *
@@ -96,13 +64,46 @@ public class ItemPowerArmorLeggings extends ItemPowerArmor {
                 rangedWrapperMap.put(EnumModuleCategory.ENERGY_GENERATION,new MPALibRangedWrapper(this, 2, 3));
                 rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
                 this.setRangedWrapperMap(rangedWrapperMap);
-            }
+            }};
+            this.modelSpec = new ArmorModelSpecNBT(armor);
         }
 
-        class EmptyEnergyWrapper extends EnergyStorage {
-            public EmptyEnergyWrapper() {
-                super(0);
+        @Nonnull
+        @Override
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == null) {
+                return LazyOptional.empty();
             }
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+                modularItemCap.updateFromNBT();
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
+            }
+
+            // update item handler to gain access to the armor module if installed
+            if (cap == HeatCapability.HEAT) {
+                modularItemCap.updateFromNBT();
+                // get max heat from armor module
+                modularItemCap.getStackInSlot(0)
+                        .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
+                        maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
+                // initialize heat storage with whatever value is retrieved
+                this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
+                // update heat storage to set current heat amount
+                heatStorage.updateFromNBT();
+                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
+            }
+
+
+            if (cap == ModelSpecNBTCapability.RENDER) {
+                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
+            }
+
+            // update item handler to gain access to the battery module if installed
+            if (cap == CapabilityEnergy.ENERGY) {
+                modularItemCap.updateFromNBT();
+                return modularItemCap.getStackInSlot(1).getCapability(cap, side);
+            }
+            return LazyOptional.empty();
         }
     }
 }

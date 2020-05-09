@@ -218,11 +218,11 @@ public class TinkerTableClassic extends Model {
         wireshort2.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         wireshort1.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         wirelong1.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
-
-//        RenderState.glowOn(); // fixme
         matrixStackIn.pop();
+
+
         matrixStackIn.push();
+        //        RenderState.glowOn(); // fixme
         matrixStackIn.translate(0.5f, 1.05f, 0.5f);
         matrixStackIn.translate(0, 0.02f * Math.sin(angle * 3), 0);
         // GLRotate uses degrees instead of radians for some reason grr

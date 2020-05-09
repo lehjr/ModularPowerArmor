@@ -66,11 +66,7 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor {
                 rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
                 setRangedWrapperMap(rangedWrapperMap);
             }};
-            this.modularItemCap.getStackInSlot(0)
-                    .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
-                            maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
             this.modelSpec = new ArmorModelSpecNBT(armor);
-            this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
         }
 
         @Nonnull
@@ -83,20 +79,32 @@ public class ItemPowerArmorHelmet extends ItemPowerArmor {
                 modularItemCap.updateFromNBT();
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
             }
+
+            // update item handler to gain access to the armor module if installed
             if (cap == HeatCapability.HEAT) {
+                modularItemCap.updateFromNBT();
+                // get max heat from armor module
+                modularItemCap.getStackInSlot(0)
+                        .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
+                        maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
+                // initialize heat storage with whatever value is retrieved
+                this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
+                // update heat storage to set current heat amount
                 heatStorage.updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
             }
+
+
             if (cap == ModelSpecNBTCapability.RENDER) {
                 return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-        }
 
-        class EmptyEnergyWrapper extends EnergyStorage {
-            public EmptyEnergyWrapper() {
-                super(0);
+            // update item handler to gain access to the battery module if installed
+            if (cap == CapabilityEnergy.ENERGY) {
+                modularItemCap.updateFromNBT();
+                return modularItemCap.getStackInSlot(1).getCapability(cap, side);
             }
+            return LazyOptional.empty();
         }
     }
 }

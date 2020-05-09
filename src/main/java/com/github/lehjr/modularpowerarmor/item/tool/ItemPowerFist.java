@@ -257,101 +257,55 @@ public class ItemPowerFist extends AbstractElectricTool {
         return new PowerToolCap(stack);
     }
 
-class PowerToolCap implements ICapabilityProvider {
-    ItemStack fist;
-    IModeChangingItem modeChangingItem;
-    IHeatStorage heatStorage;
-    IHandHeldModelSpecNBT modelSpec;
-    float maxHeat = CommonConfig.baseMaxHeatPowerFist();
+    class PowerToolCap implements ICapabilityProvider {
+        ItemStack fist;
+        IModeChangingItem modeChangingItem;
+        IHeatStorage heatStorage;
+        IHandHeldModelSpecNBT modelSpec;
+        float maxHeat = CommonConfig.baseMaxHeatPowerFist();
 
-    public PowerToolCap(@Nonnull ItemStack fist) {
-        this.fist = fist;
-        this.modeChangingItem = new ModeChangingModularItem(fist, 40)  {{
-            /*
-             * Limit only Armor, Energy Storage and Energy Generation
-             *
-             * This cuts down on overhead for accessing the most commonly used values
-             */
-            Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
-            rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE, new MPALibRangedWrapper(this, 0, 1));
-            rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
-            this.setRangedWrapperMap(rangedWrapperMap);
-        }};
-        this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
-        this.modelSpec = new PowerFistSpecNBT(fist);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            modeChangingItem.updateFromNBT();
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modeChangingItem));
+        public PowerToolCap(@Nonnull ItemStack fist) {
+            this.fist = fist;
+            this.modeChangingItem = new ModeChangingModularItem(fist, 40)  {{
+                /*
+                 * Limit only Armor, Energy Storage and Energy Generation
+                 *
+                 * This cuts down on overhead for accessing the most commonly used values
+                 */
+                Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
+                rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE, new MPALibRangedWrapper(this, 0, 1));
+                rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
+                this.setRangedWrapperMap(rangedWrapperMap);
+            }};
+            this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
+            this.modelSpec = new PowerFistSpecNBT(fist);
         }
 
-        if (cap == HeatCapability.HEAT) {
-            ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
-            return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
-        }
+        @Nonnull
+        @Override
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+                modeChangingItem.updateFromNBT();
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> modeChangingItem));
+            }
 
-        if (cap == ModelSpecNBTCapability.RENDER) {
-            return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
-        }
+            if (cap == HeatCapability.HEAT) {
+                ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
+                return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
+            }
 
-        if (cap == CapabilityEnergy.ENERGY) {
-            IEnergyStorage energyStorage = modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).map(m->m).orElse(new EmptyEnergyWrapper());
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()->energyStorage));
-        }
+            if (cap == ModelSpecNBTCapability.RENDER) {
+                return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));
+            }
 
-        return LazyOptional.empty();
-
-//
-//
-//            if (cap == CapabilityEnergy.ENERGY) {
-//                return
-//
-//
-//                Pair range = modeChangingItem.getRangeForCategory(EnumModuleCategory.ENERGY_STORAGE);
-//
-//                for (int i = (int) range.getLeft(); i < (int) range.getRight(); i++)  {
-//                    ItemStack battery = modeChangingItem.getStackInSlot(i);
-//                    if (battery.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-//                        return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> battery.getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-//                    }
-//                }
-//            }
-//
-//            return LazyOptional.empty();
-////
-////            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() ->
-////                    this.modeChangingItem.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-    }
-
-
-
-
-
-    class EmptyEnergyWrapper extends EnergyStorage {
-        int energyStorage;
-
-
-        public EmptyEnergyWrapper() {
-
-
-
-
-
-
-
-            super(0);
+            // update item handler to gain access to the battery module if installed
+            if (cap == CapabilityEnergy.ENERGY) {
+                modeChangingItem.updateFromNBT();
+                return modeChangingItem.getStackInSlot(0).getCapability(cap, side);
+            }
+            return LazyOptional.empty();
         }
     }
-
-
-
-
-
-}
 
     @Override
     public UseAction getUseAction(ItemStack stack) {

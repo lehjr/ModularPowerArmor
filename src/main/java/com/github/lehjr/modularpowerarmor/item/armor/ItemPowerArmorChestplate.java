@@ -53,16 +53,24 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
         IModularItem modularItemCap;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
-        AtomicReference<Float> maxHeat = new AtomicReference<>(CommonConfig.baseMaxHeatChest());
+        AtomicReference<Float> maxHeat = new AtomicReference<>(CommonConfig.baseMaxHeatHelmet());
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
-            this.modularItemCap = new ModularArmorCap();
-            this.modularItemCap.getStackInSlot(0)
-                    .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
-                            maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
+            this.modularItemCap = new ModularItem(armor, 18) {{
+                /*
+                 * Limit only Armor, Energy Storage and Energy Generation
+                 *
+                 * This cuts down on overhead for accessing the most commonly used values
+                 */
+                Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
+                rangedWrapperMap.put(EnumModuleCategory.ARMOR,new MPALibRangedWrapper(this, 0, 1));
+                rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE,new MPALibRangedWrapper(this, 1, 2));
+                rangedWrapperMap.put(EnumModuleCategory.ENERGY_GENERATION,new MPALibRangedWrapper(this, 2, 3));
+                rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
+                this.setRangedWrapperMap(rangedWrapperMap);
+            }};
             this.modelSpec = new ArmorModelSpecNBT(armor);
-            this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
         }
 
         @Nonnull
@@ -77,7 +85,16 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(()->modularItemCap));
             }
 
+            // update item handler to gain access to the armor module if installed
             if (cap == HeatCapability.HEAT) {
+                modularItemCap.updateFromNBT();
+                // get max heat from armor module
+                modularItemCap.getStackInSlot(0)
+                        .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
+                        maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
+                // initialize heat storage with whatever value is retrieved
+                this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
+                // update heat storage to set current heat amount
                 heatStorage.updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
             }
@@ -87,27 +104,16 @@ public class ItemPowerArmorChestplate extends ItemPowerArmor {
             }
 
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY) {
+                modularItemCap.updateFromNBT();
                 return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.orEmpty(cap,
                         LazyOptional.of(()->modularItemCap.getOnlineModuleOrEmpty(fluidTank).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(new EmptyFluidHandler())));
             }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> this.modularItemCap.getStackInSlot(1).getCapability(CapabilityEnergy.ENERGY).orElse(new EmptyEnergyWrapper())));
-        }
-
-        class ModularArmorCap extends ModularItem {
-            public ModularArmorCap() {
-                super(armor, 18);
-                /*
-                 * Limit only Armor, Energy Storage and Energy Generation
-                 *
-                 * This cuts down on overhead for accessing the most commonly used values
-                 */
-                Map<EnumModuleCategory, MPALibRangedWrapper> rangedWrapperMap = new HashMap<>();
-                rangedWrapperMap.put(EnumModuleCategory.ARMOR,new MPALibRangedWrapper(this, 0, 1));
-                rangedWrapperMap.put(EnumModuleCategory.ENERGY_STORAGE,new MPALibRangedWrapper(this, 1, 2));
-                rangedWrapperMap.put(EnumModuleCategory.ENERGY_GENERATION,new MPALibRangedWrapper(this, 2, 3));
-                rangedWrapperMap.put(EnumModuleCategory.NONE,new MPALibRangedWrapper(this, 3, this.getSlots()-1));
-                this.setRangedWrapperMap(rangedWrapperMap);
+            // update item handler to gain access to the battery module if installed
+            if (cap == CapabilityEnergy.ENERGY) {
+                modularItemCap.updateFromNBT();
+                return modularItemCap.getStackInSlot(1).getCapability(cap, side);
             }
+            return LazyOptional.empty();
         }
 
         class EmptyFluidHandler extends FluidHandlerItemStack {

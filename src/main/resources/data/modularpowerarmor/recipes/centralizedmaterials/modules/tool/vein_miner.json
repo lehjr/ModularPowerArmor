@@ -1,0 +1,32 @@
+{
+  "result": {
+    "item": "modularpowerarmor:vein_miner"
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "centralizedmaterials"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "mirrored": true,
+  "pattern": [
+    " F ",
+    "OCO",
+    "FRF"
+  ],
+  "key": {
+    "R": {
+      "tag": "forge:servo"
+    },
+    "C": {
+      "item": "modularpowerarmor:component_computer_chip"
+    },
+    "F": {
+      "tag": "forge:ingots/steel"
+    },
+    "O": {
+      "tag": "forge:wiring"
+    }
+  }
+}
