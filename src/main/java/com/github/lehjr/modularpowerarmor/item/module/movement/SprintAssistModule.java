@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 /**
  * Ported by leon on 10/18/16.
@@ -42,22 +43,22 @@ public class SprintAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyFloat(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyFloat(MPAConstants.SPRINT_SPEED_MULTIPLIER, .01F, "%");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_SPEED_MULTIPLIER, 2.49F);
+            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_SPEED_MULTIPLIER, .01F, "%");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_SPEED_MULTIPLIER, 2.49F);
 
-            this.ticker.addBasePropertyFloat(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.COMPENSATION, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 20);
-            this.ticker.addBasePropertyFloat(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 20);
+            this.ticker.addBasePropertyDouble(MPAConstants.FOOD_COMPENSATION, 0, "%");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
 
-            this.ticker.addBasePropertyFloat(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyFloat(MPAConstants.WALKING_SPEED_MULTIPLIER, 0.01F, "%");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_SPEED_MULTIPLIER, 1.99F);
+            this.ticker.addBasePropertyDouble(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPAConstants.WALKING_SPEED_MULTIPLIER, 0.01F, "%");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_SPEED_MULTIPLIER, 1.99F);
         }
 
         @Nonnull
@@ -72,7 +73,7 @@ public class SprintAssistModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, true);
             }
 

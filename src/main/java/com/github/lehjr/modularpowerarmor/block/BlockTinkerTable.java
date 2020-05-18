@@ -48,7 +48,8 @@ public class BlockTinkerTable extends HorizontalBlock implements IWaterLoggable 
                 .hardnessAndResistance(1.5F, 1000.0F)
                 .sound(SoundType.METAL)
                 .variableOpacity()
-                .lightValue(1));
+                .lightValue(15));
+//                .lightValue(1));
         setRegistryName(regName);
         setDefaultState(this.stateContainer.getBaseState().with(HORIZONTAL_FACING, Direction.NORTH).with(BlockStateProperties.WATERLOGGED, false));
     }
@@ -146,6 +147,9 @@ public class BlockTinkerTable extends HorizontalBlock implements IWaterLoggable 
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
+        // use this to enable the original tinker table model
+//        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+
         return BlockRenderType.MODEL;
     }
 

@@ -58,7 +58,7 @@
 ////                    ResourceLocation registryName = message.registryName;
 ////                    String name = message.name;
 ////                    CompoundNBT cosmeticSettings = message.cosmeticSettings;
-////                    MPSServerSettings settings = CommonConfig.moduleConfig.getServerSettings();
+////                    MPSServerSettings settings = MPASettings.getModuleConfig().getServerSettings();
 ////                    if (settings != null) {
 ////                        settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
 ////                        MPSPackets.sendToAll(new MusePacketCosmeticPresetUpdate(registryName, name, cosmeticSettings));
@@ -76,7 +76,7 @@
 ////                ResourceLocation registryName = message.registryName;
 ////                String name = message.name;
 ////                CompoundNBT cosmeticSettings = message.cosmeticSettings;
-////                MPSServerSettings settings = CommonConfig.moduleConfig.getServerSettings();
+////                MPSServerSettings settings = MPASettings.getModuleConfig().getServerSettings();
 ////                settings.updateCosmeticInfo(registryName, name, cosmeticSettings);
 ////            });
 ////        }

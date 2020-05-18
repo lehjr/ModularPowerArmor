@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
@@ -26,6 +26,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class RailgunModule extends AbstractPowerModule {
     public RailgunModule(String regName) {
@@ -44,13 +45,13 @@ public class RailgunModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyFloat(MPAConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
-            this.ticker.addBasePropertyFloat(MPAConstants.RAILGUN_ENERGY_COST, 5000, "RF");
-            this.ticker.addBasePropertyFloat(MPAConstants.RAILGUN_HEAT_EMISSION, 2, "");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_TOTAL_IMPULSE, 2500);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_ENERGY_COST, 25000);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_HEAT_EMISSION, 10);
+            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
+            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_ENERGY_COST, 5000, "RF");
+            this.ticker.addBasePropertyDouble(MPAConstants.RAILGUN_HEAT_EMISSION, 2, "");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_TOTAL_IMPULSE, 2500);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_ENERGY_COST, 25000);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_HEAT_EMISSION, 10);
         }
 
         @Nonnull
@@ -61,7 +62,7 @@ public class RailgunModule extends AbstractPowerModule {
 
         class Ticker extends PlayerTickModule implements IRightClickModule {
 
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, true);
             }
 

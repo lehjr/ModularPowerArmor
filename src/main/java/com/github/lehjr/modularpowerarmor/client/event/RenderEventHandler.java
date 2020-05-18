@@ -2,10 +2,10 @@ package com.github.lehjr.modularpowerarmor.client.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
@@ -35,7 +35,7 @@ public enum RenderEventHandler {
     public static final ResourceLocation glider = new ResourceLocation(MPARegistryNames.MODULE_GLIDER__REGNAME);
     public static final ResourceLocation jetBoots = new ResourceLocation(MPARegistryNames.MODULE_JETBOOTS__REGNAME);
     public static final ResourceLocation flightControl= new ResourceLocation(MPARegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
-    private final DrawableRect frame = new DrawableRect(ClientConfig.getHudKeybindX(), ClientConfig.getHudKeybindY(), ClientConfig.getHudKeybindX() + (float) 16, ClientConfig.getHudKeybindY() +  16, true, Colour.DARKGREEN.withAlpha(0.2F), Colour.GREEN.withAlpha(0.2F));
+    private final DrawableRect frame = new DrawableRect(MPASettings.getHudKeybindX(), MPASettings.getHudKeybindY(), MPASettings.getHudKeybindX() + (float) 16, MPASettings.getHudKeybindY() +  16, true, Colour.DARKGREEN.withAlpha(0.2F), Colour.GREEN.withAlpha(0.2F));
 
 
     @OnlyIn(Dist.CLIENT)
@@ -109,7 +109,7 @@ public enum RenderEventHandler {
                         ItemStack binnoculars = ((IModularItem) h).getOnlineModuleOrEmpty(binoculars);
                         if (!binnoculars.isEmpty())
                             e.setNewfov((float) (e.getNewfov() / binnoculars.getCapability(PowerModuleCapability.POWER_MODULE)
-                                    .map(m->m.applyPropertyModifiers(MPAConstants.FOV)).orElse(1F)));
+                                    .map(m->m.applyPropertyModifiers(MPAConstants.FOV)).orElse(1D)));
                     }
                 }
         );
@@ -117,11 +117,11 @@ public enum RenderEventHandler {
 
     @OnlyIn(Dist.CLIENT)
     public void drawKeybindToggles() {
-        if (ClientConfig.HUD_DISPLAY_HUD.get()) {
+        if (MPASettings.displayHud()) {
             Minecraft minecraft = Minecraft.getInstance();
             ClientPlayerEntity player = minecraft.player;
-            frame.setLeft(ClientConfig.getHudKeybindX());
-            frame.setTop(ClientConfig.getHudKeybindY());
+            frame.setLeft(MPASettings.getHudKeybindX());
+            frame.setTop(MPASettings.getHudKeybindY());
             frame.setBottom(frame.top() + 16);
             for (ClickableKeybinding kb : KeybindManager.INSTANCE.getKeybindings()) {
                 if (kb.displayOnHUD) {

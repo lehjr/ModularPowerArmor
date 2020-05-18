@@ -3,8 +3,6 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
-import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -17,7 +15,6 @@ import com.github.lehjr.mpalib.client.model.item.armor.ArmorModelInstance;
 import com.github.lehjr.mpalib.client.model.item.armor.HighPolyArmor;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.AtomicDouble;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.Entity;
@@ -68,6 +65,16 @@ public class ItemPowerArmor extends ItemElectricArmor {
             UUID.randomUUID(),
             UUID.randomUUID(),
             UUID.randomUUID()};
+
+//    @Override
+//    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+//
+//
+//        return 0;
+//    }
+
+
+
 
 
     @Override
@@ -168,25 +175,22 @@ public class ItemPowerArmor extends ItemElectricArmor {
             return _default;
         }
 
-//        return _default;
-
         return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
             CompoundNBT renderTag = spec.getRenderTag();
-            PlayerEntity player = (PlayerEntity) entityLiving;
-
-            // only triggered by this client's player looking at their own equipped armor
-            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
-                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
-                        renderTag = spec.getDefaultRenderTag();
-                        if (renderTag != null && !renderTag.isEmpty()) {
-                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
-                        }
-                        break;
-                    }
-                }
-            }
+//            PlayerEntity player = (PlayerEntity) entityLiving;
+////            // only triggered by this client's player looking at their own equipped armor
+//            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
+//                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+//                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
+//                        renderTag = spec.getDefaultRenderTag();
+//                        if (renderTag != null && !renderTag.isEmpty()) {
+//                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
+//                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
+//                        }
+//                        break;
+//                    }
+//                }
+//            }
 
             if (spec.getRenderTag() != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {

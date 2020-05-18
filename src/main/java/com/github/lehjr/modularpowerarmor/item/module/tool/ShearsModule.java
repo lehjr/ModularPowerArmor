@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
@@ -39,6 +39,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 // FIXME IShearable ?? pretty much a dead thing now?
 public class ShearsModule extends AbstractPowerModule {
@@ -70,9 +71,9 @@ public class ShearsModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClick.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.rightClick.addBasePropertyFloat(MPAConstants.HARVEST_SPEED, 8, "x");
+            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
         }
 
         @Nonnull
@@ -82,7 +83,7 @@ public class ShearsModule extends AbstractPowerModule {
         }
 
         class BlockBreaker extends RightClickModule implements IBlockBreakingModule {
-            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 

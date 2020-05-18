@@ -103,8 +103,9 @@ public class TestGui extends ContainerlessGui {
         Colour borderColorStart = new Colour(0x505000FF);
         Colour borderColorEnd = new Colour(((borderColorStart.getInt() & 0xFEFEFE) >> 1 | borderColorStart.getInt() & 0xFF000000));
 
-        System.out.println("borderColourStart: " + "Colour{r=" + borderColorStart.r * 255 + ", g=" + borderColorStart.g * 255 + ", b=" + borderColorStart.b * 255 + ", a=" + borderColorStart.a * 255 + '}');
-        System.out.println("borderColourEnd: " + "Colour{r=" + borderColorEnd.r * 255 + ", g=" + borderColorEnd.g * 255 + ", b=" + borderColorEnd.b * 255 + ", a=" + borderColorEnd.a * 255 + '}');
+//        System.out.println("borderColourStart: " + "Colour{r=" + borderColorStart.r * 255 + ", g=" + borderColorStart.g * 255 + ", b=" + borderColorStart.b * 255 + ", a=" + borderColorStart.a * 255 + '}');
+//        System.out.println("borderColourEnd: " + "Colour{r=" + borderColorEnd.r * 255 + ", g=" + borderColorEnd.g * 255 + ", b=" + borderColorEnd.b * 255 + ", a=" + borderColorEnd.a * 255 + '}');
+//
         return super.mouseClicked(x, y, button);
     }
 

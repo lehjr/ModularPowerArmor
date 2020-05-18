@@ -64,7 +64,6 @@ public class MPAConstants {
     public static final String ARMOR_ENERGY_CONSUMPTION = "armorEnergyPerDamage";
     public static final String KNOCKBACK_RESISTANCE = "knockbackResistance";
     public static final String MODULE_FIELD_STRENGTH = "fieldStrength";
-    public static final String MAXIMUM_HEAT = "maxHeat";
 
     // Energy Storage -----------------------------------------------------------------------------
     public static final String MAX_ENERGY = "maxEnergy";
@@ -84,6 +83,8 @@ public class MPAConstants {
     public static final String EFFICIENCY = "efficiency";
     public static final String FLUID_TANK_SIZE = "fluidTankSize";
     public static final String COOLING_BONUS = "coolingBonus";
+    public static final String HEAT_ACTIVATION_PERCENT = "heatActivationPercent";//Heat Activation Percent";
+    public static final String ACTIVATION_PERCENT = "activationPercent";//"Activation Percent"
 
     // Mining Enhancement -------------------------------------------------------------------------
     public static final String AOE_MINING_RADIUS = "aoeMiningDiameter";

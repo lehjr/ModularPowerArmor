@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class JumpAssistModule extends AbstractPowerModule {
     public JumpAssistModule(String regName) {
@@ -40,17 +41,17 @@ public class JumpAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
-            this.ticker.addBasePropertyFloat(MPAConstants.MULTIPLIER, 1, "%");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
+            this.ticker.addBasePropertyDouble(MPAConstants.MULTIPLIER, 1, "%");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
 //
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
-            this.ticker.addBasePropertyFloat(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
+            this.ticker.addBasePropertyDouble(MPAConstants.FOOD_COMPENSATION, 0, "%");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
         }
 
         @Nonnull
@@ -63,7 +64,7 @@ public class JumpAssistModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, true);
             }
 

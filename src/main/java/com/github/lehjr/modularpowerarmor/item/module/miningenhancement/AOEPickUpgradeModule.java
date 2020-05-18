@@ -1,15 +1,15 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.MiningEnhancement;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.Block;
@@ -32,6 +32,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -56,9 +57,9 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.miningEnhancement.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.miningEnhancement.addTradeoffPropertyFloat(MPAConstants.DIAMETER, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.DIAMETER, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(MPAConstants.DIAMETER, MPAConstants.AOE_MINING_RADIUS, 5, "m", 2, 1);
         }
 
@@ -69,7 +70,7 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
         }
 
         class Enhancement extends MiningEnhancement {
-            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 

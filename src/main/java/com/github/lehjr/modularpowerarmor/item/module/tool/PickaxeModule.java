@@ -1,14 +1,10 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModule;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -26,6 +22,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 
 public class PickaxeModule extends AbstractPowerModule {
@@ -45,11 +42,11 @@ public class PickaxeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.blockBreaking.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.blockBreaking.addBasePropertyFloat(MPAConstants.HARVEST_SPEED, 8, "x");
-            this.blockBreaking.addTradeoffPropertyFloat(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.blockBreaking.addTradeoffPropertyFloat(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.blockBreaking.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
+            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
         }
 
         @Nonnull
@@ -59,15 +56,12 @@ public class PickaxeModule extends AbstractPowerModule {
         }
 
         class BlockBreaker extends PowerModule implements IBlockBreakingModule {
-            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 
             @Override
             public boolean onBlockDestroyed(ItemStack itemStack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving, int playerEnergy) {
-                System.out.println("doing somethign here");
-
-
                 if (this.canHarvestBlock(itemStack, state, (PlayerEntity) entityLiving, pos, playerEnergy)) {
                     ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, getEnergyUsage());
                     return true;
@@ -87,9 +81,6 @@ public class PickaxeModule extends AbstractPowerModule {
 
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
-                System.out.println("handling break speed");
-
-
                 event.setNewSpeed((float) (event.getNewSpeed() * applyPropertyModifiers(MPAConstants.HARVEST_SPEED)));
             }
         }

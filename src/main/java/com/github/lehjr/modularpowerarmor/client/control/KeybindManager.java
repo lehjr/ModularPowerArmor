@@ -1,13 +1,14 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
+import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -55,7 +56,7 @@ public enum KeybindManager {
     public static void writeOutKeybinds() {
         BufferedWriter writer = null;
         try {
-            File file = new File(ConfigHelper.getConfigFolder().getAbsolutePath(), "modularpowerarmor-keybinds.cfg");
+            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPALIbConstants.MOD_ID).getAbsolutePath());
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -94,7 +95,7 @@ public enum KeybindManager {
 
     public static void readInKeybinds() {
         try {
-            File file = new File(ConfigHelper.getConfigFolder().getAbsolutePath(), "modularpowerarmor-keybinds.cfg");
+            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPALIbConstants.MOD_ID).getAbsolutePath());
             if (!file.exists()) {
                 MPALibLogger.logger.error("No modular power armor keybind file found.");
                 return;

@@ -1,4 +1,4 @@
-package com.github.lehjr.modularpowerarmor.client.renderer;
+package com.github.lehjr.modularpowerarmor.client.renderer.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;

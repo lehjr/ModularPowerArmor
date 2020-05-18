@@ -12,11 +12,11 @@ public class ScrollableSlider extends ScrollableRectangle {
         this.slider = slider;
     }
 
-    public float getValue() {
+    public double getValue() {
         return slider.getValue();
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         slider.setValue(value);
     }
 

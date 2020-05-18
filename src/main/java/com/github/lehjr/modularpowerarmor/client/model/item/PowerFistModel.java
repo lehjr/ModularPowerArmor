@@ -109,8 +109,6 @@ public class PowerFistModel extends BakedModelWrapper {
                         if (slot != -1) {
                             specNBTCap.setRenderTag(renderSpec, MPALIbConstants.TAG_RENDER);
                             MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(slot, MPALIbConstants.TAG_RENDER, renderSpec));
-                        } else {
-                            System.out.println(" stack not found");
                         }
                     }
                 }

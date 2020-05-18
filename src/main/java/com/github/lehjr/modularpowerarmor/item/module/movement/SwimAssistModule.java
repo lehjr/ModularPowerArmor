@@ -1,19 +1,19 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.basemod.MPALibConfig;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.client.sound.Musique;
+import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class SwimAssistModule extends AbstractPowerModule {
     public SwimAssistModule(String regName) {
@@ -45,9 +46,9 @@ public class SwimAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, CommonConfig.moduleConfig);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }
 
         @Nonnull
@@ -60,7 +61,7 @@ public class SwimAssistModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, false);
             }
 
@@ -82,22 +83,22 @@ public class SwimAssistModule extends AbstractPowerModule {
                         double swimAssistRate = applyPropertyModifiers(MPAConstants.SWIM_BOOST_AMOUNT) * 0.05 * moveRatio;
                         double swimEnergyConsumption = applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                         if (swimEnergyConsumption < ElectricItemUtils.getPlayerEnergy(player)) {
-                            if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                            if (player.world.isRemote && MPALibSettings.useSounds()) {
                                 Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
                             }
                             MovementManager.thrust(player, swimAssistRate, true);
                         } else {
-                            if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                            if (player.world.isRemote && MPALibSettings.useSounds()) {
                                 Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                             }
                         }
                     } else {
-                        if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                        if (player.world.isRemote && MPALibSettings.useSounds()) {
                             Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                         }
                     }
                 } else {
-                    if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && MPALibSettings.useSounds()) {
                         Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                     }
                 }
@@ -105,7 +106,7 @@ public class SwimAssistModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
-                if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                if (player.world.isRemote && MPALibSettings.useSounds()) {
                     Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
                 }
             }

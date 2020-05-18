@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
@@ -25,6 +25,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 /**
  * Created by User: Andrew2448
@@ -48,11 +49,11 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClick.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.rightClick.addBasePropertyFloat(MPAConstants.RADIUS, 1, "m");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addBasePropertyDouble(MPAConstants.RADIUS, 1, "m");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);
         }
 
         @Nonnull
@@ -62,7 +63,7 @@ public class LeafBlowerModule extends AbstractPowerModule {
         }
 
         class RightClickie extends RightClickModule {
-            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 

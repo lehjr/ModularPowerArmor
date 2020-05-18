@@ -1,12 +1,12 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
@@ -26,6 +26,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class LuxCapacitorModule extends AbstractPowerModule {
     public LuxCapacitorModule(String regName) {
@@ -44,12 +45,12 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.rightClick.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.RED, MPAConstants.RED_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.GREEN, MPAConstants.GREEN_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.BLUE, MPAConstants.BLUE_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyFloat(MPAConstants.ALPHA, MPAConstants.OPACITY, 1, "%");
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RED, MPAConstants.RED_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.GREEN, MPAConstants.GREEN_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.BLUE, MPAConstants.BLUE_HUE, 1, "%");
+            this.rightClick.addTradeoffPropertyDouble(MPAConstants.ALPHA, MPAConstants.OPACITY, 1, "%");
         }
 
         @Nonnull
@@ -59,7 +60,7 @@ public class LuxCapacitorModule extends AbstractPowerModule {
         }
 
         class RightClickie extends RightClickModule {
-            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 
@@ -72,10 +73,10 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
                         ElectricItemUtils.drainPlayerEnergy(playerIn, (int) energyConsumption);
 
-                        float red = applyPropertyModifiers(MPAConstants.RED_HUE);
-                        float green = applyPropertyModifiers(MPAConstants.GREEN_HUE);
-                        float blue = applyPropertyModifiers(MPAConstants.BLUE_HUE);
-                        float alpha = applyPropertyModifiers(MPAConstants.OPACITY);
+                        float red = (float) applyPropertyModifiers(MPAConstants.RED_HUE);
+                        float green = (float) applyPropertyModifiers(MPAConstants.GREEN_HUE);
+                        float blue = (float) applyPropertyModifiers(MPAConstants.BLUE_HUE);
+                        float alpha = (float) applyPropertyModifiers(MPAConstants.OPACITY);
 
                         LuxCapacitorEntity luxCapacitor = new LuxCapacitorEntity(worldIn, playerIn, new Colour(red, green, blue, alpha));
                         worldIn.addEntity(luxCapacitor);

@@ -1,11 +1,10 @@
 package com.github.lehjr.modularpowerarmor.item.armor;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.render.ArmorModelSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
+import com.github.lehjr.mpalib.capabilities.heat.HeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatWrapper;
-import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.MPALibRangedWrapper;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.ModularItem;
@@ -21,14 +20,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemPowerArmorLeggings extends ItemPowerArmor {
     public ItemPowerArmorLeggings(String regName) {
@@ -47,7 +44,7 @@ public class ItemPowerArmorLeggings extends ItemPowerArmor {
         IModularItem modularItemCap;
         IHeatWrapper heatStorage;
         IArmorModelSpecNBT modelSpec;
-        AtomicReference<Float> maxHeat = new AtomicReference<>(CommonConfig.baseMaxHeatHelmet());
+        double maxHeat = MPASettings.getMaxHeatLegs();
 
         public PowerArmorCap(@Nonnull ItemStack armor) {
             this.armor = armor;
@@ -82,17 +79,13 @@ public class ItemPowerArmorLeggings extends ItemPowerArmor {
             // update item handler to gain access to the armor module if installed
             if (cap == HeatCapability.HEAT) {
                 modularItemCap.updateFromNBT();
-                // get max heat from armor module
-                modularItemCap.getStackInSlot(0)
-                        .getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(m-> maxHeat.set(
-                        maxHeat.get() + m.applyPropertyModifiers(MPAConstants.MAXIMUM_HEAT)));
                 // initialize heat storage with whatever value is retrieved
-                this.heatStorage = new MuseHeatItemWrapper(armor, maxHeat.get());
+                this.heatStorage = new HeatItemWrapper(
+                        armor, maxHeat, modularItemCap.getStackInSlot(0).getCapability(PowerModuleCapability.POWER_MODULE));
                 // update heat storage to set current heat amount
                 heatStorage.updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()-> heatStorage));
             }
-
 
             if (cap == ModelSpecNBTCapability.RENDER) {
                 return ModelSpecNBTCapability.RENDER.orEmpty(cap, LazyOptional.of(()->modelSpec));

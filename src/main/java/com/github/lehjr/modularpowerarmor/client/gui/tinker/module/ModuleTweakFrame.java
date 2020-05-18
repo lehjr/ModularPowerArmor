@@ -12,11 +12,11 @@ import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifier;
-import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierFloat;
+import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierDouble;
 import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierInteger;
-import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditiveFloat;
+import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
 import com.github.lehjr.mpalib.network.MPALibPackets;
-import com.github.lehjr.mpalib.network.packets.TweakRequestFloatPacket;
+import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
     protected ItemSelectionFrame itemTarget;
     protected ModuleSelectionFrame moduleTarget;
     protected List<ClickableTinkerSlider> sliders;
-    protected Map<String, Float> propertyFloatStrings;
+    protected Map<String, Double> propertyDoubleStrings;
     protected Map<String, Integer> propertyIntStrings;
 
     protected ClickableTinkerSlider selectedSlider;
@@ -64,14 +64,14 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 loadTweaks(module);
             } else {
                 sliders = null;
-                propertyFloatStrings = null;
+                propertyDoubleStrings = null;
             }
         } else {
             sliders = null;
-            propertyFloatStrings = null;
+            propertyDoubleStrings = null;
         }
         if (selectedSlider != null) {
-            selectedSlider.setValueByX((float) mousex);
+            selectedSlider.setValueByX(mousex);
         }
     }
 
@@ -99,11 +99,11 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 slider.render(mouseX, mouseY, partialTicks, getzLevel());
             }
             int nexty = (int) (sliders.size() * 20 + border.top() + 23);
-            for (Map.Entry<String, Float> property : propertyFloatStrings.entrySet()) {
+            for (Map.Entry<String, Double> property : propertyDoubleStrings.entrySet()) {
                 String formattedValue = StringUtils.formatNumberFromUnits(property.getValue(), getUnit(property.getKey()));
                 String name = property.getKey();
-                float valueWidth = (float) Renderer.getStringWidth(formattedValue);
-                float allowedNameWidth = border.width() - valueWidth - margin * 2;
+                double valueWidth = Renderer.getStringWidth(formattedValue);
+                double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = StringUtils.wrapStringToVisualLength(
                         I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
@@ -117,8 +117,8 @@ public class ModuleTweakFrame extends ScrollableFrame {
             for (Map.Entry<String, Integer> property: propertyIntStrings.entrySet()) {
                 String formattedValue = StringUtils.formatNumberFromUnits(property.getValue(), getUnit(property.getKey()));
                 String name = property.getKey();
-                float valueWidth = (float) Renderer.getStringWidth(formattedValue);
-                float allowedNameWidth = border.width() - valueWidth - margin * 2;
+                double valueWidth = Renderer.getStringWidth(formattedValue);
+                double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = StringUtils.wrapStringToVisualLength(
                         I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
@@ -138,21 +138,21 @@ public class ModuleTweakFrame extends ScrollableFrame {
      * @param module
      */
     private void loadTweaks(@Nonnull ItemStack module) {
-        propertyFloatStrings = new HashMap();
+        propertyDoubleStrings = new HashMap();
         Set<String> tweaks = new HashSet<String>();
         CompoundNBT moduleTag = NBTUtils.getModuleTag(module);
         module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
 
-            Map<String, List<IPropertyModifierFloat>> propertyModifiers = pm.getPropertyModifiers();
-            for (Map.Entry<String, List<IPropertyModifierFloat>> property : propertyModifiers.entrySet()) {
-                float currValue = 0;
+            Map<String, List<IPropertyModifierDouble>> propertyModifiers = pm.getPropertyModifiers();
+            for (Map.Entry<String, List<IPropertyModifierDouble>> property : propertyModifiers.entrySet()) {
+                double currValue = 0;
                 for (IPropertyModifier modifier : property.getValue()) {
-                    currValue = (float) modifier.applyModifier(moduleTag, currValue);
-                    if (modifier instanceof PropertyModifierLinearAdditiveFloat) {
-                        tweaks.add(((PropertyModifierLinearAdditiveFloat) modifier).getTradeoffName());
+                    currValue = (double) modifier.applyModifier(moduleTag, currValue);
+                    if (modifier instanceof PropertyModifierLinearAdditiveDouble) {
+                        tweaks.add(((PropertyModifierLinearAdditiveDouble) modifier).getTradeoffName());
                     }
                 }
-                propertyFloatStrings.put(property.getKey(), currValue);
+                propertyDoubleStrings.put(property.getKey(), currValue);
             }
         });
 
@@ -213,7 +213,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
             ClickableItem item = itemTarget.getSelectedItem();
             ItemStack module = moduleTarget.getSelectedModule().getModule();
             MPALibPackets.CHANNEL_INSTANCE.sendToServer(
-                    new TweakRequestFloatPacket(item.inventorySlot, module.getItem().getRegistryName(), selectedSlider.id(), selectedSlider.getValue()));
+                    new TweakRequestDoublePacket(item.inventorySlot, module.getItem().getRegistryName(), selectedSlider.id(), selectedSlider.getValue()));
             handled = true;
         }
         if (button == 0) {

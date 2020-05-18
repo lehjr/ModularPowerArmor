@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
@@ -31,13 +31,13 @@ public class MeleeAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.moduleCap.addBasePropertyFloat(MPAConstants.PUNCH_ENERGY, 10, "RF");
-            this.moduleCap.addBasePropertyFloat(MPAConstants.PUNCH_DAMAGE, 2, "pt");
-            this.moduleCap.addTradeoffPropertyFloat(MPAConstants.IMPACT, MPAConstants.PUNCH_ENERGY, 1000, "RF");
-            this.moduleCap.addTradeoffPropertyFloat(MPAConstants.IMPACT, MPAConstants.PUNCH_DAMAGE, 8, "pt");
-            this.moduleCap.addTradeoffPropertyFloat(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_ENERGY, 200, "RF");
-            this.moduleCap.addTradeoffPropertyFloat(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_KNOCKBACK, 1, "P");
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.moduleCap.addBasePropertyDouble(MPAConstants.PUNCH_ENERGY, 10, "RF");
+            this.moduleCap.addBasePropertyDouble(MPAConstants.PUNCH_DAMAGE, 2, "pt");
+            this.moduleCap.addTradeoffPropertyDouble(MPAConstants.IMPACT, MPAConstants.PUNCH_ENERGY, 1000, "RF");
+            this.moduleCap.addTradeoffPropertyDouble(MPAConstants.IMPACT, MPAConstants.PUNCH_DAMAGE, 8, "pt");
+            this.moduleCap.addTradeoffPropertyDouble(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_ENERGY, 200, "RF");
+            this.moduleCap.addTradeoffPropertyDouble(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_KNOCKBACK, 1, "P");
         }
 
         @Nonnull

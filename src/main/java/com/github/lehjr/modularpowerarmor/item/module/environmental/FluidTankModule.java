@@ -1,15 +1,16 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.IItemStackUpdate;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
+import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,7 +20,10 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,9 +40,15 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class FluidTankModule extends AbstractPowerModule {
     static final String FLUID_NBT_KEY = "Fluid";
+    // one heat unit per 5 mB of water
+    static final double coolingFactor = 1.0/5.0;
+
+
+
 
     public FluidTankModule(String regName) {
         super(regName);
@@ -57,10 +67,10 @@ public class FluidTankModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig, true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig(), true);
             this.ticker.addBasePropertyInteger(MPAConstants.FLUID_TANK_SIZE, 20000);
-//            this.ticker.addBasePropertyFloat(ACTIVATION_PERCENT, 0.5);
-//            this.ticker.addTradeoffPropertyFloat("Activation Percent", ACTIVATION_PERCENT, 0.5, "%");
+            this.ticker.addBasePropertyDouble(MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.ACTIVATION_PERCENT, MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5, "%");
             this.fluidHandler = new ModuleTank(ticker.applyPropertyModifierBaseInt(MPAConstants.FLUID_TANK_SIZE));
         }
 
@@ -110,83 +120,63 @@ public class FluidTankModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config, boolean defBool) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config, boolean defBool) {
                 super(module, category, target, config, defBool);
             }
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack item) {
-                if (/*player.world.isRemote() &&*/ player.getEntityWorld().getGameTime() % 50 == 0) {
-                    // seems to be setup in such a way as to allow for multiple tanks in one
-                    for (int i = 0; i < fluidHandler.getTanks(); i++) {
-                        int maxFluid = fluidHandler.getTankCapacity(i);
-                        int currentFluid = fluidHandler.getFluidInTank(i).getAmount();
+                if (/*player.world.isRemote() &&*/ player.getEntityWorld().getGameTime() % 10 == 0 ) {
+                    // we only have one tank, so index 0;
+                    int maxFluid = fluidHandler.getTankCapacity(0);
+                    int currentFluid = fluidHandler.getFluidInTank(0).getAmount();
 
-                        // fill the tank
-                        if (currentFluid < maxFluid) {
-                            BlockPos pos = new BlockPos(player);
+                    // fill the tank
+                    if (currentFluid < maxFluid) {
+                        BlockPos pos = new BlockPos(player);
+                        BlockState blockstate = player.world.getBlockState(pos);
 
-                            BlockState blockstate = player.world.getBlockState(pos);
-
-                            // fill by being in water
-                            if (player.isInWater() && player.world.getBlockState(pos).getBlock() != Blocks.BUBBLE_COLUMN) {
-                            if (blockstate.getBlock() instanceof IBucketPickupHandler) {
+                        // fill by being in water
+                        if (player.isInWater() && player.world.getBlockState(pos).getBlock() != Blocks.BUBBLE_COLUMN) {
+                            if (blockstate.getBlock() instanceof IBucketPickupHandler && blockstate.getFluidState().getFluid() == Fluids.WATER) {
                                 Fluid fluid = ((IBucketPickupHandler) blockstate.getBlock()).pickupFluid(player.world, pos, blockstate);
-//                                player.world.removeBlock(pos, false);
                                 FluidStack water = new FluidStack(fluid, 1000);
-                                fluidHandler.fill(water, IFluidHandler.FluidAction.EXECUTE);
-                                player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                                // only play sound if actually filling
+                                if (fluidHandler.fill(water, IFluidHandler.FluidAction.EXECUTE) > 0) {
+                                    player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                                }
                             }
-
-                                // fill by being in the rain or bubble column
-                            } else if (player.isInWaterRainOrBubbleColumn()) {
-                                FluidStack water = new FluidStack(Fluids.WATER, 100);
-                                fluidHandler.fill(water, IFluidHandler.FluidAction.EXECUTE);
+                            // fill by being in the rain or bubble column
+                        } else if (player.isInWaterRainOrBubbleColumn()) {
+                            FluidStack water = new FluidStack(Fluids.WATER, 100);
+                            if (fluidHandler.fill(water, IFluidHandler.FluidAction.EXECUTE) > 0) {
                                 player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
                             }
                         }
                     }
-
-                    // TODO: actual cooling
-
-
-
-
-
-
-
                 }
 
-//                if (ItemUtils.getWaterLevel(item) > ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//                    ItemUtils.setWaterLevel(item, ModuleManager.computeModularProperty(item, WATER_TANK_SIZE));
-//                }
+                // Apply cooling
+                double currentHeat = HeatUtils.getPlayerHeat(player);
+                double maxHeat = HeatUtils.getPlayerMaxHeat(player);
+                if ((currentHeat / maxHeat) >= ticker.applyPropertyModifiers(MPAConstants.HEAT_ACTIVATION_PERCENT)) {
 
-//                // Fill tank if player is in water
-//                Block block = player.world.getBlockState(new BlockPos(MathHelper.floor(player.posX), MathHelper.floor(player.posY), MathHelper.floor(player.posZ)));
-//
-////                if (player.isInWater())
-//
-//
-//                if (((block == Blocks.water) || block == Blocks.flowing_water) && ItemUtils.getWaterLevel(item) < ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//                    ItemUtils.setWaterLevel(item, ItemUtils.getWaterLevel(item) + 1);
-//                }
-//                // Fill tank if raining
-//                int xCoord = MathHelper.floor_double(player.posX);
-//                int zCoord = MathHelper.floor_double(player.posZ);
-//                boolean isRaining = (player.worldObj.getWorldChunkManager().getBiomeGenAt(xCoord, zCoord).getIntRainfall() > 0) && (player.worldObj.isRaining() || player.worldObj.isThundering());
-//                if (isRaining && player.worldObj.canBlockSeeTheSky(xCoord, MathHelper.floor_double(player.posY) + 1, zCoord) && (player.worldObj.getTotalWorldTime() % 5) == 0 && ItemUtils.getWaterLevel(item) < ModuleManager.computeModularProperty(item, WATER_TANK_SIZE)) {
-//                    ItemUtils.setWaterLevel(item, ItemUtils.getWaterLevel(item) + 1);
-//                }
-//                // Apply cooling
-//                double currentHeat = HeatUtils.getPlayerHeat(player);
-//                double maxHeat = HeatUtils.getMaxHeat(player);
-//                if ((currentHeat / maxHeat) >= ModuleManager.computeModularProperty(item, ACTIVATION_PERCENT) && ItemUtils.getWaterLevel(item) > 0) {
-//                    HeatUtils.coolPlayer(player, 1);
-//                    ItemUtils.setWaterLevel(item, ItemUtils.getWaterLevel(item) - 1);
-//                    for (int i = 0; i < 4; i++) {
-//                        player.worldObj.spawnParticle("smoke", player.posX, player.posY + 0.5, player.posZ, 0.0D, 0.0D, 0.0D);
-//                    }
-//                }
+                    // cool 200 per bucket
+                    double coolAmount = fluidHandler.drain(
+                            // adjust so cooling does not exceed cooling needed
+                            (int) Math.min(1000, currentHeat/coolingFactor),
+                            // only execute on server, simulate on client
+                            player.world.isRemote ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE)
+                            .getAmount() * coolingFactor;
+
+                    HeatUtils.coolPlayer(player, coolAmount);
+                    if (coolAmount > 0) {
+                        player.world.playSound(player, player.getPosition(), SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.MASTER, 1.0F, 1.0F);
+                        for (int i = 0; i < 4; i++) {
+                            player.world.addOptionalParticle(ParticleTypes.SMOKE, player.getPosX(), player.getPosY() + 0.5, player.getPosZ(), 0.0D, 0.0D, 0.0D);
+                        }
+                    }
+                }
             }
         }
     }

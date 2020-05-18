@@ -1,13 +1,13 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.MiningEnhancement;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.BlockState;
@@ -25,6 +25,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 
 // Note: tried as an enchantment, but failed to function properly due to how block breaking code works
@@ -45,11 +46,11 @@ public class AquaAffinityModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.miningEnhancement.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.miningEnhancement.addBasePropertyFloat(MPAConstants.HARVEST_SPEED, 0.2F, "%");
-            this.miningEnhancement.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 1000);
-            this.miningEnhancement.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.HARVEST_SPEED, 0.8F);
+            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.miningEnhancement.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 0.2F, "%");
+            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 1000);
+            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.HARVEST_SPEED, 0.8F);
         }
 
         @Nonnull
@@ -59,7 +60,7 @@ public class AquaAffinityModule extends AbstractPowerModule {
         }
 
         class BlockBreaker extends MiningEnhancement implements IBlockBreakingModule {
-            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 

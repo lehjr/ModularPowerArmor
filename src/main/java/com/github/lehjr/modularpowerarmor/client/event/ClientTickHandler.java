@@ -1,10 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.environmental.AutoFeederModule;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
@@ -47,7 +46,6 @@ public class ClientTickHandler {
     protected HeatMeter energyMeter = null;
     protected WaterMeter waterMeter = null;
     protected PlasmaChargeMeter plasmaMeter = null;
-    MPAObjects mpsi = MPAObjects.INSTANCE;
     static final ItemStack food = new ItemStack(Items.COOKED_BEEF);
     static final ResourceLocation autoFeederReg = new ResourceLocation(MPARegistryNames.MODULE_AUTO_FEEDER__REGNAME);
     static final ResourceLocation clockReg = new ResourceLocation(MPARegistryNames.MODULE_CLOCK__REGNAME);
@@ -79,7 +77,7 @@ public class ClientTickHandler {
         float yOffsetIcon = 16.0F;
         float yBaseIcon;
         int yBaseString;
-        if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {
+        if (MPASettings.useGraphicalMeters()) {
             yBaseIcon = 150.0F;
             yBaseString = 155;
         } else {
@@ -117,7 +115,7 @@ public class ClientTickHandler {
                         String ampm;
                         long time = player.world.getDayTime();
                         long hour = ((time % 24000) / 1000);
-                        if (ClientConfig.HUD_USE_24_HOUR_CLOCK.get()) {
+                        if (MPASettings.use24HourClock()) {
                             if (hour < 19) {
                                 hour += 6;
                             } else {
@@ -169,8 +167,9 @@ public class ClientTickHandler {
                 String maxEnergyStr = StringUtils.formatNumberShort(maxEnergy);
 
                 // heat
-                float maxHeat = HeatUtils.getPlayerMaxHeat(player);
-                float currHeat = HeatUtils.getPlayerHeat(player);
+                float maxHeat = (float) HeatUtils.getPlayerMaxHeat(player);
+                float currHeat = (float) HeatUtils.getPlayerHeat(player);
+
                 String currHeatStr = StringUtils.formatNumberShort(currHeat);
                 String maxHeatStr = StringUtils.formatNumberShort(maxHeat);
 
@@ -186,7 +185,7 @@ public class ClientTickHandler {
                         if (maxWater.get() > 0) {
                             FluidStack fluidStack = fh.getFluidInTank(i);
                             currWater.set(currWater.get() + fluidStack.getAmount());
-                             waterMeter = new WaterMeter();
+                            waterMeter = new WaterMeter();
                             currWaterStr.set(StringUtils.formatNumberShort(currWater.get()));
                             maxWaterStr.set(StringUtils.formatNumberShort(maxWater.get()));
                         }
@@ -229,7 +228,7 @@ public class ClientTickHandler {
                 String currPlasmaStr = StringUtils.formatNumberShort((int)val) + "%";
                 String maxPlasmaStr = StringUtils.formatNumberShort(maxPlasma.get());
 
-                if (ClientConfig.HUD_USE_GRAPHICAL_METERS.get()) {
+                if (MPASettings.useGraphicalMeters()) {
                     int numMeters = 0;
 
                     if (maxEnergy > 0) {
@@ -247,7 +246,7 @@ public class ClientTickHandler {
 
                     if (maxWater.get() > 0 && waterMeter != null) {
                         numMeters++;
-                     }
+                    }
 
                     if (maxPlasma.get() > 0 /* && drawPlasmaMeter */) {
                         numMeters++;

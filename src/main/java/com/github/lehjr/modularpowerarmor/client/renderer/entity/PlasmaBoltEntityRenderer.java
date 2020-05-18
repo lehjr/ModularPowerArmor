@@ -1,4 +1,4 @@
-package com.github.lehjr.modularpowerarmor.client.renderer;
+package com.github.lehjr.modularpowerarmor.client.renderer.entity;
 
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableCircle;
@@ -38,6 +38,11 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     }
 
     public static void doRender(float size, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        // TODO: check if possible to use old render method but with each render loop as scheduled task. Also text performance
+
+
+
+
         matrixStackIn.push();
 //        RenderSystem.popMatrix();// ???
 

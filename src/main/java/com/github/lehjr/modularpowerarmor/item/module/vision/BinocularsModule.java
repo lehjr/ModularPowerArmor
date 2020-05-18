@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.vision;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
@@ -41,9 +41,9 @@ public class BinocularsModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig, false);
-            this.moduleToggle.addBasePropertyFloat(MPAConstants.FOV, 0.5F);
-            this.moduleToggle.addTradeoffPropertyFloat(MPAConstants.FIELD_OF_VIEW, MPAConstants.FOV, 9.5F, "%");
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig(), false);
+            this.moduleToggle.addBasePropertyDouble(MPAConstants.FOV, 0.5F);
+            this.moduleToggle.addTradeoffPropertyDouble(MPAConstants.FIELD_OF_VIEW, MPAConstants.FOV, 9.5F, "%");
         }
 
         @Nonnull

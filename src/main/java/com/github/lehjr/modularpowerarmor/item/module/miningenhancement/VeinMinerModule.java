@@ -1,15 +1,15 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.MiningEnhancement;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.block.Block;
@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class VeinMinerModule extends AbstractPowerModule {
@@ -52,8 +53,8 @@ public class VeinMinerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.miningEnhancement.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
         }
 
         @Nonnull
@@ -63,7 +64,7 @@ public class VeinMinerModule extends AbstractPowerModule {
         }
 
         class Enhancement extends MiningEnhancement {
-            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 
@@ -132,7 +133,7 @@ public class VeinMinerModule extends AbstractPowerModule {
                 });
 
                 // check if block is an ore
-                List<ResourceLocation> defaultOreTags = CommonConfig.getOreList();
+                List<ResourceLocation> defaultOreTags = MPASettings.getOreList();
                 Set<ResourceLocation> oretags = player.world.getBlockState(posIn).getBlock().getTags();
                 boolean isOre = false;
                 for ( ResourceLocation location : oretags ) {
@@ -142,7 +143,10 @@ public class VeinMinerModule extends AbstractPowerModule {
                     }
                 }
 
-                if (isOre || CommonConfig.getBlockList().contains(block.getRegistryName())) {
+                System.out.println(MPASettings.getBlockList().size());
+
+
+                if (isOre || MPASettings.getBlockList().contains(block.getRegistryName())) {
                     int energyRequired = this.getEnergyUsage() + bbModuleEnergyUsage.get();
 
                     // does player have enough energy to break first block?

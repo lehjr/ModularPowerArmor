@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.recipe;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.google.gson.JsonObject;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -24,11 +24,11 @@ public class MPARecipeConditionFactory implements ICondition {
 
     @Override
     public boolean test() {
-            switch (conditionName) {
-                // Vanilla reciples only as fallback
-                case "vanilla_recipes_enabled":
-                    return (CommonConfig.RECIPES_USE_VANILLA.get());
-                    }
+        switch (conditionName) {
+            // Vanilla reciples only as fallback
+            case "vanilla_recipes_enabled":
+                return (MPASettings.useVanillaRecipes());
+        }
         return false;
     }
 

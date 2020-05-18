@@ -1,8 +1,8 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
+import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,12 +29,25 @@ import java.util.zip.GZIPOutputStream;
  */
 public class CosmeticPresetSaveLoad {
     static final String EXTENSION = "dat";
+    static String configDirString = "";
+
+    public static void setConfigDirString(String configDirStringIn) {
+        configDirString = configDirStringIn;
+    }
+
+    static String getConfigDirString() {
+        if (configDirString.isEmpty()) { // fixme?
+            configDirString = MPALibSettings.getConfigFolder(MPAConstants.MOD_ID).getAbsolutePath();
+        }
+        return configDirString;
+    }
 
     public static Map<String, CompoundNBT> loadPresetsForItem(@Nonnull ItemStack itemStack) {
         return loadPresetsForItem(itemStack.getItem(), 0);
     }
 
     public static Map<String, CompoundNBT> loadPresetsForItem(Item item, int count) {
+
         Map<String, CompoundNBT> retmap = new HashMap<>();
         if (item == null || count > 4) {
             return HashBiMap.create(retmap);
@@ -44,7 +57,7 @@ public class CosmeticPresetSaveLoad {
         String subfolder = item.getRegistryName().getPath();
 
         // path with subfolder
-        Path directory = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
+        Path directory = Paths.get(getConfigDirString(), "cosmeticpresets", subfolder);
         if (Files.exists(directory))
             try {
                 Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), 1, new SimpleFileVisitor<Path>() {
@@ -69,14 +82,14 @@ public class CosmeticPresetSaveLoad {
                 e.printStackTrace();
             }
         if (retmap.isEmpty()) {
-            copyPresetsFromJar();
+            copyPresetsFromJar(getConfigDirString());
             return loadPresetsForItem(item, count + 1);
         }
 
         return HashBiMap.create(retmap);
     }
 
-    public static void copyPresetsFromJar() {
+    public static void copyPresetsFromJar(String configDir) {
         Path sourcePath;
         FileSystem fileSystem = null;
 
@@ -107,7 +120,8 @@ public class CosmeticPresetSaveLoad {
                         Path subFolder = selectedPath.getParent().getFileName();
 
                         // path with subfolder
-                        Path target = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subFolder.toString(), selectedPath.getFileName().toString());
+                        Path target = Paths.get(configDir,
+                                "cosmeticpresets", subFolder.toString(), selectedPath.getFileName().toString());
                         try {
                             // create dir
                             if (!Files.exists(target.getParent()))
@@ -178,7 +192,7 @@ public class CosmeticPresetSaveLoad {
             String subfolder = registryNameIn.getPath();
 
             // path with subfolder
-            Path directory = Paths.get(ConfigHelper.getConfigFolder().getAbsolutePath(), "cosmeticpresets", subfolder);
+            Path directory = Paths.get(getConfigDirString(), "cosmeticpresets", subfolder);
 
             try {
                 Files.createDirectories(directory);

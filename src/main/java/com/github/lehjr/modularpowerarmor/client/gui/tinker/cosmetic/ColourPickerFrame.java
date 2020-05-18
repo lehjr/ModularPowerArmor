@@ -159,7 +159,7 @@ public class ColourPickerFrame extends ScrollableFrame {
             if (this.selectedSlider != null) {
                 this.selectedSlider.getSlider().setValueByX((float) mousex);
                 if (colours().length > selectedColour) {
-                    colours()[selectedColour] = Colour.getInt(rslider.getValue(), gslider.getValue(), bslider.getValue(), aslider.getValue());
+                    colours()[selectedColour] = Colour.getInt((float) rslider.getValue(), (float) gslider.getValue(), (float) bslider.getValue(), (float) aslider.getValue());
 
                     ClientPlayerEntity player = Minecraft.getInstance().player;
                     if (player.world.isRemote)

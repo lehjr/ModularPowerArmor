@@ -35,7 +35,6 @@ import com.github.lehjr.modularpowerarmor.item.module.vision.BinocularsModule;
 import com.github.lehjr.modularpowerarmor.item.module.vision.NightVisionModule;
 import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
-import com.github.lehjr.modularpowerarmor.item.module.tool.LuxCapacitorModule;
 import com.github.lehjr.modularpowerarmor.tileentity.TileEntityLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
 import net.minecraft.block.Block;
@@ -101,7 +100,8 @@ public enum RegisterStuff {
 
                 // Energy Storage -----------------------------------------------------------------
                 new EnergyStorageModule(MODULE_BATTERY_BASIC__REGNAME,
-                        1000000,
+
+                        1000000, // 1M
                         1000000),
 
                 new EnergyStorageModule(MODULE_BATTERY_ADVANCED__REGNAME,
@@ -202,9 +202,9 @@ public enum RegisterStuff {
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
         event.getRegistry().registerAll(
                 TileEntityType.Builder.create(() ->
-                        new TileEntityLuxCapacitor(), new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME)).build(null).setRegistryName(LUX_CAPACITOR_REG_NAME + "_tile"),
+                        new TileEntityLuxCapacitor(), MPAObjects.INSTANCE.luxCapacitor).build(null).setRegistryName(LUX_CAPACITOR_REG_NAME + "_tile"),
                 TileEntityType.Builder.create(() ->
-                        new TinkerTableTileEntity(), new BlockTinkerTable(TINKER_TABLE_REG_NAME)).build(null).setRegistryName(TINKER_TABLE_REG_NAME + "_tile")
+                        new TinkerTableTileEntity(), MPAObjects.INSTANCE.tinkerTable).build(null).setRegistryName(TINKER_TABLE_REG_NAME + "_tile")
         );
     }
 

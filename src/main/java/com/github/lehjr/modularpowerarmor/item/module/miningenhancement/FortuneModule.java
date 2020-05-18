@@ -1,14 +1,14 @@
 package com.github.lehjr.modularpowerarmor.item.module.miningenhancement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.enchantment.IEnchantmentModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.IMiningEnhancementModule;
 import com.github.lehjr.mpalib.capabilities.module.miningenhancement.MiningEnhancement;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class FortuneModule extends AbstractPowerModule {
     public FortuneModule(String regName) {
@@ -43,9 +44,9 @@ public class FortuneModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.miningEnhancement.addBasePropertyFloat(MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 500, "RF");
-            this.miningEnhancement.addTradeoffPropertyFloat(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 9500);
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.miningEnhancement.addBasePropertyDouble(MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENCHANTMENT_LEVEL, 3, "", 1, 1);
         }
 
@@ -56,7 +57,7 @@ public class FortuneModule extends AbstractPowerModule {
         }
 
         class Enhancement extends MiningEnhancement implements IEnchantmentModule {
-            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Enhancement(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 

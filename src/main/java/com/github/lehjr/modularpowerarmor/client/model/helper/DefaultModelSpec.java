@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.helper;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.armor.ItemPowerArmor;
 import com.github.lehjr.modularpowerarmor.item.tool.ItemPowerFist;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
@@ -87,7 +87,7 @@ public class DefaultModelSpec {
                     }
 
                     // Armor models
-                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && CommonConfig.COSMETIC_ALLOW_HIGH_POLLY_ARMOR_MODELS.get()) {
+                    else if (spec.getSpecType().equals(EnumSpecType.ARMOR_MODEL) && MPASettings.allowHighPollyArmor()) {
 
                         for (PartSpecBase partSpec : spec.getPartSpecs()) {
                             if (partSpec.getBinding().getSlot() == slot) {

@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.item.module.special;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class MagnetModule extends AbstractPowerModule {
     public MagnetModule(String regName) {
@@ -47,11 +48,11 @@ public class MagnetModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 2000);
-            this.ticker.addBasePropertyFloat(MPAConstants.RADIUS, 5);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.POWER, MPAConstants.RADIUS, 10);
+            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 2000);
+            this.ticker.addBasePropertyDouble(MPAConstants.RADIUS, 5);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.RADIUS, 10);
         }
 
         @Nonnull
@@ -64,7 +65,7 @@ public class MagnetModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, false);
             }
 

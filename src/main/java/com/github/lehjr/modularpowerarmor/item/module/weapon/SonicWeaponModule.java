@@ -2,7 +2,7 @@
 //
 //import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 //import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-//import com.github.lehjr.mpalib.capabilities.IConfig;
+//import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 //import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 //import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
 //import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
@@ -58,7 +58,7 @@
 //        }
 //
 //        class Ticker extends PlayerTickModule implements IRightClickModule {
-//            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config, boolean defBool) {
+//            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config, boolean defBool) {
 //                super(module, category, target, config, defBool);
 //            }
 //

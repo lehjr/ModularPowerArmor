@@ -2,13 +2,13 @@ package com.github.lehjr.modularpowerarmor.item.module.energy.generation;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
@@ -26,6 +26,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class KineticGeneratorModule extends AbstractPowerModule {
     static final ResourceLocation sprintAssist = new ResourceLocation(MPARegistryNames.MODULE_SPRINT_ASSIST__REGNAME);
@@ -46,11 +47,11 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_GENERATION, 2000);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
-            this.ticker.addBasePropertyFloat(MPAConstants.MOVEMENT_RESISTANCE, 0.01F);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.ENERGY_GENERATED, MPAConstants.MOVEMENT_RESISTANCE, 0.49F, "%");
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION, 2000);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
+            this.ticker.addBasePropertyDouble(MPAConstants.MOVEMENT_RESISTANCE, 0.01F);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.MOVEMENT_RESISTANCE, 0.49F, "%");
         }
 
         @Nonnull
@@ -63,7 +64,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, true);
             }
 

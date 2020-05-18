@@ -93,10 +93,10 @@ public class LuxCapacitorModelWrapper extends BakedModelWrapper<OBJBakedComposit
             // this is for the active icon
             } else {
                 colour = stack.getCapability(PowerModuleCapability.POWER_MODULE).map(pm -> {
-                    float red = pm.applyPropertyModifiers(MPAConstants.RED_HUE);
-                    float green = pm.applyPropertyModifiers(MPAConstants.GREEN_HUE);
-                    float blue = pm.applyPropertyModifiers(MPAConstants.BLUE_HUE);
-                    float alpha = pm.applyPropertyModifiers(MPAConstants.OPACITY);
+                    float red = (float) pm.applyPropertyModifiers(MPAConstants.RED_HUE);
+                    float green = (float) pm.applyPropertyModifiers(MPAConstants.GREEN_HUE);
+                    float blue = (float) pm.applyPropertyModifiers(MPAConstants.BLUE_HUE);
+                    float alpha = (float) pm.applyPropertyModifiers(MPAConstants.OPACITY);
                     return new Colour(red, green, blue, alpha);
                 }).orElse(BlockLuxCapacitor.defaultColor);
             }

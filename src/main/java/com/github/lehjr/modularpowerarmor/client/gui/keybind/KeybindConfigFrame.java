@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.gui.keybind;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -97,7 +97,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             }
             if (!keyBindingHelper.keyBindingHasKey(key)) {
                 addKeybind(key, true);
-            } else if (ClientConfig.GENERAL_ALLOW_CONFLICTING_KEYBINDS.get()) {
+            } else if (MPASettings.allowConfictingKeyBinds()) {
                 addKeybind(key, false);
             }
             selecting = false;
@@ -327,7 +327,7 @@ public class KeybindConfigFrame implements IGuiFrame {
 //                if (!KeyBinding.HASH.containsItem(key)) {
             if (!keyBindingHelper.keyBindingHasKey(key)) {
                 addKeybind(key, true);
-            } else if (ClientConfig.GENERAL_ALLOW_CONFLICTING_KEYBINDS.get()) {
+            } else if (MPASettings.allowConfictingKeyBinds()) {
                 addKeybind(key, false);
             }
             selecting = false;

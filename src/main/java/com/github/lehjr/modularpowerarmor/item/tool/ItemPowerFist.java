@@ -2,11 +2,11 @@ package com.github.lehjr.modularpowerarmor.item.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.render.PowerFistSpecNBT;
 import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
+import com.github.lehjr.mpalib.capabilities.heat.HeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.heat.IHeatStorage;
-import com.github.lehjr.mpalib.capabilities.heat.MuseHeatItemWrapper;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.ModeChangingModularItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.MPALibRangedWrapper;
@@ -35,8 +35,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
@@ -65,16 +63,6 @@ public class ItemPowerFist extends AbstractElectricTool {
     public int getUseDuration(ItemStack stack) {
         return 72000;
     }
-
-//    /**
-//     * FORGE: Overridden to allow custom tool effectiveness
-//     */
-//    @Override
-//    public float getDestroySpeed(ItemStack itemStack, BlockState state) {
-//        System.out.println("material requires tool: " + (state.getHarvestTool() != null ? state.getHarvestTool().getName() : "none"));
-//        return 50.0F;
-//    }
-
 
     @Override
     public boolean onBlockDestroyed(ItemStack powerFist, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
@@ -134,10 +122,6 @@ public class ItemPowerFist extends AbstractElectricTool {
      */
     @Override
     public boolean hitEntity(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
-//        if (ModuleManager.INSTANCE.itemHasActiveModule(stack, MPSModuleConstants.MODULE_OMNI_WRENCH__DATANAME)) {
-//            target.rotationYaw += 90.0f;
-//            target.rotationYaw %= 360.0f;
-//        }
         if (attacker instanceof PlayerEntity) {
             itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
                 if (iItemHandler instanceof IModeChangingItem) {
@@ -262,7 +246,7 @@ public class ItemPowerFist extends AbstractElectricTool {
         IModeChangingItem modeChangingItem;
         IHeatStorage heatStorage;
         IHandHeldModelSpecNBT modelSpec;
-        float maxHeat = CommonConfig.baseMaxHeatPowerFist();
+        double maxHeat = MPASettings.getMaxHeatPowerFist();
 
         public PowerToolCap(@Nonnull ItemStack fist) {
             this.fist = fist;
@@ -277,7 +261,7 @@ public class ItemPowerFist extends AbstractElectricTool {
                 rangedWrapperMap.put(EnumModuleCategory.NONE, new MPALibRangedWrapper(this, 1, this.getSlots() - 1));
                 this.setRangedWrapperMap(rangedWrapperMap);
             }};
-            this.heatStorage = new MuseHeatItemWrapper(fist, maxHeat);
+            this.heatStorage = new HeatItemWrapper(fist, maxHeat);
             this.modelSpec = new PowerFistSpecNBT(fist);
         }
 
@@ -290,7 +274,7 @@ public class ItemPowerFist extends AbstractElectricTool {
             }
 
             if (cap == HeatCapability.HEAT) {
-                ((MuseHeatItemWrapper) heatStorage).updateFromNBT();
+                ((HeatItemWrapper) heatStorage).updateFromNBT();
                 return HeatCapability.HEAT.orEmpty(cap, LazyOptional.of(()->heatStorage));
             }
 

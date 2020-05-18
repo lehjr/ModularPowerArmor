@@ -2,12 +2,12 @@ package com.github.lehjr.modularpowerarmor.item.module.movement;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
@@ -27,6 +27,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class GliderModule extends AbstractPowerModule {
     static final ResourceLocation parachute = new ResourceLocation(MPARegistryNames.MODULE_PARACHUTE__REGNAME);
@@ -47,12 +48,12 @@ public class GliderModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, CommonConfig.moduleConfig);
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 0);
-            this.ticker.addBasePropertyFloat(MPAConstants.JETBOOTS_THRUST, 0);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 750, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.THRUST, MPAConstants.JETBOOTS_THRUST, 0.08F);
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0);
+            this.ticker.addBasePropertyDouble(MPAConstants.JETBOOTS_THRUST, 0);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 750, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.JETBOOTS_THRUST, 0.08F);
         }
 
         @Nonnull
@@ -65,7 +66,7 @@ public class GliderModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, false);
             }
 

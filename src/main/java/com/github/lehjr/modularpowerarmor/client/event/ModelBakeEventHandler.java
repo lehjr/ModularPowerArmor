@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.event;
 
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.block.LuxCapacitorModelWrapper;
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
@@ -9,7 +8,6 @@ import com.github.lehjr.modularpowerarmor.client.model.item.PowerFistModel;
 import forge.OBJBakedCompositeModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -35,15 +33,11 @@ public enum ModelBakeEventHandler {
 
 
 
-        for (ResourceLocation location : event.getModelRegistry().keySet()) {
-            if (location.getNamespace().equals(MPAConstants.MOD_ID)) {
-//                System.out.println("location: " + location);
-//                System.out.println("class: " + event.getModelRegistry().get(location).getClass());
-//                System.out.println("texture location: " + event.getModelRegistry().get(location).getParticleTexture().toString());
-//                System.out.println("atlas location: " + event.getModelRegistry().get(location).getParticleTexture().getAtlasTexture().getTextureLocation());
+        // uncomment to enable original tinker table model
+//        ClientRegistry.bindTileEntityRenderer(MPAObjects.tinkerTableTileEntityType, TinkerTableRenderer::new);
 
-            }
-        }
+
+
 
         // replace LuxCapacitor model with one that can generate the model data needed to color the lens for the item model
         IBakedModel luxCapItemModel = event.getModelRegistry().get(luxCapItemLocation);

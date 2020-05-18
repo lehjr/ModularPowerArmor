@@ -1,20 +1,20 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.gui.crafting.TinkerCraftingGUI;
 import com.github.lehjr.modularpowerarmor.client.gui.tinker.module.TinkerTableGui;
-import com.github.lehjr.modularpowerarmor.client.renderer.LuxCapacitorEntityRenderer;
-import com.github.lehjr.modularpowerarmor.client.renderer.PlasmaBoltEntityRenderer;
-import com.github.lehjr.modularpowerarmor.client.renderer.SpinningBladeEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.renderer.entity.LuxCapacitorEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.renderer.entity.PlasmaBoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.renderer.entity.SpinningBladeEntityRenderer;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
+import com.github.lehjr.modularpowerarmor.config.ModuleConfig;
 import com.github.lehjr.modularpowerarmor.event.*;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
+import com.github.lehjr.mpalib.config.MPALibSettings;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -26,30 +26,20 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("modularpowerarmor")
 public class ModularPowerArmor {
-    // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public ModularPowerArmor() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.COMMON_SPEC, ConfigHelper.setupConfigFile("modularpowerarmor-common.toml").getAbsolutePath());
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.CLIENT_SPEC, ClientConfig.clientFile.getAbsolutePath());
-
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, MPASettings.CLIENT_SPEC, MPASettings.clientFile.getAbsolutePath());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MPASettings.COMMON_SPEC, MPALibSettings.setupConfigFile("modularpowerarmor-common.toml", MPAConstants.MOD_ID).getAbsolutePath());
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.register(this);
         modEventBus.register(RegisterStuff.INSTANCE);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-//        // Register the processIMC method for modloading
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
 
@@ -58,6 +48,8 @@ public class ModularPowerArmor {
 
         MinecraftForge.EVENT_BUS.addListener(PlayerLoginHandler::onPlayerLogin);
         MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::handleEntityDamageEvent);
+        MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::entityAttackEventHandler);
+        MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
 
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);
@@ -65,13 +57,16 @@ public class ModularPowerArmor {
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
             new RuntimeException("Got config " + event.getConfig() + " name " + event.getConfig().getModId() + ":" + event.getConfig().getFileName());
             final ModConfig config = event.getConfig();
-            if (config.getSpec() == ClientConfig.CLIENT_SPEC) {
+//            if (config.getSpec() == MPASettings.CLIENT_SPEC) {
 //
-            } else if (config.getSpec() == CommonConfig.COMMON_SPEC) {
-                CommonConfig.commonConfig = config;
-                CommonConfig.setLoadingDone();
-                CommonConfig.finishBuilder();
-                CosmeticPresetSaveLoad.copyPresetsFromJar();
+//            } else
+            if (config.getSpec() == MPASettings.COMMON_SPEC) {
+                ModuleConfig moduleConfig = new ModuleConfig(config);
+                moduleConfig.setLoadingDone();
+                moduleConfig.finishBuilder();
+                CosmeticPresetSaveLoad.setConfigDirString(config.getFullPath().getParent().toString());
+                CosmeticPresetSaveLoad.copyPresetsFromJar(config.getFullPath().getParent().toString());
+                MPASettings.setModConfig(moduleConfig);
             }
         });
     }
@@ -91,7 +86,7 @@ public class ModularPowerArmor {
         MinecraftForge.EVENT_BUS.register(RenderEventHandler.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
         MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
-        MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
+
 
         System.out.println("FIXME!!");
 //        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
@@ -99,48 +94,20 @@ public class ModularPowerArmor {
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.PLASMA_BOLT_ENTITY_TYPE, PlasmaBoltEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.SPINNING_BLADE_ENTITY_TYPE, SpinningBladeEntityRenderer::new);
 
+
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
         ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
         ScreenManager.registerFactory(MPAObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
+
+/*
+
+ <T extends TileEntity> void bindTileEntityRenderer(TileEntityType<T> tileEntityType,
+            Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>> rendererFactory)
+
+ */
+
+
+
+
     }
-
-
-//    private void enqueueIMC(final InterModEnqueueEvent event) {
-//        // some example code to dispatch IMC to another mod
-//        InterModComms.sendTo("examplemod", "helloworld", () -> {
-//            LOGGER.info("Hello world from the MDK");
-//            return "Hello world";
-//        });
-//    }
-//
-//    private void processIMC(final InterModProcessEvent event) {
-//        // some example code to receive and process InterModComms from other mods
-//        LOGGER.info("Got IMC {}", event.getIMCStream().
-//                map(m -> m.getMessageSupplier().get()).
-//                collect(Collectors.toList()));
-//    }
-
-
-
-
-
-
-
-//    // You can use SubscribeEvent and let the Event Bus discover methods to call
-//    @SubscribeEvent
-//    public void onServerStarting(FMLServerStartingEvent event) {
-//        // do something when the server starts
-//        LOGGER.info("HELLO from server starting");
-//    }
-
-//    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-//    // Event bus for receiving Registry Events)
-//    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-//    public static class RegistryEvents {
-//        @SubscribeEvent
-//        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-//            // register a new block here
-//            LOGGER.info("HELLO from Register Block");
-//        }
-//    }
 }

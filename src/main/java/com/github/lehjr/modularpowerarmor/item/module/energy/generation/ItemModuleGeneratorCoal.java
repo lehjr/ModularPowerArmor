@@ -31,9 +31,9 @@
 ////        ModuleManager.INSTANCE.addInstallCost(getDataName(), new ItemStack(Blocks.FURNACE));
 ////        ModuleManager.INSTANCE.addInstallCost(getDataName(), ItemUtils.copyAndResize(Iteminecraftomponent.controlCircuit, 1));
 ////
-////        addBasePropertyFloat(MPSModuleConstants.MAX_COAL_STORAGE, 128);
-////        addBasePropertyFloat(MPSModuleConstants.HEAT_GENERATION, 2.5);
-////        addBasePropertyFloat(MPSModuleConstants.ENERGY_PER_COAL, 300);
+////        addBasePropertyDouble(MPSModuleConstants.MAX_COAL_STORAGE, 128);
+////        addBasePropertyDouble(MPSModuleConstants.HEAT_GENERATION, 2.5);
+////        addBasePropertyDouble(MPSModuleConstants.ENERGY_PER_COAL, 300);
 //    }
 //
 //    @Override

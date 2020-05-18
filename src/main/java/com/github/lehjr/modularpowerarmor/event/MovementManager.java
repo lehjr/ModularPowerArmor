@@ -2,14 +2,14 @@ package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
-import com.github.lehjr.mpalib.basemod.MPALibConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
+import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
@@ -123,10 +123,10 @@ public class MovementManager {
                     return ((IModularItem) iModularItem)
                             .getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
                             .getCapability(PowerModuleCapability.POWER_MODULE)
-                            .map(pm->pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0F);
+                            .map(pm->pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0D);
                 else
-                    return 0F;
-            }).orElse(0F);
+                    return 0D;
+            }).orElse(0D);
 
             desiredDirection = new Vec3d(
                     (desiredDirection.x * Math.signum(playerInput.moveForward) + strafeX * Math.signum(playerInput.moveStrafe)),
@@ -209,7 +209,7 @@ public class MovementManager {
         double horzm2 = player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z;
 
         // currently comes out to 0.0625
-        double horizontalLimit = CommonConfig.GENERAL_MAX_FLYING_SPEED.get() * CommonConfig.GENERAL_MAX_FLYING_SPEED.get() / 400;
+        double horizontalLimit = MPASettings.getMaxFlyingSpeed() * MPASettings.getMaxFlyingSpeed() / 400;
 
 //        double playerVelocity = Math.abs(player.getMotion().x) + Math.abs(player.getMotion().y) + Math.abs(player.getMotion().z);
 
@@ -246,7 +246,7 @@ public class MovementManager {
                     double jumpAssist = jumper.applyPropertyModifiers(MPAConstants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
-                    if ((player.world.isRemote()) && MPALibConfig.USE_SOUNDS.get()) {
+                    if ((player.world.isRemote()) && MPALibSettings.useSounds()) {
                         Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JUMP_ASSIST, SoundCategory.PLAYERS, (float) (jumpAssist / 8.0), (float) 1, false);
                     }
 
@@ -279,7 +279,7 @@ public class MovementManager {
                 ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPAConstants.MULTIPLIER);
-                    if (player.world.isRemote && MPALibConfig.USE_SOUNDS.get()) {
+                    if (player.world.isRemote && MPALibSettings.useSounds()) {
                         Musique.playerSound(player, SoundDictionary.SOUND_EVENT_GUI_INSTALL, SoundCategory.PLAYERS, (float) (distanceAbsorb), (float) 1, false);
                     }
                     double drain = distanceAbsorb * sa.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);

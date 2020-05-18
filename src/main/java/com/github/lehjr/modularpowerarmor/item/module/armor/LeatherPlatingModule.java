@@ -1,9 +1,10 @@
 package com.github.lehjr.modularpowerarmor.item.module.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,10 +33,10 @@ public class LeatherPlatingModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, CommonConfig.moduleConfig);
-            moduleCap.addBasePropertyFloat(MPAConstants.ARMOR_VALUE_PHYSICAL, 3, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
-            moduleCap.addBasePropertyFloat(MPAConstants.MAXIMUM_HEAT, 75);
-            moduleCap.addBasePropertyFloat(MPAConstants.KNOCKBACK_RESISTANCE, 0.25F, "");
+                moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPASettings.getModuleConfig());
+                moduleCap.addBasePropertyDouble(MPAConstants.ARMOR_VALUE_PHYSICAL, 3, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
+                moduleCap.addBasePropertyDouble(HeatCapability.MAXIMUM_HEAT, 75);
+                moduleCap.addBasePropertyDouble(MPAConstants.KNOCKBACK_RESISTANCE, 0.25F, "");
         }
 
         @Nonnull

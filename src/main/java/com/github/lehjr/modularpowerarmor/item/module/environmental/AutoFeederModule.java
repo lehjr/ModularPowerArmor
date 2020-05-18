@@ -1,11 +1,11 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
@@ -24,6 +24,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class AutoFeederModule extends AbstractPowerModule {
     public static final String TAG_FOOD = "Food";
@@ -61,11 +62,11 @@ public class AutoFeederModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, CommonConfig.moduleConfig);
-            this.ticker.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyFloat(MPAConstants.EATING_EFFICIENCY, 50);
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.ticker.addTradeoffPropertyFloat(MPAConstants.EFFICIENCY, MPAConstants.EATING_EFFICIENCY, 50);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
+            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 100);
+            this.ticker.addBasePropertyDouble(MPAConstants.EATING_EFFICIENCY, 50);
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffPropertyDouble(MPAConstants.EFFICIENCY, MPAConstants.EATING_EFFICIENCY, 50);
         }
 
         @Nonnull
@@ -78,7 +79,7 @@ public class AutoFeederModule extends AbstractPowerModule {
         }
 
         class Ticker extends PlayerTickModule {
-            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public Ticker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config, true);
             }
 
@@ -95,7 +96,7 @@ public class AutoFeederModule extends AbstractPowerModule {
                 float saturationNeeded = 20 - foodStats.getSaturationLevel();
 
                 // this consumes all food in the player's inventory and stores the stats in a buffer
-//        if (CommonConfig.moduleConfig.useOldAutoFeeder()) { // FIXME!!!!!
+//        if (MPASettings.getModuleConfig().useOldAutoFeeder()) { // FIXME!!!!!
                 if (true) {
 
                     for (int i = 0; i < inv.getSizeInventory(); i++) {

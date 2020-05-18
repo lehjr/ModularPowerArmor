@@ -6,7 +6,7 @@
 //
 //package com.github.lehjr.modularpowerarmor.client.model.item;
 //
-//import com.github.lehjr.modularpowerarmor.client.renderer.PlasmaBoltEntityRenderer;
+//import com.github.lehjr.modularpowerarmor.client.renderer.entity.PlasmaBoltEntityRenderer;
 //import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 //import com.github.lehjr.mpalib.client.render.RenderState;
 //import com.github.lehjr.mpalib.math.Colour;

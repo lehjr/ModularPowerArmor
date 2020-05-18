@@ -2,15 +2,11 @@ package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.IConfig;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.module.blockbreaking.IBlockBreakingModule;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleTarget;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModule;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.helper.ToolHelpers;
 import com.google.common.util.concurrent.AtomicDouble;
@@ -32,6 +28,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -54,11 +51,11 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, CommonConfig.moduleConfig);
-            this.blockBreaking.addBasePropertyFloat(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-//            this.blockBreaking.addBasePropertyFloat(MPAConstants.HARVEST_SPEED, 10, "x");
-//            this.blockBreaking.addTradeoffPropertyFloat(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
-//            this.blockBreaking.addTradeoffPropertyFloat(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.blockBreaking.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+//            this.blockBreaking.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 10, "x");
+//            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
+//            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);
         }
 
         @Nonnull
@@ -68,7 +65,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
         }
 
         class BlockBreaker extends PowerModule implements IBlockBreakingModule {
-            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, IConfig config) {
+            public BlockBreaker(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
                 super(module, category, target, config);
             }
 
@@ -137,7 +134,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                         if (!pickaxeModule.isEmpty()) {
                             newSpeed.set(newSpeed.get() *
                                     pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m ->
-                                            m.applyPropertyModifiers(MPAConstants.HARVEST_SPEED)).orElse(1F));
+                                            m.applyPropertyModifiers(MPAConstants.HARVEST_SPEED)).orElse(1D));
                         }
                     }
                 });

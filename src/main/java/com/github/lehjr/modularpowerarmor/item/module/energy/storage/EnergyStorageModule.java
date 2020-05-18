@@ -1,14 +1,20 @@
 package com.github.lehjr.modularpowerarmor.item.module.energy.storage;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.capabilities.energy.ForgeEnergyModuleWrapper;
 import com.github.lehjr.mpalib.capabilities.energy.IEnergyWrapper;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,7 +46,7 @@ public class EnergyStorageModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, CommonConfig.moduleConfig);
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, MPASettings.getModuleConfig());
             this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_ENERGY, maxEnergy, "RF");
             this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_TRAMSFER, maxTransfer, "RF");
             this.energyStorage = new ForgeEnergyModuleWrapper(
@@ -53,15 +59,36 @@ public class EnergyStorageModule extends AbstractPowerModule {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+            if (cap == CapabilityEnergy.ENERGY) {
+                energyStorage.updateFromNBT();
+                return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(() -> energyStorage));
+            }
             if (cap == PowerModuleCapability.POWER_MODULE) {
                 return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> moduleCap));
             }
-            if (cap == CapabilityEnergy.ENERGY) {
-                energyStorage.updateFromNBT();
-            }
-            return CapabilityEnergy.ENERGY.orEmpty(cap, LazyOptional.of(()-> energyStorage));
+            return LazyOptional.empty();
         }
     }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        System.out.println(playerIn.getHeldItem(handIn).serializeNBT());
+
+
+        return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
+
+        @Override
+    public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
+        super.fillItemGroup(group, items);
+        if (isInGroup(group)) {
+            ItemStack out = new ItemStack(this);
+            ForgeEnergyModuleWrapper energyStorage = new ForgeEnergyModuleWrapper(out, maxEnergy, maxTransfer);
+            energyStorage.receiveEnergy(maxEnergy, false);
+            items.add(out);
+        }
+    }
+
 
     @Override
     public boolean showDurabilityBar(final ItemStack stack) {
