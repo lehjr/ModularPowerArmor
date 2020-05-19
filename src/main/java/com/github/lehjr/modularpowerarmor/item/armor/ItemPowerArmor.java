@@ -13,6 +13,7 @@ import com.github.lehjr.mpalib.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.capabilities.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.client.model.item.armor.ArmorModelInstance;
 import com.github.lehjr.mpalib.client.model.item.armor.HighPolyArmor;
+import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -35,6 +36,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class ItemPowerArmor extends ItemElectricArmor {
     public ItemPowerArmor(EquipmentSlotType slots) {
@@ -66,16 +68,32 @@ public class ItemPowerArmor extends ItemElectricArmor {
             UUID.randomUUID(),
             UUID.randomUUID()};
 
-//    @Override
-//    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+//    /*
+//        returning a value higher than 0 is applied damage to the armor, even if the armor is not setup to take damage.
+//        TODO: does this even work???? Is this even needed?
 //
-//
-//        return 0;
-//    }
+//      */
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+        int enerConsum = (int) Math.round(stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iItemHandler -> {
+            if (iItemHandler instanceof IModularItem) {
+                Pair<Integer, Integer> range = ((IModularItem) iItemHandler).getRangeForCategory(EnumModuleCategory.ARMOR);
+                double energyUsed = 0;
+                for (int x = range.getKey(); x < range.getRight(); x ++) {
+                    energyUsed += iItemHandler.getStackInSlot(x).getCapability(PowerModuleCapability.POWER_MODULE)
+                            .map(pm->pm.applyPropertyModifiers(MPAConstants.ARMOR_ENERGY_CONSUMPTION)).orElse(0D);
+                }
+                return energyUsed;
+            }
+            return 0D;
+        }).orElse(0D));
 
-
-
-
+        // protects as long as there is energy to drain I guess
+        if (enerConsum > 0 && entity instanceof LivingEntity) {
+            ElectricItemUtils.drainPlayerEnergy(entity, enerConsum);
+        }
+        return 0;
+    }
 
     @Override
     public int getDamageReduceAmount() {
