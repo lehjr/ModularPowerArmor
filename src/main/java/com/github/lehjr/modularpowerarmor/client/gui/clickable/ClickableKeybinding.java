@@ -138,7 +138,7 @@ public class ClickableKeybinding extends ClickableButton {
                 Point2F directionVector = euclideanDistance.normalize();
                 Point2F tangentTarget = directionVector.times(getTargetDistance()).plus(this.getPosition());
                 Point2F midpointTangent = module.getPosition().midpoint(tangentTarget);
-                module.move(midpointTangent.getX(), midpointTangent.getY());
+                module.setPosition(midpointTangent.copy());
             }
         }
     }

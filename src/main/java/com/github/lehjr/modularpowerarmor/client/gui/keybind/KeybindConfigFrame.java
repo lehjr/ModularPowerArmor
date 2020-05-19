@@ -16,7 +16,11 @@ import com.github.lehjr.mpalib.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;
+import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
+import com.github.lehjr.mpalib.math.Colour;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,49 +62,52 @@ public class KeybindConfigFrame implements IGuiFrame {
 
     @Override
     public void init(float left, float top, float right, float bottom) {
-        newKeybindButton.move(rect.center().plus(new Point2F(0, -8)));
-        trashKeybindButton.move(rect.center().plus(new Point2F(0, 8)));
+        newKeybindButton.setPosition(rect.center().plus(new Point2F(0, -8)));
+        trashKeybindButton.setPosition(rect.center().plus(new Point2F(0, 8)));
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        if (button == 0) {
-            if (selectedClickie == null) {
-                for (ClickableModule module : modules) {
-                    if (module.hitBox((float)x, (float)y)) {
-                        selectedClickie = module;
-                        return true;
+        if (this.rect.containsPoint(x, y)) {
+            if (button == 0) {
+                if (selectedClickie == null) {
+                    for (ClickableModule module : modules) {
+                        if (module.hitBox((float) x, (float) y)) {
+                            selectedClickie = module;
+                            return true;
+                        }
+                    }
+                    for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                        if (keybind.hitBox((float) x, (float) y)) {
+                            selectedClickie = keybind;
+                            return true;
+                        }
                     }
                 }
+                if (newKeybindButton.hitBox((float) x, (float) y)) {
+                    selecting = true;
+                }
+            } else if (button == 1) {
                 for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
                     if (keybind.hitBox((float) x, (float) y)) {
-                        selectedClickie = keybind;
+                        keybind.toggleHUDState();
                         return true;
                     }
                 }
-            }
-            if (newKeybindButton.hitBox((float)x, (float) y)) {
-                selecting = true;
-            }
-        } else if (button == 1) {
-            for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
-                if (keybind.hitBox((float) x, (float) y)) {
-                    keybind.toggleHUDState();
-                    return true;
-                }
-            }
-        } else if (button > 2) {
-            int key = button - 100;
+            } else if (button > 2) {
+                int key = button - 100;
 
-            if (keyBindingHelper.keyBindingHasKey(key)) {
-                takenTime = System.currentTimeMillis();
+                if (keyBindingHelper.keyBindingHasKey(key)) {
+                    takenTime = System.currentTimeMillis();
+                }
+                if (!keyBindingHelper.keyBindingHasKey(key)) {
+                    addKeybind(key, true);
+                } else if (MPASettings.allowConfictingKeyBinds()) {
+                    addKeybind(key, false);
+                }
+                selecting = false;
             }
-            if (!keyBindingHelper.keyBindingHasKey(key)) {
-                addKeybind(key, true);
-            } else if (MPASettings.allowConfictingKeyBinds()) {
-                addKeybind(key, false);
-            }
-            selecting = false;
+            return true;
         }
         return false;
     }
@@ -185,7 +192,7 @@ public class KeybindConfigFrame implements IGuiFrame {
         this.closestKeybind = null;
         double closestDistance = Double.MAX_VALUE;
         if (this.selectedClickie != null) {
-            this.selectedClickie.move((float)mousex, (float)mousey);
+            this.selectedClickie.setPosition(new Point2F((float)mousex, (float)mousey));
             if (this.selectedClickie instanceof ClickableModule) {
                 ClickableModule selectedModule = ((ClickableModule) this.selectedClickie);
                 for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
@@ -248,48 +255,45 @@ public class KeybindConfigFrame implements IGuiFrame {
                 Point2F tangentTarget = directionVector.times(16).plus(module.getPosition());
                 Point2F midpointTangent = otherModule.getPosition().midpoint(tangentTarget);
                 if (midpointTangent.distanceTo(module.getPosition()) > 2) {
-                    otherModule.move(midpointTangent.getX(), midpointTangent.getY());
+                    otherModule.setPosition(midpointTangent.copy());
                 }
-                // Point2F away = directionVector.times(0).plus(modulePosition);
-                // module.move(away.getX(), away.getY());
+                 Point2F away = directionVector.times(0).plus(modulePosition);
+                 module.setPosition(away.copy());
             }
         }
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-//        Point2F center = rect.center();
-//        RenderState.blendingOn();
-//        RenderState.on2D();
-//        if (selecting) {
-//            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.pressKey"), center.getX(), center.getY());
-//            RenderState.off2D();
-//            RenderState.blendingOff();
-//            return;
-//        }
-//        newKeybindButton.render(mouseX, mouseY, partialTicks);
-//        trashKeybindButton.render(mouseX, mouseY, partialTicks);
-//        TextureUtils.pushTexture(TextureUtils.TEXTURE_QUILT);
-//        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions1"), center.getX(), center.getY() + 40);
-//        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions2"), center.getX(), center.getY() + 50);
-//        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions3"), center.getX(), center.getY() + 60);
-//        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions4"), center.getX(), center.getY() + 70);
-//        if (takenTime + 1000 > System.currentTimeMillis()) {
-//            Point2F pos = newKeybindButton.getPosition().plus(new Point2F(0, -20));
-//            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindTaken"), pos.getX(), pos.getY());
-//        }
-//        for (ClickableModule module : modules) {
-//            module.render(mouseX, mouseY, partialTicks);
-//        }
-//        for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
-//            keybind.render(mouseX, mouseY, partialTicks);
-//        }
-//        if (selectedClickie != null && closestKeybind != null) {
-//            Renderer.drawLineBetween(selectedClickie, closestKeybind, Colour.YELLOW);
-//        }
-//        RenderState.off2D();
-//        RenderState.blendingOff();
-//        TextureUtils.popTexture();
+        // FIXME!!
+        float zLevel = Minecraft.getInstance().currentScreen.getBlitOffset();
+
+        Point2F center = rect.center();
+
+        if (selecting) {
+            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.pressKey"), center.getX(), center.getY());
+            return;
+        }
+        newKeybindButton.render(mouseX, mouseY, partialTicks, zLevel);
+        trashKeybindButton.render(mouseX, mouseY, partialTicks, zLevel);
+
+        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions1"), center.getX(), center.getY() + 40);
+        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions2"), center.getX(), center.getY() + 50);
+        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions3"), center.getX(), center.getY() + 60);
+        Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindInstructions4"), center.getX(), center.getY() + 70);
+        if (takenTime + 1000 > System.currentTimeMillis()) {
+            Point2F pos = newKeybindButton.getPosition().plus(new Point2F(0, -20));
+            Renderer.drawCenteredString(I18n.format("gui.modularpowerarmor.keybindTaken"), pos.getX(), pos.getY());
+        }
+        for (ClickableModule module : modules) {
+            module.render(mouseX, mouseY, partialTicks, zLevel);
+        }
+        for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+            keybind.render(mouseX, mouseY, partialTicks, zLevel);
+        }
+        if (selectedClickie != null && closestKeybind != null) {
+            Renderer.drawLineBetween(selectedClickie, closestKeybind, Colour.YELLOW, zLevel);
+        }
     }
 
     @Override
@@ -308,12 +312,6 @@ public class KeybindConfigFrame implements IGuiFrame {
     public static boolean doAdditionalInfo() {
         return false; //InputMappings.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
     }
-
-
-
-
-
-
 
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
 

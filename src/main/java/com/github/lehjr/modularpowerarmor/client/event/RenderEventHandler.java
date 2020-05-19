@@ -117,7 +117,10 @@ public enum RenderEventHandler {
 
     @OnlyIn(Dist.CLIENT)
     public void drawKeybindToggles() {
+        float zLevel = Minecraft.getInstance().currentScreen != null ? Minecraft.getInstance().currentScreen.getBlitOffset() : 0;
+
         if (MPASettings.displayHud()) {
+
             Minecraft minecraft = Minecraft.getInstance();
             ClientPlayerEntity player = minecraft.player;
             frame.setLeft(MPASettings.getHudKeybindX());
@@ -127,7 +130,7 @@ public enum RenderEventHandler {
                 if (kb.displayOnHUD) {
                     float stringwidth = (float) Renderer.getStringWidth(kb.getLabel().getFormattedText());
                     frame.setWidth(stringwidth + kb.getBoundModules().size() * 16);
-                    frame.draw(Minecraft.getInstance().currentScreen.getBlitOffset());
+                    frame.draw(zLevel);
                     Renderer.drawString(kb.getLabel().getFormattedText(), frame.left() + 1, frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
                     double x = frame.left() + stringwidth;
                     for (ClickableModule module : kb.getBoundModules()) {
