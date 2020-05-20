@@ -12,6 +12,8 @@ import com.github.lehjr.mpalib.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
+import net.minecraft.block.pattern.BlockPattern;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,15 +21,20 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 /**
  * Created by Eximius88 on 2/3/14.
@@ -50,6 +57,8 @@ public class DimensionalRiftModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            rightClick.addBasePropertyDouble(MPAConstants.HEAT_GENERATION, 55);
+            rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 200000);
         }
 
         @Nonnull
@@ -72,10 +81,10 @@ public class DimensionalRiftModule extends AbstractPowerModule {
                         coords = coords.up();
                     }
 
-                    playerIn.changeDimension(DimensionType.OVERWORLD);
                     int energyConsumption = (int) applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                     int playerEnergy = ElectricItemUtils.getPlayerEnergy(playerIn);
                     if (playerEnergy >= energyConsumption) {
+                        playerIn.changeDimension(DimensionType.OVERWORLD, new CommandTeleporter(coords));
                         ElectricItemUtils.drainPlayerEnergy(playerIn, getEnergyUsage());
                         HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.HEAT_GENERATION));
                         return ActionResult.resultSuccess(itemStackIn);
@@ -88,6 +97,20 @@ public class DimensionalRiftModule extends AbstractPowerModule {
             public int getEnergyUsage() {
                 return (int) applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
             }
+        }
+    }
+
+    private static class CommandTeleporter implements ITeleporter {
+        private final BlockPos targetPos;
+
+        private CommandTeleporter(BlockPos targetPos) {
+            this.targetPos = targetPos;
+        }
+
+        @Override
+        public Entity placeEntity(Entity entity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+            entity.moveToBlockPosAndAngles(targetPos, yaw, entity.rotationPitch);
+            return repositionEntity.apply(false);
         }
     }
 }
