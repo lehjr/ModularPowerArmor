@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ItemElectricArmor extends ArmorItem {
     public ItemElectricArmor(EquipmentSlotType slots, Properties builder) {
-        super(MPSArmorMaterial.EMPTY_ARMOR, slots, builder);
+        super(MPAArmorMaterial.EMPTY_ARMOR, slots, builder);
     }
 
     @OnlyIn(Dist.CLIENT)

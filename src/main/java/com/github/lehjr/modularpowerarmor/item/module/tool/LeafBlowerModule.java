@@ -50,10 +50,10 @@ public class LeafBlowerModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.rightClick.addBasePropertyDouble(MPAConstants.RADIUS, 1, "m");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addBaseProperty(MPAConstants.RADIUS, 1, "m");
+            this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);
         }
 
         @Nonnull

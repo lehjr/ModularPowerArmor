@@ -12,6 +12,6 @@ public abstract class MPARecipeBookContainer<C> extends RecipeBookContainer {
 
     @Override
     public void func_217056_a(boolean placeAll, IRecipe recipe, ServerPlayerEntity player) {
-        (new MPSServerRecipePlacer(this)).place(player, recipe, placeAll);
+        (new MPAServerRecipePlacer(this)).place(player, recipe, placeAll);
     }
 }

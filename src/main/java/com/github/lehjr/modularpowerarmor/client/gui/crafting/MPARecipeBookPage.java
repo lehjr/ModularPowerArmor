@@ -16,9 +16,9 @@ import net.minecraft.item.crafting.RecipeBook;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MPSRecipeBookPage extends RecipeBookPage {
-    private final List<MPSRecipeWidget> buttons = Lists.newArrayListWithCapacity(20);
-    private MPSRecipeWidget hoveredButton;
+public class MPARecipeBookPage extends RecipeBookPage {
+    private final List<MPARecipeWidget> buttons = Lists.newArrayListWithCapacity(20);
+    private MPARecipeWidget hoveredButton;
     private final RecipeOverlayGui overlay = new RecipeOverlayGui();
     private Minecraft minecraft;
     private final List<IRecipeUpdateListener> listeners = Lists.newArrayList();
@@ -35,9 +35,9 @@ public class MPSRecipeBookPage extends RecipeBookPage {
     private final Colour arrowHighlightedBackground = Colour.WHITE;
 
 
-    public MPSRecipeBookPage() {
+    public MPARecipeBookPage() {
         for(int i = 0; i < 20; ++i) {
-            this.buttons.add(new MPSRecipeWidget());
+            this.buttons.add(new MPARecipeWidget());
         }
 
         forwardArrow = new ClickableArrow(0, 0, 0, 0, true, arrowNormalBackGound, arrowHighlightedBackground, arrowBorderColour);
@@ -81,7 +81,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         int i = 20 * this.currentPage;
 
         for(int j = 0; j < this.buttons.size(); ++j) {
-            MPSRecipeWidget recipewidget = this.buttons.get(j);
+            MPARecipeWidget recipewidget = this.buttons.get(j);
             if (i + j < this.recipeLists.size()) {
                 RecipeList recipelist = this.recipeLists.get(i + j);
                 recipewidget.func_203400_a(recipelist, this);
@@ -110,7 +110,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
         RenderHelper.disableStandardItemLighting();
         this.hoveredButton = null;
 
-        for(MPSRecipeWidget recipewidget : this.buttons) {
+        for(MPARecipeWidget recipewidget : this.buttons) {
             recipewidget.render(mouseX, mouseY, partialTicks);
             if (recipewidget.visible && recipewidget.isHovered()) {
                 this.hoveredButton = recipewidget;
@@ -172,7 +172,7 @@ public class MPSRecipeBookPage extends RecipeBookPage {
             this.updateButtonsForPage();
             return true;
         } else {
-            for(MPSRecipeWidget recipewidget : this.buttons) {
+            for(MPARecipeWidget recipewidget : this.buttons) {
                 if (recipewidget.mouseClicked(mouseX, mouseY, mouseButton)) {
                     if (mouseButton == 0) {
                         this.lastClickedRecipe = recipewidget.getRecipe();

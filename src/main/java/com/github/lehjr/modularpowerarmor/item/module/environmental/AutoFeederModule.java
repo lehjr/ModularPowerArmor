@@ -63,10 +63,10 @@ public class AutoFeederModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyDouble(MPAConstants.EATING_EFFICIENCY, 50);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.EFFICIENCY, MPAConstants.EATING_EFFICIENCY, 50);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 100);
+            this.ticker.addBaseProperty(MPAConstants.EATING_EFFICIENCY, 50);
+            this.ticker.addTradeoffProperty(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.EFFICIENCY, MPAConstants.EATING_EFFICIENCY, 50);
         }
 
         @Nonnull

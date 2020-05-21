@@ -55,9 +55,9 @@ public class HoeModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RADIUS, MPAConstants.RADIUS, 8, "m");
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.RADIUS, 8, "m");
         }
 
         @Nonnull

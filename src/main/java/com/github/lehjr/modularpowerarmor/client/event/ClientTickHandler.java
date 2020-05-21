@@ -25,6 +25,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -96,8 +97,9 @@ public class ClientTickHandler {
 
                 // Helmet modules with overlay
                 player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                    if (!(h instanceof IModularItem))
+                    if (!(h instanceof IModularItem)) {
                         return;
+                    }
 
                     // AutoFeeder
                     ItemStack autoFeeder = ((IModularItem) h).getOnlineModuleOrEmpty(autoFeederReg);
@@ -108,6 +110,7 @@ public class ClientTickHandler {
                         Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), food);
                         index.addAndGet(1);
                     }
+
 
                     // Clock
                     ItemStack clock = ((IModularItem) h).getOnlineModuleOrEmpty(clockReg);
@@ -150,7 +153,6 @@ public class ClientTickHandler {
                     // Compass
                     ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(compassReg);
                     if (!compass.isEmpty()) {
-
                         Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), compass);
                         index.addAndGet(1);
                     }

@@ -20,7 +20,7 @@ public class TinkerKeybindGui extends ContainerlessGui {
 
     public TinkerKeybindGui(PlayerInventory playerInventory, ITextComponent title) {
         super(title);
-        KeybindManager.readInKeybinds();
+        KeybindManager.INSTANCE.readInKeybinds();
         this.player = playerInventory.player;
         this.minecraft = Minecraft.getInstance();
         rescale();
@@ -59,6 +59,7 @@ public class TinkerKeybindGui extends ContainerlessGui {
 //        System.out.println("p_keyPressed_3_: "+ p_keyPressed_3_);
         InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
         if (keyCode == GLFW.GLFW_KEY_ESCAPE || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+            KeybindManager.INSTANCE.writeOutKeybinds();
             this.minecraft.player.closeScreen();
             return true; // Forge MC-146650: Needs to return true when the key is handled.
         }
@@ -77,11 +78,5 @@ public class TinkerKeybindGui extends ContainerlessGui {
     public void renderBackground() {
         super.renderBackground();
         this.backgroundRect.draw(getBlitOffset());
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        KeybindManager.writeOutKeybinds();
     }
 }

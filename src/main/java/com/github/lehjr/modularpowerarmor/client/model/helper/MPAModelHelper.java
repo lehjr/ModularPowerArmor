@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MPSModelHelper {
+public class MPAModelHelper {
     // One pass just to register the textures called from texture stitch event
     // another to register the models called from model bake event (second run)
 
@@ -39,7 +39,7 @@ public class MPSModelHelper {
     }
 
     public static void parseSpecFile(String resourceString, @Nullable TextureStitchEvent.Pre event, ModelLoader bakery) {
-        URL resource = MPSModelHelper.class.getResource(resourceString);
+        URL resource = MPAModelHelper.class.getResource(resourceString);
         ModelSpecXMLReader.INSTANCE.parseFile(resource, event, bakery);
     }
 }

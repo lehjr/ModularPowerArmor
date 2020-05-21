@@ -72,8 +72,8 @@ public class ShearsModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.rightClick.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addBaseProperty(MPAConstants.HARVEST_SPEED, 8, "x");
         }
 
         @Nonnull

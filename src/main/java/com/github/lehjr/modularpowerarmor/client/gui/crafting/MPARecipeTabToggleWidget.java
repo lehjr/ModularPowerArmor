@@ -13,15 +13,15 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class MPSRecipeTabToggleWidget extends RecipeTabToggleWidget {
+public class MPARecipeTabToggleWidget extends RecipeTabToggleWidget {
     private final RecipeBookCategories category;
     private final Colour activeColor = new Colour(0.1F, 0.3F, 0.4F, 0.7F);
     private final Colour inactiveColor = Colour.DARKBLUE.withAlpha(0.8F);
 
     DrawableRect tabRectangle;
-    public MPSRecipeTabToggleWidget(RecipeBookCategories category) {
+    public MPARecipeTabToggleWidget(RecipeBookCategories category) {
         super(category);
-        this.initTextureValues(153, 2, 35, 0, MPSRecipeBookGui.RECIPE_BOOK);
+        this.initTextureValues(153, 2, 35, 0, MPARecipeBookGui.RECIPE_BOOK);
         this.category = category;
         this.tabRectangle = new DrawableRect(0, 0, 0, 0, inactiveColor, Colour.LIGHTBLUE.withAlpha(0.8F));
     }

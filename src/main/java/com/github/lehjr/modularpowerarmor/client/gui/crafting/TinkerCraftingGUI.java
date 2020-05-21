@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.client.gui.crafting;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.client.gui.common.TabSelectFrame;
-import com.github.lehjr.modularpowerarmor.container.MPSCraftingContainer;
+import com.github.lehjr.modularpowerarmor.container.MPACraftingContainer;
 import com.github.lehjr.mpalib.client.gui.ExtendedContainerScreen;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableArrow;
 import com.github.lehjr.mpalib.client.gui.clickable.TexturedButton;
@@ -29,13 +29,13 @@ import java.util.stream.IntStream;
 
 
 @OnlyIn(Dist.CLIENT)
-public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContainer> implements IRecipeShownListener {
+public class TinkerCraftingGUI extends ExtendedContainerScreen<MPACraftingContainer> implements IRecipeShownListener {
     /** the recipe book */
-    private final MPSRecipeBookGui recipeBookGui = new MPSRecipeBookGui();
+    private final MPARecipeBookGui recipeBookGui = new MPARecipeBookGui();
     /** determins if the recipe book gui will be over the crafting gui */
     private boolean widthTooNarrow;
 
-    protected MPSCraftingContainer container;
+    protected MPACraftingContainer container;
 
     /** The outer green rectangle */
     protected DrawableRelativeRect backgroundRect;
@@ -57,7 +57,7 @@ public class TinkerCraftingGUI extends ExtendedContainerScreen<MPSCraftingContai
      * Fun fact: initializing GUI element placement values in the constructor is meaningless because the placement
      *  values aren't set until init()
      */
-    public TinkerCraftingGUI(MPSCraftingContainer container, PlayerInventory playerInventory, ITextComponent title) {
+    public TinkerCraftingGUI(MPACraftingContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title);
         this.minecraft = Minecraft.getInstance();
         PlayerEntity player = getMinecraft().player;

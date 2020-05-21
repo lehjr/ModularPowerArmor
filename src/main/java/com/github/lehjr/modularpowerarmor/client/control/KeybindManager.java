@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.client.control;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
@@ -22,6 +21,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,20 +32,23 @@ public enum KeybindManager {
     // only stores keybindings relevant to us!!
     protected final Set<ClickableKeybinding> keybindings = new HashSet();
 
-    public static Set<ClickableKeybinding> getKeybindings() {
-        return INSTANCE.keybindings;
+    public Set<ClickableKeybinding> getKeybindings() {
+        return keybindings;
     }
 
-    public static KeyBinding addKeybinding(String keybindDescription, InputMappings.Input keyCode, Point2F position) {
-        KeyBinding kb = new KeyBinding(keybindDescription, keyCode.getKeyCode(), KeybindKeyHandler.mps);
-//        boolean free = !KeyBinding.HASH.containsItem(keycode);
-        boolean free = !keyBindingHelper.keyBindingHasKey(keyCode);
+    public void remove(ClickableKeybinding keybinding) {
+        keybindings.remove(keybinding);
+        writeOutKeybinds();
+    }
 
-        INSTANCE.keybindings.add(new ClickableKeybinding(kb, position, free, false));
+    public KeyBinding addKeybinding(String keybindDescription, InputMappings.Input keyCode, Point2F position) {
+        KeyBinding kb = new KeyBinding(keybindDescription, keyCode.getKeyCode(), KeybindKeyHandler.mpa);
+        boolean free = !keyBindingHelper.keyBindingHasKey(keyCode);
+        keybindings.add(new ClickableKeybinding(kb, position, free, false));
         return kb;
     }
 
-    public static String parseName(KeyBinding keybind) {
+    public String parseName(KeyBinding keybind) {
         if (keybind.getKey().getKeyCode() < 0) {
             return "Mouse" + (keybind.getKey().getKeyCode() + 100);
         } else {
@@ -53,14 +56,15 @@ public enum KeybindManager {
         }
     }
 
-    public static void writeOutKeybinds() {
-        BufferedWriter writer = null;
+    public void writeOutKeybinds() {
         try {
-            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPALIbConstants.MOD_ID).getAbsolutePath());
+            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPAConstants.MOD_ID).getAbsolutePath());
             if (!file.exists()) {
+                Files.createDirectories(file.toPath().getParent());
                 file.createNewFile();
             }
-            writer = new BufferedWriter(new FileWriter(file));
+
+            FileWriter fileWriter = new FileWriter(file, false);
 
             PlayerEntity player = Minecraft.getInstance().player;
             NonNullList modulesToWrite = NonNullList.create();
@@ -76,26 +80,44 @@ public enum KeybindManager {
                 }
             }
 
-            for (ClickableKeybinding keybinding : INSTANCE.keybindings) {
-                writer.write(keybinding.getKeyBinding().getKey().getKeyCode() + ":" + keybinding.getPosition().getX() + ':' + keybinding.getPosition().getY() + ':' + keybinding.displayOnHUD + ':' + keybinding.toggleval + '\n');
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ClickableKeybinding keybinding : keybindings) {
+                stringBuilder.append(keybinding.getKeyBinding().getKey().getKeyCode())
+                        .append(":")
+                        .append(keybinding.getPosition().getX())
+                        .append(':')
+                        .append(keybinding.getPosition().getY())
+                        .append(':')
+                        .append(keybinding.displayOnHUD)
+                        .append(':')
+                        .append(keybinding.toggleval)
+                        .append('\n');
+
                 for (ClickableModule module : keybinding.getBoundModules()) {
-                    writer.write(module.getModule().getItem().getRegistryName().getPath() + '~' + module.getPosition().getX() + '~' + module.getPosition().getY() + '\n');
+                    stringBuilder.append(module.getModule().getItem().getRegistryName().getPath())
+                            .append('~')
+                            .append(module.getPosition().getX())
+                            .append('~')
+                            .append(module.getPosition().getY())
+                            .append('\n');
                 }
             }
+
+            String out = stringBuilder.toString();
+
+            fileWriter.write(out);
+            fileWriter.flush();
+            fileWriter.close();
+
         } catch (Exception e) {
             MPALibLogger.logger.error("Problem writing out keyconfig :(");
             e.printStackTrace();
-        } finally {
-            try {
-                writer.close();
-            } catch (Throwable ignored) {
-            }
         }
     }
 
-    public static void readInKeybinds() {
+    public void readInKeybinds() {
         try {
-            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPALIbConstants.MOD_ID).getAbsolutePath());
+            File file = new File(MPALibSettings.setupConfigFile("modularpowerarmor-keybinds.cfg", MPAConstants.MOD_ID).getAbsolutePath());
             if (!file.exists()) {
                 MPALibLogger.logger.error("No modular power armor keybind file found.");
                 return;
@@ -120,9 +142,9 @@ public enum KeybindManager {
                         }
 
                         workingKeybinding = new ClickableKeybinding(
-                                new KeyBinding(KeyBindingHelper.getInputByCode(id).getTranslationKey(), id, KeybindKeyHandler.mps), position, free, displayOnHUD);
+                                new KeyBinding(KeyBindingHelper.getInputByCode(id).getTranslationKey(), id, KeybindKeyHandler.mpa), position, free, displayOnHUD);
                         workingKeybinding.toggleval = toggleval;
-                        INSTANCE.keybindings.add(workingKeybinding);
+                        keybindings.add(workingKeybinding);
                     } else {
                         workingKeybinding = null;
                     }

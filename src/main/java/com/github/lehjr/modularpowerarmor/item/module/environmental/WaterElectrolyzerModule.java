@@ -43,7 +43,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
         }
 
         @Nonnull

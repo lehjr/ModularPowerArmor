@@ -45,20 +45,20 @@ public class SprintAssistModule extends AbstractPowerModule {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_SPEED_MULTIPLIER, .01F, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_SPEED_MULTIPLIER, 2.49F);
+            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBaseProperty(MPAConstants.SPRINT_SPEED_MULTIPLIER, .01F, "%");
+            this.ticker.addTradeoffProperty(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_SPEED_MULTIPLIER, 2.49F);
 
-            this.ticker.addBasePropertyDouble(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 20);
-            this.ticker.addBasePropertyDouble(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 20);
+            this.ticker.addBaseProperty(MPAConstants.FOOD_COMPENSATION, 0, "%");
+            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
 
-            this.ticker.addBasePropertyDouble(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_ENERGY_CONSUMPTION, 100);
-            this.ticker.addBasePropertyDouble(MPAConstants.WALKING_SPEED_MULTIPLIER, 0.01F, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_SPEED_MULTIPLIER, 1.99F);
+            this.ticker.addBaseProperty(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_ENERGY_CONSUMPTION, 100);
+            this.ticker.addBaseProperty(MPAConstants.WALKING_SPEED_MULTIPLIER, 0.01F, "%");
+            this.ticker.addTradeoffProperty(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_SPEED_MULTIPLIER, 1.99F);
         }
 
         @Nonnull

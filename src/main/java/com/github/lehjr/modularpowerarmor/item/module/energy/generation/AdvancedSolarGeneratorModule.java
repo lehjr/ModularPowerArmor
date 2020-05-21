@@ -48,10 +48,10 @@ public class AdvancedSolarGeneratorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION_DAY, 45000, "RF");
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION_NIGHT, 1500, "RF");
-            this.ticker.addBasePropertyDouble(MPAConstants.HEAT_GENERATION_DAY, 15);
-            this.ticker.addBasePropertyDouble(MPAConstants.HEAT_GENERATION_NIGHT, 5);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_DAY, 45000, "RF");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_NIGHT, 1500, "RF");
+            this.ticker.addBaseProperty(MPAConstants.HEAT_GENERATION_DAY, 15);
+            this.ticker.addBaseProperty(MPAConstants.HEAT_GENERATION_NIGHT, 5);
         }
 
         @Nonnull

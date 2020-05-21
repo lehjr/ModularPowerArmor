@@ -46,11 +46,11 @@ public class LuxCapacitorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.RED, MPAConstants.RED_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.GREEN, MPAConstants.GREEN_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.BLUE, MPAConstants.BLUE_HUE, 1, "%");
-            this.rightClick.addTradeoffPropertyDouble(MPAConstants.ALPHA, MPAConstants.OPACITY, 1, "%");
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick.addTradeoffProperty(MPAConstants.RED, MPAConstants.RED_HUE, 1, "%");
+            this.rightClick.addTradeoffProperty(MPAConstants.GREEN, MPAConstants.GREEN_HUE, 1, "%");
+            this.rightClick.addTradeoffProperty(MPAConstants.BLUE, MPAConstants.BLUE_HUE, 1, "%");
+            this.rightClick.addTradeoffProperty(MPAConstants.ALPHA, MPAConstants.OPACITY, 1, "%");
         }
 
         @Nonnull

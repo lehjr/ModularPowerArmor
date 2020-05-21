@@ -136,7 +136,7 @@ public class MPARegistryNames {
     /**
      * Container
      */
-    public static final String MPS_CRAFTING_CONTAINER_TYPE__REG_NAME = MOD_ID + ":crafting_container";
-    public static final String MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME = MOD_ID + ":tinker_table_container_type";
+    public static final String MPA_CRAFTING_CONTAINER_TYPE__REG_NAME = MOD_ID + ":crafting_container";
+    public static final String MPA_TINKER_TABLE_CONTAINER_TYPE__REG_NAME = MOD_ID + ":tinker_table_container_type";
 
 }

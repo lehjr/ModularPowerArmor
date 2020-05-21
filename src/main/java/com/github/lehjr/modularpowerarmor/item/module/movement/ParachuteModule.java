@@ -43,8 +43,8 @@ public class ParachuteModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }
 
         @Nonnull
@@ -67,6 +67,8 @@ public class ParachuteModule extends AbstractPowerModule {
                 boolean hasGlider = false;
                 PlayerUtils.resetFloatKickTicks(player);
                 if (playerInput.sneakKey && player.getMotion().y < -0.1 && (!hasGlider || playerInput.moveForward <= 0)) {
+                    System.out.println("parachute applied!!!!");
+
                     double totalVelocity = Math.sqrt(player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z + player.getMotion().y * player.getMotion().y);
                     if (totalVelocity > 0) {
                         Vec3d motion = player.getMotion();
@@ -75,7 +77,11 @@ public class ParachuteModule extends AbstractPowerModule {
                                 motion.y * 0.1 / totalVelocity,
                                 motion.z * 0.1 / totalVelocity);
                     }
+                } else {
+                    System.out.println("no parachute applied!!!!");
                 }
+
+
             }
         }
     }

@@ -43,15 +43,15 @@ public class JumpAssistModule extends AbstractPowerModule {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
-            this.ticker.addBasePropertyDouble(MPAConstants.MULTIPLIER, 1, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
+            this.ticker.addBaseProperty(MPAConstants.MULTIPLIER, 1, "%");
+            this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
 //
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
-            this.ticker.addBasePropertyDouble(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
+            this.ticker.addBaseProperty(MPAConstants.FOOD_COMPENSATION, 0, "%");
+            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
         }
 
         @Nonnull

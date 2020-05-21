@@ -57,7 +57,7 @@ public class FlintAndSteelModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
         }
 
         @Nonnull

@@ -43,10 +43,10 @@ public class AxeModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.blockBreaking.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.blockBreaking.addBasePropertyDouble(MPAConstants.HARVEST_SPEED, 8, "x");
-            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
-            this.blockBreaking.addTradeoffPropertyDouble(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 22);
+            this.blockBreaking.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking.addBaseProperty(MPAConstants.HARVEST_SPEED, 8, "x");
+            this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 22);
         }
 
         @Nonnull

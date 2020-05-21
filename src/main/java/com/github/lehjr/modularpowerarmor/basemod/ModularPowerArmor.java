@@ -96,7 +96,7 @@ public class ModularPowerArmor {
 
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
-        ScreenManager.registerFactory(MPAObjects.MPS_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
+        ScreenManager.registerFactory(MPAObjects.MPA_CRAFTING_CONTAINER_TYPE, TinkerCraftingGUI::new);
         ScreenManager.registerFactory(MPAObjects.TINKER_TABLE_CONTAINER_TYPE, TinkerTableGui::new);
 
 /*

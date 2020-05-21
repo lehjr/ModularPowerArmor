@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 @OnlyIn(Dist.CLIENT)
-public class MPSRecipeBookGui extends RecipeBookGui {
+public class MPARecipeBookGui extends RecipeBookGui {
     /** The outer green rectangle */
     protected DrawableRelativeRect outerFrame = new DrawableRelativeRect(0, 0, 0, 0,
             true,
@@ -61,8 +61,8 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     private int height;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
 
-    private final List<MPSRecipeTabToggleWidget> recipeTabs = Lists.newArrayList();
-    private MPSRecipeTabToggleWidget currentTab;
+    private final List<MPARecipeTabToggleWidget> recipeTabs = Lists.newArrayList();
+    private MPARecipeTabToggleWidget currentTab;
 
     // todo: replace this with a textured button??
 
@@ -72,7 +72,7 @@ public class MPSRecipeBookGui extends RecipeBookGui {
     private TextFieldWidget searchBar;
     private String lastSearch = "";
     protected ClientRecipeBook recipeBook;
-    protected final MPSRecipeBookPage recipeBookPage = new MPSRecipeBookPage();
+    protected final MPARecipeBookPage recipeBookPage = new MPARecipeBookPage();
     protected final RecipeItemHelper stackedContents = new RecipeItemHelper();
     private int timesInventoryChanged;
     private boolean field_199738_u;
@@ -130,13 +130,13 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         this.recipeTabs.clear();
 
         for(RecipeBookCategories recipebookcategories : this.container.getRecipeBookCategories()) {
-            this.recipeTabs.add(new MPSRecipeTabToggleWidget(recipebookcategories));
+            this.recipeTabs.add(new MPARecipeTabToggleWidget(recipebookcategories));
         }
 
         if (this.currentTab != null) {
             this.currentTab = this.recipeTabs.stream().filter((tabOther) -> {
                 return tabOther.func_201503_d()/* getCategory */.equals(this.currentTab.func_201503_d());
-            }).findFirst().orElse((MPSRecipeTabToggleWidget)null);
+            }).findFirst().orElse((MPARecipeTabToggleWidget)null);
         }
 
         if (this.currentTab == null) {
@@ -241,16 +241,16 @@ public class MPSRecipeBookGui extends RecipeBookGui {
         int k = 27;
         int l = 0;
 
-        for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-            RecipeBookCategories recipebookcategories = MPSRecipeTabToggleWidget.func_201503_d();
+        for(MPARecipeTabToggleWidget MPARecipeTabToggleWidget : this.recipeTabs) {
+            RecipeBookCategories recipebookcategories = MPARecipeTabToggleWidget.func_201503_d();
             if (recipebookcategories != RecipeBookCategories.SEARCH && recipebookcategories != RecipeBookCategories.FURNACE_SEARCH) {
-                if (MPSRecipeTabToggleWidget.func_199500_a(this.recipeBook)) {
-                    MPSRecipeTabToggleWidget.setPosition(i, j + k * l++);
-                    MPSRecipeTabToggleWidget.startAnimation(this.mc);
+                if (MPARecipeTabToggleWidget.func_199500_a(this.recipeBook)) {
+                    MPARecipeTabToggleWidget.setPosition(i, j + k * l++);
+                    MPARecipeTabToggleWidget.startAnimation(this.mc);
                 }
             } else {
-                MPSRecipeTabToggleWidget.visible = true;
-                MPSRecipeTabToggleWidget.setPosition(i, j + k * l++);
+                MPARecipeTabToggleWidget.visible = true;
+                MPARecipeTabToggleWidget.setPosition(i, j + k * l++);
             }
         }
     }
@@ -289,8 +289,8 @@ public class MPSRecipeBookGui extends RecipeBookGui {
             this.searchBar.render(mouseX, mouseY, partialTicks);
 
             // move this up to before the outer frame once the texture is no longer needed
-            for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-                MPSRecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
+            for(MPARecipeTabToggleWidget MPARecipeTabToggleWidget : this.recipeTabs) {
+                MPARecipeTabToggleWidget.render(mouseX, mouseY, partialTicks);
             }
 
             this.toggleRecipesBtn.render(mouseX, mouseY, partialTicks);
@@ -370,11 +370,11 @@ public class MPSRecipeBookGui extends RecipeBookGui {
                 this.updateCollections(false);
                 return true;
             } else {
-                for(MPSRecipeTabToggleWidget MPSRecipeTabToggleWidget : this.recipeTabs) {
-                    if (MPSRecipeTabToggleWidget.mouseClicked(mouseX, mouseY, button)) {
-                        if (this.currentTab != MPSRecipeTabToggleWidget) {
+                for(MPARecipeTabToggleWidget MPARecipeTabToggleWidget : this.recipeTabs) {
+                    if (MPARecipeTabToggleWidget.mouseClicked(mouseX, mouseY, button)) {
+                        if (this.currentTab != MPARecipeTabToggleWidget) {
                             this.currentTab.setStateTriggered(false);
-                            this.currentTab = MPSRecipeTabToggleWidget;
+                            this.currentTab = MPARecipeTabToggleWidget;
                             this.currentTab.setStateTriggered(true);
                             this.updateCollections(true);
                         }

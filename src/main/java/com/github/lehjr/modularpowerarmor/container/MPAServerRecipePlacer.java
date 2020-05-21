@@ -18,8 +18,8 @@ import java.util.List;
 /**
  * Only handles placing recipes
  */
-public class MPSServerRecipePlacer extends ServerRecipePlacer {
-    public MPSServerRecipePlacer(RecipeBookContainer recipeBookContainer) {
+public class MPAServerRecipePlacer extends ServerRecipePlacer {
+    public MPAServerRecipePlacer(RecipeBookContainer recipeBookContainer) {
         super(recipeBookContainer);
     }
 
@@ -103,7 +103,7 @@ public class MPSServerRecipePlacer extends ServerRecipePlacer {
     protected void clear() {
         for(int index = 0; index < this.recipeBookContainer.getWidth() * this.recipeBookContainer.getHeight() + 1; ++index) {
             if (index != this.recipeBookContainer.getOutputSlot() ||
-                    !(this.recipeBookContainer instanceof MPSCraftingContainer) &&
+                    !(this.recipeBookContainer instanceof MPACraftingContainer) &&
                             !(this.recipeBookContainer instanceof TinkerTableContainer) &&
                             !(this.recipeBookContainer instanceof PlayerContainer)) {
                 this.giveToPlayer(index);

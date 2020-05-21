@@ -1,20 +1,9 @@
 package com.github.lehjr.modularpowerarmor.event;
 
-import com.github.lehjr.mpalib.capabilities.heat.HeatCapability;
-import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.google.common.eventbus.Subscribe;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class EntityDamageEvent {
     // LivingAttackEvent

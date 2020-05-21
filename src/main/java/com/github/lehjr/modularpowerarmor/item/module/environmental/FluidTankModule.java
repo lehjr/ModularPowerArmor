@@ -23,7 +23,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -68,10 +67,10 @@ public class FluidTankModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig(), true);
-            this.ticker.addBasePropertyInteger(MPAConstants.FLUID_TANK_SIZE, 20000);
-            this.ticker.addBasePropertyDouble(MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.ACTIVATION_PERCENT, MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5, "%");
-            this.fluidHandler = new ModuleTank(ticker.applyPropertyModifierBaseInt(MPAConstants.FLUID_TANK_SIZE));
+            this.ticker.addBaseProperty(MPAConstants.FLUID_TANK_SIZE, 20000);
+            this.ticker.addBaseProperty(MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5);
+            this.ticker.addTradeoffProperty(MPAConstants.ACTIVATION_PERCENT, MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5, "%");
+            this.fluidHandler = new ModuleTank((int)ticker.applyPropertyModifiers(MPAConstants.FLUID_TANK_SIZE));
         }
 
         @Nonnull

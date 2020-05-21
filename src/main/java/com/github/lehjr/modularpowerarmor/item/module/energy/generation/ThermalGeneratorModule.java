@@ -46,8 +46,8 @@ public class ThermalGeneratorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION, 250);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 250, "RF");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION, 250);
+            this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 250, "RF");
         }
 
         @Nonnull

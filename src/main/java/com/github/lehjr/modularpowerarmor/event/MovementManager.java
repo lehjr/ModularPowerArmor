@@ -116,16 +116,16 @@ public class MovementManager {
             Vec3d desiredDirection = player.getLookVec().normalize();
             double strafeX = desiredDirection.z;
             double strafeZ = -desiredDirection.x;
-            double flightVerticality = 0;
             ItemStack helm = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-            flightVerticality = helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iModularItem -> {
-                if (iModularItem instanceof IModularItem)
+            double flightVerticality = helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iModularItem -> {
+                if (iModularItem instanceof IModularItem) {
                     return ((IModularItem) iModularItem)
                             .getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
                             .getCapability(PowerModuleCapability.POWER_MODULE)
-                            .map(pm->pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0D);
-                else
+                            .map(pm -> pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0D);
+                } else {
                     return 0D;
+                }
             }).orElse(0D);
 
             desiredDirection = new Vec3d(
@@ -239,8 +239,9 @@ public class MovementManager {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             player.getItemStackFromSlot(EquipmentSlotType.LEGS).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-                if (!(iModularItem instanceof IModularItem))
+                if (!(iModularItem instanceof IModularItem)) {
                     return;
+                }
 
                 ((IModularItem) iModularItem).getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
                     double jumpAssist = jumper.applyPropertyModifiers(MPAConstants.MULTIPLIER) * 2;
@@ -273,8 +274,9 @@ public class MovementManager {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             ItemStack boots = player.getItemStackFromSlot(EquipmentSlotType.FEET);
             boots.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
-                if (!(iModularItem instanceof IModularItem))
+                if (!(iModularItem instanceof IModularItem)) {
                     return;
+                }
 
                 ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {

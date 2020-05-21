@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
-import com.github.lehjr.modularpowerarmor.container.MPSCraftingContainer;
+import com.github.lehjr.modularpowerarmor.container.MPACraftingContainer;
 import com.github.lehjr.modularpowerarmor.container.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
@@ -350,9 +350,9 @@ public enum MPAObjects {
     /**
      * Container Types ----------------------------------------------------------------------------
      */
-    @ObjectHolder(MPS_CRAFTING_CONTAINER_TYPE__REG_NAME)
-    public static final ContainerType<MPSCraftingContainer> MPS_CRAFTING_CONTAINER_TYPE = null;
+    @ObjectHolder(MPA_CRAFTING_CONTAINER_TYPE__REG_NAME)
+    public static final ContainerType<MPACraftingContainer> MPA_CRAFTING_CONTAINER_TYPE = null;
 
-    @ObjectHolder(MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME)
+    @ObjectHolder(MPA_TINKER_TABLE_CONTAINER_TYPE__REG_NAME)
     public static final ContainerType<TinkerTableContainer> TINKER_TABLE_CONTAINER_TYPE = null;
 }

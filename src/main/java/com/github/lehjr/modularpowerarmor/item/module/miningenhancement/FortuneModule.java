@@ -45,8 +45,8 @@ public class FortuneModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.miningEnhancement.addBasePropertyDouble(MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 500, "RF");
-            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 9500);
+            this.miningEnhancement.addBaseProperty(MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement.addTradeoffProperty(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(MPAConstants.ENCHANTMENT_LEVEL, MPAConstants.FORTUNE_ENCHANTMENT_LEVEL, 3, "", 1, 1);
         }
 

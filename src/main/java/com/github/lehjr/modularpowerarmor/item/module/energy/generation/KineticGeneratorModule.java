@@ -48,10 +48,10 @@ public class KineticGeneratorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_GENERATION, 2000);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
-            this.ticker.addBasePropertyDouble(MPAConstants.MOVEMENT_RESISTANCE, 0.01F);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.ENERGY_GENERATED, MPAConstants.MOVEMENT_RESISTANCE, 0.49F, "%");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION, 2000);
+            this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
+            this.ticker.addBaseProperty(MPAConstants.MOVEMENT_RESISTANCE, 0.01F);
+            this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.MOVEMENT_RESISTANCE, 0.49F, "%");
         }
 
         @Nonnull

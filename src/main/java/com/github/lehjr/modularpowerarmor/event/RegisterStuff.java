@@ -4,7 +4,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPACreativeTab;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.block.BlockTinkerTable;
-import com.github.lehjr.modularpowerarmor.container.MPSCraftingContainer;
+import com.github.lehjr.modularpowerarmor.container.MPACraftingContainer;
 import com.github.lehjr.modularpowerarmor.container.TinkerTableContainer;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
@@ -240,7 +240,7 @@ public enum RegisterStuff {
 
                 // Modular Item Container
                 new ContainerType<>(TinkerTableContainer::new)
-                        .setRegistryName(MPS_TINKER_TABLE_CONTAINER_TYPE__REG_NAME),
+                        .setRegistryName(MPA_TINKER_TABLE_CONTAINER_TYPE__REG_NAME),
 
 //                // the IForgeContainerType only needed for extra data
 //                // ModuleConfig
@@ -262,8 +262,8 @@ public enum RegisterStuff {
 //                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
 
                 // Crafting Gui
-                new ContainerType<>(MPSCraftingContainer::new)
-                        .setRegistryName(MPS_CRAFTING_CONTAINER_TYPE__REG_NAME)
+                new ContainerType<>(MPACraftingContainer::new)
+                        .setRegistryName(MPA_CRAFTING_CONTAINER_TYPE__REG_NAME)
         );
     }
 }

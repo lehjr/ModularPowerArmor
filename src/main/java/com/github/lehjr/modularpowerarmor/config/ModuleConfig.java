@@ -168,36 +168,6 @@ public class ModuleConfig implements IConfig {
     }
 
     @Override
-    public int getBasePropertIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String propertyName, int baseVal) {
-        String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
-        String entry = "base_" + propertyName;
-
-        if (isDevMode) {
-            addtoMap(category.getName(),
-                    moduleName,
-                    new StringBuilder("builder.defineInRange(\"")
-                            .append(entry).append("\", ")
-                            .append(baseVal).append(", ")
-                            .append(0).append(", ")
-                            .append(Integer.MAX_VALUE)
-                            .append(");\n").toString());
-            boolean isAllowed = isModuleAllowed(category, module);
-        } else {
-            ArrayList<String> key = new ArrayList<String>() {{
-                add("Modules");
-                add(category.getName());
-                add(moduleName);
-                add(entry);
-            }};
-            if (commonConfig != null && commonConfig.getConfigData().contains(key)) {
-//                    System.out.println("common config value: " + commonConfig.getConfigData().get(key));
-                return commonConfig.getConfigData().get(key);
-            }
-        }
-        return baseVal;
-    }
-
-    @Override
     public int getTradeoffPropertyIntegerOrDefault(EnumModuleCategory category, @Nonnull ItemStack module, String tradeoffName, String propertyName, int multiplier) {
         String moduleName = itemTranslationKeyToConfigKey(module.getTranslationKey());
         String entry = propertyName + "_" + tradeoffName + "_multiplier";

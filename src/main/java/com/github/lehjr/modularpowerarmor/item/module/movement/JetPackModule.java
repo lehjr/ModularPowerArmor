@@ -14,6 +14,7 @@ import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapabi
 import com.github.lehjr.mpalib.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
@@ -55,10 +56,10 @@ public class JetPackModule extends AbstractPowerModule {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
 
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/t");
-            this.ticker.addBasePropertyDouble(MPAConstants.JETPACK_THRUST, 0, "N");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1500);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.JETPACK_THRUST, 0.16F);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/t");
+            this.ticker.addBaseProperty(MPAConstants.JETPACK_THRUST, 0, "N");
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1500);
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.JETPACK_THRUST, 0.16F);
         }
 
         @Nonnull
@@ -77,10 +78,12 @@ public class JetPackModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, ItemStack torso) {
-                if (player.isInWater())
+                if (player.isInWater()) {
                     return;
+                }
 
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
+
                 ItemStack helmet = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
                 boolean hasFlightControl = helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(m->
                         m instanceof IModularItem && ((IModularItem) m).isModuleOnline(flightControl)).orElse(false);

@@ -12,9 +12,7 @@ import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.math.Colour;
 import com.github.lehjr.mpalib.nbt.NBTUtils;
 import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifier;
-import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierDouble;
-import com.github.lehjr.mpalib.nbt.propertymodifier.IPropertyModifierInteger;
-import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditiveDouble;
+import com.github.lehjr.mpalib.nbt.propertymodifier.PropertyModifierLinearAdditive;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.string.StringUtils;
@@ -33,8 +31,6 @@ public class ModuleTweakFrame extends ScrollableFrame {
     protected ModuleSelectionFrame moduleTarget;
     protected List<ClickableTinkerSlider> sliders;
     protected Map<String, Double> propertyDoubleStrings;
-    protected Map<String, Integer> propertyIntStrings;
-
     protected ClickableTinkerSlider selectedSlider;
 
     public ModuleTweakFrame(
@@ -78,9 +74,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
     String getUnit(String key) {
         if (moduleTarget.getSelectedModule() != null) {
             return moduleTarget.getSelectedModule().getModule().getCapability(PowerModuleCapability.POWER_MODULE)
-                    .map(pm->{
-                        return pm.getUnit(key);
-                    }).orElse("");
+                    .map(pm-> pm.getUnit(key)).orElse("");
         }
         return "";
     }
@@ -99,22 +93,8 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 slider.render(mouseX, mouseY, partialTicks, getzLevel());
             }
             int nexty = (int) (sliders.size() * 20 + border.top() + 23);
+
             for (Map.Entry<String, Double> property : propertyDoubleStrings.entrySet()) {
-                String formattedValue = StringUtils.formatNumberFromUnits(property.getValue(), getUnit(property.getKey()));
-                String name = property.getKey();
-                double valueWidth = Renderer.getStringWidth(formattedValue);
-                double allowedNameWidth = border.width() - valueWidth - margin * 2;
-
-                List<String> namesList = StringUtils.wrapStringToVisualLength(
-                        I18n.format(MPALIbConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
-                for (int i = 0; i < namesList.size(); i++) {
-                    Renderer.drawString(namesList.get(i), border.left() + margin, nexty + 9 * i);
-                }
-                Renderer.drawRightAlignedString(formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
-                nexty += 9 * namesList.size() + 1;
-            }
-
-            for (Map.Entry<String, Integer> property: propertyIntStrings.entrySet()) {
                 String formattedValue = StringUtils.formatNumberFromUnits(property.getValue(), getUnit(property.getKey()));
                 String name = property.getKey();
                 double valueWidth = Renderer.getStringWidth(formattedValue);
@@ -143,13 +123,13 @@ public class ModuleTweakFrame extends ScrollableFrame {
         CompoundNBT moduleTag = NBTUtils.getModuleTag(module);
         module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
 
-            Map<String, List<IPropertyModifierDouble>> propertyModifiers = pm.getPropertyModifiers();
-            for (Map.Entry<String, List<IPropertyModifierDouble>> property : propertyModifiers.entrySet()) {
+            Map<String, List<IPropertyModifier>> propertyModifiers = pm.getPropertyModifiers();
+            for (Map.Entry<String, List<IPropertyModifier>> property : propertyModifiers.entrySet()) {
                 double currValue = 0;
                 for (IPropertyModifier modifier : property.getValue()) {
                     currValue = (double) modifier.applyModifier(moduleTag, currValue);
-                    if (modifier instanceof PropertyModifierLinearAdditiveDouble) {
-                        tweaks.add(((PropertyModifierLinearAdditiveDouble) modifier).getTradeoffName());
+                    if (modifier instanceof PropertyModifierLinearAdditive) {
+                        tweaks.add(((PropertyModifierLinearAdditive) modifier).getTradeoffName());
                     }
                 }
                 propertyDoubleStrings.put(property.getKey(), currValue);
@@ -171,22 +151,6 @@ public class ModuleTweakFrame extends ScrollableFrame {
                 selectedSlider = slider;
             }
         }
-
-        /**
-         * Loads values for display only. These values cannot be changed.
-         * @param module
-         */
-        propertyIntStrings = new HashMap();
-        module.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(pm->{
-            Map<String, List<IPropertyModifierInteger>> propertyModifiers = pm.getPropertyModifierBaseInt();
-            for (Map.Entry<String, List<IPropertyModifierInteger>> property : propertyModifiers.entrySet()) {
-                int currValue = 0;
-                for (IPropertyModifier modifier : property.getValue()) {
-                    currValue = (int) modifier.applyModifier(moduleTag, currValue);
-                }
-                propertyIntStrings.put(property.getKey(), currValue);
-            }
-        });
     }
 
     @Override

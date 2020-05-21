@@ -3,7 +3,7 @@ package com.github.lehjr.modularpowerarmor.client.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.client.model.block.LuxCapacitorModelWrapper;
-import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
+import com.github.lehjr.modularpowerarmor.client.model.helper.MPAModelHelper;
 import com.github.lehjr.modularpowerarmor.client.model.item.PowerFistModel;
 import forge.OBJBakedCompositeModel;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -55,7 +55,7 @@ public enum ModelBakeEventHandler {
             event.getModelRegistry().put(powerFistIconLocation, new PowerFistModel(powerFistIcon));
         }
 
-        MPSModelHelper.loadArmorModels(null, event.getModelLoader());
+        MPAModelHelper.loadArmorModels(null, event.getModelLoader());
 //        event.getModelLoader().defaultTextureGetter();
 
 

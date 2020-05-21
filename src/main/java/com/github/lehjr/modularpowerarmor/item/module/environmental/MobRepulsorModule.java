@@ -55,7 +55,7 @@ public class MobRepulsorModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 2500, "RF");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 2500, "RF");
         }
 
         @Nonnull

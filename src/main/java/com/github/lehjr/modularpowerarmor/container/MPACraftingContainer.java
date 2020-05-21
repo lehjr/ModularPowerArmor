@@ -24,13 +24,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 import java.util.Optional;
 
-public class MPSCraftingContainer extends MPARecipeBookContainer<CraftingInventory> {
+public class MPACraftingContainer extends MPARecipeBookContainer<CraftingInventory> {
     private final CraftingInventory craftingInventory;
     private final CraftResultInventory resultInventory;
     private final PlayerEntity player;
 
-    public MPSCraftingContainer(int windowId, PlayerInventory playerInventory) {
-        super(MPAObjects.INSTANCE.MPS_CRAFTING_CONTAINER_TYPE, windowId);
+    public MPACraftingContainer(int windowId, PlayerInventory playerInventory) {
+        super(MPAObjects.INSTANCE.MPA_CRAFTING_CONTAINER_TYPE, windowId);
         this.craftingInventory = new CraftingInventory(this, 3, 3);
         this.resultInventory = new CraftResultInventory();
         this.player = playerInventory.player;

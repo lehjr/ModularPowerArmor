@@ -4,7 +4,7 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
-import com.github.lehjr.modularpowerarmor.client.model.helper.MPSModelHelper;
+import com.github.lehjr.modularpowerarmor.client.model.helper.MPAModelHelper;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
@@ -42,7 +42,7 @@ public enum RenderEventHandler {
     @SubscribeEvent
     public void preTextureStitch(TextureStitchEvent.Pre event) {
 //        MuseIcon.registerIcons(event);
-        MPSModelHelper.loadArmorModels(event, null);
+        MPAModelHelper.loadArmorModels(event, null);
     }
 
     @OnlyIn(Dist.CLIENT)

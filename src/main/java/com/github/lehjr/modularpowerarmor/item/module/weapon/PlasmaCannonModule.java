@@ -48,12 +48,12 @@ public class PlasmaCannonModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClickie.addBasePropertyDouble(MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
-            this.rightClickie.addBasePropertyDouble(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
-            this.rightClickie.addTradeoffPropertyDouble(MPAConstants.AMPERAGE, MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");
-            this.rightClickie.addTradeoffPropertyDouble(MPAConstants.AMPERAGE, MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 38, "pt");
-            this.rightClickie.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 500, "RF");
-            this.rightClickie.addTradeoffPropertyDouble(MPAConstants.VOLTAGE, MPAConstants.PLASMA_CANNON_EXPLOSIVENESS, 0.5F, MPAConstants.CREEPER);
+            this.rightClickie.addBaseProperty(MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 100, "RF");
+            this.rightClickie.addBaseProperty(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 2, "pt");
+            this.rightClickie.addTradeoffProperty(MPAConstants.AMPERAGE, MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 1500, "RF");
+            this.rightClickie.addTradeoffProperty(MPAConstants.AMPERAGE, MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE, 38, "pt");
+            this.rightClickie.addTradeoffProperty(MPAConstants.VOLTAGE, MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK, 500, "RF");
+            this.rightClickie.addTradeoffProperty(MPAConstants.VOLTAGE, MPAConstants.PLASMA_CANNON_EXPLOSIVENESS, 0.5F, MPAConstants.CREEPER);
         }
 
         @Nonnull

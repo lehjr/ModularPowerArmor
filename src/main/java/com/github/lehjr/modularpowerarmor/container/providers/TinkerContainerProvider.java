@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.container.providers;
 
-import com.github.lehjr.modularpowerarmor.container.MPSCraftingContainer;
+import com.github.lehjr.modularpowerarmor.container.MPACraftingContainer;
 import com.github.lehjr.modularpowerarmor.container.TinkerTableContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,7 +34,7 @@ public class TinkerContainerProvider implements INamedContainerProvider {
             case 0:
                 return new TinkerTableContainer(windowId, playerInventory);
             default:
-                return new MPSCraftingContainer(windowId, playerInventory);
+                return new MPACraftingContainer(windowId, playerInventory);
         }
     }
 }

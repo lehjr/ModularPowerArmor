@@ -30,7 +30,7 @@ A mod which adds modular power armor, power tool, and a tinker table to configur
 [[dependencies.modularpowerarmor]]
     modId="mpalib"
     mandatory=true
-    versionRange="[2.0.1,)"
+    versionRange="[2.0.2,)"
     ordering="AFTER"
     side="BOTH"
 

@@ -7,7 +7,7 @@ import net.minecraft.util.LazyValue;
 
 import java.util.function.Supplier;
 
-public enum MPSToolMaterial implements IItemTier {
+public enum MPAToolMaterial implements IItemTier {
     EMPTY_TOOL(0, 0, 0, 0.0F, 0, () -> {
         return Ingredient.fromItems(Items.AIR);
     });
@@ -19,7 +19,7 @@ public enum MPSToolMaterial implements IItemTier {
     private final int enchantability;
     private final LazyValue<Ingredient> repairMaterial;
 
-    private MPSToolMaterial(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantibility, Supplier<Ingredient> repairMaterial) {
+    private MPAToolMaterial(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantibility, Supplier<Ingredient> repairMaterial) {
         this.harvestLevel = harvestLevel;
         this.maxUses = maxUses;
         this.efficiency = efficiency;

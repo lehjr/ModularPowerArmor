@@ -19,7 +19,7 @@ public class AbstractElectricTool extends ToolItem {
     public AbstractElectricTool() {
         super(0.0F,
                 0.0F,
-                MPSToolMaterial.EMPTY_TOOL,
+                MPAToolMaterial.EMPTY_TOOL,
                 new HashSet<>(),
                 new Item.Properties().group(RegisterStuff.INSTANCE.creativeTab).maxStackSize(1).defaultMaxDamage(0));
     }

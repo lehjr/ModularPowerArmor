@@ -47,12 +47,12 @@ public class EnergyStorageModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.moduleCap = new PowerModule(module, EnumModuleCategory.ENERGY_STORAGE, EnumModuleTarget.ALLITEMS, MPASettings.getModuleConfig());
-            this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_ENERGY, maxEnergy, "RF");
-            this.moduleCap.addBasePropertyInteger(MPAConstants.MAX_TRAMSFER, maxTransfer, "RF");
+            this.moduleCap.addBaseProperty(MPAConstants.MAX_ENERGY, maxEnergy, "RF");
+            this.moduleCap.addBaseProperty(MPAConstants.MAX_TRAMSFER, maxTransfer, "RF");
             this.energyStorage = new ForgeEnergyModuleWrapper(
                     module,
-                    moduleCap.applyPropertyModifierBaseInt(MPAConstants.MAX_ENERGY),
-                    moduleCap.applyPropertyModifierBaseInt(MPAConstants.MAX_TRAMSFER)
+                    (int)moduleCap.applyPropertyModifiers(MPAConstants.MAX_ENERGY),
+                    (int)moduleCap.applyPropertyModifiers(MPAConstants.MAX_TRAMSFER)
             );
         }
 

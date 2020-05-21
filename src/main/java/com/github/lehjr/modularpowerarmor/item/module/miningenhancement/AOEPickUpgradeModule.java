@@ -58,8 +58,8 @@ public class AOEPickUpgradeModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.miningEnhancement.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
-            this.miningEnhancement.addTradeoffPropertyDouble(MPAConstants.DIAMETER, MPAConstants.ENERGY_CONSUMPTION, 9500);
+            this.miningEnhancement.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement.addTradeoffProperty(MPAConstants.DIAMETER, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.miningEnhancement.addIntTradeoffProperty(MPAConstants.DIAMETER, MPAConstants.AOE_MINING_RADIUS, 5, "m", 2, 1);
         }
 

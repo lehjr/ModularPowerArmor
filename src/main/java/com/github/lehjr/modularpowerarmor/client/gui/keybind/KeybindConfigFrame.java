@@ -46,11 +46,13 @@ public class KeybindConfigFrame implements IGuiFrame {
     protected ClickableButton newKeybindButton;
     protected ClickableButton trashKeybindButton;
     protected long takenTime;
+    KeybindManager keybindManager = KeybindManager.INSTANCE;
+
     Rect rect;
 
     public KeybindConfigFrame(Rect backgroundRect, PlayerEntity player) {
         modules = new HashSet();
-        for (ClickableKeybinding kb : KeybindManager.getKeybindings()) {
+        for (ClickableKeybinding kb : keybindManager.getKeybindings()) {
             modules.addAll(kb.getBoundModules());
         }
         this.rect = backgroundRect;
@@ -77,7 +79,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                             return true;
                         }
                     }
-                    for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                    for (ClickableKeybinding keybind : keybindManager.getKeybindings()) {
                         if (keybind.hitBox((float) x, (float) y)) {
                             selectedClickie = keybind;
                             return true;
@@ -88,7 +90,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                     selecting = true;
                 }
             } else if (button == 1) {
-                for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                for (ClickableKeybinding keybind : keybindManager.getKeybindings()) {
                     if (keybind.hitBox((float) x, (float) y)) {
                         keybind.toggleHUDState();
                         return true;
@@ -171,7 +173,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                 keyBindingHelper.removeKey(binding);
 //                KeyBinding.HASH.removeObject(binding.getKeyCode());
                 keyBindingHelper.removeKey(binding);
-                KeybindManager.getKeybindings().remove(selectedClickie);
+                keybindManager.remove((ClickableKeybinding) selectedClickie);
             }
             selectedClickie = null;
         }
@@ -195,7 +197,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             this.selectedClickie.setPosition(new Point2F((float)mousex, (float)mousey));
             if (this.selectedClickie instanceof ClickableModule) {
                 ClickableModule selectedModule = ((ClickableModule) this.selectedClickie);
-                for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+                for (ClickableKeybinding keybind : keybindManager.getKeybindings()) {
                     double distance = keybind.getPosition().minus(selectedModule.getPosition()).distance();
                     if (distance < closestDistance) {
                         closestDistance = distance;
@@ -206,7 +208,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                 }
             }
         }
-        for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+        for (ClickableKeybinding keybind : keybindManager.getKeybindings()) {
             if (keybind != selectedClickie) {
                 keybind.unbindFarModules();
             }
@@ -217,7 +219,7 @@ public class KeybindConfigFrame implements IGuiFrame {
                 repelOtherModules(module);
             }
         }
-        for (IClickable keybind : KeybindManager.getKeybindings()) {
+        for (IClickable keybind : keybindManager.getKeybindings()) {
             if (keybind != selectedClickie) {
                 repelOtherModules(keybind);
             }
@@ -225,7 +227,7 @@ public class KeybindConfigFrame implements IGuiFrame {
         for (IClickable module : modules) {
             clampClickiePosition(module);
         }
-        for (IClickable keybind : KeybindManager.getKeybindings()) {
+        for (IClickable keybind : keybindManager.getKeybindings()) {
             clampClickiePosition(keybind);
         }
     }
@@ -288,7 +290,7 @@ public class KeybindConfigFrame implements IGuiFrame {
         for (ClickableModule module : modules) {
             module.render(mouseX, mouseY, partialTicks, zLevel);
         }
-        for (ClickableKeybinding keybind : KeybindManager.getKeybindings()) {
+        for (ClickableKeybinding keybind : keybindManager.getKeybindings()) {
             keybind.render(mouseX, mouseY, partialTicks, zLevel);
         }
         if (selectedClickie != null && closestKeybind != null) {
@@ -345,9 +347,9 @@ public class KeybindConfigFrame implements IGuiFrame {
         } catch (Exception e) {
             name = "???";
         }
-        KeyBinding keybind = new KeyBinding(name, key.getKeyCode(), KeybindKeyHandler.mps);
+        KeyBinding keybind = new KeyBinding(name, key.getKeyCode(), KeybindKeyHandler.mpa);
         ClickableKeybinding clickie = new ClickableKeybinding(keybind, newKeybindButton.getPosition().plus(new Point2F(0, -20)), free, false);
-        KeybindManager.getKeybindings().add(clickie);
+        keybindManager.getKeybindings().add(clickie);
     }
 
     @Override

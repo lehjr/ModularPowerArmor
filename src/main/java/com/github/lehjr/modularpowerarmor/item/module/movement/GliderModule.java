@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
@@ -49,11 +48,6 @@ public class GliderModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-
-            this.ticker.addBasePropertyDouble(MPAConstants.ENERGY_CONSUMPTION, 0);
-            this.ticker.addBasePropertyDouble(MPAConstants.JETBOOTS_THRUST, 0);
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 750, "RF");
-            this.ticker.addTradeoffPropertyDouble(MPAConstants.THRUST, MPAConstants.JETBOOTS_THRUST, 0.08F);
         }
 
         @Nonnull
@@ -80,12 +74,12 @@ public class GliderModule extends AbstractPowerModule {
                 PlayerUtils.resetFloatKickTicks(player);
                 boolean hasParachute = chestPlate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                         .map(m-> m instanceof IModularItem && ((IModularItem) m).isModuleOnline(parachute)).orElse(false);
+
                 if (playerInput.sneakKey && player.getMotion().y < 0 && (!hasParachute || playerInput.moveForward > 0)) {
-                    if (player.getMotion().y < -0.1) {
-                        // FIXME: volume parameter missing
-//                        float vol = (float) (player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z);
-                        double motionYchange = Math.min(0.08, -0.1 - player.getMotion().y);
-                        Vec3d motion = player.getMotion();
+                    Vec3d motion = player.getMotion();
+                    if (motion.y < -0.1) {
+                        double motionYchange = Math.min(0.08, -0.1 - motion.y);
+
                         player.setMotion(motion.add(
                                 playerHorzFacing.x * motionYchange,
                                 motionYchange,

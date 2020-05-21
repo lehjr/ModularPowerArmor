@@ -33,9 +33,9 @@ public class DiamondPlatingModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
                 moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPASettings.getModuleConfig());
-                moduleCap.addBasePropertyDouble(MPAConstants.ARMOR_VALUE_PHYSICAL, 5, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
-                moduleCap.addBasePropertyDouble(HeatCapability.MAXIMUM_HEAT, 400);
-                moduleCap.addBasePropertyDouble(MPAConstants.KNOCKBACK_RESISTANCE, 0.25F, "");
+                moduleCap.addBaseProperty(MPAConstants.ARMOR_VALUE_PHYSICAL, 5, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
+                moduleCap.addBaseProperty(HeatCapability.MAXIMUM_HEAT, 400);
+                moduleCap.addBaseProperty(MPAConstants.KNOCKBACK_RESISTANCE, 0.25F, "");
         }
 
         @Nonnull

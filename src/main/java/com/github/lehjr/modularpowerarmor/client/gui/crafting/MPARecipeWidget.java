@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-public class MPSRecipeWidget extends RecipeWidget {
+public class MPARecipeWidget extends RecipeWidget {
     Colour disabledBackground = new Colour(0.416F, 0.416F, 0.416F, 1);
     Colour enabledBackground = new Colour(0.545F, 0.545F, 0.545F, 1);
     Colour disabledBorder = new Colour(0.541F, 0.133F, 0.133F, 1);
@@ -32,7 +32,7 @@ public class MPSRecipeWidget extends RecipeWidget {
 
     DrawableTile tile;
 
-    public MPSRecipeWidget() {
+    public MPARecipeWidget() {
         tile = new DrawableTile(0, 0, 0, 0, false, disabledBackground, disabledBorder);
     }
 

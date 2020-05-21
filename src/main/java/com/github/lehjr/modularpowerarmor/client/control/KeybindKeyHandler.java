@@ -21,12 +21,12 @@ import org.lwjgl.glfw.GLFW;
 public class KeybindKeyHandler {
     Minecraft minecraft;
 
-    public static final String mps = "Modular Power Armor";
-    public static final KeyBinding openKeybindGUI = new KeyBinding("Open MPS Keybind GUI", GLFW.GLFW_KEY_UNKNOWN, mps);
-    public static final KeyBinding goDownKey = new KeyBinding("Go Down (MPS Flight Control)", GLFW.GLFW_KEY_Z, mps);
-    public static final KeyBinding cycleToolBackward = new KeyBinding("Cycle Tool Backward (MPS)", GLFW.GLFW_KEY_UNKNOWN, mps);
-    public static final KeyBinding cycleToolForward = new KeyBinding("Cycle Tool Forward (MPS)", GLFW.GLFW_KEY_UNKNOWN, mps);
-    public static final KeyBinding openCosmeticGUI = new KeyBinding("Cosmetic (MPS)", GLFW.GLFW_KEY_UNKNOWN, mps);
+    public static final String mpa = "Modular Power Armor";
+    public static final KeyBinding openKeybindGUI = new KeyBinding("Open MPA Keybind GUI", GLFW.GLFW_KEY_UNKNOWN, mpa);
+    public static final KeyBinding goDownKey = new KeyBinding("Go Down (MPA Flight Control)", GLFW.GLFW_KEY_Z, mpa);
+    public static final KeyBinding cycleToolBackward = new KeyBinding("Cycle Tool Backward (MPA)", GLFW.GLFW_KEY_UNKNOWN, mpa);
+    public static final KeyBinding cycleToolForward = new KeyBinding("Cycle Tool Forward (MPA)", GLFW.GLFW_KEY_UNKNOWN, mpa);
+    public static final KeyBinding openCosmeticGUI = new KeyBinding("Cosmetic (MPA)", GLFW.GLFW_KEY_UNKNOWN, mpa);
     public static final KeyBinding[] keybindArray = new KeyBinding[]{openKeybindGUI, goDownKey, cycleToolBackward, cycleToolForward, openCosmeticGUI};
 
     public KeybindKeyHandler() {
@@ -37,34 +37,36 @@ public class KeybindKeyHandler {
     }
 
     void updatePlayerValues(ClientPlayerEntity clientPlayer) {
-        if (clientPlayer == null)
+        if (clientPlayer == null) {
             return;
-            clientPlayer.getCapability(CapabilityPlayerKeyStates.PLAYER_KEYSTATES).ifPresent(playerCap -> {
-                boolean markForSync = false;
-                boolean downKeyState = goDownKey.isKeyDown();
-                boolean jumpKeyState = minecraft.gameSettings.keyBindJump.isKeyDown();
+        }
+        clientPlayer.getCapability(CapabilityPlayerKeyStates.PLAYER_KEYSTATES).ifPresent(playerCap -> {
+            boolean markForSync = false;
+            boolean downKeyState = goDownKey.isKeyDown();
+            boolean jumpKeyState = minecraft.gameSettings.keyBindJump.isKeyDown();
 
-                if (playerCap.getDownKeyState() != downKeyState) {
-                    playerCap.setDownKeyState(downKeyState);
-                    markForSync = true;
-                }
+            if (playerCap.getDownKeyState() != downKeyState) {
+                playerCap.setDownKeyState(downKeyState);
+                markForSync = true;
+            }
 
-                if (playerCap.getDownKeyState() != downKeyState) {
-                    playerCap.setDownKeyState(downKeyState);
-                    markForSync = true;
-                }
+            if (playerCap.getDownKeyState() != downKeyState) {
+                playerCap.setDownKeyState(downKeyState);
+                markForSync = true;
+            }
 
-                if (markForSync) {
-                    MPALibPackets.CHANNEL_INSTANCE.sendToServer(new PlayerUpdatePacket(downKeyState, jumpKeyState));
-                }
-            });
+            if (markForSync) {
+                MPALibPackets.CHANNEL_INSTANCE.sendToServer(new PlayerUpdatePacket(downKeyState, jumpKeyState));
+            }
+        });
     }
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
         ClientPlayerEntity player = minecraft.player;
-        if (player == null)
+        if (player == null) {
             return;
+        }
 
         KeyBinding[] hotbarKeys = minecraft.gameSettings.keyBindsHotbar;
         updatePlayerValues(player);
@@ -72,11 +74,11 @@ public class KeybindKeyHandler {
         // Mode changinging GUI
         if (hotbarKeys[player.inventory.currentItem].isKeyDown() && minecraft.isGameFocused()) {
             player.inventory.getCurrentItem().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModeChanging->{
-                        if(player.world.isRemote) {
-                            if (!(Minecraft.getInstance().currentScreen instanceof GuiModeSelector)) {
-                                Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiModeSelector(player, new StringTextComponent("modeChanging"))));
-                            }
-                        }
+                if(player.world.isRemote) {
+                    if (!(Minecraft.getInstance().currentScreen instanceof GuiModeSelector)) {
+                        Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new GuiModeSelector(player, new StringTextComponent("modeChanging"))));
+                    }
+                }
             });
         }
 
