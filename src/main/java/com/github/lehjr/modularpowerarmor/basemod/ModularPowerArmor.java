@@ -15,6 +15,7 @@ import com.github.lehjr.modularpowerarmor.event.*;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import com.github.lehjr.mpalib.config.MPALibSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -50,6 +51,7 @@ public class ModularPowerArmor {
         MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::handleEntityDamageEvent);
         MinecraftForge.EVENT_BUS.addListener(EntityDamageEvent::entityAttackEventHandler);
         MinecraftForge.EVENT_BUS.register(new PlayerUpdateHandler());
+        MinecraftForge.EVENT_BUS.register(MovementManager.INSTANCE);
 
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleHarvestCheck);
         MinecraftForge.EVENT_BUS.addListener(HarvestEventHandler::handleBreakSpeed);

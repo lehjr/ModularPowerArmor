@@ -35,7 +35,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MovementManager {
+public enum MovementManager {
+    INSTANCE;
     static final double root2 = Math.sqrt(2);
     public static final Map<UUID, Double> playerJumpMultipliers = new HashMap();
     /**
@@ -43,7 +44,7 @@ public class MovementManager {
      */
     public static final double DEFAULT_GRAVITY = -0.0784000015258789;
 
-    public static double getPlayerJumpMultiplier(PlayerEntity player) {
+    public double getPlayerJumpMultiplier(PlayerEntity player) {
         if (playerJumpMultipliers.containsKey(player.getUniqueID())) {
             return playerJumpMultipliers.get(player.getUniqueID());
         } else {
@@ -51,18 +52,18 @@ public class MovementManager {
         }
     }
 
-    public static void setPlayerJumpTicks(PlayerEntity player, double number) {
+    public void setPlayerJumpTicks(PlayerEntity player, double number) {
         playerJumpMultipliers.put(player.getUniqueID(), number);
     }
 
-    public static double computeFallHeightFromVelocity(double velocity) {
+    public double computeFallHeightFromVelocity(double velocity) {
         double ticks = velocity / DEFAULT_GRAVITY;
         return -0.5 * DEFAULT_GRAVITY * ticks * ticks;
     }
 
     static final ResourceLocation kineticGen = new ResourceLocation(MPARegistryNames.MODULE_KINETIC_GENERATOR__REGNAME);
     // moved here so it is still accessible if sprint assist module isn't installed.
-    public static void setMovementModifier(ItemStack itemStack, double multiplier, PlayerEntity player) {
+    public void setMovementModifier(ItemStack itemStack, double multiplier, PlayerEntity player) {
         // reduce player speed according to Kinetic Energy Generator setting
         AtomicDouble movementResistance = new AtomicDouble(0);
         itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
@@ -109,7 +110,7 @@ public class MovementManager {
         }
     }
 
-    public static double thrust(PlayerEntity player, double thrust, boolean flightControl) {
+    public double thrust(PlayerEntity player, double thrust, boolean flightControl) {
         PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
         double thrustUsed = 0;
         if (flightControl) {
@@ -231,7 +232,6 @@ public class MovementManager {
     public static double computePlayerVelocity(PlayerEntity player) {
         return MathUtils.pythag(player.getMotion().x, player.getMotion().y, player.getMotion().z);
     }
-
 
     static final ResourceLocation jumpAssist = new ResourceLocation(MPARegistryNames.MODULE_JUMP_ASSIST__REGNAME);
     @SubscribeEvent

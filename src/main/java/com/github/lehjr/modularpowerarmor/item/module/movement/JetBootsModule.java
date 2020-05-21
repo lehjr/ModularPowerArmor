@@ -89,13 +89,13 @@ public class JetBootsModule extends AbstractPowerModule {
                 // if player has enough energy to fly
                 if (jetEnergy < ElectricItemUtils.getPlayerEnergy(player)) {
                     if (hasFlightControl && thrust > 0) {
-                        thrust = MovementManager.thrust(player, thrust, true);
+                        thrust = MovementManager.INSTANCE.thrust(player, thrust, true);
                         if ((player.world.isRemote) && MPALibSettings.useSounds()) {
                             Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else if (playerInput.jumpKey && player.getMotion().y < 0.5) {
-                        thrust = MovementManager.thrust(player, thrust, false);
+                        thrust = MovementManager.INSTANCE.thrust(player, thrust, false);
                         if ((player.world.isRemote) && MPALibSettings.useSounds()) {
                             Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETBOOTS, SoundCategory.PLAYERS, (float) (thrust * 12.5), 1.0f, true);
                         }

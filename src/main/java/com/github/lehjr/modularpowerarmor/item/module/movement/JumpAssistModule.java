@@ -64,14 +64,14 @@ public class JumpAssistModule extends AbstractPowerModule {
             public void onPlayerTickActive(PlayerEntity player, ItemStack item) {
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
                 if (playerInput.jumpKey) {
-                    double multiplier = MovementManager.getPlayerJumpMultiplier(player);
+                    double multiplier = MovementManager.INSTANCE.getPlayerJumpMultiplier(player);
                     if (multiplier > 0) {
                         player.setMotion(player.getMotion().add(0, 0.15 * Math.min(multiplier, 1), 0));
-                        MovementManager.setPlayerJumpTicks(player, multiplier - 1);
+                        MovementManager.INSTANCE.setPlayerJumpTicks(player, multiplier - 1);
                     }
                     player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
                 } else {
-                    MovementManager.setPlayerJumpTicks(player, 0);
+                    MovementManager.INSTANCE.setPlayerJumpTicks(player, 0);
                 }
                 PlayerUtils.resetFloatKickTicks(player);
             }

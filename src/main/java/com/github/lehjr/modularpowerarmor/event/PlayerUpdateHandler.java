@@ -27,7 +27,7 @@ public class PlayerUpdateHandler {
             PlayerEntity player = (PlayerEntity) event.getEntity();
 
             // pretty sure the whole point of this was to reduce fall distance, not increase it.
-            float fallDistance = (float) MovementManager.computeFallHeightFromVelocity(MathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
+            float fallDistance = (float) MovementManager.INSTANCE.computeFallHeightFromVelocity(MathUtils.clampDouble(player.getMotion().y, -1000.0, 0.0));
             if (fallDistance < player.fallDistance) {
                 player.fallDistance = fallDistance;
             }

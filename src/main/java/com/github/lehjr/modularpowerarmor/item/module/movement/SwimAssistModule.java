@@ -86,7 +86,7 @@ public class SwimAssistModule extends AbstractPowerModule {
                             if (player.world.isRemote && MPALibSettings.useSounds()) {
                                 Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
                             }
-                            MovementManager.thrust(player, swimAssistRate, true);
+                            MovementManager.INSTANCE.thrust(player, swimAssistRate, true);
                         } else {
                             if (player.world.isRemote && MPALibSettings.useSounds()) {
                                 Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);

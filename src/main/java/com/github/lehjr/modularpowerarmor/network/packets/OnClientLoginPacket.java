@@ -23,11 +23,6 @@ public class OnClientLoginPacket {
 
     public static void handle(OnClientLoginPacket message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            System.out.println("reception side is client: " +
-
-            ctx.get().getDirection().getReceptionSide().isClient());
-
-
             final ServerPlayerEntity player = ctx.get().getSender();
             PlayerLoginHandler.clientPlayerLogin(player);
         });

@@ -67,8 +67,6 @@ public class ParachuteModule extends AbstractPowerModule {
                 boolean hasGlider = false;
                 PlayerUtils.resetFloatKickTicks(player);
                 if (playerInput.sneakKey && player.getMotion().y < -0.1 && (!hasGlider || playerInput.moveForward <= 0)) {
-                    System.out.println("parachute applied!!!!");
-
                     double totalVelocity = Math.sqrt(player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z + player.getMotion().y * player.getMotion().y);
                     if (totalVelocity > 0) {
                         Vec3d motion = player.getMotion();
@@ -77,11 +75,7 @@ public class ParachuteModule extends AbstractPowerModule {
                                 motion.y * 0.1 / totalVelocity,
                                 motion.z * 0.1 / totalVelocity);
                     }
-                } else {
-                    System.out.println("no parachute applied!!!!");
                 }
-
-
             }
         }
     }

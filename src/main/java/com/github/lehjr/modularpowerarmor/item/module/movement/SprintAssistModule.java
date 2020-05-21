@@ -65,9 +65,7 @@ public class SprintAssistModule extends AbstractPowerModule {
         @Override
         public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
             if (cap instanceof IPlayerTickModule) {
-                System.out.println("ismodule online: " + ticker.isAllowed());
                 ticker.updateFromNBT();
-                System.out.println("ismodule online (after update): " + ticker.isAllowed());
             }
             return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(()-> ticker));
         }
@@ -92,7 +90,7 @@ public class SprintAssistModule extends AbstractPowerModule {
                             double sprintMultiplier = applyPropertyModifiers(MPAConstants.SPRINT_SPEED_MULTIPLIER);
                             double exhaustionComp = applyPropertyModifiers(MPAConstants.FOOD_COMPENSATION);
                             ElectricItemUtils.drainPlayerEnergy(player, (int) (sprintCost * horzMovement * 5));
-                            MovementManager.setMovementModifier(itemStack, sprintMultiplier, player);
+                            MovementManager.INSTANCE.setMovementModifier(itemStack, sprintMultiplier, player);
                             player.getFoodStats().addExhaustion((float) (-0.01 * exhaustion * exhaustionComp));
                             player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
                         }
@@ -101,7 +99,7 @@ public class SprintAssistModule extends AbstractPowerModule {
                         if (cost < totalEnergy) {
                             double walkMultiplier = applyPropertyModifiers(MPAConstants.WALKING_SPEED_MULTIPLIER);
                             ElectricItemUtils.drainPlayerEnergy(player, (int) (cost * horzMovement * 5));
-                            MovementManager.setMovementModifier(itemStack, walkMultiplier, player);
+                            MovementManager.INSTANCE.setMovementModifier(itemStack, walkMultiplier, player);
                             player.jumpMovementFactor = player.getAIMoveSpeed() * .2f;
                         }
                     }
@@ -110,7 +108,7 @@ public class SprintAssistModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickInactive(PlayerEntity player, @Nonnull ItemStack itemStack) {
-                MovementManager.setMovementModifier(itemStack, 0, player);
+                MovementManager.INSTANCE.setMovementModifier(itemStack, 0, player);
             }
         }
     }

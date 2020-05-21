@@ -78,7 +78,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
                     itemStackIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h->{
                         if(h instanceof IModularItem && !((IModularItem) h).isModuleOnline(sprintAssist));
                         // only fires if the sprint assist module isn't installed and active
-                        MovementManager.setMovementModifier(itemStackIn, 0, player);
+                        MovementManager.INSTANCE.setMovementModifier(itemStackIn, 0, player);
                     });
 
                     // server side
@@ -98,7 +98,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
                 itemStackIn.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h->{
                     if (h instanceof IModularItem && !((IModularItem) h).isModuleOnline(sprintAssist)) {
                         // only fire if sprint assist module not installed.
-                        MovementManager.setMovementModifier(itemStackIn, 0, player);
+                        MovementManager.INSTANCE.setMovementModifier(itemStackIn, 0, player);
                     }
                 });
             }

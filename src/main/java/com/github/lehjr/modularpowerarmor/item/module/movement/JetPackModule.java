@@ -94,13 +94,13 @@ public class JetPackModule extends AbstractPowerModule {
 
                 if (jetEnergy < ElectricItemUtils.getPlayerEnergy(player)) {
                     if (hasFlightControl && thrust > 0) {
-                        thrust = MovementManager.thrust(player, thrust, true);
+                        thrust = MovementManager.INSTANCE.thrust(player, thrust, true);
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
                             Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else if (playerInput.jumpKey) {//&& player.motionY < 0.5) {
-                        thrust = MovementManager.thrust(player, thrust, false);
+                        thrust = MovementManager.INSTANCE.thrust(player, thrust, false);
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
                             Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
                         }

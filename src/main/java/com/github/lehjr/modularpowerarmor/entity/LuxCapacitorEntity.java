@@ -65,8 +65,6 @@ public class LuxCapacitorEntity extends ThrowableEntity implements IEntityAdditi
     @Override
     protected void onImpact(RayTraceResult hitResult) {
         if (color == null) {
-            System.out.println("using default colour");
-
             color = BlockLuxCapacitor.defaultColor;
         }
 
