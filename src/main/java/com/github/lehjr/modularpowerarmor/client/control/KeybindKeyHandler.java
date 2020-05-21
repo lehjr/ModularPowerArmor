@@ -50,8 +50,8 @@ public class KeybindKeyHandler {
                 markForSync = true;
             }
 
-            if (playerCap.getDownKeyState() != downKeyState) {
-                playerCap.setDownKeyState(downKeyState);
+            if (playerCap.getJumpKeyState() != jumpKeyState) {
+                playerCap.setJumpKeyState(jumpKeyState);
                 markForSync = true;
             }
 

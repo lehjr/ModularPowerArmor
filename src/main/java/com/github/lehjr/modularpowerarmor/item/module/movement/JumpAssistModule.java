@@ -42,16 +42,8 @@ public class JumpAssistModule extends AbstractPowerModule {
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
             this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
-
-            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 250);
-            this.ticker.addBaseProperty(MPAConstants.MULTIPLIER, 1, "%");
-            this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.MULTIPLIER, 4);
-//
-            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
-            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, 50);
-            this.ticker.addBaseProperty(MPAConstants.FOOD_COMPENSATION, 0, "%");
-            this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
+            this.ticker.addSimpleTradeoff(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, "FE", 0, 250, MPAConstants.MULTIPLIER, "%", 1, 4);
+            this.ticker.addSimpleTradeoff(MPAConstants.COMPENSATION, MPAConstants.ENERGY_CONSUMPTION, "FE", 0, 50, MPAConstants.FOOD_COMPENSATION, "%", 0, 1);
         }
 
         @Nonnull
