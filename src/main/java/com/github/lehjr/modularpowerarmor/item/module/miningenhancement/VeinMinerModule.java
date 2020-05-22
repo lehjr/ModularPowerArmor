@@ -143,9 +143,6 @@ public class VeinMinerModule extends AbstractPowerModule {
                     }
                 }
 
-                System.out.println(MPASettings.getBlockList().size());
-
-
                 if (isOre || MPASettings.getBlockList().contains(block.getRegistryName())) {
                     int energyRequired = this.getEnergyUsage() + bbModuleEnergyUsage.get();
 
