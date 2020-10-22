@@ -27,25 +27,19 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        url = "https://maven.theillusivec4.top/"
-    }
-
-    maven { // TOP
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
-
-    flatDir {
-        dirs 'mods'
+//    maven {
+//        // location of a maven mirror for JEI files, as a fallback
+//        name = "ModMaven"
+//        url = "https://modmaven.k-4u.nl"
+//    }
+    repositories {
+        flatDir {
+            dir 'libs/'
+        }
     }
 }
 
+//println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
     mappings channel: "snapshot", version: "${project.mcp_version}".toString()
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
@@ -56,28 +50,32 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory project.file('run')
 
+            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            ideaModule project.group + ".main"
 
             mods {
-                modularpowerarmor {
+                mpalib {
                     source sourceSets.main
                 }
             }
         }
 
         server {
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory project.file('run')
 
+            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            ideaModule project.group + ".main"
 
             mods {
-                modularpowerarmor {
+                mpalib {
                     source sourceSets.main
                 }
             }
@@ -92,10 +90,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'mpalib', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                modularpowerarmor {
+                mpalib {
                     source sourceSets.main
                 }
             }
@@ -105,79 +103,87 @@ minecraft {
 
 dependencies {
     minecraft([
-            group  : "${project.forgegroup}",
+            group  : "net.minecraftforge",
             name   : "forge",
             version: "${project.minecraft_version}-${project.forge_version}"
     ])
 
+//    // compile against the JEI API but do not include it at runtime
+//    // currently not actually using any JEI code, just using it as a matter of convienience for testing.
+//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+//
+//    // at runtime, use the full JEI jar
+//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
     // compile against the JEI API but do not include it at runtime
     // currently not actually using any JEI code, just using it as a matter of convienience for testing.
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.3:${jei_version}:api")
 
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:${jei_version}")
 
-//    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
-//    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:FORGE-${minecraft_version}-${caelus_version}")
-
-//    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
-    runtimeOnly fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
-        transitive = false
-    })
-
-    // almost works, but no
-/*
-SilentLib-1.14.4-4.4.0+44.jar
-files(...) dependencies are not deobfuscated. Use a flatDir repository instead: https://docs.gradle.org/current/userguide/repository_types.html#sec:flat_dir_resolver
-Cannot deobfuscate dependency of type DefaultSelfResolvingDependency_Decorated, using obfuscated version!
-SilentMechanisms-1.14.4-0.6.13+49.jar
-files(...) dependencies are not deobfuscated. Use a flatDir repository instead: https://docs.gradle.org/current/userguide/repository_types.html#sec:flat_dir_resolver
-Cannot deobfuscate dependency of type DefaultSelfResolvingDependency_Decorated, using obfuscated version!
-New Dep: net.minecraftforge:forge:1.14.4-28.2.3_mapped_snapshot_20200119-1.14.4_at_a5f094ffe7a783ab5ac828fa111f5692fc8c1705
- */
-//    fileTree(dir: 'mods', include: ['*.jar'], each: {
-//        File file ->
-//            println file.name
-//            runtimeOnly fg.deobf(files(file.name))
-//    })
-
-//    compile fileTree(include: ['*.jar'], dir: 'mods')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
+//dependencies {
+//    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+//    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
+//    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+//    minecraft 'net.minecraftforge:forge:1.16.1-32.0.61'
+//
+//    // You may put jars on which you depend on in ./libs or you may define them like so..
+//    // compile "some.group:artifact:version:classifier"
+//    // compile "some.group:artifact:version"
+//
+//    // Real examples
+//    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+//    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+//
+//    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+//    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+//
+//    // These dependencies get remapped to your current MCP mappings
+//    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+//
+//    // For more info...
+//    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+//    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+//
+//}
+
+// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes(["Specification-Title": project.name,
-                    "Specification-Vendor"    : "lehjr",
-                    "Specification-Version"   : "1", // We are version 1 of the modlauncher specification
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : "${version}",
-                    "Implementation-Vendor"   : "lehjr",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "FMLAT"                   : "accesstransformer.cfg"
-        ],)
+        attributes([
+            "Specification-Title": "Modular Power Armor",
+            "Specification-Vendor": "lehjr",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"lehjr",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
 
-// Process resources on build
-processResources {
-    // This will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
-
-    // Replace stuff in mods.toml, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-
-        // Replace version
-        expand 'version': project.version
-    }
-
-    // Copy everything else except the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-}
+//processResources {
+//    // This will ensure that this task is redone when the versions change.
+//    inputs.property 'version', project.version
+//
+//    // Replace stuff in mods.toml, nothing else
+//    from(sourceSets.main.resources.srcDirs) {
+//        include 'META-INF/mods.toml'
+//
+//        // Replace version
+//        expand 'version':project.version
+//    }
+//
+//    // Copy everything else except the mods.toml
+//    from(sourceSets.main.resources.srcDirs) {
+//        exclude 'META-INF/mods.toml'
+//    }
+//}
 
 task devJar(type: Jar) {
     from sourceSets.main.output
@@ -189,18 +195,15 @@ artifacts {
 }
 
 // Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar') 
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//publish.dependsOn('reobfJar')
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact reobfArtifact
+            artifact jar
         }
     }
     repositories {
