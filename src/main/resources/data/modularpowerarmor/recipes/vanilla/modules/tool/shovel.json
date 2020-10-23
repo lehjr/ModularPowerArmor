@@ -19,7 +19,7 @@
       "tag": "forge:ingots/iron"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "S": {
       "tag":"forge:solenoid"

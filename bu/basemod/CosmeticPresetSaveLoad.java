@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
+import com.github.lehjr.modularpowerarmor.config.ConfigHelper;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.collect.HashBiMap;

@@ -7,13 +7,7 @@ import static com.github.lehjr.modularpowerarmor.basemod.MPAConstants.MOD_ID;
  * Also, @ObjectHolders require strings and won't take a ResourceLocation, so there's that
  */
 public class MPARegistryNames {
-    /**
-     * Armor --------------------------------------------------------------------------------------
-     */
-    public static final String ITEM__POWER_ARMOR_HELMET__REGNAME = MOD_ID + ":powerarmor_head";
-    public static final String ITEM__POWER_ARMOR_CHESTPLATE__REGNAME = MOD_ID + ":powerarmor_torso";
-    public static final String ITEM__POWER_ARMOR_LEGGINGS__REGNAME = MOD_ID + ":powerarmor_legs";
-    public static final String ITEM__POWER_ARMOR_BOOTS__REGNAME = MOD_ID + ":powerarmor_feet";
+
 
     /**
      * HandHeld -----------------------------------------------------------------------------------

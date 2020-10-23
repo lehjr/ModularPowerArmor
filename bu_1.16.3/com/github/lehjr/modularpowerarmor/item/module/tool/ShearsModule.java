@@ -28,7 +28,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IShearable;
+import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-// FIXME IShearable ?? pretty much a dead thing now?
+// FIXME IForgeShearable ?? pretty much a dead thing now?
 public class ShearsModule extends AbstractPowerModule {
     static final ArrayList<Material> materials =
             new ArrayList<Material>() {{
@@ -94,8 +94,8 @@ public class ShearsModule extends AbstractPowerModule {
                 }
                 Block block = state.getBlock();
 
-                if (block instanceof IShearable && ElectricItemUtils.getPlayerEnergy(((PlayerEntity) entityLiving)) > getEnergyUsage()) {
-                    IShearable target = (IShearable) block;
+                if (block instanceof IForgeShearable && ElectricItemUtils.getPlayerEnergy(((PlayerEntity) entityLiving)) > getEnergyUsage()) {
+                    IForgeShearable target = (IForgeShearable) block;
                     if (target.isShearable(itemStack, entityLiving.world, pos)) {
                         List<ItemStack> drops = target.onSheared(itemStack, entityLiving.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack));
                         Random rand = new Random();
@@ -141,8 +141,8 @@ public class ShearsModule extends AbstractPowerModule {
                 RayTraceResult rayTraceResult = rayTrace(playerIn.world, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
 
                 if (rayTraceResult != null && rayTraceResult instanceof EntityRayTraceResult
-                        && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof IShearable) {
-                    IShearable target = (IShearable) ((EntityRayTraceResult) rayTraceResult).getEntity();
+                        && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof IForgeShearable) {
+                    IForgeShearable target = (IForgeShearable) ((EntityRayTraceResult) rayTraceResult).getEntity();
                     Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
                     if (target.isShearable(itemStackIn, entity.world, new BlockPos(entity))) {
                         List<ItemStack> drops = target.onSheared(itemStackIn, entity.world, new BlockPos(entity), 0);

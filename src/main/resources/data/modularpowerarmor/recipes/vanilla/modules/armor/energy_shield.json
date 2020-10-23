@@ -16,10 +16,10 @@
       "tag": "forge:wiring"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "E": {
-      "item": "modularpowerarmor:component_field_emitter"
+      "item": "mpalib:component_field_emitter"
     }
   },
   "result": {

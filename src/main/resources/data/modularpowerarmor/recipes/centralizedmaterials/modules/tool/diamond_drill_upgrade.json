@@ -20,13 +20,13 @@
       "tag": "forge:solenoid"
     },
     "C": {
-      "item": "modularpowerarmor:component_wiring"
+      "item": "mpalib:component_wiring"
     },
     "F": {
       "tag": "forge:ingots/steel"
     },
     "M": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     },
     "O": {
       "tag": "forge:gems/diamond"

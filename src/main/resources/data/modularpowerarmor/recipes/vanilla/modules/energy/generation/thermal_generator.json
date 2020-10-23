@@ -13,13 +13,13 @@
   ],
   "key": {
     "D": {
-      "item": "modularpowerarmor:component_plating_diamond"
+      "item": "mpalib:component_plating_diamond"
     },
     "W": {
       "tag": "forge:wiring"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "S": {
       "tag":"forge:servo"

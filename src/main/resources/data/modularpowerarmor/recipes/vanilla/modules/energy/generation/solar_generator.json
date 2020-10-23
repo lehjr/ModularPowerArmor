@@ -16,10 +16,10 @@
       "tag": "forge:wiring"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "S": {
-      "item":"modularpowerarmor:component_solar_panel"
+      "item":"mpalib:component_solar_panel"
     },
     "I": {
       "tag": "forge:ingots/iron"

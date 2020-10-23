@@ -78,32 +78,7 @@ public class BlockTinkerTable extends HorizontalBlock implements IWaterLoggable 
 
 
 
-    @Override
-    public int getHarvestLevel(BlockState state) {
-        return 2;
-    }
 
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return ToolType.PICKAXE;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING).add(WATERLOGGED);
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TinkerTableTileEntity();
-    }
 
 
 

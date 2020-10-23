@@ -17,13 +17,13 @@
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_field_emitter"
+      "item": "mpalib:component_field_emitter"
     },
     "F": {
       "tag": "forge:wiring"
     },
     "O": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     }
   }
 }

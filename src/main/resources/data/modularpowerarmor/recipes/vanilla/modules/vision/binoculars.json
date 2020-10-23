@@ -16,10 +16,10 @@
       "tag": "forge:wiring"
     },
     "L": {
-      "item": "modularpowerarmor:component_laser_emitter"
+      "item": "mpalib:component_laser_emitter"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     }
   },
   "result": {

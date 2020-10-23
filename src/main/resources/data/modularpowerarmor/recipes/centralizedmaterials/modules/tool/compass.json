@@ -23,7 +23,7 @@
       "tag": "forge:wiring"
     },
     "O": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     }
   }
 }

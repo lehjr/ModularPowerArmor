@@ -16,13 +16,13 @@
       "tag": "forge:wiring"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "S": {
       "item":"modularpowerarmor:generator_solar"
     },
     "#": {
-      "item": "modularpowerarmor:component_computer_chip"
+      "item": "mpalib:component_computer_chip"
     }
   },
   "result": {

@@ -20,7 +20,7 @@
       "tag": "forge:servo"
     },
     "C": {
-      "item": "modularpowerarmor:component_computer_chip"
+      "item": "mpalib:component_computer_chip"
     },
     "F": {
       "tag": "forge:ingots/steel"

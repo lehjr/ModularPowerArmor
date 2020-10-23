@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.forge.obj.MPALibOBJLoader;
-import com.github.lehjr.modularpowerarmor.basemod.config.ClientConfig;
-import com.github.lehjr.modularpowerarmor.basemod.config.CommonConfig;
-import com.github.lehjr.modularpowerarmor.basemod.config.ConfigHelper;
+import com.github.lehjr.modularpowerarmor.config.ClientConfig;
+import com.github.lehjr.modularpowerarmor.config.CommonConfig;
+import com.github.lehjr.modularpowerarmor.config.ConfigHelper;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;

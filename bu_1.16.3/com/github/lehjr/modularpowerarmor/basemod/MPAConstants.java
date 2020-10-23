@@ -14,7 +14,7 @@ public class MPAConstants {
     public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
 
 
-    public static final String CONFIG_PREFIX = "config." + MOD_ID + ".";
+
 
     /** HUD --------------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
@@ -43,13 +43,7 @@ public class MPAConstants {
     public static final String CONFIG_GENERAL_VEIN_MINER_ORE_LIST = CONFIG_PREFIX_GENERAL +  "maxVeinMinerOreList";
     public static final String CONFIG_GENERAL_VEIN_MINER_BLOCK_LIST = CONFIG_PREFIX_GENERAL +  "maxVeinMinerBlockList";
 
-    /** Recipes ----------------------------------------------------------------------------------- */
-    public static final String CONFIG_PREFIX_RECIPES = CONFIG_PREFIX + "recipes.";
-    public static final String CONFIG_RECIPES_USE_VANILLA = CONFIG_PREFIX_RECIPES + "useVanilla";
-    public static final String CONFIG_RECIPES_USE_THERMAL_EXPANSION = CONFIG_PREFIX_RECIPES + "useThermalExpansion";
-    public static final String CONFIG_RECIPES_USE_ENDERIO = CONFIG_PREFIX_RECIPES + "useEnderIO";
-    public static final String CONFIG_RECIPES_USE_TECH_REBORN = CONFIG_PREFIX_RECIPES + "useTechReborn";
-    public static final String CONFIG_RECIPES_USE_IC2 = CONFIG_PREFIX_RECIPES + "useIC2";
+
 
     /**
      * Modules ------------------------------------------------------------------------------------
@@ -136,8 +130,8 @@ public class MPAConstants {
 
     // Weapon --------------------------------------------------------------------------------------
     public static final String BLADE_ENERGY = "spinBladeEnergyCon";
-    public static final String BLADE_DAMAGE = "spinBladeDam";
-    public static final String ENERGY_CONSUMPTION = "energyCon";
+
+
     public static final String HEAT_EMISSION = "heatEmission";
     public static final String PUNCH_ENERGY = "punchEnergyCon";
     public static final String PUNCH_DAMAGE = "meleeDamage";

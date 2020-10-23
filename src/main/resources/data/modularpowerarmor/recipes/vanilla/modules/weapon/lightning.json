@@ -16,10 +16,10 @@
       "tag": "forge:wiring"
     },
     "H": {
-      "item": "modularpowerarmor:component_capacitor_hv"
+      "item": "mpalib:component_capacitor_hv"
     },
     "F": {
-      "item":"modularpowerarmor:component_field_emitter"
+      "item":"mpalib:component_field_emitter"
     },
     "S": {
       "tag": "forge:solenoid"

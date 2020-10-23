@@ -51,20 +51,7 @@ import static com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames.*;
 public enum MPAObjects {
     INSTANCE;
 
-    /**
-     * Armor --------------------------------------------------------------------------------------
-     */
-    @ObjectHolder(ITEM__POWER_ARMOR_HELMET__REGNAME)
-    public static final ItemPowerArmorHelmet powerArmorHead = null;
 
-    @ObjectHolder(ITEM__POWER_ARMOR_CHESTPLATE__REGNAME)
-    public static final ItemPowerArmorChestplate powerArmorTorso = null;
-
-    @ObjectHolder(ITEM__POWER_ARMOR_LEGGINGS__REGNAME)
-    public static final ItemPowerArmorLeggings powerArmorLegs = null;
-
-    @ObjectHolder(ITEM__POWER_ARMOR_BOOTS__REGNAME)
-    public static final ItemPowerArmorBoots powerArmorFeet = null;
 
     /**
      * HandHeld -----------------------------------------------------------------------------------
@@ -318,20 +305,13 @@ public enum MPAObjects {
 
 
 
-    /**
-     * Entities -----------------------------------------------------------------------------------
-     */
-    @ObjectHolder(MOD_ID + ":luxcapacitor_entity")
-    public static EntityType<LuxCapacitorEntity> LUX_CAPACITOR_ENTITY_TYPE;
 
-    @ObjectHolder(MOD_ID + ":plasma_bolt")
-    public static EntityType<PlasmaBoltEntity> PLASMA_BOLT_ENTITY_TYPE;
+
 //
 //    @ObjectHolder(MOD_ID + ":bolt")
 //    public static EntityType<BoltEntity> BOLT_ENTITY_TYPE;
 
-    @ObjectHolder(MOD_ID + ":spinning_blade")
-    public static EntityType<SpinningBladeEntity> SPINNING_BLADE_ENTITY_TYPE;
+
 
     /**
      * Container Types ----------------------------------------------------------------------------

@@ -2,7 +2,7 @@ modLoader="javafml"
 loaderVersion="[34,)"
 issueTrackerURL="https://github.com/lehjr/ModularPowerArmor/issues"
 logoFile="assets/modularpowerarmor/textures/logo.png"
-
+license="All rights reserved"
 [[mods]]
     modId="modularpowerarmor"
     version="${version}"

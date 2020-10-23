@@ -17,7 +17,7 @@
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     },
     "F": {
       "tag": "forge:solenoid"

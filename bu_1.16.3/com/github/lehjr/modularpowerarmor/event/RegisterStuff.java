@@ -211,18 +211,6 @@ public enum RegisterStuff {
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event ){
         event.getRegistry().registerAll(
-                EntityType.Builder.<LuxCapacitorEntity>create(LuxCapacitorEntity::new, EntityClassification.MISC)
-                        .size(0.25F, 0.25F)
-                        .setCustomClientFactory(((spawnEntity, world) -> MPAObjects.LUX_CAPACITOR_ENTITY_TYPE.create(world)))
-                        .build(LUX_CAPACITOR_REG_NAME + "_entity").setRegistryName(LUX_CAPACITOR_REG_NAME + "_entity"),
-
-                EntityType.Builder.<SpinningBladeEntity>create(SpinningBladeEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.SPINNING_BLADE_ENTITY_TYPE.create(world))
-                        .build(MOD_ID +":spinning_blade").setRegistryName(MOD_ID +":spinning_blade"),
-
-                EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
-                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.PLASMA_BOLT_ENTITY_TYPE.create(world))
-                        .build(MOD_ID +":plasma_bolt").setRegistryName(MOD_ID +":plasma_bolt")//,
 
 //                EntityType.Builder.<BoltEntity>create(BoltEntity::new, EntityClassification.MISC)
 //                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.BOLT_ENTITY_TYPE.create(world))

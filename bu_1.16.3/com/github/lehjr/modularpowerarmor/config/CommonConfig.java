@@ -23,7 +23,7 @@ public class CommonConfig {
             GENERAL_BASE_MAX_HEAT_LEGS,
             GENERAL_BASE_MAX_HEAT_FEET;
 
-    protected ForgeConfigSpec.BooleanValue RECIPES_USE_VANILLA;
+
     protected ForgeConfigSpec.ConfigValue<List<? extends String>> GENERAL_VEIN_MINER_ORE_LIST;
     protected ForgeConfigSpec.ConfigValue<List<?>> GENERAL_VEIN_MINER_BLOCK_LIST;
 
@@ -114,14 +114,7 @@ public class CommonConfig {
         builder.pop();
 
 
-        /** Recipes ----------------------------------------------------------------------------------------------- */
-        builder.comment("Recipe settings").push("Recipes");
-        RECIPES_USE_VANILLA = builder
-                .comment("Use recipes for Vanilla")
-                .translation(MPAConstants.CONFIG_RECIPES_USE_VANILLA)
-                .worldRestart()
-                .define("useVanillaRecipes", true);
-        builder.pop();
+
 
 
         /** Modules --------------------------------------------------------------------------------------------------- */

@@ -17,13 +17,13 @@
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_computer_chip"
+      "item": "mpalib:component_computer_chip"
     },
     "F": {
       "tag": "forge:solenoid"
     },
     "M": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     },
     "O": {
       "tag": "forge:ingots/gold"

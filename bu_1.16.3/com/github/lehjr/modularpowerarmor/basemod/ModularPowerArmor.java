@@ -38,8 +38,7 @@ public class ModularPowerArmor {
         modEventBus.register(this);
         modEventBus.register(RegisterStuff.INSTANCE);
 
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+
 
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
@@ -73,11 +72,7 @@ public class ModularPowerArmor {
         });
     }
 
-    // preInit
-    private void setup(final FMLCommonSetupEvent event) {
-        MPAPackets.registerMPAPackets();
-        CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
-    }
+
 
     private void setupClient(final FMLClientSetupEvent event) {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

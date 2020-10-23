@@ -17,7 +17,7 @@
   ],
   "key": {
     "C": {
-      "item": "modularpowerarmor:component_wiring"
+      "item": "mpalib:component_wiring"
     },
     "T": {
       "item": "modularpowerarmor:tinkertable"
@@ -26,10 +26,10 @@
       "item": "minecraft:iron_ingot"
     },
     "M": {
-      "item": "modularpowerarmor:component_solenoid"
+      "item": "mpalib:component_solenoid"
     },
     "O": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     }
   }
 }

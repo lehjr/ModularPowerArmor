@@ -20,10 +20,10 @@
       "item": "minecraft:crafting_table"
     },
     "M": {
-      "item": "modularpowerarmor:component_control_circuit"
+      "item": "mpalib:component_control_circuit"
     },
     "O": {
-      "item": "modularpowerarmor:component_wiring"
+      "item": "mpalib:component_wiring"
     }
   }
 }

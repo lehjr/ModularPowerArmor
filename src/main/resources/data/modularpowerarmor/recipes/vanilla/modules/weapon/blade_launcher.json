@@ -16,10 +16,10 @@
       "tag": "forge:wiring"
     },
     "M": {
-      "item": "modularpowerarmor:component_capacitor_mv"
+      "item": "mpalib:component_capacitor_mv"
     },
     "C": {
-      "item":"modularpowerarmor:component_control_circuit"
+      "item":"mpalib:component_control_circuit"
     },
     "S": {
       "tag": "forge:servo"

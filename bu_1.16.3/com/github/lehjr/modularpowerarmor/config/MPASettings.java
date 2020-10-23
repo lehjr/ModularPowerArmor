@@ -75,7 +75,7 @@ public class MPASettings {
         return CLIENT_CONFIG != null ? CLIENT_CONFIG.GENERAL_ALLOW_CONFLICTING_KEYBINDS.get() : true;
     }
 
-    /** Common/Server ----------------------------------------------------------------------------- */
+
     @Nullable
     static CommonConfig getCommonConfig() {
         return COMMON_CONFIG;
@@ -139,10 +139,7 @@ public class MPASettings {
         return COMMON_CONFIG != null ? COMMON_CONFIG.COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN.get() : true;
     }
 
-    // Recipes ------------------------------------------------------------------------------------
-    public static boolean useVanillaRecipes() {
-        return COMMON_CONFIG != null ? COMMON_CONFIG.RECIPES_USE_VANILLA.get() : false;
-    }
+
 
     // Modules ------------------------------------------------------------------------------------
     static ModuleConfig moduleConfig = null;
