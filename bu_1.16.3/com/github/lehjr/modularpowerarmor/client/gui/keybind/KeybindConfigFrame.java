@@ -6,8 +6,8 @@ import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybindi
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.clickable.IClickable;

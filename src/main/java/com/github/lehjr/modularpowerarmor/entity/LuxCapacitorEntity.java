@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.block.LuxCapacitorBlock;
-import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
+import com.github.lehjr.modularpowerarmor.tile_entity.LuxCapacitorTileEntity;
 import com.github.lehjr.mpalib.util.math.Colour;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;

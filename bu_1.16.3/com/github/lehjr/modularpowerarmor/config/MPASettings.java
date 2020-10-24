@@ -3,7 +3,7 @@ package com.github.lehjr.modularpowerarmor.config;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
 import com.github.lehjr.mpalib.config.MPALibSettings;
 import jdk.internal.jline.internal.Nullable;
 import net.minecraft.util.ResourceLocation;

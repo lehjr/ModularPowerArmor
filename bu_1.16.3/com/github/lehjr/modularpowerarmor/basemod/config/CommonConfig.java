@@ -2,8 +2,8 @@
 //
 //import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 //import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-//import com.github.lehjr.mpalib.capabilities.module.powermodule.IConfig;
-//import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+//import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
+//import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 //import com.github.lehjr.mpalib.config.MPALibSettings;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.util.ResourceLocation;

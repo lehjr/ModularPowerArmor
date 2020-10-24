@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.tinker.module;
 
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.Point2F;
 import com.github.lehjr.mpalib.client.gui.geometry.Rect;

@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.client.renderer.block;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.client.model.block.TinkerTableModel;
-import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
+import com.github.lehjr.modularpowerarmor.tile_entity.TinkerTableTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;

@@ -14,8 +14,6 @@ public class MPAConstants {
     public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
 
 
-
-
     /** HUD --------------------------------------------------------------------------------------- */
     public static final String CONFIG_PREFIX_HUD = CONFIG_PREFIX + "hud.";
     public static final String CONFIG_HUD_TOGGLE_MODULE_SPAM = CONFIG_PREFIX_HUD + "enableModuleSpam";

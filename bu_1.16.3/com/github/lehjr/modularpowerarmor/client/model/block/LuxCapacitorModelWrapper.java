@@ -3,7 +3,7 @@ package com.github.lehjr.modularpowerarmor.client.model.block;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.block.BlockLuxCapacitor;
 import com.github.lehjr.modularpowerarmor.client.model.helper.LuxCapHelper;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import forge.OBJBakedCompositeModel;

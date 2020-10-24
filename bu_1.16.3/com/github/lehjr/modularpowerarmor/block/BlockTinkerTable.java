@@ -1,7 +1,7 @@
 package com.github.lehjr.modularpowerarmor.block;
 
 import com.github.lehjr.modularpowerarmor.container.providers.TinkerContainerProvider;
-import com.github.lehjr.modularpowerarmor.tileentity.TinkerTableTileEntity;
+import com.github.lehjr.modularpowerarmor.tile_entity.TinkerTableTileEntity;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;

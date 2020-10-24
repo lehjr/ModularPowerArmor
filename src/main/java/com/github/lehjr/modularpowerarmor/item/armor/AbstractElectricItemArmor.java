@@ -2,6 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.mpalib.basemod.ModObjects;
+import com.github.lehjr.mpalib.util.string.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -32,9 +33,7 @@ public abstract class AbstractElectricItemArmor extends ArmorItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (worldIn != null) {
-            System.out.println("fixme!!!");
-
-//            AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
+            AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 

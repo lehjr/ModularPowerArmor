@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.block;
 
-import com.github.lehjr.modularpowerarmor.tileentity.WorkBenchTileEntity;
+import com.github.lehjr.modularpowerarmor.tile_entity.WorkBenchTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.Fluid;

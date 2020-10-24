@@ -7,7 +7,7 @@ import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybindi
 import com.github.lehjr.modularpowerarmor.client.model.helper.MPAModelHelper;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.client.render.Renderer;

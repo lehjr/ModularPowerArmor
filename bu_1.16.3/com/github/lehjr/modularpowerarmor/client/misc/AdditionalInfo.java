@@ -2,8 +2,8 @@ package com.github.lehjr.modularpowerarmor.client.misc;
 
 import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.energy.ElectricAdapterManager;
-import com.github.lehjr.mpalib.energy.adapter.IElectricAdapter;
+import com.github.lehjr.mpalib.util.energy.ElectricAdapterManager;
+import com.github.lehjr.mpalib.util.energy.adapter.IElectricAdapter;
 import com.github.lehjr.mpalib.string.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

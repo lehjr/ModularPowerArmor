@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.block;
 
-import com.github.lehjr.modularpowerarmor.tileentity.LuxCapacitorTileEntity;
+import com.github.lehjr.modularpowerarmor.tile_entity.LuxCapacitorTileEntity;
 import com.github.lehjr.mpalib.util.math.Colour;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;

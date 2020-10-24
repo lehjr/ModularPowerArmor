@@ -12,7 +12,7 @@ import com.github.lehjr.mpalib.client.gui.hud.meters.HeatMeter;
 import com.github.lehjr.mpalib.client.gui.hud.meters.PlasmaChargeMeter;
 import com.github.lehjr.mpalib.client.gui.hud.meters.WaterMeter;
 import com.github.lehjr.mpalib.client.render.Renderer;
-import com.github.lehjr.mpalib.energy.ElectricItemUtils;
+import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.heat.HeatUtils;
 import com.github.lehjr.mpalib.math.MathUtils;
 import com.github.lehjr.mpalib.string.StringUtils;
