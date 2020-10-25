@@ -62,7 +62,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig(), true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig, true);
             this.ticker.addBaseProperty(MPAConstants.FLUID_TANK_SIZE, 20000);
             this.ticker.addBaseProperty(MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5);
             this.ticker.addTradeoffProperty(MPAConstants.ACTIVATION_PERCENT, MPAConstants.HEAT_ACTIVATION_PERCENT, 0.5, "%");
@@ -128,7 +128,7 @@ public class FluidTankModule extends AbstractPowerModule {
 
                     // fill the tank
                     if (currentFluid < maxFluid) {
-                        BlockPos pos = new BlockPos(player);
+                        BlockPos pos = player.getPosition();
                         BlockState blockstate = player.world.getBlockState(pos);
 
                         // fill by being in water

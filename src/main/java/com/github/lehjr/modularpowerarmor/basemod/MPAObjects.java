@@ -3,13 +3,14 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.modularpowerarmor.block.LuxCapacitorBlock;
 import com.github.lehjr.modularpowerarmor.block.WorkBenchBlock;
+import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainer;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorChestplate;
 import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorHelmet;
-import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorLeggins;
+import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorLeggings;
 import com.github.lehjr.modularpowerarmor.item.module.armor.IronPlatingModule;
 import com.github.lehjr.modularpowerarmor.item.module.armor.LeatherPlatingModule;
 import com.github.lehjr.modularpowerarmor.item.module.cosmetic.TransparentArmorModule;
@@ -31,13 +32,16 @@ import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.PowerFist;
 import com.github.lehjr.modularpowerarmor.tile_entity.LuxCapacitorTileEntity;
 import com.github.lehjr.modularpowerarmor.tile_entity.WorkBenchTileEntity;
+import com.github.lehjr.mpalib.container.CraftingContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,9 +50,9 @@ public class MPAObjects {
     public static final MPACreativeTab creativeTab = new MPACreativeTab();
     public static final Item.Properties singleStack = new Item.Properties()
             .maxStackSize(1)
-                .group(MPAObjects.creativeTab)
-                .defaultMaxDamage(-1)
-                .setNoRepair();
+            .group(MPAObjects.creativeTab)
+            .defaultMaxDamage(-1)
+            .setNoRepair();
     public static final Item.Properties fullStack = new Item.Properties()
             .group(MPAObjects.creativeTab)
             .defaultMaxDamage(-1)
@@ -121,7 +125,7 @@ public class MPAObjects {
             () -> new PowerArmorChestplate());
 
     public static final RegistryObject<Item> POWER_ARMOR_LEGGINGS = ITEMS.register(MPARegistryNames.POWER_ARMOR_LEGGINGS,
-            () -> new PowerArmorLeggins());
+            () -> new PowerArmorLeggings());
 
     public static final RegistryObject<Item> POWER_ARMOR_BOOTS = ITEMS.register(MPARegistryNames.POWER_ARMOR_BOOTS,
             () -> new PowerArmorBoots());
@@ -304,6 +308,22 @@ public class MPAObjects {
     public static final RegistryObject<Item> RAILGUN_MODULE = ITEMS.register(MPARegistryNames.RAILGUN_MODULE,
             () -> new RailgunModule());
 
+    /**
+     * Container Types ----------------------------------------------------------------------------
+     */
+    public static final DeferredRegister<ContainerType<?>> CONTAINER_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, MPAConstants.MOD_ID);
+
+    public static final RegistryObject<ContainerType<MPAWorkbenchContainer>> MPA_WORKBENCH_CONTAINER_TYPE = CONTAINER_TYPES.register(MPARegistryNames.MPA_WORKBENCH_CONTAINER_TYPE,
+            () -> IForgeContainerType.create((windowId, inv, data) -> new MPAWorkbenchContainer(windowId, inv)));
+
+
+//                    new ContainerType<>(MPAWorkbenchContainer::new)
+//            .setRegistryName(MPA_WORKBENCH_CONTAINER_TYPE),
+//
+//
+//    // Crafting Gui
+//                new ContainerType<>(MPACraftingContainer::new)
+//            .setRegistryName(MPA_CRAFTING_CONTAINER_TYPE__REG_NAME)
 
 
 ////    @ObjectHolder(MOD_ID + ":bolt")
@@ -311,14 +331,12 @@ public class MPAObjects {
 //
 //
 //
-//        /**
-//         * Container Types ----------------------------------------------------------------------------
-//         */
+
 //        @ObjectHolder(MPA_CRAFTING_CONTAINER_TYPE__REG_NAME)
 //        public static final ContainerType<MPACraftingContainer> MPA_CRAFTING_CONTAINER_TYPE = null;
 //
 //        @ObjectHolder(MPA_TINKER_TABLE_CONTAINER_TYPE__REG_NAME)
-//        public static final ContainerType<TinkerTableContainer> TINKER_TABLE_CONTAINER_TYPE = null;
+//        public static final ContainerType<MPAWorkbenchContainer> TINKER_TABLE_CONTAINER_TYPE = null;
 //    }
 
 

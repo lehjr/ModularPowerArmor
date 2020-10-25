@@ -46,8 +46,8 @@ public class SwimAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
-            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings::getModuleConfig);
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }
 
@@ -84,22 +84,22 @@ public class SwimAssistModule extends AbstractPowerModule {
                         double swimEnergyConsumption = applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                         if (swimEnergyConsumption < ElectricItemUtils.getPlayerEnergy(player)) {
                             if (player.world.isRemote && MPALibSettings.useSounds()) {
-                                Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
+                                Musique.playerSound(player, MPASoundDictionary.SWIM_ASSIST, SoundCategory.PLAYERS, 1.0f, 1.0f, true);
                             }
                             MovementManager.INSTANCE.thrust(player, swimAssistRate, true);
                         } else {
                             if (player.world.isRemote && MPALibSettings.useSounds()) {
-                                Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
+                                Musique.stopPlayerSound(player, MPASoundDictionary.SWIM_ASSIST);
                             }
                         }
                     } else {
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
-                            Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
+                            Musique.stopPlayerSound(player, MPASoundDictionary.SWIM_ASSIST);
                         }
                     }
                 } else {
                     if (player.world.isRemote && MPALibSettings.useSounds()) {
-                        Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
+                        Musique.stopPlayerSound(player, MPASoundDictionary.SWIM_ASSIST);
                     }
                 }
             }
@@ -107,7 +107,7 @@ public class SwimAssistModule extends AbstractPowerModule {
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
                 if (player.world.isRemote && MPALibSettings.useSounds()) {
-                    Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_SWIM_ASSIST);
+                    Musique.stopPlayerSound(player, MPASoundDictionary.SWIM_ASSIST);
                 }
             }
         }

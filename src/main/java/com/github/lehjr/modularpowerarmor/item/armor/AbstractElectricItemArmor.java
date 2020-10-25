@@ -3,7 +3,10 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.mpalib.basemod.ModObjects;
 import com.github.lehjr.mpalib.util.string.AdditionalInfo;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
@@ -35,6 +38,11 @@ public abstract class AbstractElectricItemArmor extends ArmorItem {
         if (worldIn != null) {
             AdditionalInfo.addInformation(stack, worldIn, tooltip, flagIn);
         }
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.tool;
 
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
+import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainerProvider;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
@@ -48,7 +49,7 @@ public class FieldTinkerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
         }
 
         @Nonnull
@@ -65,7 +66,7 @@ public class FieldTinkerModule extends AbstractPowerModule {
             @Override
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (!worldIn.isRemote()) {
-                    NetworkHooks.openGui((ServerPlayerEntity) playerIn, new WorkbenchContainerProvider(0), (buffer) -> buffer.writeInt(0));
+                    NetworkHooks.openGui((ServerPlayerEntity) playerIn, new MPAWorkbenchContainerProvider(0), (buffer) -> buffer.writeInt(0));
                 }
                 return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
             }

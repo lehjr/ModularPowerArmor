@@ -26,8 +26,7 @@ import java.util.concurrent.Callable;
 
 
 public class PickaxeModule extends AbstractPowerModule {
-    public PickaxeModule(String regName) {
-        super(regName);
+    public PickaxeModule() {
     }
 
     @Nullable
@@ -42,8 +41,8 @@ public class PickaxeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.blockBreaking.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.blockBreaking.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "FE");
             this.blockBreaking.addBaseProperty(MPAConstants.HARVEST_SPEED, 8, "x");
             this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);

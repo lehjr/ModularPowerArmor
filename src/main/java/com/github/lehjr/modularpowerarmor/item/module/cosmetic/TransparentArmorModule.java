@@ -34,7 +34,7 @@ public class TransparentArmorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.COSMETIC, EnumModuleTarget.ARMORONLY, MPASettings.getModuleConfig(), true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.COSMETIC, EnumModuleTarget.ARMORONLY, MPASettings::getModuleConfig, true);
         }
 
         @Nonnull

@@ -30,8 +30,7 @@ import java.util.concurrent.Callable;
 
 // Note: tried as an enchantment, but failed to function properly due to how block breaking code works
 public class AquaAffinityModule extends AbstractPowerModule {
-    public AquaAffinityModule(String regName) {
-        super(regName);
+    public AquaAffinityModule() {
     }
 
     @Nullable
@@ -46,8 +45,8 @@ public class AquaAffinityModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.miningEnhancement.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.miningEnhancement = new BlockBreaker(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.miningEnhancement.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "FE");
             this.miningEnhancement.addBaseProperty(MPAConstants.HARVEST_SPEED, 0.2F, "%");
             this.miningEnhancement.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 1000);
             this.miningEnhancement.addTradeoffProperty(MPAConstants.POWER, MPAConstants.HARVEST_SPEED, 0.8F);
@@ -81,7 +80,7 @@ public class AquaAffinityModule extends AbstractPowerModule {
             @Override
             public void handleBreakSpeed(PlayerEvent.BreakSpeed event) {
                 PlayerEntity player = event.getPlayer();
-                if (event.getNewSpeed() > 1 && (player.canSwim() || !player.onGround)
+                if (event.getNewSpeed() > 1 && (player.canSwim() || !player.isOnGround())
                         && ElectricItemUtils.getPlayerEnergy(player) > getEnergyUsage()) {
                     event.setNewSpeed((float) (event.getNewSpeed() * 5 * applyPropertyModifiers(MPAConstants.HARVEST_SPEED)));
                 }

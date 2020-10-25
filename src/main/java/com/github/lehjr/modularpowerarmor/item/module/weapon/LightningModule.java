@@ -12,8 +12,10 @@ import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickMo
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.util.heat.HeatUtils;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
@@ -52,8 +54,8 @@ public class LightningModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClickie.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 4900000, "RF");
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClickie.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 4900000, "FE");
             this.rightClickie.addBaseProperty(MPAConstants.HEAT_EMISSION, 100, "");
         }
 
@@ -81,9 +83,10 @@ public class LightningModule extends AbstractPowerModule {
                                 if(worldIn instanceof ServerWorld) {
                                     ElectricItemUtils.drainPlayerEnergy(playerIn, energyConsumption);
                                     HeatUtils.heatPlayer(playerIn, applyPropertyModifiers(MPAConstants.HEAT_EMISSION));
-                                    LightningBoltEntity sparkie = new LightningBoltEntity(playerIn.world, raytraceResult.getHitVec().x, raytraceResult.getHitVec().y, raytraceResult.getHitVec().z, false);
-
-                                    ((ServerWorld) worldIn).addLightningBolt(sparkie);
+                                    LightningBoltEntity sparkie = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, worldIn);
+                                    sparkie.setPosition(raytraceResult.getHitVec().x, raytraceResult.getHitVec().y, raytraceResult.getHitVec().z);
+                                    sparkie.setCaster((ServerPlayerEntity) playerIn);
+                                    ((ServerWorld) worldIn).addEntityIfNotDuplicate(sparkie);
                                 }
                             }
                         }

@@ -44,7 +44,7 @@ public class NightVisionModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.VISION, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig);
         }
 
         @Nonnull

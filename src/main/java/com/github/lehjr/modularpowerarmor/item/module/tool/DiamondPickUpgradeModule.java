@@ -4,11 +4,11 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.*;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.helper.ToolHelpers;
+import com.github.lehjr.mpalib.util.helper.ToolHelpers;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -33,10 +33,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DiamondPickUpgradeModule extends AbstractPowerModule {
-    public static final ResourceLocation pickaxe = new ResourceLocation(MPARegistryNames.MODULE_PICKAXE__REGNAME);
+    public static final ResourceLocation pickaxe = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PICKAXE_MODULE);
 
-    public DiamondPickUpgradeModule(String regName) {
-        super(regName);
+    public DiamondPickUpgradeModule() {
     }
 
     @Nullable
@@ -51,8 +50,8 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.blockBreaking.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.blockBreaking = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.blockBreaking.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "FE");
 //            this.blockBreaking.addBaseProperty(MPAConstants.HARVEST_SPEED, 10, "x");
 //            this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.ENERGY_CONSUMPTION, 9500);
 //            this.blockBreaking.addTradeoffProperty(MPAConstants.OVERCLOCK, MPAConstants.HARVEST_SPEED, 52);

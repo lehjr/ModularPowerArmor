@@ -1,7 +1,7 @@
 //package com.github.lehjr.modularpowerarmor.item.armor;
 //
 //import com.github.lehjr.mpalib.basemod.MPALibLogger;
-//import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+//import com.github.lehjr.mpalib.basemod.MPALibConstants;
 //import com.github.lehjr.mpalib.client.render.modelspec.ModelRegistry;
 //import com.github.lehjr.mpalib.client.render.modelspec.TexturePartSpec;
 //import com.github.lehjr.mpalib.math.Colour;
@@ -21,11 +21,11 @@
 //    default Colour getColorFromItemStack(ItemStack stack) {
 //        try {
 //            CompoundNBT renderTag = MPSModelHelper.getRenderTag(stack);
-//            if (renderTag.contains(MPALIbConstants.NBT_TEXTURESPEC_TAG)) {
-//                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG));
-//                CompoundNBT specTag = renderTag.getCompound(MPALIbConstants.NBT_TEXTURESPEC_TAG);
+//            if (renderTag.contains(MPALibConstants.NBT_TEXTURESPEC_TAG)) {
+//                TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALibConstants.NBT_TEXTURESPEC_TAG));
+//                CompoundNBT specTag = renderTag.getCompound(MPALibConstants.NBT_TEXTURESPEC_TAG);
 //                int index = partSpec.getColourIndex(specTag);
-//                int[] colours = renderTag.getIntArray(MPALIbConstants.TAG_COLOURS);
+//                int[] colours = renderTag.getIntArray(MPALibConstants.TAG_COLOURS);
 //                if (colours.length > index)
 //                    return new Colour(colours[index]);
 //            }

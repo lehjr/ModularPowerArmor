@@ -52,8 +52,8 @@ public class VeinMinerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.miningEnhancement.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.miningEnhancement = new Enhancement(module, EnumModuleCategory.MINING_ENHANCEMENT, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.miningEnhancement.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "FE");
         }
 
         @Nonnull

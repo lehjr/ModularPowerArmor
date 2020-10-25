@@ -27,8 +27,7 @@ import java.util.concurrent.Callable;
  * Ported by leon on 10/18/16.
  */
 public class SprintAssistModule extends AbstractPowerModule {
-    public SprintAssistModule(String regName) {
-        super(regName);
+    public SprintAssistModule() {
     }
 
     @Nullable
@@ -43,19 +42,19 @@ public class SprintAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.LEGSONLY, MPASettings::getModuleConfig);
 
-            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 100);
             this.ticker.addBaseProperty(MPAConstants.SPRINT_SPEED_MULTIPLIER, .01F, "%");
             this.ticker.addTradeoffProperty(MPAConstants.SPRINT_ASSIST, MPAConstants.SPRINT_SPEED_MULTIPLIER, 2.49F);
 
-            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addBaseProperty(MPAConstants.SPRINT_ENERGY_CONSUMPTION, 0, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.SPRINT_ENERGY_CONSUMPTION, 20);
             this.ticker.addBaseProperty(MPAConstants.FOOD_COMPENSATION, 0, "%");
             this.ticker.addTradeoffProperty(MPAConstants.COMPENSATION, MPAConstants.FOOD_COMPENSATION, 1);
 
-            this.ticker.addBaseProperty(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker.addBaseProperty(MPAConstants.WALKING_ENERGY_CONSUMPTION, 0, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_ENERGY_CONSUMPTION, 100);
             this.ticker.addBaseProperty(MPAConstants.WALKING_SPEED_MULTIPLIER, 0.01F, "%");
             this.ticker.addTradeoffProperty(MPAConstants.WALKING_ASSISTANCE, MPAConstants.WALKING_SPEED_MULTIPLIER, 1.99F);

@@ -46,9 +46,9 @@ public class AdvancedSolarGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
-            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_DAY, 45000, "RF");
-            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_NIGHT, 1500, "RF");
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_DAY, 45000, "FE");
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION_NIGHT, 1500, "FE");
             this.ticker.addBaseProperty(MPAConstants.HEAT_GENERATION_DAY, 15);
             this.ticker.addBaseProperty(MPAConstants.HEAT_GENERATION_NIGHT, 5);
         }
@@ -78,7 +78,7 @@ public class AdvancedSolarGeneratorModule extends AbstractPowerModule {
                 boolean sunVisible = world.isDaytime() && !isRaining && world.canBlockSeeSky(player.getPosition().up());
                 boolean moonVisible = !world.isDaytime() && !isRaining && world.canBlockSeeSky(player.getPosition().up());
 
-                if (!world.isRemote && world.dimension.hasSkyLight() && (world.getGameTime() % 80) == 0) {
+                if (!world.isRemote && world.getDimensionType().hasSkyLight() && (world.getGameTime() % 80) == 0) {
                     float lightLevelScaled = (world.getLightFor(LightType.SKY, player.getPosition().up()) - world.getSkylightSubtracted())/15F;
 
                     if (sunVisible) {

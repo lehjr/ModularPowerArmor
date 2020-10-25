@@ -61,10 +61,10 @@ public class AutoFeederModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig);
             this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 100);
             this.ticker.addBaseProperty(MPAConstants.EATING_EFFICIENCY, 50);
-            this.ticker.addTradeoffProperty(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.EFFICIENCY, MPAConstants.ENERGY_CONSUMPTION, 1000, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.EFFICIENCY, MPAConstants.EATING_EFFICIENCY, 50);
         }
 
@@ -95,7 +95,7 @@ public class AutoFeederModule extends AbstractPowerModule {
                 float saturationNeeded = 20 - foodStats.getSaturationLevel();
 
                 // this consumes all food in the player's inventory and stores the stats in a buffer
-//        if (MPASettings.getModuleConfig().useOldAutoFeeder()) { // FIXME!!!!!
+//        if (MPASettings::getModuleConfig.useOldAutoFeeder()) { // FIXME!!!!!
                 if (true) {
 
                     for (int i = 0; i < inv.getSizeInventory(); i++) {

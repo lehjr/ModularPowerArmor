@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.item.module.environmental;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.config.MPALibSettings;
@@ -40,7 +41,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig);
             this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 10000, "FE");
         }
 
@@ -64,7 +65,7 @@ public class WaterElectrolyzerModule extends AbstractPowerModule {
                 int energyConsumption = (int) Math.round(applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION));
                 if (energy > energyConsumption && player.getAir() < 10) {
                     if ((player.world.isRemote()) && MPALibSettings.useSounds()) {
-                        player.playSound(MPASoundDictionary.SOUND_EVENT_ELECTROLYZER, 1.0f, 1.0f);
+                        player.playSound(MPASoundDictionary.ELECTROLYZER, 1.0f, 1.0f);
                     }
                     ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);
                     player.setAir(300);

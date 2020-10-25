@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 public class MPARegistryNames {
 
-
     /**
      * Entities -----------------------------------------------------------------------------------
      */
@@ -113,5 +112,5 @@ public class MPARegistryNames {
      * Container ----------------------------------------------------------------------------------
      */
     public static final String MPA_CRAFTING_CONTAINER_TYPE = "crafting_container";
-    public static final String MPA_TINKER_TABLE_CONTAINER_TYPE = "powerarmor_workbench_container_type";
+    public static final String MPA_WORKBENCH_CONTAINER_TYPE = "powerarmor_workbench_container_type";
 }

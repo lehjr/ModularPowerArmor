@@ -30,12 +30,12 @@ public class MeleeAssistModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.moduleCap.addBaseProperty(MPAConstants.PUNCH_ENERGY, 10, "RF");
+            this.moduleCap = new PowerModule(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.moduleCap.addBaseProperty(MPAConstants.PUNCH_ENERGY, 10, "FE");
             this.moduleCap.addBaseProperty(MPAConstants.PUNCH_DAMAGE, 2, "pt");
-            this.moduleCap.addTradeoffProperty(MPAConstants.IMPACT, MPAConstants.PUNCH_ENERGY, 1000, "RF");
+            this.moduleCap.addTradeoffProperty(MPAConstants.IMPACT, MPAConstants.PUNCH_ENERGY, 1000, "FE");
             this.moduleCap.addTradeoffProperty(MPAConstants.IMPACT, MPAConstants.PUNCH_DAMAGE, 8, "pt");
-            this.moduleCap.addTradeoffProperty(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_ENERGY, 200, "RF");
+            this.moduleCap.addTradeoffProperty(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_ENERGY, 200, "FE");
             this.moduleCap.addTradeoffProperty(MPAConstants.CARRY_THROUGH, MPAConstants.PUNCH_KNOCKBACK, 1, "P");
         }
 

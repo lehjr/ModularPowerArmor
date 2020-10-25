@@ -45,8 +45,8 @@ public class BladeLauncherModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClickie.addBaseProperty(MPAConstants.BLADE_ENERGY, 5000, "RF");
+            this.rightClickie = new RightClickie(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClickie.addBaseProperty(MPAConstants.BLADE_ENERGY, 5000, "FE");
             this.rightClickie.addBaseProperty(MPAConstants.BLADE_DAMAGE, 6, "pt");
         }
 
@@ -77,8 +77,8 @@ public class BladeLauncherModule extends AbstractPowerModule {
                 if (!worldIn.isRemote) {
                    int energyConsumption = getEnergyUsage();
 
-                    if (ElectricItemUtils.getPlayerEnergy((PlayerEntity) entityLiving) > energyConsumption) {
-                        ElectricItemUtils.drainPlayerEnergy((PlayerEntity) entityLiving, energyConsumption);
+                    if (ElectricItemUtils.getPlayerEnergy(entityLiving) > energyConsumption) {
+                        ElectricItemUtils.drainPlayerEnergy(entityLiving, energyConsumption);
                         SpinningBladeEntity blade = new SpinningBladeEntity(worldIn, entityLiving);
                         worldIn.addEntity(blade);
                     }

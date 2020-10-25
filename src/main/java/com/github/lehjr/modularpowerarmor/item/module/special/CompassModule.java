@@ -33,8 +33,7 @@ import javax.annotation.Nullable;
  * 11:12 PM 6/11/13
  */
 public class CompassModule extends AbstractPowerModule {
-    public CompassModule(String regName) {
-        super(regName);
+    public CompassModule() {
         this.addPropertyOverride(new ResourceLocation("angle"), new IItemPropertyGetter() {
             @OnlyIn(Dist.CLIENT)
             private double rotation;
@@ -111,7 +110,7 @@ public class CompassModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig(), true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
         }
 
         @Nonnull

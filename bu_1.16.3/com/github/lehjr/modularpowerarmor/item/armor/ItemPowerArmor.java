@@ -3,7 +3,7 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.event.RegisterStuff;
-import com.github.lehjr.mpalib.basemod.MPALIbConstants;
+import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
@@ -167,7 +167,7 @@ public class ItemPowerArmor extends ItemElectricArmor {
     @Override
     public String getArmorTexture(ItemStack armor, Entity entity, EquipmentSlotType equipmentSlotType, String type) {
         if (type == "overlay") { // this is to allow a tint to be applied tot the armor
-            return MPALIbConstants.BLANK_ARMOR_MODEL_PATH;
+            return MPALibConstants.BLANK_ARMOR_MODEL_PATH;
         }
 
         return armor.getCapability(ModelSpecNBTCapability.RENDER).map(spec->
@@ -202,8 +202,8 @@ public class ItemPowerArmor extends ItemElectricArmor {
 //                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
 //                        renderTag = spec.getDefaultRenderTag();
 //                        if (renderTag != null && !renderTag.isEmpty()) {
-//                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-//                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
+//                            spec.setRenderTag(renderTag, MPALibConstants.TAG_RENDER);
+//                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALibConstants.TAG_RENDER, renderTag));
 //                        }
 //                        break;
 //                    }

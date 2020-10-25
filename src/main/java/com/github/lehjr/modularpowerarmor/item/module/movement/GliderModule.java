@@ -1,9 +1,11 @@
 package com.github.lehjr.modularpowerarmor.item.module.movement;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
@@ -11,14 +13,13 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleC
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
-import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
-import com.github.lehjr.mpalib.player.PlayerUtils;
+import com.github.lehjr.mpalib.util.player.PlayerUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,10 +30,9 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class GliderModule extends AbstractPowerModule {
-    static final ResourceLocation parachute = new ResourceLocation(MPARegistryNames.MODULE_PARACHUTE__REGNAME);
+    static final ResourceLocation parachute = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PARACHUTE_MODULE);
 
-    public GliderModule(String regName) {
-        super(regName);
+    public GliderModule() {
     }
 
     @Nullable
@@ -47,7 +47,7 @@ public class GliderModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
         }
 
         @Nonnull
@@ -66,8 +66,8 @@ public class GliderModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, ItemStack chestPlate) {
-                Vec3d playerHorzFacing = player.getLookVec();
-                playerHorzFacing = new Vec3d(playerHorzFacing.x, 0, playerHorzFacing.z);
+                Vector3d playerHorzFacing = player.getLookVec();
+                playerHorzFacing = new Vector3d(playerHorzFacing.x, 0, playerHorzFacing.z);
                 playerHorzFacing.normalize();
                 PlayerMovementInputWrapper.PlayerMovementInput playerInput = PlayerMovementInputWrapper.get(player);
 
@@ -76,7 +76,7 @@ public class GliderModule extends AbstractPowerModule {
                         .map(m-> m instanceof IModularItem && ((IModularItem) m).isModuleOnline(parachute)).orElse(false);
 
                 if (playerInput.sneakKey && player.getMotion().y < 0 && (!hasParachute || playerInput.moveForward > 0)) {
-                    Vec3d motion = player.getMotion();
+                    Vector3d motion = player.getMotion();
                     if (motion.y < -0.1) {
                         double motionYchange = Math.min(0.08, -0.1 - motion.y);
 

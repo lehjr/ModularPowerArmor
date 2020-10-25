@@ -10,7 +10,7 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleC
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.helper.ToolHelpers;
+import com.github.lehjr.mpalib.util.helper.ToolHelpers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -33,8 +33,7 @@ import java.util.concurrent.Callable;
  */
 public class LeafBlowerModule extends AbstractPowerModule {
 
-    public LeafBlowerModule(String regName) {
-        super(regName);
+    public LeafBlowerModule() {
     }
 
     @Nullable
@@ -49,8 +48,8 @@ public class LeafBlowerModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "FE");
             this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.rightClick.addBaseProperty(MPAConstants.RADIUS, 1, "m");
             this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.RADIUS, 15);

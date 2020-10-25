@@ -3,6 +3,7 @@ package com.github.lehjr.modularpowerarmor.item.module.armor;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.util.capabilities.heat.HeatCapability;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.*;
 import net.minecraft.item.ItemStack;
@@ -30,8 +31,8 @@ public class DiamondPlatingModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-                moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPASettings.getModuleConfig());
-                moduleCap.addBaseProperty(MPAConstants.ARMOR_VALUE_PHYSICAL, 5, MPALIbConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
+                moduleCap = new PowerModule(module, EnumModuleCategory.ARMOR, EnumModuleTarget.ARMORONLY, MPASettings::getModuleConfig);
+                moduleCap.addBaseProperty(MPAConstants.ARMOR_VALUE_PHYSICAL, 5, MPALibConstants.MODULE_TRADEOFF_PREFIX + MPAConstants.ARMOR_POINTS);
                 moduleCap.addBaseProperty(HeatCapability.MAXIMUM_HEAT, 400);
                 moduleCap.addBaseProperty(MPAConstants.KNOCKBACK_RESISTANCE, 0.25F, "");
         }

@@ -7,6 +7,7 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTa
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.ToggleableModule;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.IItemPropertyGetter;
@@ -30,10 +31,8 @@ import javax.annotation.Nullable;
  * 11:12 PM 6/11/13
  */
 public class ClockModule extends AbstractPowerModule {
-   public ClockModule(String regName) {
-        super(regName);
-
-       this.addPropertyOverride(new ResourceLocation("time"), new IItemPropertyGetter() {
+   public ClockModule() {
+       addPropertyOverride(new ResourceLocation("time"), new IItemPropertyGetter() {
            @OnlyIn(Dist.CLIENT)
            private double rotation;
            @OnlyIn(Dist.CLIENT)
@@ -41,25 +40,26 @@ public class ClockModule extends AbstractPowerModule {
            @OnlyIn(Dist.CLIENT)
            private long lastUpdateTick;
 
+           @Override
            @OnlyIn(Dist.CLIENT)
-           public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-               boolean flag = p_call_3_ != null;
-               Entity entity = (Entity)(flag ? p_call_3_ : p_call_1_.getItemFrame());
-               if (p_call_2_ == null && entity != null) {
-                   p_call_2_ = entity.world;
+           public float call(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity1) {
+               boolean flag = entity1 != null;
+               Entity entity = (Entity)(flag ? entity1 : itemStack.getItemFrame());
+               if (world == null && entity != null) {
+                   world = (ClientWorld) entity.world;
                }
 
-               if (p_call_2_ == null) {
+               if (world == null) {
                    return 0.0F;
                } else {
                    double d0;
-                   if (p_call_2_.dimension.isSurfaceWorld()) {
-                       d0 = (double)p_call_2_.getCelestialAngle(1.0F);
+                   if (world.dimension.isSurfaceWorld()) {
+                       d0 = (double)world.getCelestialAngle(1.0F);
                    } else {
                        d0 = Math.random();
                    }
 
-                   d0 = this.wobble(p_call_2_, d0);
+                   d0 = this.wobble(world, d0);
                    return (float)d0;
                }
            }
@@ -91,7 +91,7 @@ public class ClockModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings.getModuleConfig(), true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
         }
 
         @Nonnull

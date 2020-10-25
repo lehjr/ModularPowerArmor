@@ -19,8 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ShockAbsorberModule extends AbstractPowerModule {
-    public ShockAbsorberModule(String regName) {
-        super(regName);
+    public ShockAbsorberModule() {
     }
 
     @Nullable
@@ -35,7 +34,7 @@ public class ShockAbsorberModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, MPASettings.getModuleConfig(), true);
+            this.moduleToggle = new ToggleableModule(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.FEETONLY, MPASettings::getModuleConfig, true);
             this.moduleToggle.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/m");
             this.moduleToggle.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 100);
             this.moduleToggle.addBaseProperty(MPAConstants.MULTIPLIER, 0, "%");

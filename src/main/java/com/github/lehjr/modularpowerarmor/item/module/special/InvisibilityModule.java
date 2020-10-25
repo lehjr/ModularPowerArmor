@@ -28,10 +28,6 @@ import java.util.concurrent.Callable;
 public class InvisibilityModule extends AbstractPowerModule {
     private final Effect invisibility = Effects.INVISIBILITY;
 
-    public InvisibilityModule(String regName) {
-        super(regName);
-    }
-
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
@@ -44,7 +40,7 @@ public class InvisibilityModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
         }
 
         @Nonnull

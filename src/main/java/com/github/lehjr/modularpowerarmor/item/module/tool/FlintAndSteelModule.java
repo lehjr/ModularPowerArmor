@@ -11,10 +11,7 @@ import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickMo
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FireBlock;
-import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,6 +24,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,8 +38,7 @@ import java.util.concurrent.Callable;
  * 10:48 PM 6/11/13
  */
 public class FlintAndSteelModule extends AbstractPowerModule {
-    public FlintAndSteelModule(String regName) {
-        super(regName);//
+    public FlintAndSteelModule() {
     }
 
     @Nullable
@@ -56,8 +53,8 @@ public class FlintAndSteelModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 10000, "RF");
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 10000, "FE");
         }
 
         @Nonnull
@@ -78,54 +75,36 @@ public class FlintAndSteelModule extends AbstractPowerModule {
             public ActionResultType onItemUse(ItemUseContext context) {
                 int energyConsumption = getEnergyUsage();
                 PlayerEntity player = context.getPlayer();
-                if (ElectricItemUtils.getPlayerEnergy(player) < energyConsumption )
+                if (ElectricItemUtils.getPlayerEnergy(player) < energyConsumption ) {
                     return ActionResultType.FAIL;
+                }
 
-                IWorld world = context.getWorld();
-                BlockPos pos1 = context.getPos();
-                BlockPos pos2 = pos1.offset(context.getFace());
-
-                if (canIgnite(world.getBlockState(pos2), world, pos2)) {
-                    world.playSound(player, pos2, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, random.nextFloat() * 0.4F + 0.8F);
-                    BlockState blockstate1 = ((FireBlock) Blocks.FIRE).getStateForPlacement(world, pos2);
-                    world.setBlockState(pos2, blockstate1, 11);
-                    ItemStack itemstack = context.getItem();
-                    if (player instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity)player, pos2, itemstack);
+                World world = context.getWorld();
+                BlockPos blockpos = context.getPos();
+                BlockState blockstate = world.getBlockState(blockpos);
+                if (CampfireBlock.canBeLit(blockstate)) {
+                    world.playSound(player, blockpos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, random.nextFloat() * 0.4F + 0.8F);
+                    world.setBlockState(blockpos, blockstate.with(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
+                    if (player != null) {
                         ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);
                     }
-
-                    return ActionResultType.SUCCESS;
+                    return ActionResultType.func_233537_a_(world.isRemote());
                 } else {
-                    BlockState blockstate = world.getBlockState(pos1);
-                    if (func_219997_a(blockstate)) {
-                        world.playSound(player, pos1, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, random.nextFloat() * 0.4F + 0.8F);
-                        world.setBlockState(pos1, blockstate.with(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
-                        if (player != null) {
+                    BlockPos blockpos1 = blockpos.offset(context.getFace());
+                    if (AbstractFireBlock.canLightBlock(world, blockpos1, context.getPlacementHorizontalFacing())) {
+                        world.playSound(player, blockpos1, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, random.nextFloat() * 0.4F + 0.8F);
+                        BlockState blockstate1 = AbstractFireBlock.getFireForPlacement(world, blockpos1);
+                        world.setBlockState(blockpos1, blockstate1, 11);
+                        ItemStack itemstack = context.getItem();
+                        if (player instanceof ServerPlayerEntity) {
+                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity)player, blockpos1, itemstack);
                             ElectricItemUtils.drainPlayerEnergy(player, energyConsumption);
                         }
-
-                        return ActionResultType.SUCCESS;
+                        return ActionResultType.func_233537_a_(world.isRemote());
                     } else {
                         return ActionResultType.FAIL;
                     }
                 }
-            }
-
-            public boolean func_219997_a(BlockState state) {
-                return state.getBlock() == Blocks.CAMPFIRE && !state.get(BlockStateProperties.WATERLOGGED) && !state.get(BlockStateProperties.LIT);
-            }
-
-            public boolean canIgnite(BlockState state, IWorld world, BlockPos pos) {
-                BlockState blockstate = ((FireBlock)Blocks.FIRE).getStateForPlacement(world, pos);
-                boolean flag = false;
-
-                for(Direction direction : Direction.Plane.HORIZONTAL) {
-                    if (world.getBlockState(pos.offset(direction)).getBlock() == Blocks.OBSIDIAN && ((NetherPortalBlock)Blocks.NETHER_PORTAL).isPortal(world, pos) != null) {
-                        flag = true;
-                    }
-                }
-                return state.isAir() && (blockstate.isValidPosition(world, pos) || flag);
             }
 
             @Override

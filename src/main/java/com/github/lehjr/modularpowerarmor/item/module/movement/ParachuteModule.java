@@ -11,12 +11,12 @@ import com.github.lehjr.mpalib.util.capabilities.module.tickable.IPlayerTickModu
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
-import com.github.lehjr.mpalib.player.PlayerUtils;
+import com.github.lehjr.mpalib.util.player.PlayerUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -26,8 +26,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class ParachuteModule extends AbstractPowerModule {
-    public ParachuteModule(String regName) {
-        super(regName);
+    public ParachuteModule() {
     }
 
     @Nullable
@@ -42,8 +41,8 @@ public class ParachuteModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
+            this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.ENERGY_CONSUMPTION, 1000, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.THRUST, MPAConstants.SWIM_BOOST_AMOUNT, 1, "m/s");
         }
 
@@ -69,7 +68,7 @@ public class ParachuteModule extends AbstractPowerModule {
                 if (playerInput.sneakKey && player.getMotion().y < -0.1 && (!hasGlider || playerInput.moveForward <= 0)) {
                     double totalVelocity = Math.sqrt(player.getMotion().x * player.getMotion().x + player.getMotion().z * player.getMotion().z + player.getMotion().y * player.getMotion().y);
                     if (totalVelocity > 0) {
-                        Vec3d motion = player.getMotion();
+                        Vector3d motion = player.getMotion();
                         player.setMotion(
                                 motion.x * 0.1 / totalVelocity,
                                 motion.y * 0.1 / totalVelocity,

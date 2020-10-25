@@ -72,8 +72,8 @@ public class ShearsModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick = new BlockBreaker(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "FE");
             this.rightClick.addBaseProperty(MPAConstants.HARVEST_SPEED, 8, "x");
         }
 
@@ -98,7 +98,8 @@ public class ShearsModule extends AbstractPowerModule {
                 if (block instanceof IForgeShearable && ElectricItemUtils.getPlayerEnergy(((PlayerEntity) entityLiving)) > getEnergyUsage()) {
                     IForgeShearable target = (IForgeShearable) block;
                     if (target.isShearable(itemStack, entityLiving.world, pos)) {
-                        List<ItemStack> drops = target.onSheared(itemStack, entityLiving.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack));
+                        // default List<ItemStack> onSheared(@Nullable PlayerEntity player, @Nonnull ItemStack item, World world, BlockPos pos, int fortune)
+                        List<ItemStack> drops = target.onSheared((PlayerEntity)entityLiving, itemStack, entityLiving.world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemStack));
                         Random rand = new Random();
 
                         for (ItemStack stack : drops) {
@@ -140,13 +141,12 @@ public class ShearsModule extends AbstractPowerModule {
                 }
 
                 RayTraceResult rayTraceResult = rayTrace(playerIn.world, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
-
                 if (rayTraceResult != null && rayTraceResult instanceof EntityRayTraceResult
                         && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof IForgeShearable) {
                     IForgeShearable target = (IForgeShearable) ((EntityRayTraceResult) rayTraceResult).getEntity();
                     Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-                    if (target.isShearable(itemStackIn, entity.world, new BlockPos(entity))) {
-                        List<ItemStack> drops = target.onSheared(itemStackIn, entity.world, new BlockPos(entity), 0);
+                    if (target.isShearable(itemStackIn, entity.world, entity.getPosition())) {
+                        List<ItemStack> drops = target.onSheared(playerIn, itemStackIn, entity.world, entity.getPosition(), 0);
                         Random rand = new Random();
                         for (ItemStack drop : drops) {
                             ItemEntity ent = entity.entityDropItem(drop, 1.0F);

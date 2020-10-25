@@ -3,6 +3,7 @@ package com.github.lehjr.modularpowerarmor.item.module.energy_generation;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
+import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
@@ -28,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class KineticGeneratorModule extends AbstractPowerModule {
-    static final ResourceLocation sprintAssist = new ResourceLocation(MPARegistryNames.MODULE_SPRINT_ASSIST__REGNAME);
+    static final ResourceLocation sprintAssist = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.SPRINT_ASSIST_MODULE);
 
     public KineticGeneratorModule() {
     }
@@ -45,9 +46,9 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.ENERGY_GENERATION, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
             this.ticker.addBaseProperty(MPAConstants.ENERGY_GENERATION, 2000);
-            this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "RF");
+            this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.ENERGY_GENERATION, 6000, "FE");
             this.ticker.addBaseProperty(MPAConstants.MOVEMENT_RESISTANCE, 0.01F);
             this.ticker.addTradeoffProperty(MPAConstants.ENERGY_GENERATED, MPAConstants.MOVEMENT_RESISTANCE, 0.49F, "%");
         }
@@ -68,7 +69,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
 
             @Override
             public void onPlayerTickActive(PlayerEntity player, @Nonnull ItemStack itemStackIn) {
-                if (player.abilities.isFlying || player.isPassenger() || player.isElytraFlying() || !player.onGround)
+                if (player.abilities.isFlying || player.isPassenger() || player.isElytraFlying() || !player.isOnGround())
                     onPlayerTickInactive(player, itemStackIn);
 
                 // really hate running this check on every tick but needed for player speed adjustments
@@ -84,7 +85,7 @@ public class KineticGeneratorModule extends AbstractPowerModule {
                             // every 20 ticks
                             (player.world.getGameTime() % 20) == 0 &&
                             // player not jumping, flying, or riding
-                            player.onGround) {
+                            player.isOnGround()) {
                         double distance = player.distanceWalkedModified - player.prevDistanceWalkedModified;
                         ElectricItemUtils.givePlayerEnergy(player, (int) (distance * 10 * applyPropertyModifiers(MPAConstants.ENERGY_GENERATION)));
                     }

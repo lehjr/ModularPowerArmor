@@ -6,7 +6,7 @@ import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
-import com.github.lehjr.mpalib.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
@@ -14,7 +14,7 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleC
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
-import com.github.lehjr.mpalib.capabilities.player.CapabilityPlayerKeyStates;
+import com.github.lehjr.mpalib.util.capabilities.player.CapabilityPlayerKeyStates;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
@@ -36,10 +36,10 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class JetPackModule extends AbstractPowerModule {
-    ResourceLocation flightControl = new ResourceLocation(MPARegistryNames.MODULE_FLIGHT_CONTROL__REGNAME);
+    ResourceLocation flightControl = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.FLIGHT_CONTROL_MODULE);
 
-    public JetPackModule(String regName) {
-        super(regName);
+    public JetPackModule() {
+        super();
     }
 
     @Nullable
@@ -54,7 +54,7 @@ public class JetPackModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.MOVEMENT, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
 
             this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF/t");
             this.ticker.addBaseProperty(MPAConstants.JETPACK_THRUST, 0, "N");
@@ -96,23 +96,23 @@ public class JetPackModule extends AbstractPowerModule {
                     if (hasFlightControl && thrust > 0) {
                         thrust = MovementManager.INSTANCE.thrust(player, thrust, true);
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
-                            Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
+                            Musique.playerSound(player, MPASoundDictionary.JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else if (playerInput.jumpKey) {//&& player.motionY < 0.5) {
                         thrust = MovementManager.INSTANCE.thrust(player, thrust, false);
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
-                            Musique.playerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
+                            Musique.playerSound(player, MPASoundDictionary.JETPACK, SoundCategory.PLAYERS, (float) (thrust * 6.25), 1.0f, true);
                         }
                         ElectricItemUtils.drainPlayerEnergy(player, (int) (thrust * jetEnergy));
                     } else {
                         if (player.world.isRemote && MPALibSettings.useSounds()) {
-                            Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK);
+                            Musique.stopPlayerSound(player, MPASoundDictionary.JETPACK);
                         }
                     }
                 } else {
                     if (player.world.isRemote && MPALibSettings.useSounds()) {
-                        Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK);
+                        Musique.stopPlayerSound(player, MPASoundDictionary.JETPACK);
                     }
                 }
             }
@@ -120,7 +120,7 @@ public class JetPackModule extends AbstractPowerModule {
             @Override
             public void onPlayerTickInactive(PlayerEntity player, ItemStack item) {
                 if (player.world.isRemote && MPALibSettings.useSounds()) {
-                    Musique.stopPlayerSound(player, MPASoundDictionary.SOUND_EVENT_JETPACK);
+                    Musique.stopPlayerSound(player, MPASoundDictionary.JETPACK);
                 }
             }
         }

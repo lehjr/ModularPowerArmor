@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class MagnetModule extends AbstractPowerModule {
-    public MagnetModule(String regName) {
-        super(regName);
+    public MagnetModule() {
     }
 
     @Nullable
@@ -48,8 +47,8 @@ public class MagnetModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig());
-            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "RF");
+            this.ticker = new Ticker(module, EnumModuleCategory.SPECIAL, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig);
+            this.ticker.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 0, "FE");
             this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 2000);
             this.ticker.addBaseProperty(MPAConstants.RADIUS, 5);
             this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.RADIUS, 10);

@@ -44,7 +44,7 @@ public class CoolingSystemModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings.getModuleConfig(), true);
+            this.ticker = new Ticker(module, EnumModuleCategory.ENVIRONMENTAL, EnumModuleTarget.TORSOONLY, MPASettings::getModuleConfig, true);
             this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.COOLING_BONUS, 1, "%");
             this.ticker.addTradeoffProperty(MPAConstants.POWER, MPAConstants.ENERGY_CONSUMPTION, 40, "RF/t");
         }

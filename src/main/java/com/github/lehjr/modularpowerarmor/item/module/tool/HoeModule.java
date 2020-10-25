@@ -38,8 +38,7 @@ import java.util.concurrent.Callable;
 public class HoeModule extends AbstractPowerModule {
     protected static final Map<Block, BlockState> HOE_LOOKUP = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.getDefaultState(), Blocks.GRASS_PATH, Blocks.FARMLAND.getDefaultState(), Blocks.DIRT, Blocks.FARMLAND.getDefaultState(), Blocks.COARSE_DIRT, Blocks.DIRT.getDefaultState()));
 
-    public HoeModule(String regName) {
-        super(regName);
+    public HoeModule() {
     }
 
     @Nullable
@@ -54,8 +53,8 @@ public class HoeModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "RF");
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 500, "FE");
             this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.ENERGY_CONSUMPTION, 9500);
             this.rightClick.addTradeoffProperty(MPAConstants.RADIUS, MPAConstants.RADIUS, 8, "m");
         }

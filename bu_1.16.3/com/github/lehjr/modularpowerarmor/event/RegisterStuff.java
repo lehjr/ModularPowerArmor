@@ -58,25 +58,8 @@ public enum RegisterStuff {
 
     public static final MPACreativeTab creativeTab = new MPACreativeTab();
 
-    @SubscribeEvent
-    public void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent) {
-        itemRegistryEvent.getRegistry().registerAll(
 
 
-                // ItemBlocks ---------------------------------------------------------------------------------
-                new BlockItem(MPAObjects.INSTANCE.tinkerTable,
-                        new Item.Properties().group(creativeTab))
-                        .setRegistryName(new ResourceLocation(TINKER_TABLE_REG_NAME)),
-                new BlockItem(MPAObjects.INSTANCE.luxCapacitor,
-                        new Item.Properties().group(creativeTab))
-                        .setRegistryName(new ResourceLocation(LUX_CAPACITOR_REG_NAME))
-        );
-    }
-
-    @SubscribeEvent
-    public void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent) {
-        blockRegistryEvent.getRegistry().registerAll(new BlockLuxCapacitor(LUX_CAPACITOR_REG_NAME), new BlockTinkerTable(TINKER_TABLE_REG_NAME));
-    }
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -107,8 +90,6 @@ public enum RegisterStuff {
 //                        .setRegistryName(MODID + ":mode_changing_container_type"),
 
                 // Modular Item Container
-                new ContainerType<>(TinkerTableContainer::new)
-                        .setRegistryName(MPA_TINKER_TABLE_CONTAINER_TYPE__REG_NAME),
 
 //                // the IForgeContainerType only needed for extra data
 //                // ModuleConfig
@@ -129,9 +110,7 @@ public enum RegisterStuff {
 //                    return new TinkerTableContainer(windowId, playerInventory, typeIndex);
 //                }).setRegistryName(MODID + ":cosmetic_config_container_type"),
 
-                // Crafting Gui
-                new ContainerType<>(MPACraftingContainer::new)
-                        .setRegistryName(MPA_CRAFTING_CONTAINER_TYPE__REG_NAME)
+
         );
     }
 }

@@ -11,8 +11,8 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleC
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
-import com.github.lehjr.mpalib.heat.HeatUtils;
-import com.github.lehjr.mpalib.math.Colour;
+import com.github.lehjr.mpalib.util.heat.HeatUtils;
+import com.github.lehjr.mpalib.util.math.Colour;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,8 +29,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class LuxCapacitorModule extends AbstractPowerModule {
-    public LuxCapacitorModule(String regName) {
-        super(regName);
+    public LuxCapacitorModule() {
     }
 
     @Nullable
@@ -45,8 +44,8 @@ public class LuxCapacitorModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
-            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "RF");
+            this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+            this.rightClick.addBaseProperty(MPAConstants.ENERGY_CONSUMPTION, 1000, "FE");
             this.rightClick.addTradeoffProperty(MPAConstants.RED, MPAConstants.RED_HUE, 1, "%");
             this.rightClick.addTradeoffProperty(MPAConstants.GREEN, MPAConstants.GREEN_HUE, 1, "%");
             this.rightClick.addTradeoffProperty(MPAConstants.BLUE, MPAConstants.BLUE_HUE, 1, "%");

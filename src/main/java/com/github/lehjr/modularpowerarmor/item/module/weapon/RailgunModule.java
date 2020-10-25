@@ -44,9 +44,9 @@ public class RailgunModule extends AbstractPowerModule {
 
         public CapProvider(@Nonnull ItemStack module) {
             this.module = module;
-            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings.getModuleConfig());
+            this.ticker = new Ticker(module, EnumModuleCategory.WEAPON, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
             this.ticker.addBaseProperty(MPAConstants.RAILGUN_TOTAL_IMPULSE, 500, "Ns");
-            this.ticker.addBaseProperty(MPAConstants.RAILGUN_ENERGY_COST, 5000, "RF");
+            this.ticker.addBaseProperty(MPAConstants.RAILGUN_ENERGY_COST, 5000, "FE");
             this.ticker.addBaseProperty(MPAConstants.RAILGUN_HEAT_EMISSION, 2, "");
             this.ticker.addTradeoffProperty(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_TOTAL_IMPULSE, 2500);
             this.ticker.addTradeoffProperty(MPAConstants.VOLTAGE, MPAConstants.RAILGUN_ENERGY_COST, 25000);
