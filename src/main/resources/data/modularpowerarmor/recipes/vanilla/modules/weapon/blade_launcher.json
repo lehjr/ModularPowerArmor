@@ -16,7 +16,7 @@
       "tag": "forge:wiring"
     },
     "M": {
-      "item": "mpalib:component_capacitor_mv"
+      "item": "mpalib:battery_advanced"
     },
     "C": {
       "item":"mpalib:component_control_circuit"

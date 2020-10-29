@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.network.packets.reworked_crafting_packets;
 
-import com.github.lehjr.modularpowerarmor.client.gui.modding.module.WorkBenchGui;
+import com.github.lehjr.modularpowerarmor.client.gui.modding.module.MPAWorkbenchGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.crafting.IRecipe;
@@ -44,22 +44,25 @@ public class SPlaceGhostRecipePacket {
 
     @OnlyIn(Dist.CLIENT)
     static void handleClient(SPlaceGhostRecipePacket message) {
-        Minecraft client = Minecraft.getInstance();
-        Container container = client.player.openContainer;
-        if (container.windowId == message.windowId && container.getCanCraft(client.player)) {
-            client.world.getRecipeManager().getRecipe(message.recipeId).ifPresent((iRecipe) -> {
-                if (client.currentScreen instanceof WorkBenchGui) {
-                    ((WorkBenchGui) client.currentScreen).setupGhostRecipe(iRecipe, container.inventorySlots);
-                }
-            });
-        }
+        System.out.println("fixme");
+
+//        Minecraft client = Minecraft.getInstance();
+//        Container container = client.player.openContainer;
+//        if (container.windowId == message.windowId && container.getCanCraft(client.player)) {
+//            client.world.getRecipeManager().getRecipe(message.recipeId).ifPresent((iRecipe) -> {
+//                if (client.currentScreen instanceof MPAWorkbenchGui) {
+//                    ((MPAWorkbenchGui) client.currentScreen).setupGhostRecipe(iRecipe, container.inventorySlots);
+//                }
+//            });
+//        }
     }
 
     public static void handle(SPlaceGhostRecipePacket message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            if (ctx.get().getDirection().getReceptionSide().isClient()) {
-                handleClient(message);
-            }
+            System.out.println("fixme");
+//            if (ctx.get().getDirection().getReceptionSide().isClient()) {
+//                handleClient(message);
+//            }
         });
         ctx.get().setPacketHandled(true);
     };

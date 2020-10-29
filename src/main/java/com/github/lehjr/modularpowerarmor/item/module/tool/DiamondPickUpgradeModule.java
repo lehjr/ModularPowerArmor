@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DiamondPickUpgradeModule extends AbstractPowerModule {
-    public static final ResourceLocation pickaxe = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PICKAXE_MODULE);
 
     public DiamondPickUpgradeModule() {
     }
@@ -73,7 +72,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                 AtomicBoolean canHarvest = new AtomicBoolean(false);
                 powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
                     if (modeChanging instanceof IModeChangingItem) {
-                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
+                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(MPARegistryNames.PICKAXE_MODULE_REGNAME);
                         if (!pickaxeModule.isEmpty()) {
                             int energyUsage = pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
                                 if (m instanceof IBlockBreakingModule) {
@@ -100,7 +99,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                     AtomicInteger energyUsage = new AtomicInteger(0);
                     powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
                         if (modeChanging instanceof IModeChangingItem) {
-                            ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
+                            ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(MPARegistryNames.PICKAXE_MODULE_REGNAME);
                             if (!pickaxeModule.isEmpty()) {
                                 energyUsage.set(pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m -> {
                                     if (m instanceof IBlockBreakingModule) {
@@ -129,7 +128,7 @@ public class DiamondPickUpgradeModule extends AbstractPowerModule {
                 AtomicDouble newSpeed = new AtomicDouble(event.getNewSpeed());
                 powerFist.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(modeChanging -> {
                     if (modeChanging instanceof IModeChangingItem) {
-                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(pickaxe);
+                        ItemStack pickaxeModule = ((IModeChangingItem) modeChanging).getOnlineModuleOrEmpty(MPARegistryNames.PICKAXE_MODULE_REGNAME);
                         if (!pickaxeModule.isEmpty()) {
                             newSpeed.set(newSpeed.get() *
                                     pickaxeModule.getCapability(PowerModuleCapability.POWER_MODULE).map(m ->

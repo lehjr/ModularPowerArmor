@@ -32,7 +32,6 @@ import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.PowerFist;
 import com.github.lehjr.modularpowerarmor.tile_entity.LuxCapacitorTileEntity;
 import com.github.lehjr.modularpowerarmor.tile_entity.WorkBenchTileEntity;
-import com.github.lehjr.mpalib.container.CraftingContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -53,6 +52,7 @@ public class MPAObjects {
             .group(MPAObjects.creativeTab)
             .defaultMaxDamage(-1)
             .setNoRepair();
+
     public static final Item.Properties fullStack = new Item.Properties()
             .group(MPAObjects.creativeTab)
             .defaultMaxDamage(-1)
@@ -97,6 +97,7 @@ public class MPAObjects {
 
     public static final RegistryObject<EntityType<PlasmaBoltEntity>> PLASMA_BOLT_ENTITY_TYPE = ENTITY_TYPES.register(MPARegistryNames.PLASMA_BOLT,
             ()-> EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
+//                    .size(0.25F, 0.25F)
                     .build(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PLASMA_BOLT).toString()));
 
 
@@ -114,8 +115,7 @@ public class MPAObjects {
             () -> new BlockItem(WORKBENCH_BLOCK.get(), fullStack));
 
     public static final RegistryObject<Item> LUX_CAPACITOR_ITEM = ITEMS.register(MPARegistryNames.LUX_CAPACITOR,
-            () -> new BlockItem(WORKBENCH_BLOCK.get(), fullStack));
-
+            () -> new BlockItem(LUX_CAPACITOR_BLOCK.get(), fullStack));
 
     /* Armor -------------------------------------------------------------------------------------- */
     public static final RegistryObject<Item> POWER_ARMOR_HELMET = ITEMS.register(MPARegistryNames.POWER_ARMOR_HELMET,
@@ -136,177 +136,82 @@ public class MPAObjects {
 
     /* Modules ------------------------------------------------------------------------------------ */
     // Armor --------------------------------------------------------------------------------------
-    public static final RegistryObject<Item> LEATHER_PLATING_MODULE = ITEMS.register(MPARegistryNames.LEATHER_PLATING_MODULE,
-            () -> new LeatherPlatingModule());
-
-    public static final RegistryObject<Item> IRON_PLATING_MODULE = ITEMS.register(MPARegistryNames.IRON_PLATING_MODULE,
-            () -> new IronPlatingModule());
-
-    public static final RegistryObject<Item> DIAMOND_PLATING_MODULE = ITEMS.register(MPARegistryNames.DIAMOND_PLATING_MODULE,
-            () -> new IronPlatingModule());
-
-    public static final RegistryObject<Item> ENERGY_SHIELD_MODULE = ITEMS.register(MPARegistryNames.ENERGY_SHIELD_MODULE,
-            () -> new IronPlatingModule());
+    public static final RegistryObject<Item> LEATHER_PLATING_MODULE = registerModule(MPARegistryNames.LEATHER_PLATING_MODULE, new LeatherPlatingModule());
+    public static final RegistryObject<Item> IRON_PLATING_MODULE = registerModule(MPARegistryNames.IRON_PLATING_MODULE, new IronPlatingModule());
+    public static final RegistryObject<Item> DIAMOND_PLATING_MODULE = registerModule(MPARegistryNames.DIAMOND_PLATING_MODULE, new IronPlatingModule());
+    public static final RegistryObject<Item> ENERGY_SHIELD_MODULE = registerModule(MPARegistryNames.ENERGY_SHIELD_MODULE, new IronPlatingModule());
 
     // Cosmetic -----------------------------------------------------------------------------------
-    public static final RegistryObject<Item> TRANSPARENT_ARMOR_MODULE = ITEMS.register(MPARegistryNames.TRANSPARENT_ARMOR_MODULE,
-            () -> new TransparentArmorModule());
+    public static final RegistryObject<Item> TRANSPARENT_ARMOR_MODULE = registerModule(MPARegistryNames.TRANSPARENT_ARMOR_MODULE, new TransparentArmorModule());
 
     // Energy Generation --------------------------------------------------------------------------
-    public static final RegistryObject<Item> SOLAR_GENERATOR_MODULE = ITEMS.register(MPARegistryNames.SOLAR_GENERATOR_MODULE,
-            () -> new BasicSolarGeneratorModule());
-
-    public static final RegistryObject<Item> ADVANCED_SOLAR_GENERATOR_MODULE = ITEMS.register(MPARegistryNames.ADVANCED_SOLAR_GENERATOR_MODULE,
-            () -> new AdvancedSolarGeneratorModule());
-
-    public static final RegistryObject<Item> KINETIC_GENERATOR_MODULE = ITEMS.register(MPARegistryNames.KINETIC_GENERATOR_MODULE,
-            () -> new KineticGeneratorModule());
-
-    public static final RegistryObject<Item> THERMAL_GENERATOR_MODULE = ITEMS.register(MPARegistryNames.THERMAL_GENERATOR_MODULE,
-            () -> new ThermalGeneratorModule());
+    public static final RegistryObject<Item> SOLAR_GENERATOR_MODULE = registerModule(MPARegistryNames.SOLAR_GENERATOR_MODULE, new BasicSolarGeneratorModule());
+    public static final RegistryObject<Item> ADVANCED_SOLAR_GENERATOR_MODULE = registerModule(MPARegistryNames.ADVANCED_SOLAR_GENERATOR_MODULE, new AdvancedSolarGeneratorModule());
+    public static final RegistryObject<Item> KINETIC_GENERATOR_MODULE = registerModule(MPARegistryNames.KINETIC_GENERATOR_MODULE, new KineticGeneratorModule());
+    public static final RegistryObject<Item> THERMAL_GENERATOR_MODULE = registerModule(MPARegistryNames.THERMAL_GENERATOR_MODULE, new ThermalGeneratorModule());
 
     // Environmental ------------------------------------------------------------------------------
-    public static final RegistryObject<Item> AUTO_FEEDER_MODULE = ITEMS.register(MPARegistryNames.AUTO_FEEDER_MODULE,
-            () -> new AutoFeederModule());
-
-    public static final RegistryObject<Item> COOLING_SYSTEM_MODULE = ITEMS.register(MPARegistryNames.COOLING_SYSTEM_MODULE,
-            () -> new CoolingSystemModule());
-
-    public static final RegistryObject<Item> FLUID_TANK_MODULE = ITEMS.register(MPARegistryNames.FLUID_TANK_MODULE,
-            () -> new FluidTankModule());
-
-    public static final RegistryObject<Item> MOB_REPULSOR_MODULE = ITEMS.register(MPARegistryNames.MOB_REPULSOR_MODULE,
-            () -> new MobRepulsorModule());
-
-    public static final RegistryObject<Item> WATER_ELECTROLYZER_MODULE = ITEMS.register(MPARegistryNames.WATER_ELECTROLYZER_MODULE,
-            () -> new WaterElectrolyzerModule());
+    public static final RegistryObject<Item> AUTO_FEEDER_MODULE = registerModule(MPARegistryNames.AUTO_FEEDER_MODULE, new AutoFeederModule());
+    public static final RegistryObject<Item> COOLING_SYSTEM_MODULE = registerModule(MPARegistryNames.COOLING_SYSTEM_MODULE, new CoolingSystemModule());
+    public static final RegistryObject<Item> FLUID_TANK_MODULE = registerModule(MPARegistryNames.FLUID_TANK_MODULE, new FluidTankModule());
+    public static final RegistryObject<Item> MOB_REPULSOR_MODULE = registerModule(MPARegistryNames.MOB_REPULSOR_MODULE, new MobRepulsorModule());
+    public static final RegistryObject<Item> WATER_ELECTROLYZER_MODULE = registerModule(MPARegistryNames.WATER_ELECTROLYZER_MODULE, new WaterElectrolyzerModule());
 
     // Mining Enhancements ------------------------------------------------------------------------
-    public static final RegistryObject<Item> AOE_PICK_UPGRADE_MODULE = ITEMS.register(MPARegistryNames.AOE_PICK_UPGRADE_MODULE,
-            () -> new AOEPickUpgradeModule());
-
-    public static final RegistryObject<Item> AQUA_AFFINITY_MODULE = ITEMS.register(MPARegistryNames.AQUA_AFFINITY_MODULE,
-            () -> new AquaAffinityModule());
-
-    public static final RegistryObject<Item> SILK_TOUCH_MODULE = ITEMS.register(MPARegistryNames.SILK_TOUCH_MODULE,
-            () -> new SilkTouchModule());
-
-    public static final RegistryObject<Item> FORTUNE_MODULE = ITEMS.register(MPARegistryNames.FORTUNE_MODULE,
-            () -> new FortuneModule());
-
-    public static final RegistryObject<Item> VEIN_MINER_MODULE = ITEMS.register(MPARegistryNames.VEIN_MINER_MODULE,
-            () -> new VeinMinerModule());
+    public static final RegistryObject<Item> AOE_PICK_UPGRADE_MODULE = registerModule(MPARegistryNames.AOE_PICK_UPGRADE_MODULE, new AOEPickUpgradeModule());
+    public static final RegistryObject<Item> AQUA_AFFINITY_MODULE = registerModule(MPARegistryNames.AQUA_AFFINITY_MODULE, new AquaAffinityModule());
+    public static final RegistryObject<Item> SILK_TOUCH_MODULE = registerModule(MPARegistryNames.SILK_TOUCH_MODULE, new SilkTouchModule());
+    public static final RegistryObject<Item> FORTUNE_MODULE = registerModule(MPARegistryNames.FORTUNE_MODULE, new FortuneModule());
+    public static final RegistryObject<Item> VEIN_MINER_MODULE = registerModule(MPARegistryNames.VEIN_MINER_MODULE, new VeinMinerModule());
 
     // Movement -----------------------------------------------------------------------------------
-    public static final RegistryObject<Item> BLINK_DRIVE_MODULE = ITEMS.register(MPARegistryNames.BLINK_DRIVE_MODULE,
-            () -> new BlinkDriveModule());
-
-    public static final RegistryObject<Item> CLIMB_ASSIST_MODULE = ITEMS.register(MPARegistryNames.CLIMB_ASSIST_MODULE,
-            () -> new ClimbAssistModule());
-
-    public static final RegistryObject<Item> DIMENSIONAL_RIFT_MODULE = ITEMS.register(MPARegistryNames.DIMENSIONAL_RIFT_MODULE,
-            () -> new DimensionalRiftModule());
-
-    public static final RegistryObject<Item> FLIGHT_CONTROL_MODULE = ITEMS.register(MPARegistryNames.FLIGHT_CONTROL_MODULE,
-            () -> new FlightControlModule());
-
-    public static final RegistryObject<Item> GLIDER_MODULE = ITEMS.register(MPARegistryNames.GLIDER_MODULE,
-            () -> new GliderModule());
-
-    public static final RegistryObject<Item> JETBOOTS_MODULE = ITEMS.register(MPARegistryNames.JETBOOTS_MODULE,
-            () -> new JetBootsModule());
-
-    public static final RegistryObject<Item> JETPACK_MODULE = ITEMS.register(MPARegistryNames.JETPACK_MODULE,
-            () -> new JetPackModule());
-
-    public static final RegistryObject<Item> JUMP_ASSIST_MODULE = ITEMS.register(MPARegistryNames.JUMP_ASSIST_MODULE,
-            () -> new JumpAssistModule());
-
-    public static final RegistryObject<Item> PARACHUTE_MODULE = ITEMS.register(MPARegistryNames.PARACHUTE_MODULE,
-            () -> new ParachuteModule());
-
-    public static final RegistryObject<Item> SHOCK_ABSORBER_MODULE = ITEMS.register(MPARegistryNames.SHOCK_ABSORBER_MODULE,
-            () -> new ShockAbsorberModule());
-
-    public static final RegistryObject<Item> SPRINT_ASSIST_MODULE = ITEMS.register(MPARegistryNames.SPRINT_ASSIST_MODULE,
-            () -> new SprintAssistModule());
-
-    public static final RegistryObject<Item> SWIM_BOOST_MODULE = ITEMS.register(MPARegistryNames.SWIM_BOOST_MODULE,
-            () -> new SwimAssistModule());
+    public static final RegistryObject<Item> BLINK_DRIVE_MODULE = registerModule(MPARegistryNames.BLINK_DRIVE_MODULE, new BlinkDriveModule());
+    public static final RegistryObject<Item> CLIMB_ASSIST_MODULE = registerModule(MPARegistryNames.CLIMB_ASSIST_MODULE, new ClimbAssistModule());
+    public static final RegistryObject<Item> DIMENSIONAL_RIFT_MODULE = registerModule(MPARegistryNames.DIMENSIONAL_RIFT_MODULE, new DimensionalRiftModule());
+    public static final RegistryObject<Item> FLIGHT_CONTROL_MODULE = registerModule(MPARegistryNames.FLIGHT_CONTROL_MODULE, new FlightControlModule());
+    public static final RegistryObject<Item> GLIDER_MODULE = registerModule(MPARegistryNames.GLIDER_MODULE, new GliderModule());
+    public static final RegistryObject<Item> JETBOOTS_MODULE = registerModule(MPARegistryNames.JETBOOTS_MODULE, new JetBootsModule());
+    public static final RegistryObject<Item> JETPACK_MODULE = registerModule(MPARegistryNames.JETPACK_MODULE, new JetPackModule());
+    public static final RegistryObject<Item> JUMP_ASSIST_MODULE = registerModule(MPARegistryNames.JUMP_ASSIST_MODULE, new JumpAssistModule());
+    public static final RegistryObject<Item> PARACHUTE_MODULE = registerModule(MPARegistryNames.PARACHUTE_MODULE, new ParachuteModule());
+    public static final RegistryObject<Item> SHOCK_ABSORBER_MODULE = registerModule(MPARegistryNames.SHOCK_ABSORBER_MODULE, new ShockAbsorberModule());
+    public static final RegistryObject<Item> SPRINT_ASSIST_MODULE = registerModule(MPARegistryNames.SPRINT_ASSIST_MODULE, new SprintAssistModule());
+    public static final RegistryObject<Item> SWIM_BOOST_MODULE = registerModule(MPARegistryNames.SWIM_BOOST_MODULE, new SwimAssistModule());
 
     // Special ------------------------------------------------------------------------------------
-    public static final RegistryObject<Item> CLOCK_MODULE = ITEMS.register(MPARegistryNames.CLOCK_MODULE,
-            () -> new ClockModule());
-
-    public static final RegistryObject<Item> COMPASS_MODULE = ITEMS.register(MPARegistryNames.COMPASS_MODULE,
-            () -> new CompassModule());
-
-    public static final RegistryObject<Item> ACTIVE_CAMOUFLAGE_MODULE = ITEMS.register(MPARegistryNames.ACTIVE_CAMOUFLAGE_MODULE,
-            () -> new InvisibilityModule());
-
-    public static final RegistryObject<Item> MAGNET_MODULE = ITEMS.register(MPARegistryNames.MAGNET_MODULE,
-            () -> new MagnetModule());
+    public static final RegistryObject<Item> CLOCK_MODULE = registerModule(MPARegistryNames.CLOCK_MODULE, new ClockModule());
+    public static final RegistryObject<Item> COMPASS_MODULE = registerModule(MPARegistryNames.COMPASS_MODULE, new CompassModule());
+    public static final RegistryObject<Item> ACTIVE_CAMOUFLAGE_MODULE = registerModule(MPARegistryNames.ACTIVE_CAMOUFLAGE_MODULE, new InvisibilityModule());
+    public static final RegistryObject<Item> MAGNET_MODULE = registerModule(MPARegistryNames.MAGNET_MODULE, new MagnetModule());
 
     // Vision -------------------------------------------------------------------------------------
-    public static final RegistryObject<Item> BINOCULARS_MODULE = ITEMS.register(MPARegistryNames.BINOCULARS_MODULE,
-            () -> new BinocularsModule());
-
-    public static final RegistryObject<Item> NIGHT_VISION_MODULE = ITEMS.register(MPARegistryNames.NIGHT_VISION_MODULE,
-            () -> new NightVisionModule());
+    public static final RegistryObject<Item> BINOCULARS_MODULE = registerModule(MPARegistryNames.BINOCULARS_MODULE, new BinocularsModule());
+    public static final RegistryObject<Item> NIGHT_VISION_MODULE = registerModule(MPARegistryNames.NIGHT_VISION_MODULE, new NightVisionModule());
 
     // Tools --------------------------------------------------------------------------
-    public static final RegistryObject<Item> AXE_MODULE = ITEMS.register(MPARegistryNames.AXE_MODULE,
-            () -> new AxeModule());
-
-    public static final RegistryObject<Item> DIAMOND_PICK_UPGRADE_MODULE = ITEMS.register(MPARegistryNames.DIAMOND_PICK_UPGRADE_MODULE,
-            () -> new DiamondPickUpgradeModule());
+    public static final RegistryObject<Item> AXE_MODULE = registerModule(MPARegistryNames.AXE_MODULE, new AxeModule());
+    public static final RegistryObject<Item> DIAMOND_PICK_UPGRADE_MODULE = registerModule(MPARegistryNames.DIAMOND_PICK_UPGRADE_MODULE, new DiamondPickUpgradeModule());
 
     // Fixme !!! rename?
-    public static final RegistryObject<Item> FIELD_TINKER_MODULE = ITEMS.register(MPARegistryNames.FIELD_TINKER_MODULE,
-            () -> new FieldTinkerModule());
-
-    public static final RegistryObject<Item> FLINT_AND_STEEL_MODULE = ITEMS.register(MPARegistryNames.FLINT_AND_STEEL_MODULE,
-            () -> new FlintAndSteelModule());
-
-    public static final RegistryObject<Item> HOE_MODULE = ITEMS.register(MPARegistryNames.HOE_MODULE,
-            () -> new HoeModule());
-
-    public static final RegistryObject<Item> LEAF_BLOWER_MODULE = ITEMS.register(MPARegistryNames.LEAF_BLOWER_MODULE,
-            () -> new LeafBlowerModule());
-
-    public static final RegistryObject<Item> LUX_CAPACITOR_MODULE = ITEMS.register(MPARegistryNames.LUX_CAPACITOR_MODULE,
-            () -> new LuxCapacitorModule());
-
-    public static final RegistryObject<Item> PORTABLE_CRAFTING_MODULE = ITEMS.register(MPARegistryNames.PORTABLE_CRAFTING_MODULE,
-            () -> new PortableCraftingModule());
-
-    public static final RegistryObject<Item> PICKAXE_MODULE = ITEMS.register(MPARegistryNames.PICKAXE_MODULE,
-            () -> new PickaxeModule());
-
-    public static final RegistryObject<Item> SHEARS_MODULE = ITEMS.register(MPARegistryNames.SHEARS_MODULE,
-            () -> new ShearsModule());
-
-    public static final RegistryObject<Item> SHOVEL_MODULE = ITEMS.register(MPARegistryNames.SHOVEL_MODULE,
-            () -> new ShockAbsorberModule());
+    public static final RegistryObject<Item> FIELD_TINKER_MODULE = registerModule(MPARegistryNames.PORTABLE_WORKBENCH_MODULE, new FieldTinkerModule());
+    public static final RegistryObject<Item> FLINT_AND_STEEL_MODULE = registerModule(MPARegistryNames.FLINT_AND_STEEL_MODULE, new FlintAndSteelModule());
+    public static final RegistryObject<Item> HOE_MODULE = registerModule(MPARegistryNames.HOE_MODULE, new HoeModule());
+    public static final RegistryObject<Item> LEAF_BLOWER_MODULE = registerModule(MPARegistryNames.LEAF_BLOWER_MODULE, new LeafBlowerModule());
+    public static final RegistryObject<Item> LUX_CAPACITOR_MODULE = registerModule(MPARegistryNames.LUX_CAPACITOR_MODULE, new LuxCapacitorModule());
+    public static final RegistryObject<Item> PORTABLE_CRAFTING_MODULE = registerModule(MPARegistryNames.PORTABLE_CRAFTING_MODULE, new PortableCraftingModule());
+    public static final RegistryObject<Item> PICKAXE_MODULE = registerModule(MPARegistryNames.PICKAXE_MODULE, new PickaxeModule());
+    public static final RegistryObject<Item> SHEARS_MODULE = registerModule(MPARegistryNames.SHEARS_MODULE, new ShearsModule());
+    public static final RegistryObject<Item> SHOVEL_MODULE = registerModule(MPARegistryNames.SHOVEL_MODULE, new ShockAbsorberModule());
 
     // Debug --------------------------------------------------------------------------------------
     // todo
 
     // Weapons ------------------------------------------------------------------------------------
-    public static final RegistryObject<Item> BLADE_LAUNCHER_MODULE = ITEMS.register(MPARegistryNames.BLADE_LAUNCHER_MODULE,
-            () -> new BladeLauncherModule());
-
-    public static final RegistryObject<Item> LIGHTNING_MODULE = ITEMS.register(MPARegistryNames.LIGHTNING_MODULE,
-            () -> new LightningModule());
-
-    public static final RegistryObject<Item> MELEE_ASSIST_MODULE = ITEMS.register(MPARegistryNames.MELEE_ASSIST_MODULE,
-            () -> new MeleeAssistModule());
-
-    public static final RegistryObject<Item> PLASMA_CANNON_MODULE = ITEMS.register(MPARegistryNames.PLASMA_CANNON_MODULE,
-            () -> new PlasmaCannonModule());
-
-    public static final RegistryObject<Item> RAILGUN_MODULE = ITEMS.register(MPARegistryNames.RAILGUN_MODULE,
-            () -> new RailgunModule());
+    public static final RegistryObject<Item> BLADE_LAUNCHER_MODULE = registerModule(MPARegistryNames.BLADE_LAUNCHER_MODULE, new BladeLauncherModule());
+    public static final RegistryObject<Item> LIGHTNING_MODULE = registerModule(MPARegistryNames.LIGHTNING_MODULE, new LightningModule());
+    public static final RegistryObject<Item> MELEE_ASSIST_MODULE = registerModule(MPARegistryNames.MELEE_ASSIST_MODULE, new MeleeAssistModule());
+    public static final RegistryObject<Item> PLASMA_CANNON_MODULE = registerModule(MPARegistryNames.PLASMA_CANNON_MODULE, new PlasmaCannonModule());
+    public static final RegistryObject<Item> RAILGUN_MODULE = registerModule(MPARegistryNames.RAILGUN_MODULE, new RailgunModule());
 
     /**
      * Container Types ----------------------------------------------------------------------------
@@ -342,6 +247,8 @@ public class MPAObjects {
 
 
 
-
-
+    static RegistryObject<Item> registerModule(String regName, Item item) {
+        MPAModules.INSTANCE.addModule(MPARegistryNames.getRegName(regName));
+        return ITEMS.register(regName, () -> item);
+    }
 }

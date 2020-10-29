@@ -43,13 +43,15 @@ public class MoveModuleFromSlotToSlotPacket {
                 ItemStack itemStack = source.getStack();
                 ItemStack stackCopy = itemStack.copy();
                 // fixme: no idea if this will work with target set as range
-                if (source instanceof CraftingResultSlot && source.getHasStack()) {
-                    container.consume(player);
-                    if (container.mergeItemStack(itemStack, message.targetSlot, message.targetSlot + 1, false)) {
-//                        source.onSlotChange(itemStack, stackCopy);
-                        source.onTake(player, itemStack);
-                    }
-                } else {
+//                if (source instanceof CraftingResultSlot && source.getHasStack()) {
+//                    container.consume(player);
+//                    if (container.mergeItemStack(itemStack, message.targetSlot, message.targetSlot + 1, false)) {
+////                        source.onSlotChange(itemStack, stackCopy);
+//                        source.onTake(player, itemStack);
+//                    }
+//                } else
+
+                {
                     target.putStack(stackCopy);
                     source.decrStackSize(1);
                 }

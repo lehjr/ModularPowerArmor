@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "modularpowerarmor:field_tinkerer"
+    "item": "modularpowerarmor:portable_mpa_workbench"
   },
   "conditions": [
     {
@@ -20,7 +20,7 @@
       "item": "mpalib:component_wiring"
     },
     "T": {
-      "item": "modularpowerarmor:tinkertable"
+      "item": "modularpowerarmor:mpa_workbench"
     },
     "I": {
       "item": "minecraft:iron_ingot"

@@ -6,25 +6,21 @@ import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainer;
 import com.github.lehjr.mpalib.util.client.gui.ExtendedContainerScreen;
 import com.github.lehjr.mpalib.util.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.List;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Requires all module and inventory slots be accounted for before constructing
  *
  *
  */
-public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>{
+public class MPAWorkbenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer> {
     final int spacer = 7;
 
     MPAWorkbenchContainer container;
@@ -36,7 +32,7 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
     protected ModuleTweakFrame tweakFrame;
     protected TabSelectFrame tabSelectFrame;
 
-    public WorkBenchGui(MPAWorkbenchContainer containerIn, PlayerInventory playerInventory, ITextComponent titleIn) {
+    public MPAWorkbenchGui(MPAWorkbenchContainer containerIn, PlayerInventory playerInventory, ITextComponent titleIn) {
         super(containerIn, playerInventory, titleIn);
         this.minecraft = Minecraft.getInstance();
         PlayerEntity player = getMinecraft().player;
@@ -63,11 +59,7 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
                 Colour.LIGHT_BLUE.withAlpha(0.8F));
         addFrame(moduleSelectFrame);
 
-        itemSelectFrame.setDoOnNewSelect(doThis-> {
-            moduleSelectFrame.loadModules(false);
-            this.installFrame.ghostRecipe.clear();
-            this.container.clear();
-        });
+        itemSelectFrame.setDoOnNewSelect(doThis -> moduleSelectFrame.loadModules(false));
 
         /** GLErrors */
         summaryFrame = new DetailedSummaryFrame(player,
@@ -103,17 +95,16 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
                 moduleSelectFrame);
         addFrame(tweakFrame);
 
-        // adding this last so it's last in the loop and will get rendered over everything else instead of behind it
         tabSelectFrame = new TabSelectFrame(player, 0, this.getBlitOffset());
         addFrame(tabSelectFrame);
     }
 
-    Point2D getUlOffset () {
+    Point2D getUlOffset() {
         return new Point2D(guiLeft + 8, guiTop + 8);
     }
 
     public void rescale() {
-        this.setXSize((Math.min(minecraft.getMainWindow().getScaledWidth()- 50, 500)));
+        this.setXSize((Math.min(minecraft.getMainWindow().getScaledWidth() - 50, 500)));
         this.setYSize((Math.min(minecraft.getMainWindow().getScaledHeight() - 50, 300)));
     }
 
@@ -123,7 +114,7 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
         backgroundRect.setTargetDimensions(getGuiLeft(), getGuiTop(), getGuiLeft() + getXSize(), getGuiTop() + getYSize());
 
         itemSelectFrame.init(
-                backgroundRect.finalLeft()  + spacer,
+                backgroundRect.finalLeft() + spacer,
                 backgroundRect.finalTop() + spacer,
                 backgroundRect.finalLeft() + spacer + 36,
                 backgroundRect.finalBottom() - spacer);
@@ -138,13 +129,13 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
         summaryFrame.init(
                 backgroundRect.finalLeft() + spacer + 200 + spacer,
                 backgroundRect.finalTop() + spacer,
-                backgroundRect.finalRight() -  spacer,
+                backgroundRect.finalRight() - spacer,
                 backgroundRect.finalTop() + spacer + 80);
 
         tweakFrame.init(
                 backgroundRect.finalLeft() + spacer + 200 + spacer,
                 backgroundRect.finalTop() + spacer + 80 + spacer,
-                backgroundRect.finalRight() -  spacer,
+                backgroundRect.finalRight() - spacer,
                 backgroundRect.finalBottom() - spacer);
 
         installFrame.setUlShift(getUlOffset());
@@ -160,38 +151,28 @@ public class WorkBenchGui extends ExtendedContainerScreen<MPAWorkbenchContainer>
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
-        if (container.getModularItemToSlotMap().isEmpty()) {
-            float centerx = absX(0);
-            float centery = absY(0);
-            Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.noModulesFound.line1"), centerx, centery - 5);
-            Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.noModulesFound.line2"), centerx, centery + 5);
-        } else {
-            super.render(matrixStack, mouseX, mouseY, partialTicks);
-            if (itemSelectFrame.getSelectedItem() != null && moduleSelectFrame.getSelectedModule() != null) {
-                installFrame.renderGhostRecipe(this.guiLeft, this.guiTop, true, partialTicks);
-                installFrame.renderGhostRecipeTooltip(this.guiLeft, this.guiTop, mouseX, mouseY);
+        if (backgroundRect.width() == backgroundRect.finalWidth() && backgroundRect.height() == backgroundRect.finalHeight()) {
+            if (container.getModularItemToSlotMap().isEmpty()) {
+                float centerx = absX(0);
+                float centery = absY(0);
+                MPALibRenderer.drawCenteredText(matrixStack, new TranslationTextComponent("gui.modularpowerarmor.noModulesFound.line1"), centerx, centery - 5, Colour.WHITE);
+                MPALibRenderer.drawCenteredText(matrixStack, new TranslationTextComponent("gui.modularpowerarmor.noModulesFound.line2"), centerx, centery + 5, Colour.WHITE);
+                tabSelectFrame.render(matrixStack, mouseX, mouseY, partialTicks);
             } else {
-                installFrame.ghostRecipe.clear();
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
+                drawToolTip(matrixStack, mouseX, mouseY);
             }
-            drawToolTip(matrixStack, mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
+
     }
 
     @Override
     public void renderBackground(MatrixStack matrixStack) {
         super.renderBackground(matrixStack);
         this.backgroundRect.draw(matrixStack, getBlitOffset());
-    }
-
-    @Override
-    public void onClose() {
-        installFrame.updateStackedContents();
-        this.container.clear();
-        super.onClose();
-    }
-
-    //----------------------------------------------------
-    public void setupGhostRecipe(IRecipe<?> recipe, List<Slot> slots) {
-        this.installFrame.setupGhostRecipe(recipe, slots);
     }
 }

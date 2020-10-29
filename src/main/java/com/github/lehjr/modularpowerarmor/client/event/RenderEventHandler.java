@@ -10,7 +10,6 @@ import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularI
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.util.client.gui.geometry.DrawableRect;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -32,16 +31,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public enum RenderEventHandler {
     INSTANCE;
     private static boolean ownFly = false;
-    public static final ResourceLocation binoculars = new ResourceLocation(MPAConstants.MOD_ID,
-            MPARegistryNames.BINOCULARS_MODULE);
-    public static final ResourceLocation jetpack =  new ResourceLocation(MPAConstants.MOD_ID,
-            MPARegistryNames.JETPACK_MODULE);
-    public static final ResourceLocation glider = new ResourceLocation(MPAConstants.MOD_ID,
-            MPARegistryNames.GLIDER_MODULE);
-    public static final ResourceLocation jetBoots = new ResourceLocation(MPAConstants.MOD_ID,
-            MPARegistryNames.JETBOOTS_MODULE);
-    public static final ResourceLocation flightControl= new ResourceLocation(MPAConstants.MOD_ID,
-            MPARegistryNames.FLIGHT_CONTROL_MODULE);
     private final DrawableRect frame = new DrawableRect(MPASettings.getHudKeybindX(), MPASettings.getHudKeybindY(), MPASettings.getHudKeybindX() + (float) 16, MPASettings.getHudKeybindY() +  16, true, Colour.DARK_GREEN.withAlpha(0.2F), Colour.GREEN.withAlpha(0.2F));
 
 
@@ -87,17 +76,17 @@ public enum RenderEventHandler {
 
                 player.getItemStackFromSlot(EquipmentSlotType.HEAD).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                         .map(iModularItem ->
-                                (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(flightControl)).orElse(false) ||
+                                (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(MPARegistryNames.FLIGHT_CONTROL_MODULE_REGNAME)).orElse(false) ||
 
                         player.getItemStackFromSlot(EquipmentSlotType.CHEST).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                                 .map(iModularItem ->
                                         (iModularItem instanceof IModularItem) &&
-                                                ((IModularItem) iModularItem).isModuleOnline(jetpack) ||
-                                                ((IModularItem) iModularItem).isModuleOnline(glider)).orElse(false) ||
+                                                ((IModularItem) iModularItem).isModuleOnline(MPARegistryNames.JETPACK_MODULE_REGNAME) ||
+                                                ((IModularItem) iModularItem).isModuleOnline(MPARegistryNames.GLIDER_MODULE_REGNAME)).orElse(false) ||
 
                         player.getItemStackFromSlot(EquipmentSlotType.FEET).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                                 .map(iModularItem ->
-                                        (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(jetBoots)).orElse(false);
+                                        (iModularItem instanceof IModularItem) && ((IModularItem) iModularItem).isModuleOnline(MPARegistryNames.JETBOOTS_MODULE_REGNAME)).orElse(false);
     }
 
     @SubscribeEvent
@@ -113,7 +102,7 @@ public enum RenderEventHandler {
         ItemStack helmet = e.getEntity().getItemStackFromSlot(EquipmentSlotType.HEAD);
         helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h-> {
                     if (h instanceof IModularItem) {
-                        ItemStack binnoculars = ((IModularItem) h).getOnlineModuleOrEmpty(binoculars);
+                        ItemStack binnoculars = ((IModularItem) h).getOnlineModuleOrEmpty(MPARegistryNames.BINOCULARS_MODULE_REGNAME);
                         if (!binnoculars.isEmpty())
                             e.setNewfov((float) (e.getNewfov() / binnoculars.getCapability(PowerModuleCapability.POWER_MODULE)
                                     .map(m->m.applyPropertyModifiers(MPAConstants.FOV)).orElse(1D)));
@@ -135,7 +124,7 @@ public enum RenderEventHandler {
             frame.setBottom(frame.top() + 16);
             for (ClickableKeybinding kb : KeybindManager.INSTANCE.getKeybindings()) {
                 if (kb.displayOnHUD) {
-                    float stringwidth = (float) Renderer.getFontRenderer().getStringPropertyWidth(kb.getLabel());
+                    float stringwidth = (float) MPALibRenderer.getFontRenderer().getStringPropertyWidth(kb.getLabel());
                     frame.setWidth(stringwidth + kb.getBoundModules().size() * 16);
                     frame.draw(matrixStack, zLevel);
                     MPALibRenderer.drawCenteredText(matrixStack, kb.getLabel(), (float) frame.left() + 1, (float) frame.top() + 3, (kb.toggleval) ? Colour.RED : Colour.GREEN);
@@ -154,7 +143,7 @@ public enum RenderEventHandler {
                             }).orElse(false);
                         }
 
-                        Renderer.drawModuleAt(x, frame.top(), module.getModule(), active);
+                        MPALibRenderer.drawModuleAt(matrixStack, x, frame.top(), module.getModule(), active);
 //                        TextureUtils.popTexture();
                         x += 16;
                     }

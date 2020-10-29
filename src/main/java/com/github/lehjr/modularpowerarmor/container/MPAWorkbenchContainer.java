@@ -2,6 +2,8 @@ package com.github.lehjr.modularpowerarmor.container;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
+import com.github.lehjr.modularpowerarmor.network.packets.MoveModuleFromSlotToSlotPacket;
+import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.CreativeInstallModuleRequestPacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.client.gui.slot.*;
@@ -12,6 +14,7 @@ import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -19,6 +22,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -33,36 +37,17 @@ import java.util.*;
  */
 public class MPAWorkbenchContainer
 //        extends MPARecipeBookContainer<CraftingInventory> implements IModularItemToSlotMapProvider {
-        extends Container {
-//    private final CraftingInventory craftingInventory;
-//    private final CraftResultInventory resultInventory;
+        extends Container implements IModularItemToSlotMapProvider {
     private final PlayerEntity player;
 
     // A map of the slot that holds the modular item, and the set of slots in that modular item
     private Map<Integer, List<SlotItemHandler>> modularItemToSlotMap;
 
-    // a set of all known modules
-    private Set<ClickableModuleSlot> allPossibleModules;
-
     public MPAWorkbenchContainer(int windowId, PlayerInventory playerInventory) {
         super(MPAObjects.MPA_WORKBENCH_CONTAINER_TYPE.get(), windowId);
-        this.craftingInventory = new CraftingInventory(this, 3, 3);
-        this.resultInventory = new CraftResultInventory();
         this.player = playerInventory.player;
 
         modularItemToSlotMap = new HashMap<>();
-
-        // crafting result: slot 0
-        this.addSlot(new HideableResultSlot(playerInventory.player, this.craftingInventory, this.resultInventory, 0, -1000, -1000));
-
-        int row;
-        int col;
-        // crafting inventory: slot 1-9
-        for(row = 0; row < 3; ++row) {
-            for(col = 0; col < 3; ++col) {
-                this.addSlot(new HideableSlot(this.craftingInventory, col + row * 3, -1000, -1000));
-            }
-        }
 
         // add all player inventory slots
         for (int index = 0; index < playerInventory.getSizeInventory(); index ++) {
@@ -95,16 +80,12 @@ public class MPAWorkbenchContainer
         }
     }
 
-    public Map<Integer, List<SlotItemHandler>> getModularItemToSlotMap() {
-        return modularItemToSlotMap;
-    }
-
     @Override
     public boolean canMergeSlot(ItemStack itemStack, Slot slot) {
         if (slot instanceof SlotItemHandler) {
             return ((SlotItemHandler) slot).getItemHandler().isItemValid(slot.getSlotIndex(), itemStack);
         }
-        return slot.inventory != this.resultInventory && super.canMergeSlot(itemStack, slot);
+        return super.canMergeSlot(itemStack, slot);
     }
 
     @Override
@@ -202,18 +183,14 @@ public class MPAWorkbenchContainer
         return flag;
     }
 
-    @Override
-    public Container getContainer() {
-        return this;
-    }
-
     public void creativeInstall(int slot, @Nonnull ItemStack itemStack) {
         if(this.getSlot(slot).getItemStackLimit(itemStack) > 0) {
             putStackInSlot(slot, itemStack);
 //            this.detectAndSendChanges();
-            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CreativeInstallModuleRequestPacket(this.windowId, slot, itemStack));
+            MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CreativeInstallModuleRequestPacket(this.windowId, slot, itemStack));
         }
     }
+
 
     public void move(int source, int target) {
         if (source == -1)
@@ -228,101 +205,25 @@ public class MPAWorkbenchContainer
         ItemStack stackCopy = contents.copy();
 
         if(sourceSlot.canTakeStack(player) && canMergeSlot(contents, targetSlot)) {
-            if (source == getOutputSlot()) {
-                if (this.mergeItemStack(stackCopy, target, target+ 1, false)) {
-                    sourceSlot.onTake(player, contents);
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new MoveModuleFromSlotToSlotPacket(this.windowId, source, target));
-                }
-            } else {
-                MPAPackets.CHANNEL_INSTANCE.sendToServer(new MoveModuleFromSlotToSlotPacket(this.windowId, source, target));
-                targetSlot.putStack(stackCopy);
-                sourceSlot.putStack(ItemStack.EMPTY);
-            }
-            detectAndSendChanges();
+            targetSlot.putStack(stackCopy);
+            sourceSlot.putStack(ItemStack.EMPTY);
+            MPAPackets.CHANNEL_INSTANCE.sendToServer(new MoveModuleFromSlotToSlotPacket(this.windowId, source, target));
+//            detectAndSendChanges();
         }
-    }
-
-    @Override
-    public void onCraftMatrixChanged(IInventory iInventory) {
-        if (!player.world.isRemote) {
-            setCraftingResultSlot(this.windowId, player.world, this.player, this.craftingInventory, this.resultInventory);
-        }
-    }
-
-    protected static void setCraftingResultSlot(int windowId, World world, PlayerEntity playerIn, CraftingInventory craftingInventory, CraftResultInventory resultInventory) {
-        if (!world.isRemote) {
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity)playerIn;
-            ItemStack itemStack = ItemStack.EMPTY;
-            Optional<ICraftingRecipe> optionalRecipe = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
-            if (optionalRecipe.isPresent()) {
-                ICraftingRecipe recipe = (ICraftingRecipe)optionalRecipe.get();
-                if (resultInventory.canUseRecipe(world, serverPlayer, recipe)) {
-                    itemStack = recipe.getCraftingResult(craftingInventory);
-                }
-            }
-            // set result slot on server side then send packet to set same on client
-            resultInventory.setInventorySlotContents(0, itemStack);
-            serverPlayer.connection.sendPacket(new SSetSlotPacket(windowId, 0, itemStack));
-        }
-    }
-
-    /**
-     * replace IWorldPosCallable.consume with something not position specific
-     * since this will be used by a portable setup
-     */
-    public void consume(PlayerEntity playerIn) {
-        this.resultInventory.clear();
-        if (!playerIn.world.isRemote) {
-            this.clearContainer(playerIn, playerIn.world, this.craftingInventory);
-        }
-    }
-
-    /**
-     * Called when the container is closed.
-     */
-    public void onContainerClosed(PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        consume(playerIn);
-    }
-
-    @Override
-    public void fillStackedContents(RecipeItemHelper itemHelperIn) {
-        this.craftingInventory.fillStackedContents(itemHelperIn);
-    }
-
-    @Override
-    public void clear() {
-        this.craftingInventory.clear();
-        this.resultInventory.clear();
-    }
-
-    @Override
-    public boolean matches(IRecipe recipeIn) {
-        return recipeIn.matches(this.craftingInventory, this.player.world);
-    }
-
-    @Override
-    public int getOutputSlot() {
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        return 3;
-    }
-
-    @Override
-    public int getHeight() {
-        return 3;
-    }
-
-    @Override
-    public int getSize() {
-        return getHeight() * getWidth() + 1;
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
+    }
+
+
+    public Map<Integer, List<SlotItemHandler>> getModularItemToSlotMap() {
+        return modularItemToSlotMap;
+    }
+
+    @Override
+    public Container getContainer() {
+        return this;
     }
 }

@@ -12,7 +12,7 @@ import com.github.lehjr.mpalib.util.client.gui.hud.meters.EnergyMeter;
 import com.github.lehjr.mpalib.util.client.gui.hud.meters.HeatMeter;
 import com.github.lehjr.mpalib.util.client.gui.hud.meters.PlasmaChargeMeter;
 import com.github.lehjr.mpalib.util.client.gui.hud.meters.WaterMeter;
-import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.util.heat.HeatUtils;
 import com.github.lehjr.mpalib.util.math.MathUtils;
@@ -109,8 +109,8 @@ public class ClientTickHandler {
                     if (!autoFeeder.isEmpty()) {
                         int foodLevel = (int) ((AutoFeederModule) autoFeeder.getItem()).getFoodLevel(autoFeeder);
                         String num = StringUtils.formatNumberShort(foodLevel);
-                        Renderer.drawString(matrixStack, num, 17, yBaseString + (yOffsetString * index.get()));
-                        Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), food);
+                        MPALibRenderer.drawString(matrixStack, num, 17, yBaseString + (yOffsetString * index.get()));
+                        MPALibRenderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), food);
                         index.addAndGet(1);
                     }
 
@@ -146,8 +146,8 @@ public class ClientTickHandler {
                                 ampm = " AM";
                             }
 
-                            Renderer.drawString(matrixStack, hour + ampm, 17, yBaseString + (yOffsetString * index.get()));
-                            Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), clock);
+                            MPALibRenderer.drawString(matrixStack, hour + ampm, 17, yBaseString + (yOffsetString * index.get()));
+                            MPALibRenderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), clock);
 
                             index.addAndGet(1);
                         }
@@ -156,7 +156,7 @@ public class ClientTickHandler {
                     // Compass
                     ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(compassReg);
                     if (!compass.isEmpty()) {
-                        Renderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), compass);
+                        MPALibRenderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), compass);
                         index.addAndGet(1);
                     }
                 });
@@ -245,8 +245,9 @@ public class ClientTickHandler {
 
                     if (maxHeat > 0) {
                         numMeters++;
-                        if (heatMeter == null)
+                        if (heatMeter == null) {
                             heatMeter = new HeatMeter();
+                        }
                     } else heatMeter = null;
 
                     if (maxWater.get() > 0 && waterMeter != null) {
@@ -266,45 +267,45 @@ public class ClientTickHandler {
                     //but including it won't hurt and this makes it easier to swap them around.
 
                     if (energyMeter != null) {
-                        energyMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, (float) (currEnergy / maxEnergy));
-                        Renderer.drawRightAlignedString(matrixStack, currEnergyStr, stringX, top);
+                        energyMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, (float) (currEnergy / maxEnergy), 0);
+                        MPALibRenderer.drawRightAlignedString(matrixStack, currEnergyStr, stringX, top);
                         numMeters--;
                     }
 
                     if (heatMeter != null) {
-                        heatMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, MathUtils.clampFloat(currHeat, 0, maxHeat) / maxHeat);
-                        Renderer.drawRightAlignedString(matrixStack, currHeatStr, stringX, top + (totalMeters - numMeters) * 8);
+                        heatMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, MathUtils.clampFloat(currHeat, 0, maxHeat) / maxHeat, 0);
+                        MPALibRenderer.drawRightAlignedString(matrixStack, currHeatStr, stringX, top + (totalMeters - numMeters) * 8);
                         numMeters--;
                     }
 
                     if (waterMeter != null) {
-                        waterMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, MathUtils.clampFloat(currWater.get(), 0, maxWater.get()) / maxWater.get());
-                        Renderer.drawRightAlignedString(matrixStack, currWaterStr.get(), stringX, top + (totalMeters - numMeters) * 8);
+                        waterMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, MathUtils.clampFloat(currWater.get(), 0, maxWater.get()) / maxWater.get(), 0);
+                        MPALibRenderer.drawRightAlignedString(matrixStack, currWaterStr.get(), stringX, top + (totalMeters - numMeters) * 8);
                         numMeters--;
                     }
 
                     if (plasmaMeter != null) {
-                        plasmaMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, currentPlasma.get() / maxPlasma.get());
-                        Renderer.drawRightAlignedString(matrixStack, currPlasmaStr, stringX, top + (totalMeters - numMeters) * 8);
+                        plasmaMeter.draw(matrixStack, left, top + (totalMeters - numMeters) * 8, currentPlasma.get() / maxPlasma.get(), 0);
+                        MPALibRenderer.drawRightAlignedString(matrixStack, currPlasmaStr, stringX, top + (totalMeters - numMeters) * 8);
                     }
 
                 } else {
                     int numReadouts = 0;
                     if (maxEnergy > 0) {
-                        Renderer.drawString(matrixStack, currEnergyStr + '/' + maxEnergyStr + " \u1D60", 2, 2);
+                        MPALibRenderer.drawString(matrixStack, currEnergyStr + '/' + maxEnergyStr + " \u1D60", 2, 2);
                         numReadouts += 1;
                     }
 
-                    Renderer.drawString(matrixStack, currHeatStr + '/' + maxHeatStr + " C", 2, 2 + (numReadouts * 9));
+                    MPALibRenderer.drawString(matrixStack, currHeatStr + '/' + maxHeatStr + " C", 2, 2 + (numReadouts * 9));
                     numReadouts += 1;
 
                     if (maxWater.get() > 0) {
-                        Renderer.drawString(matrixStack, currWaterStr.get() + '/' + maxWaterStr.get() + " buckets", 2, 2 + (numReadouts * 9));
+                        MPALibRenderer.drawString(matrixStack, currWaterStr.get() + '/' + maxWaterStr.get() + " buckets", 2, 2 + (numReadouts * 9));
                         numReadouts += 1;
                     }
 
                     if (maxPlasma.get() > 0 /* && drawPlasmaMeter */) {
-                        Renderer.drawString(matrixStack, currPlasmaStr + '/' + maxPlasmaStr + "%", 2, 2 + (numReadouts * 9));
+                        MPALibRenderer.drawString(matrixStack, currPlasmaStr + '/' + maxPlasmaStr + "%", 2, 2 + (numReadouts * 9));
                     }
                 }
             }

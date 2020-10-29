@@ -1,7 +1,8 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
-public class MPARegistryNames {
+import net.minecraft.util.ResourceLocation;
 
+public class MPARegistryNames {
     /**
      * Entities -----------------------------------------------------------------------------------
      */
@@ -11,7 +12,7 @@ public class MPARegistryNames {
     /**
      * Blocks -------------------------------------------------------------------------------------
      */
-    public static final String WORKBENCH = "workbench";
+    public static final String WORKBENCH = "mpa_workbench";
     public static final String LUX_CAPACITOR = "luxcapacitor";
 
     /**
@@ -86,7 +87,7 @@ public class MPARegistryNames {
     public static final String AQUA_AFFINITY_MODULE = "aqua_affinity";
     public static final String AXE_MODULE = "axe";
     public static final String DIAMOND_PICK_UPGRADE_MODULE = "diamond_pick_upgrade";
-    public static final String FIELD_TINKER_MODULE = "field_tinkerer";
+    public static final String PORTABLE_WORKBENCH_MODULE = "portable_mpa_workbench";
     public static final String FLINT_AND_STEEL_MODULE = "flint_and_steel";
     public static final String HOE_MODULE = "hoe";
     public static final String LEAF_BLOWER_MODULE = "leaf_blower";
@@ -113,4 +114,28 @@ public class MPARegistryNames {
      */
     public static final String MPA_CRAFTING_CONTAINER_TYPE = "crafting_container";
     public static final String MPA_WORKBENCH_CONTAINER_TYPE = "powerarmor_workbench_container_type";
+
+    //-------------------------------------------
+    // actual registry names
+    public static final ResourceLocation FLUID_TANK_MODULE_REGNAME = getRegName(FLUID_TANK_MODULE);
+    public static final ResourceLocation ACTIVE_CAMOUFLAGE_MODULE_REGNAME = getRegName(ACTIVE_CAMOUFLAGE_MODULE);
+    public static final ResourceLocation FLIGHT_CONTROL_MODULE_REGNAME = getRegName(FLIGHT_CONTROL_MODULE);
+    public static final ResourceLocation MELEE_ASSIST_MODULE_REGNAME =  getRegName(MELEE_ASSIST_MODULE);
+    public static final ResourceLocation PICKAXE_MODULE_REGNAME = getRegName(PICKAXE_MODULE);
+    public static final ResourceLocation AXE_MODULE_REGNAME = getRegName(AXE_MODULE);
+    public static final ResourceLocation SHOVEL_MODULE_REGNAME = getRegName(SHOVEL_MODULE);
+    public static final ResourceLocation PARACHUTE_MODULE_REGNAME = getRegName(PARACHUTE_MODULE);
+    public static final ResourceLocation SPRINT_ASSIST_MODULE_REGNAME =  getRegName(SPRINT_ASSIST_MODULE);
+    public static final ResourceLocation BINOCULARS_MODULE_REGNAME = getRegName(BINOCULARS_MODULE);
+    public static final ResourceLocation JETPACK_MODULE_REGNAME = getRegName(JETPACK_MODULE);
+    public static final ResourceLocation GLIDER_MODULE_REGNAME = getRegName(GLIDER_MODULE);
+    public static final ResourceLocation JETBOOTS_MODULE_REGNAME = getRegName(JETBOOTS_MODULE);
+    public static final ResourceLocation JUMP_ASSIST_MODULE_REGNAME =getRegName(JUMP_ASSIST_MODULE);
+    public static final ResourceLocation KINETIC_GENERATOR_MODULE_REGNAME = getRegName(KINETIC_GENERATOR_MODULE);
+    public static final ResourceLocation SHOCK_ABSORBER_MODULE_REGNAME = getRegName(SHOCK_ABSORBER_MODULE);
+    public static final ResourceLocation PLASMA_CANNON_MODULE_REGNAME = getRegName(PLASMA_CANNON_MODULE);
+
+    static ResourceLocation getRegName(String regNameString) {
+        return new ResourceLocation(MPAConstants.MOD_ID, regNameString);
+    }
 }

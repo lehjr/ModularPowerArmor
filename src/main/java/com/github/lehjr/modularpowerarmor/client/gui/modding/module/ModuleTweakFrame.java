@@ -8,7 +8,7 @@ import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableTinkerSlider;
 import com.github.lehjr.mpalib.util.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.nbt.NBTUtils;
 import com.github.lehjr.mpalib.util.nbt.propertymodifier.IPropertyModifier;
@@ -89,7 +89,7 @@ public class ModuleTweakFrame extends ScrollableFrame {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (sliders != null) {
             super.render(matrixStack, mouseX, mouseY, partialTicks);
-            Renderer.drawCenteredString(matrixStack, "Tinker", (border.left() + border.right()) / 2, border.top() + 2);
+            MPALibRenderer.drawCenteredString(matrixStack, "Tinker", (border.left() + border.right()) / 2, border.top() + 2);
             for (ClickableTinkerSlider slider : sliders) {
                 slider.render(matrixStack, mouseX, mouseY, partialTicks, getzLevel());
             }
@@ -98,15 +98,15 @@ public class ModuleTweakFrame extends ScrollableFrame {
             for (Map.Entry<String, Double> property : propertyDoubleStrings.entrySet()) {
                 String formattedValue = StringUtils.formatNumberFromUnits(property.getValue(), getUnit(property.getKey()));
                 String name = property.getKey();
-                double valueWidth = Renderer.getStringWidth(formattedValue);
+                double valueWidth = MPALibRenderer.getStringWidth(formattedValue);
                 double allowedNameWidth = border.width() - valueWidth - margin * 2;
 
                 List<String> namesList = StringUtils.wrapStringToVisualLength(
                         I18n.format(MPALibConstants.MODULE_TRADEOFF_PREFIX + name), allowedNameWidth);
                 for (int i = 0; i < namesList.size(); i++) {
-                    Renderer.drawString(matrixStack, namesList.get(i), border.left() + margin, nexty + 9 * i);
+                    MPALibRenderer.drawString(matrixStack, namesList.get(i), border.left() + margin, nexty + 9 * i);
                 }
-                Renderer.drawRightAlignedString(matrixStack, formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
+                MPALibRenderer.drawRightAlignedString(matrixStack, formattedValue, border.right() - margin, nexty + 9 * (namesList.size() - 1) / 2);
                 nexty += 9 * namesList.size() + 1;
             }
         }

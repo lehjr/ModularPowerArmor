@@ -2,15 +2,14 @@ package com.github.lehjr.modularpowerarmor.event;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.sound.MPASoundDictionary;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
-import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.util.math.MathUtils;
 import com.github.lehjr.mpalib.util.player.PlayerUtils;
@@ -22,7 +21,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.Constants;
@@ -61,14 +59,13 @@ public enum MovementManager {
         return -0.5 * DEFAULT_GRAVITY * ticks * ticks;
     }
 
-    static final ResourceLocation kineticGen = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.KINETIC_GENERATOR_MODULE);
     // moved here so it is still accessible if sprint assist module isn't installed.
     public void setMovementModifier(ItemStack itemStack, double multiplier, PlayerEntity player) {
         // reduce player speed according to Kinetic Energy Generator setting
         AtomicDouble movementResistance = new AtomicDouble(0);
         itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iModularItem -> {
             if (iModularItem instanceof IModularItem)
-                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(kineticGen).getCapability(PowerModuleCapability.POWER_MODULE)
+                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(MPARegistryNames.KINETIC_GENERATOR_MODULE_REGNAME).getCapability(PowerModuleCapability.POWER_MODULE)
                         .ifPresent(kin->{
                             movementResistance.set(kin.applyPropertyModifiers(MPAConstants.MOVEMENT_RESISTANCE));
                         });
@@ -121,7 +118,7 @@ public enum MovementManager {
             double flightVerticality = helm.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(iModularItem -> {
                 if (iModularItem instanceof IModularItem) {
                     return ((IModularItem) iModularItem)
-                            .getOnlineModuleOrEmpty(RenderEventHandler.flightControl)
+                            .getOnlineModuleOrEmpty(MPARegistryNames.FLIGHT_CONTROL_MODULE_REGNAME)
                             .getCapability(PowerModuleCapability.POWER_MODULE)
                             .map(pm -> pm.applyPropertyModifiers(MPAConstants.FLIGHT_VERTICALITY)).orElse(0D);
                 } else {
@@ -233,8 +230,7 @@ public enum MovementManager {
         return MathUtils.pythag(player.getMotion().x, player.getMotion().y, player.getMotion().z);
     }
 
-    static final ResourceLocation jumpAssist = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.JUMP_ASSIST_MODULE);
-    @SubscribeEvent
+   @SubscribeEvent
     public void handleLivingJumpEvent(LivingJumpEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
@@ -243,7 +239,7 @@ public enum MovementManager {
                     return;
                 }
 
-                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(jumpAssist).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
+                ((IModularItem) iModularItem).getOnlineModuleOrEmpty(MPARegistryNames.JUMP_ASSIST_MODULE_REGNAME).getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(jumper -> {
                     double jumpAssist = jumper.applyPropertyModifiers(MPAConstants.MULTIPLIER) * 2;
                     double drain = jumper.applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);
                     int avail = ElectricItemUtils.getPlayerEnergy(player);
@@ -266,8 +262,6 @@ public enum MovementManager {
         }
     }
 
-    private static final ResourceLocation shockAbsorbersReg = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.SHOCK_ABSORBER_MODULE);
-
     @SubscribeEvent
     public void handleFallEvent(LivingFallEvent event) {
         if (event.getEntityLiving() instanceof PlayerEntity && event.getDistance() > 3.0) {
@@ -278,7 +272,7 @@ public enum MovementManager {
                     return;
                 }
 
-                ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(shockAbsorbersReg);
+                ItemStack shockAbsorbers = ((IModularItem) iModularItem).getOnlineModuleOrEmpty(MPARegistryNames.SHOCK_ABSORBER_MODULE_REGNAME);
                 shockAbsorbers.getCapability(PowerModuleCapability.POWER_MODULE).ifPresent(sa -> {
                     double distanceAbsorb = event.getDistance() * sa.applyPropertyModifiers(MPAConstants.MULTIPLIER);
                     if (player.world.isRemote && MPALibSettings.useSounds()) {

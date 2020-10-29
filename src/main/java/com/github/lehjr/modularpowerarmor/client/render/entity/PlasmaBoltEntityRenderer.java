@@ -3,8 +3,8 @@ package com.github.lehjr.modularpowerarmor.client.render.entity;
 import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
+import com.github.lehjr.mpalib.util.client.gui.IconUtils;
 import com.github.lehjr.mpalib.util.client.model.helper.ModelHelper;
-import com.github.lehjr.mpalib.util.client.render.IconUtils;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.entity.Pose;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.util.NonNullLazy;
@@ -32,7 +33,7 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     public static final NonNullLazy<OBJBakedCompositeModel> modelSphere = NonNullLazy.of(() -> ModelHelper.loadBakedModel(ModelRotation.X0_Y0, null, modelLocation));
     protected final Random rand = new Random();
 
-    protected PlasmaBoltEntityRenderer(EntityRendererManager renderManager) {
+    public PlasmaBoltEntityRenderer(EntityRendererManager renderManager) {
         super(renderManager);
     }
 
@@ -40,15 +41,14 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     @Override
     public void render(PlasmaBoltEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-
         if(entityIn.size > 0) {
-            renderPlasma(matrixStackIn, bufferIn, entityIn.size);
+            renderPlasma(matrixStackIn, bufferIn, entityIn.size/12.5F);
         }
     }
 
     @Override
     public ResourceLocation getEntityTexture(PlasmaBoltEntity entity) {
-        return null;
+        return MPALibConstants.TEXTURE_WHITE;
     }
 
     public void renderPlasma(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, double size) {

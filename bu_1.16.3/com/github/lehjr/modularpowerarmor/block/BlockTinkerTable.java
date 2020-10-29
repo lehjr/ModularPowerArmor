@@ -39,41 +39,7 @@ public class BlockTinkerTable extends HorizontalBlock implements IWaterLoggable 
 
 
 
-    @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        player.playSound(SoundDictionary.SOUND_EVENT_GUI_SELECT, 1.0F, 1.0F);
 
-//        if(!worldIn.isRemote) {
-//            NetworkHooks.openGui((ServerPlayerEntity) player,
-//                    new TinkerContainerProvider(0), (buffer) -> buffer.writeInt(0));
-//        }
-
-        if (worldIn.isRemote) {
-            return ActionResultType.SUCCESS;
-        } else {
-            player.openContainer(state.getContainer(worldIn, pos));
-//            player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
-            return ActionResultType.SUCCESS;
-        }
-
-//        if (worldIn.isRemote()) {
-////        Musique.playClientSound(, 1);
-//            Minecraft.getInstance().enqueue(() -> Minecraft.getInstance().displayGuiScreen(new TestGui(new TranslationTextComponent("gui.tinkertable"))));
-////}
-//        }
-//        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-    }
-
-    @Nullable
-    @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-        return new TinkerContainerProvider(0);
-
-
-//        return new SimpleNamedContainerProvider((windowID, playerInventory, playerEntity) -> {
-//            return new WorkbenchContainer(windowID, playerInventory, IWorldPosCallable.of(worldIn, pos));
-//        }, title);
-    }
 
 
 

@@ -6,9 +6,9 @@ import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -58,7 +58,7 @@ public class ModuleSelectionSubFrame {
     public void drawPartial(MatrixStack matrixStack, int min, int max, float partialTicks, float zLevel) {
         refreshButtonPositions();
         double top = border.top();
-        Renderer.drawString(matrixStack, this.category.getName(), border.left(), top);
+        MPALibRenderer.drawString(matrixStack, this.category.getName(), border.left(), top);
         for (ClickableModule clickie : moduleButtons) {
             clickie.render(matrixStack, min, max, partialTicks, zLevel);
         }

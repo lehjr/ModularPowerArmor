@@ -36,8 +36,6 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class JetPackModule extends AbstractPowerModule {
-    ResourceLocation flightControl = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.FLIGHT_CONTROL_MODULE);
-
     public JetPackModule() {
         super();
     }
@@ -86,7 +84,7 @@ public class JetPackModule extends AbstractPowerModule {
 
                 ItemStack helmet = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
                 boolean hasFlightControl = helmet.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).map(m->
-                        m instanceof IModularItem && ((IModularItem) m).isModuleOnline(flightControl)).orElse(false);
+                        m instanceof IModularItem && ((IModularItem) m).isModuleOnline(MPARegistryNames.FLIGHT_CONTROL_MODULE_REGNAME)).orElse(false);
                 double jetEnergy = 0;
                 double thrust = 0;
                 jetEnergy += applyPropertyModifiers(MPAConstants.ENERGY_CONSUMPTION);

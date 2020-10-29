@@ -30,8 +30,6 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
 public class GliderModule extends AbstractPowerModule {
-    static final ResourceLocation parachute = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PARACHUTE_MODULE);
-
     public GliderModule() {
     }
 
@@ -73,7 +71,7 @@ public class GliderModule extends AbstractPowerModule {
 
                 PlayerUtils.resetFloatKickTicks(player);
                 boolean hasParachute = chestPlate.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                        .map(m-> m instanceof IModularItem && ((IModularItem) m).isModuleOnline(parachute)).orElse(false);
+                        .map(m-> m instanceof IModularItem && ((IModularItem) m).isModuleOnline(MPARegistryNames.PARACHUTE_MODULE_REGNAME)).orElse(false);
 
                 if (playerInput.sneakKey && player.getMotion().y < 0 && (!hasParachute || playerInput.moveForward > 0)) {
                     Vector3d motion = player.getMotion();

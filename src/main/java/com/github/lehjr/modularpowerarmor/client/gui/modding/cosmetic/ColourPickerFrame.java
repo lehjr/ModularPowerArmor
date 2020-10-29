@@ -10,13 +10,13 @@ import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.util.client.gui.GuiIcon;
+import com.github.lehjr.mpalib.util.client.gui.IconUtils;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableLabel;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableSlider;
 import com.github.lehjr.mpalib.util.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.util.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
-import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -28,9 +28,6 @@ import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -229,11 +226,8 @@ public class ColourPickerFrame extends ScrollableFrame {
             colourBox.removeColour(x, y);
 
             if (colourLabel.hitbox((float) x, (float) y) && colours().length > selectedColour) {
-                // todo: insert chat to player...
-//            System.out.println("copying to clipboard: " + "0x" + new Colour(selectedColour).hexColour());
-                StringSelection selection = new StringSelection(new Colour(selectedColour).hexColour());
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(selection, selection);
+                // todo: insert chat to player
+                Minecraft.getInstance().keyboardListener.setClipboardString(new Colour(selectedColour).hexColour());
             }
         }
         return false;

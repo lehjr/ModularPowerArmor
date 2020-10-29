@@ -5,13 +5,13 @@ import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.util.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -143,14 +143,16 @@ public class ModuleSelectionFrame extends ScrollableFrame {
             super.preRender(matrixStack, mouseX, mouseY, partialTicks);
             RenderSystem.pushMatrix();
             RenderSystem.translatef(0, -currentscrollpixels, 0);
-            drawItems(matrixStack, mouseX, mouseY, partialTicks, getzLevel());
+            drawItems(matrixStack, partialTicks, getzLevel());
             drawSelection(matrixStack);
             RenderSystem.popMatrix();
             super.postRender(mouseX, mouseY, partialTicks);
+        } else {
+            super.render(matrixStack, mouseX, mouseY, partialTicks);
         }
     }
 
-    private void drawItems(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, float zLevel) {
+    private void drawItems(MatrixStack matrixStack, float partialTicks, float zLevel) {
         for (ModuleSelectionSubFrame frame : categories.values()) {
             frame.drawPartial(matrixStack, (int) (this.currentscrollpixels + border.top() + 4),
                     (int) (this.currentscrollpixels + border.top() + border.height() - 4), partialTicks, zLevel);
@@ -162,7 +164,7 @@ public class ModuleSelectionFrame extends ScrollableFrame {
         if (module != null) {
             Point2D pos = module.getPosition();
             if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
-                Renderer.drawCircleAround(matrixStack, pos.getX(), pos.getY(), 10, getzLevel());
+                MPALibRenderer.drawCircleAround(matrixStack, pos.getX(), pos.getY(), 10, getzLevel());
             }
         }
     }

@@ -16,8 +16,8 @@ import com.github.lehjr.mpalib.util.client.gui.geometry.GradientAndArcCalculator
 import com.github.lehjr.mpalib.util.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.control.KeyBindingHelper;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -274,19 +274,19 @@ public class KeybindConfigFrame implements IGuiFrame {
         Point2D center = rect.center();
 
         if (selecting) {
-            Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.pressKey"), center.getX(), center.getY());
+            MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.pressKey"), center.getX(), center.getY());
             return;
         }
         newKeybindButton.render(matrixStack, mouseX, mouseY, partialTicks, zLevel);
         trashKeybindButton.render(matrixStack, mouseX, mouseY, partialTicks, zLevel);
 
-        Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions1"), center.getX(), center.getY() + 40);
-        Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions2"), center.getX(), center.getY() + 50);
-        Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions3"), center.getX(), center.getY() + 60);
-        Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions4"), center.getX(), center.getY() + 70);
+        MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions1"), center.getX(), center.getY() + 40);
+        MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions2"), center.getX(), center.getY() + 50);
+        MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions3"), center.getX(), center.getY() + 60);
+        MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindInstructions4"), center.getX(), center.getY() + 70);
         if (takenTime + 1000 > System.currentTimeMillis()) {
             Point2D pos = newKeybindButton.getPosition().plus(new Point2D(0, -20));
-            Renderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindTaken"), pos.getX(), pos.getY());
+            MPALibRenderer.drawCenteredString(matrixStack, I18n.format("gui.modularpowerarmor.keybindTaken"), pos.getX(), pos.getY());
         }
         for (ClickableModule module : modules) {
             module.render(matrixStack, mouseX, mouseY, partialTicks, zLevel);
@@ -295,7 +295,7 @@ public class KeybindConfigFrame implements IGuiFrame {
             keybind.render(matrixStack, mouseX, mouseY, partialTicks, zLevel);
         }
         if (selectedClickie != null && closestKeybind != null) {
-            Renderer.drawLineBetween(selectedClickie, closestKeybind, Colour.YELLOW, zLevel);
+            MPALibRenderer.drawLineBetween(selectedClickie, closestKeybind, Colour.YELLOW, zLevel);
         }
     }
 

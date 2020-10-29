@@ -6,6 +6,7 @@ import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.util.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.util.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.management.OpEntry;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -70,7 +72,7 @@ public class CosmeticGui extends ContainerlessGui {
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHT_BLUE.withAlpha(0.8F),
                 player);
-        frames.add(itemSelectFrame);
+        addFrame(itemSelectFrame);
 
         renderframe = new PlayerModelViewFrame(
                 itemSelectFrame,
@@ -79,7 +81,7 @@ public class CosmeticGui extends ContainerlessGui {
                 this.getBlitOffset(),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHT_BLUE.withAlpha(0.8F));
-        frames.add(renderframe);
+        addFrame(renderframe);
 
         colourpicker = new ColourPickerFrame(
                 new Point2D(absX(0.18),
@@ -91,7 +93,7 @@ public class CosmeticGui extends ContainerlessGui {
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHT_BLUE.withAlpha(0.8F),
                 itemSelectFrame);
-        frames.add(colourpicker);
+        addFrame(colourpicker);
 
         partframe = new PartManipContainer(
                 itemSelectFrame, colourpicker,
@@ -100,10 +102,10 @@ public class CosmeticGui extends ContainerlessGui {
                 this.getBlitOffset(),
                 Colour.DARKBLUE.withAlpha(0.8F),
                 Colour.LIGHT_BLUE.withAlpha(0.8F));
-        frames.add(partframe);
+        addFrame(partframe);
 
         tabSelectFrame = new TabSelectFrame(player, 2, this.getBlitOffset());
-        frames.add(tabSelectFrame);
+        addFrame(tabSelectFrame);
     }
 
     public void rescale() {
@@ -134,7 +136,7 @@ public class CosmeticGui extends ContainerlessGui {
                 backgroundRect.finalTop() + spacer,
                 backgroundRect.finalRight() - spacer - 150 -spacer,
                 backgroundRect.centery() - spacer
-                );
+        );
 
         colourpicker.init(
                 backgroundRect.finalRight() - spacer - 150,
@@ -151,7 +153,7 @@ public class CosmeticGui extends ContainerlessGui {
 
         );
 
-//
+
 //        CosmeticPresetContainer cosmeticFrame = new CosmeticPresetContainer(
 //                itemSelect, colourpicker,
 //                new Point2F(absX(-0.95F), absY(0.025f)),
@@ -181,6 +183,17 @@ public class CosmeticGui extends ContainerlessGui {
 
 
         tabSelectFrame.init(getGuiLeft(), getGuiTop(), getGuiLeft() + getXSize(), getGuiTop() + getYSize());
+    }
+
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        if (backgroundRect.width() == backgroundRect.finalWidth() && backgroundRect.height() == backgroundRect.finalHeight()) {
+            super.render(matrixStack, mouseX, mouseY, partialTicks);
+            drawToolTip(matrixStack, mouseX, mouseY);
+        } else {
+            this.renderBackground(matrixStack);
+        }
     }
 
     @Override

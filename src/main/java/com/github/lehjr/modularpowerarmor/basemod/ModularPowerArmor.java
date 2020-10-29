@@ -4,7 +4,7 @@ import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ClientTickHandler;
 import com.github.lehjr.modularpowerarmor.client.event.ModelBakeEventHandler;
 import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
-import com.github.lehjr.modularpowerarmor.client.gui.modding.module.WorkBenchGui;
+import com.github.lehjr.modularpowerarmor.client.gui.modding.module.MPAWorkbenchGui;
 import com.github.lehjr.modularpowerarmor.client.render.entity.LuxCapacitorEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.render.entity.SpinningBladeEntityRenderer;
@@ -15,7 +15,6 @@ import com.github.lehjr.modularpowerarmor.event.PlayerUpdateHandler;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import com.github.lehjr.mpalib.config.ConfigHelper;
-import com.github.lehjr.mpalib.config.MPALibSettings;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -58,7 +57,7 @@ public class ModularPowerArmor {
         MPAObjects.BLOCKS.register(modEventBus);
         MPAObjects.TILE_TYPES.register(modEventBus);
         MPAObjects.ENTITY_TYPES.register(modEventBus);
-//        MPAObjects.CONTAINER_TYPES.register(modEventBus);
+        MPAObjects.CONTAINER_TYPES.register(modEventBus);
 
         // handles loading and reloading event
         modEventBus.addListener((ModConfig.ModConfigEvent event) -> {
@@ -97,7 +96,7 @@ public class ModularPowerArmor {
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);
 //        ScreenManager.registerFactory(MPAObjects.MPA_CRAFTING_CONTAINER_TYPE.get(), TinkerCraftingGUI::new);
-        ScreenManager.registerFactory(MPAObjects.MPA_WORKBENCH_CONTAINER_TYPE.get(), WorkBenchGui::new);
+        ScreenManager.registerFactory(MPAObjects.MPA_WORKBENCH_CONTAINER_TYPE.get(), MPAWorkbenchGui::new);
 
 /*
 

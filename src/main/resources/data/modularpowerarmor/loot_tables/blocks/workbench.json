@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "modularpowerarmor:workbench"
+          "name": "modularpowerarmor:mpa_workbench"
         }
       ],
       "conditions": [

@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.common;
 
 import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainer;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.client.sound.Musique;
 import com.github.lehjr.mpalib.client.sound.SoundDictionary;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
@@ -10,10 +9,10 @@ import com.github.lehjr.mpalib.util.client.gui.frame.ScrollableFrame;
 import com.github.lehjr.mpalib.util.client.gui.geometry.FlyFromPointToPoint2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.GradientAndArcCalculator;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.math.MathUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
@@ -136,11 +135,11 @@ public class ItemSelectionFrame extends ScrollableFrame {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.currentscrollpixels = Math.min(currentscrollpixels, getMaxScrollPixels());
         super.preRender(matrixStack, mouseX, mouseY, partialTicks);
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(0, -currentscrollpixels, 0);
+        matrixStack.push();
+        matrixStack.translate(0, -currentscrollpixels, 0);
         drawItems(matrixStack, mouseX, mouseY, partialTicks);
         drawSelection(matrixStack, mouseX, mouseY, partialTicks);
-        RenderSystem.popMatrix();
+        matrixStack.pop();
         super.postRender(mouseX, mouseY, partialTicks);
     }
 
@@ -165,7 +164,7 @@ public class ItemSelectionFrame extends ScrollableFrame {
         if (selectedItemStack != -1) {
             Point2D pos = itemButtons.get(selectedItemStack).getPosition();
             if (pos.getY() > this.currentscrollpixels + border.top() + 4 && pos.getY() < this.currentscrollpixels + border.top() + border.height() - 4) {
-                Renderer.drawCircleAround(matrixStack, pos.getX(), pos.getY(), 10, getzLevel());
+                MPALibRenderer.drawCircleAround(matrixStack, pos.getX(), pos.getY(), 10, getzLevel());
             }
         }
     }

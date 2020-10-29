@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.client.gui.modechanging;
 
 import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ModeChangeRequestPacket;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
@@ -11,6 +10,7 @@ import com.github.lehjr.mpalib.util.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.SpiralPointToPoint2D;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -144,7 +144,7 @@ public class RadialModeSelectionFrame implements IGuiFrame {
         ClickableModule module = getSelectedModule();
         if (module != null) {
             Point2D pos = module.getPosition();
-            Renderer.drawCircleAround(matrixStackIn, pos.getX(), pos.getY(), 10, zLevel);
+            MPALibRenderer.drawCircleAround(matrixStackIn, pos.getX(), pos.getY(), 10, zLevel);
         }
     }
 

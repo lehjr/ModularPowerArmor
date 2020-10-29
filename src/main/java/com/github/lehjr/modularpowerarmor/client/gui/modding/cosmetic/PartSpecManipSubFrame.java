@@ -10,12 +10,12 @@ import com.github.lehjr.mpalib.util.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
 import com.github.lehjr.mpalib.util.capabilities.render.modelspec.*;
 import com.github.lehjr.mpalib.util.client.gui.GuiIcon;
+import com.github.lehjr.mpalib.util.client.gui.IconUtils;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
-import com.github.lehjr.mpalib.client.render.IconUtils;
 import com.github.lehjr.mpalib.client.render.RenderState;
-import com.github.lehjr.mpalib.client.render.Renderer;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.math.MathUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -171,7 +171,7 @@ public class PartSpecManipSubFrame {
 
     public void drawPartial(MatrixStack matrixStack, double min, double max) {
         if (partSpecs.size() > 0) {
-            Renderer.drawString(matrixStack, model.getDisaplayName(), border.left() + 8, border.top());
+            MPALibRenderer.drawString(matrixStack, model.getDisaplayName(), border.left() + 8, border.top());
             drawOpenArrow(matrixStack, min, max);
             if (open) {
                 int y = (int) (border.top() + 8);
@@ -227,7 +227,7 @@ public class PartSpecManipSubFrame {
         if (selcomp > 0) {
             icon.selectedArmorOverlay.draw(matrixStack, x + 28 + selcolour * 8, y, Colour.WHITE);
         }
-        Renderer.drawString(matrixStack, partSpec.getDisaplayName(), textstartx + 4, y);
+        MPALibRenderer.drawCenteredText(matrixStack, partSpec.getDisaplayName(), (float) textstartx + 4, (float) y, Colour.WHITE);
     }
 
     // FIXME
@@ -237,24 +237,39 @@ public class PartSpecManipSubFrame {
         RenderSystem.disableAlphaTest();
         RenderSystem.defaultBlendFunc();
         RenderSystem.shadeModel(GL11.GL_SMOOTH);
-        RenderState.glowOn();
 
         Matrix4f matrix4f = matrixStack.getLast().getMatrix();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR_LIGHTMAP);
         if (this.open) {
-            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
-            buffer.pos(this.border.left() + 5, MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
-            buffer.pos(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 3, (float)MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 5, (float)MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 7, (float)MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
         } else {
-            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
-            buffer.pos(this.border.left() + 3, MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
-            buffer.pos(this.border.left() + 7, MathUtils.clampDouble(this.border.top() + 5, min, max), zLevel).color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a).endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 3, (float)MathUtils.clampDouble(this.border.top() + 3, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 3, (float)MathUtils.clampDouble(this.border.top() + 7, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
+            buffer.pos(matrix4f,(float)this.border.left() + 7, (float)MathUtils.clampDouble(this.border.top() + 5, min, max), zLevel)
+                    .color(Colour.LIGHT_BLUE.r, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.b, Colour.LIGHT_BLUE.a)
+                    .lightmap(0x00F000F0)
+                    .endVertex();
         }
         tessellator.draw();
-
-        RenderState.glowOff();
         RenderSystem.shadeModel(GL11.GL_FLAT);
         RenderSystem.disableBlend();
         RenderSystem.enableAlphaTest();

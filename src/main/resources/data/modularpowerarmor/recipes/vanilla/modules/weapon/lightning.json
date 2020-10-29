@@ -16,7 +16,7 @@
       "tag": "forge:wiring"
     },
     "H": {
-      "item": "mpalib:component_capacitor_hv"
+      "item": "mpalib:battery_ultimate"
     },
     "F": {
       "item":"mpalib:component_field_emitter"

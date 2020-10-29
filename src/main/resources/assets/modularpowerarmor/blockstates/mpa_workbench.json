@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "facing=west,waterlogged=false": { "model": "modularpowerarmor:block/mpa_workbench", "y": 90 },
+    "facing=east,waterlogged=false": { "model": "modularpowerarmor:block/mpa_workbench", "y": 270 },
+    "facing=north,waterlogged=false": { "model": "modularpowerarmor:block/mpa_workbench", "y": 0 },
+    "facing=south,waterlogged=false": { "model": "modularpowerarmor:block/mpa_workbench", "y": 180 },
+
+    "facing=west,waterlogged=true": { "model": "modularpowerarmor:block/mpa_workbench", "y": 90 },
+    "facing=east,waterlogged=true": { "model": "modularpowerarmor:block/mpa_workbench", "y": 270 },
+    "facing=north,waterlogged=true": { "model": "modularpowerarmor:block/mpa_workbench", "y": 0 },
+    "facing=south,waterlogged=true": { "model": "modularpowerarmor:block/mpa_workbench", "y": 180 }
+  }
+}

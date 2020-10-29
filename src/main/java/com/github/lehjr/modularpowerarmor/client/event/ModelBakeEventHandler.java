@@ -27,20 +27,6 @@ public enum ModelBakeEventHandler {
         /**
          * Notes: looks like all current models are "SimpleBakedModels"
          */
-
-
-
-        boolean found = false;
-
-
-
-
-        // uncomment to enable original tinker table model
-//        ClientRegistry.bindTileEntityRenderer(MPAObjects.tinkerTableTileEntityType, TinkerTableRenderer::new);
-
-
-
-
         // replace LuxCapacitor model with one that can generate the model data needed to color the lens for the item model
         IBakedModel luxCapItemModel = event.getModelRegistry().get(luxCapItemLocation);
         if (luxCapItemModel instanceof OBJBakedCompositeModel) {
@@ -58,69 +44,5 @@ public enum ModelBakeEventHandler {
         }
 
         MPAModelHelper.loadArmorModels(null, event.getModelLoader());
-//        event.getModelLoader().defaultTextureGetter();
-
-
-
-
-//        modelRegistry = event.getModelRegistry();
-//        modelRegistry.put(powerFistIconLocation, new ModelPowerFist(modelRegistry.get(powerFistIconLocation)));
-//
-//
-//
-//        // Lux Capacitor Base Model
-//        IModel luxCapacitorBaseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MOD_ID,
-//        "models/block/luxcapacitor/luxcapacitor_base.obj"));
-//
-//        // Lux Capacitor Lens Model
-//        IModel luxcapacitorLenseUnbaked = ModelHelper.getModel(new ResourceLocation(MPAConstants.MOD_ID,
-//        "models/block/luxcapacitor/luxcapacitor_lens.obj"));
-//
-//
-//        modelRegistry.put(
-//                new ModelResourceLocation(MPARegistryNames.LUX_CAPACITOR_REG_NAME, "inventory"),
-//                new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
-//                        event.getModelLoader(),
-//                        ModelHelper.defaultTextureGetter(),
-//                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM),
-//                        luxcapacitorLenseUnbaked.bake(
-//                                event.getModelLoader(),
-//                                ModelHelper.defaultTextureGetter(),
-//                                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
-//
-//        modelRegistry.put(
-//                new ModelResourceLocation(MPARegistryNames.MODULE_LUX_CAPACITOR__REGNAME, "inventory"),
-//                new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
-//                        event.getModelLoader(),
-//                        ModelHelper.defaultTextureGetter(),
-//                        ModelRotation.X0_Y0, DefaultVertexFormats.ITEM),
-//                        luxcapacitorLenseUnbaked.bake(
-//                                event.getModelLoader(),
-//                                ModelHelper.defaultTextureGetter(),
-//                                ModelRotation.X0_Y0, DefaultVertexFormats.ITEM)));
-//
-//        luxCapModel = new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
-//                event.getModelLoader(),
-//                ModelHelper.defaultTextureGetter(),
-//                TransformationMatrix.getRotation(Direction.DOWN),
-//                DefaultVertexFormats.ITEM),
-//                luxcapacitorLenseUnbaked.bake(
-//                        event.getModelLoader(),
-//                        ModelHelper.defaultTextureGetter(),
-//                        TransformationMatrix.getRotation(Direction.DOWN), DefaultVertexFormats.ITEM));
-//
-//
-//        for (Direction facing : Direction.values()) {
-//            modelRegistry.put(
-//                    new ModelResourceLocation(MPARegistryNames.LUX_CAPACITOR_REG_NAME, "facing=" + facing.getName()),
-//                    new ModelLuxCapacitor(luxCapacitorBaseUnbaked.bake(
-//                            event.getModelLoader(),
-//                            ModelHelper.defaultTextureGetter(),
-//                            TransformationMatrix.getRotation(facing), DefaultVertexFormats.ITEM),
-//                            luxcapacitorLenseUnbaked.bake(
-//                                    event.getModelLoader(),
-//                                    ModelHelper.defaultTextureGetter(),
-//                                    TransformationMatrix.getRotation(facing), DefaultVertexFormats.ITEM)));
-//        }
     }
 }

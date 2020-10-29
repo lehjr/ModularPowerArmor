@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.gui.clickable;
 
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
-import com.github.lehjr.mpalib.client.render.Renderer;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ToggleRequestPacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
@@ -9,6 +8,7 @@ import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableButton;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.util.client.gui.clickable.IClickable;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
+import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.string.StringUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -85,13 +85,13 @@ public class ClickableKeybinding extends ClickableButton {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, float zLevel) {
         super.render(matrixStack, mouseX, mouseY, partialTicks, zLevel);
         for (ClickableModule module : boundModules) {
-            Renderer.drawLineBetween(this, module, Colour.LIGHT_BLUE, zLevel);
+            MPALibRenderer.drawLineBetween(this, module, Colour.LIGHT_BLUE, zLevel);
             RenderSystem.pushMatrix();
             RenderSystem.scaled(0.5, 0.5, 0.5);
             if (displayOnHUD) {
-                Renderer.drawString(matrixStack, StringUtils.wrapFormatTags("HUD", StringUtils.FormatCodes.BrightGreen), this.position.getX() * 2 + 6, this.position.getY() * 2 + 6);
+                MPALibRenderer.drawString(matrixStack, StringUtils.wrapFormatTags("HUD", StringUtils.FormatCodes.BrightGreen), this.position.getX() * 2 + 6, this.position.getY() * 2 + 6);
             } else {
-                Renderer.drawString(matrixStack, StringUtils.wrapFormatTags("x", StringUtils.FormatCodes.Red), this.position.getX() * 2 + 6, this.position.getY() * 2 + 6);
+                MPALibRenderer.drawString(matrixStack, StringUtils.wrapFormatTags("x", StringUtils.FormatCodes.Red), this.position.getX() * 2 + 6, this.position.getY() * 2 + 6);
             }
             RenderSystem.popMatrix();
         }

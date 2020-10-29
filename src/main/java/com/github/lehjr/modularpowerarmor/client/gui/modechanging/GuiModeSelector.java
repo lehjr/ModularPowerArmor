@@ -24,7 +24,7 @@ public class GuiModeSelector extends ContainerlessGui {
                 new Point2D(absX(-0.5), absY(-0.5)),
                 new Point2D(absX(0.5), absY(0.5)),
                 player, this.getBlitOffset());
-        frames.add(radialSelect);
+        addFrame(radialSelect);
     }
 
     @Override
