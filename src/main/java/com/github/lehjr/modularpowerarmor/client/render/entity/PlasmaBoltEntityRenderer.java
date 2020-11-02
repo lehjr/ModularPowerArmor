@@ -37,12 +37,13 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
         super(renderManager);
     }
 
-
     @Override
     public void render(PlasmaBoltEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        if(entityIn.size > 0) {
-            renderPlasma(matrixStackIn, bufferIn, entityIn.size/12.5F);
+        float size = entityIn.getActualSize();
+
+        if(size > 0) {
+            renderPlasma(matrixStackIn, bufferIn, size/12.5F);
         }
     }
 

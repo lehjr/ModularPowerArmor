@@ -1,5 +1,7 @@
 package com.github.lehjr.modularpowerarmor.basemod;
 
+import net.minecraft.util.ResourceLocation;
+
 public class MPAConstants {
     public static final String MOD_ID = "modularpowerarmor";
     public static final String RESOURCE_PREFIX = MPAConstants.MOD_ID + ":";
@@ -11,6 +13,8 @@ public class MPAConstants {
     public static final String SEBK_AMROR = TEXTURE_PREFIX + "item/armor/sebkarmor.png";
     public static final String CITIZEN_JOE_ARMOR_PANTS = TEXTURE_PREFIX + "item/armor/joearmorpants.png";
     public static final String CITIZEN_JOE_ARMOR = TEXTURE_PREFIX + "item/armor/joearmor.png";
+
+    public static final ResourceLocation POWER_FIST_TEXTURE = new ResourceLocation(TEXTURE_PREFIX + "models/powerfist.png");
 
     /**
      * Config -------------------------------------------------------------------------------------

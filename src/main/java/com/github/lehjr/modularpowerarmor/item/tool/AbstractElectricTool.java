@@ -21,12 +21,12 @@ import java.util.HashSet;
 import java.util.List;
 
 public class AbstractElectricTool extends ToolItem {
-    public AbstractElectricTool() {
+    public AbstractElectricTool(Item.Properties properties) {
         super(0.0F,
                 0.0F,
                 MPAToolMaterial.EMPTY_TOOL,
                 new HashSet<>(),
-                new Item.Properties().group(MPAObjects.creativeTab).maxStackSize(1).defaultMaxDamage(0));
+                properties);
     }
 
     @OnlyIn(Dist.CLIENT)

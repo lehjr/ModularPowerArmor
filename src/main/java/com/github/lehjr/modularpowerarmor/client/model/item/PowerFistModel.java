@@ -1,5 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
+import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
@@ -17,6 +18,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -49,6 +52,8 @@ public class PowerFistModel extends BakedModelWrapper {
     static ItemCameraTransforms.TransformType modelcameraTransformType;
     static ItemStack itemStack;
     static boolean isFiring = false;
+    float chargeSize = 0;
+
     public PowerFistModel(IBakedModel bakedModelIn) {
         super(bakedModelIn);
 //        calibration = new ModelTransformCalibration();
@@ -80,6 +85,8 @@ public class PowerFistModel extends BakedModelWrapper {
             case NONE:
                 return originalModel.getQuads(state, side, rand, extraData);
         }
+        System.out.println("charge: " + chargeSize);
+
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         itemStack.getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBTCap -> {
             if (specNBTCap instanceof IHandHeldModelSpecNBT) {
@@ -178,7 +185,15 @@ public class PowerFistModel extends BakedModelWrapper {
 
     @Override
     public boolean isBuiltInRenderer() {
-        return false;
+        switch (this.modelcameraTransformType) {
+            case FIRST_PERSON_LEFT_HAND:
+            case THIRD_PERSON_LEFT_HAND:
+            case FIRST_PERSON_RIGHT_HAND:
+            case THIRD_PERSON_RIGHT_HAND:
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -195,6 +210,10 @@ public class PowerFistModel extends BakedModelWrapper {
         @Override
         public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack itemStackIn, @Nullable ClientWorld world, @Nullable LivingEntity entityIn) {
             itemStack = itemStackIn;
+
+//            IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+
+
             if (entityIn instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) entityIn;
                 if (player.isHandActive()) {
@@ -210,8 +229,14 @@ public class PowerFistModel extends BakedModelWrapper {
                             actualCount = (maxDuration - player.getItemInUseCount());
                         }
                         isFiring = actualCount > 0;
+                        if (((IModeChangingItem) modechanging).getActiveModule().getItem().getRegistryName() == MPARegistryNames.PLASMA_CANNON_MODULE_REGNAME) {
+                            chargeSize = ((actualCount) > 50F ? 50F : actualCount);
+                        } else {
+                            chargeSize = 0;
+                        }
                     });
                 } else {
+                    chargeSize = 0;
                     isFiring = false;
                 }
             }

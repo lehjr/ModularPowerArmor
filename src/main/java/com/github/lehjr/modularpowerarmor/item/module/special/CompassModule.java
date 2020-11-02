@@ -34,68 +34,7 @@ import javax.annotation.Nullable;
  */
 public class CompassModule extends AbstractPowerModule {
     public CompassModule() {
-//        this.addPropertyOverride(new ResourceLocation("angle"), new IItemPropertyGetter() {
-//            @OnlyIn(Dist.CLIENT)
-//            private double rotation;
-//            @OnlyIn(Dist.CLIENT)
-//            private double rota;
-//            @OnlyIn(Dist.CLIENT)
-//            private long lastUpdateTick;
-//
-//            @OnlyIn(Dist.CLIENT)
-//            public float call(ItemStack p_call_1_, @Nullable World world, @Nullable LivingEntity entity1) {
-//                if (entity1 == null && !p_call_1_.isOnItemFrame()) {
-//                    return 0.0F;
-//                } else {
-//                    boolean flag = entity1 != null;
-//                    Entity entity = flag ? entity1 : p_call_1_.getItemFrame();
-//                    if (world == null) {
-//                        world = entity.world;
-//                    }
-//
-//                    double d0;
-//                    if (world.dimension.isSurfaceWorld()) {
-//                        double d1 = flag ? (double)entity.rotationYaw : this.getFrameRotation((ItemFrameEntity)entity);
-//                        d1 = MathHelper.positiveModulo(d1 / 360.0D, 1.0D);
-//                        double d2 = this.getSpawnToAngle(world, entity) / (double)((float)Math.PI * 2F);
-//                        d0 = 0.5D - (d1 - 0.25D - d2);
-//                    } else {
-//                        d0 = Math.random();
-//                    }
-//
-//                    if (flag) {
-//                        d0 = this.wobble(world, d0);
-//                    }
-//
-//                    return MathHelper.positiveModulo((float)d0, 1.0F);
-//                }
-//            }
-//
-//            @OnlyIn(Dist.CLIENT)
-//            private double wobble(World worldIn, double p_185093_2_) {
-//                if (worldIn.getGameTime() != this.lastUpdateTick) {
-//                    this.lastUpdateTick = worldIn.getGameTime();
-//                    double d0 = p_185093_2_ - this.rotation;
-//                    d0 = MathHelper.positiveModulo(d0 + 0.5D, 1.0D) - 0.5D;
-//                    this.rota += d0 * 0.1D;
-//                    this.rota *= 0.8D;
-//                    this.rotation = MathHelper.positiveModulo(this.rotation + this.rota, 1.0D);
-//                }
-//
-//                return this.rotation;
-//            }
-//
-//            @OnlyIn(Dist.CLIENT)
-//            private double getFrameRotation(ItemFrameEntity frameEntity) {
-//                return MathHelper.wrapDegrees(180 + frameEntity.getHorizontalFacing().getHorizontalIndex() * 90);
-//            }
-//
-//            @OnlyIn(Dist.CLIENT)
-//            private double getSpawnToAngle(IWorld iWorld, Entity entity) {
-//                BlockPos blockpos = iWorld.getSpawnPoint();
-//                return Math.atan2((double)blockpos.getZ() - entity.getPosZ(), (double)blockpos.getX() - entity.getPosX());
-//            }
-//        });
+
     }
 
     @Nullable

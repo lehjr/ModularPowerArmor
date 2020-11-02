@@ -14,7 +14,6 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,54 +30,8 @@ import javax.annotation.Nullable;
  * 11:12 PM 6/11/13
  */
 public class ClockModule extends AbstractPowerModule {
-   public ClockModule() {
-//       addPropertyOverride(new ResourceLocation("time"), new IItemPropertyGetter() {
-//           @OnlyIn(Dist.CLIENT)
-//           private double rotation;
-//           @OnlyIn(Dist.CLIENT)
-//           private double rota;
-//           @OnlyIn(Dist.CLIENT)
-//           private long lastUpdateTick;
-//
-//           @Override
-//           @OnlyIn(Dist.CLIENT)
-//           public float call(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity1) {
-//               boolean flag = entity1 != null;
-//               Entity entity = (Entity)(flag ? entity1 : itemStack.getItemFrame());
-//               if (world == null && entity != null) {
-//                   world = (ClientWorld) entity.world;
-//               }
-//
-//               if (world == null) {
-//                   return 0.0F;
-//               } else {
-//                   double d0;
-//                   if (world.dimension.isSurfaceWorld()) {
-//                       d0 = (double)world.getCelestialAngle(1.0F);
-//                   } else {
-//                       d0 = Math.random();
-//                   }
-//
-//                   d0 = this.wobble(world, d0);
-//                   return (float)d0;
-//               }
-//           }
-//
-//           @OnlyIn(Dist.CLIENT)
-//           private double wobble(World p_185087_1_, double p_185087_2_) {
-//               if (p_185087_1_.getGameTime() != this.lastUpdateTick) {
-//                   this.lastUpdateTick = p_185087_1_.getGameTime();
-//                   double d0 = p_185087_2_ - this.rotation;
-//                   d0 = MathHelper.positiveModulo(d0 + 0.5D, 1.0D) - 0.5D;
-//                   this.rota += d0 * 0.1D;
-//                   this.rota *= 0.9D;
-//                   this.rotation = MathHelper.positiveModulo(this.rotation + this.rota, 1.0D);
-//               }
-//
-//               return this.rotation;
-//           }
-//       });
-   }
+    public ClockModule() {
+    }
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {

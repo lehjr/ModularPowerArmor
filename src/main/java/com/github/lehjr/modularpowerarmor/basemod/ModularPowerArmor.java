@@ -15,10 +15,23 @@ import com.github.lehjr.modularpowerarmor.event.PlayerUpdateHandler;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
 import com.github.lehjr.modularpowerarmor.recipe.MPARecipeConditionFactory;
 import com.github.lehjr.mpalib.config.ConfigHelper;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
+import com.github.lehjr.mpalib.util.capabilities.module.toggleable.ToggleableModule;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +40,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Mod(MPAConstants.MOD_ID)
 public class ModularPowerArmor {
     public ModularPowerArmor() {
@@ -34,7 +50,7 @@ public class ModularPowerArmor {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, MPASettings.SERVER_SPEC); // note config file location for dedicated server is stored in the world config
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.register(this);
+//        modEventBus.register(this);
 
         // Register the setup method for modloading
         modEventBus.addListener(this::setup);
@@ -99,10 +115,44 @@ public class ModularPowerArmor {
         ScreenManager.registerFactory(MPAObjects.MPA_WORKBENCH_CONTAINER_TYPE.get(), MPAWorkbenchGui::new);
 
 /*
-
  <T extends TileEntity> void bindTileEntityRenderer(TileEntityType<T> tileEntityType,
             Function<? super TileEntityRendererDispatcher, ? extends TileEntityRenderer<? super T>> rendererFactory)
 
  */
+    }
+
+    @SubscribeEvent
+    public void attachCapability(AttachCapabilitiesEvent<ItemStack> event) {
+        if (!event.getCapabilities().containsKey(MPARegistryNames.CLOCK_MODULE_REG) &&
+                event.getObject().getItem().equals(Items.CLOCK)) {
+            final ItemStack stack = event.getObject();
+
+            IToggleableModule clock = new ToggleableModule(stack, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
+            event.addCapability(MPARegistryNames.CLOCK_MODULE_REG, new ICapabilityProvider() {
+                @Nonnull
+                @Override
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+                    if (cap == PowerModuleCapability.POWER_MODULE) {
+                        return LazyOptional.of(()->(T)clock);
+                    }
+                    return LazyOptional.empty();
+                }
+            });
+        } else if (!event.getCapabilities().containsKey(MPARegistryNames.COMPASS_MODULE_REG) &&
+                event.getObject().getItem().equals(Items.COMPASS)) {
+            final ItemStack stack = event.getObject();
+            IToggleableModule compass = new ToggleableModule(stack, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
+
+            event.addCapability(MPARegistryNames.COMPASS_MODULE_REG, new ICapabilityProvider() {
+                @Nonnull
+                @Override
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+                    if (cap == PowerModuleCapability.POWER_MODULE) {
+                        return LazyOptional.of(()->(T)compass);
+                    }
+                    return LazyOptional.empty();
+                }
+            });
+        }
     }
 }

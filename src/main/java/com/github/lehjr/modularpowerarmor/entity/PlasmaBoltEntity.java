@@ -4,14 +4,20 @@ import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
@@ -22,8 +28,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
-    public static final int SIZE = 24;
-    public double size;
+    private static final DataParameter<Float> ACTUAL_SIZE = EntityDataManager.createKey(PlasmaBoltEntity.class, DataSerializers.FLOAT);
     public double damagingness;
     public double explosiveness;
 
@@ -34,7 +39,9 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
     public PlasmaBoltEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
         super(MPAObjects.PLASMA_BOLT_ENTITY_TYPE.get(), world);
         this.setShooter(shootingEntity);
-        this.size = ((chargeTicks) > 50 ? 50 : chargeTicks);
+
+        float size = ((chargeTicks) > 50F ? 50F : chargeTicks);
+        this.dataManager.set(ACTUAL_SIZE, size);
         this.explosiveness = explosivenessIn;
         this.damagingness = damagingnessIn;
         Vector3d direction = shootingEntity.getLookVec().normalize();
@@ -44,7 +51,8 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
                 direction.y * scale,
                 direction.z * scale
         );
-        double r = this.size / 50.0;
+
+        double r = size / 50.0;
         double xoffset = 1.3f + r - direction.y * shootingEntity.getEyeHeight();
         double yoffset = -.2;
         double zoffset = 0.3f;
@@ -65,7 +73,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
 
     @Override
     protected void registerData() {
-
+        dataManager.register(ACTUAL_SIZE, 0F);
     }
 
     @Override
@@ -74,9 +82,10 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
         if (this.ticksExisted > this.getMaxLifetime()) {
             this.remove();
         }
+
         if (this.isInWater()) {
             this.remove();
-            for (int var3 = 0; var3 < this.size; ++var3) {
+            for (int i = 0; i <  this.dataManager.get(ACTUAL_SIZE); ++i) {
                 this.world.addParticle(ParticleTypes.FLAME,
                         this.getPosX() + Math.random() * 1, this.getPosY() + Math.random() * 1, this.getPosZ() + Math.random()
                                 * 0.1,
@@ -109,7 +118,9 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        double damage = this.size / 50.0 * this.damagingness;
+        float size = this.dataManager.get(ACTUAL_SIZE);
+
+        double damage =  size/ 50.0 * this.damagingness;
         switch (result.getType()) {
             case ENTITY:
                 EntityRayTraceResult rayTraceResult = (EntityRayTraceResult) result;
@@ -126,7 +137,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
             boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 
             // FIXME: this is probably all wrone
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), (float) (this.size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), (float) (size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
         }
         for (int var3 = 0; var3 < 8; ++var3) {
             this.world.addParticle(ParticleTypes.FLAME,
@@ -138,6 +149,10 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
         }
     }
 
+    public float getActualSize() {
+        return this.dataManager.get(ACTUAL_SIZE);
+    }
+
     /**
      * Called by the server when constructing the spawn packet.
      * Data should be added to the provided stream.
@@ -146,7 +161,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
      */
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeDouble(this.size);
+        buffer.writeFloat(this.dataManager.get(ACTUAL_SIZE));
     }
 
     /**
@@ -157,7 +172,7 @@ public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAddition
      */
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        this.size = additionalData.readDouble();
+        this.dataManager.set(ACTUAL_SIZE, additionalData.readFloat());
     }
 
     @Override

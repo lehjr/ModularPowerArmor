@@ -6,7 +6,7 @@ public class EventRegisterRenderers {
 //    public void registerRenderers(ModelRegistryEvent event) {
 //        MPSObjects mpsItems = MPSObjects.INSTANCE;
 //
-//        // PowerFist
+//        // PowerFistModel2
 //        regRenderer(mpsItems.powerFist);
 //
 //        // Armor

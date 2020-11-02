@@ -134,6 +134,13 @@ public class MPARegistryNames {
     public static final ResourceLocation KINETIC_GENERATOR_MODULE_REGNAME = getRegName(KINETIC_GENERATOR_MODULE);
     public static final ResourceLocation SHOCK_ABSORBER_MODULE_REGNAME = getRegName(SHOCK_ABSORBER_MODULE);
     public static final ResourceLocation PLASMA_CANNON_MODULE_REGNAME = getRegName(PLASMA_CANNON_MODULE);
+    public static final ResourceLocation AUTO_FEEDER_MODULE_REG = getRegName(AUTO_FEEDER_MODULE);
+    public static final ResourceLocation CLOCK_MODULE_REG = getRegName(CLOCK_MODULE);
+    public static final ResourceLocation COMPASS_MODULE_REG = getRegName(COMPASS_MODULE);
+
+
+
+
 
     static ResourceLocation getRegName(String regNameString) {
         return new ResourceLocation(MPAConstants.MOD_ID, regNameString);

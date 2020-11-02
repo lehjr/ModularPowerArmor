@@ -1,7 +1,9 @@
 package com.github.lehjr.modularpowerarmor.item.tool;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
+import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
+import com.github.lehjr.modularpowerarmor.client.render.item.PowerFistRenderer;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.util.capabilities.module.miningenhancement.IMiningEnhancementModule;
@@ -11,10 +13,14 @@ import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.UseAction;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
@@ -27,6 +33,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PowerFist extends AbstractElectricTool {
+    public PowerFist() {
+        super(new Item.Properties().group(MPAObjects.creativeTab).maxStackSize(1).defaultMaxDamage(0));
+//        .setISTER(() -> PowerFistRenderer::new));
+    }
 
     @Override
     public int getUseDuration(ItemStack stack) {

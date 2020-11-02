@@ -179,8 +179,8 @@ public class MPAObjects {
     public static final RegistryObject<Item> SWIM_BOOST_MODULE = registerModule(MPARegistryNames.SWIM_BOOST_MODULE, new SwimAssistModule());
 
     // Special ------------------------------------------------------------------------------------
-    public static final RegistryObject<Item> CLOCK_MODULE = registerModule(MPARegistryNames.CLOCK_MODULE, new ClockModule());
-    public static final RegistryObject<Item> COMPASS_MODULE = registerModule(MPARegistryNames.COMPASS_MODULE, new CompassModule());
+//    public static final RegistryObject<Item> CLOCK_MODULE = registerModule(MPARegistryNames.CLOCK_MODULE, new ClockModule());
+//    public static final RegistryObject<Item> COMPASS_MODULE = registerModule(MPARegistryNames.COMPASS_MODULE, new CompassModule());
     public static final RegistryObject<Item> ACTIVE_CAMOUFLAGE_MODULE = registerModule(MPARegistryNames.ACTIVE_CAMOUFLAGE_MODULE, new InvisibilityModule());
     public static final RegistryObject<Item> MAGNET_MODULE = registerModule(MPARegistryNames.MAGNET_MODULE, new MagnetModule());
 

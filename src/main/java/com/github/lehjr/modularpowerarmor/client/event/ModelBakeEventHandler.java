@@ -24,6 +24,18 @@ public enum ModelBakeEventHandler {
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent event) {
+        /*
+
+        from itemModelProvider
+              for(int j = 0; j < 32; ++j) {
+         if (j != 16) {
+            this.func_240077_a_(Items.COMPASS, String.format("_%02d", j), StockModelShapes.GENERATED);
+         }
+      }
+         */
+
+
+
         /**
          * Notes: looks like all current models are "SimpleBakedModels"
          */

@@ -39,7 +39,7 @@ public class ServerConfig {
                 .translation(MPAConstants.CONFIG_GENERAL_MAX_FLYING_SPEED)
                 .defineInRange("maximumFlyingSpeedmps", 25.0, 0, Float.MAX_VALUE);
 
-        GENERAL_BASE_MAX_HEAT_POWERFIST = builder.comment("PowerFist Base Heat Cap")
+        GENERAL_BASE_MAX_HEAT_POWERFIST = builder.comment("PowerFistModel2 Base Heat Cap")
                 .translation(MPAConstants.CONFIG_GENERAL_BASE_MAX_HEAT_POWERFIST)
                 .defineInRange("baseMaxHeatPowerFist", 5.0, 0, 5000);
 
@@ -113,7 +113,7 @@ public class ServerConfig {
                 .define("allowHighPollyArmorModuels", true);
 
         COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN = builder
-                .comment("Allow PowerFist model to be customized")
+                .comment("Allow PowerFistModel2 model to be customized")
                 .translation(MPAConstants.CONFIG_COSMETIC_ALLOW_POWER_FIST_CUSTOMIZATOIN)
                 .define("allowPowerFistCustomization", true);
         builder.pop();

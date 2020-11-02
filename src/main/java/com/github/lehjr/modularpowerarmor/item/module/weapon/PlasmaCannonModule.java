@@ -87,7 +87,6 @@ public class PlasmaCannonModule extends AbstractPowerModule {
                             ElectricItemUtils.drainPlayerEnergy(player, (int) energyConsumption);
                             double explosiveness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_EXPLOSIVENESS);
                             double damagingness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
-
                             PlasmaBoltEntity plasmaBolt = new PlasmaBoltEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
                             worldIn.addEntity(plasmaBolt);
                         }

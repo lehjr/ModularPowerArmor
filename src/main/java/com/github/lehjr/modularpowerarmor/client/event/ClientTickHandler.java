@@ -50,12 +50,7 @@ public class ClientTickHandler {
     protected WaterMeter waterMeter = null;
     protected PlasmaChargeMeter plasmaMeter = null;
     static final ItemStack food = new ItemStack(Items.COOKED_BEEF);
-    static final ResourceLocation autoFeederReg = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.AUTO_FEEDER_MODULE);
-    static final ResourceLocation clockReg = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.CLOCK_MODULE);
-    static final ResourceLocation compassReg = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.COMPASS_MODULE);
-    static final ResourceLocation plasmaCannon = new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PLASMA_CANNON_MODULE);
     MatrixStack matrixStack = new MatrixStack();
-
 
     @SubscribeEvent
     public void onPreClientTick(TickEvent.ClientTickEvent event) {
@@ -105,7 +100,7 @@ public class ClientTickHandler {
                     }
 
                     // AutoFeeder
-                    ItemStack autoFeeder = ((IModularItem) h).getOnlineModuleOrEmpty(autoFeederReg);
+                    ItemStack autoFeeder = ((IModularItem) h).getOnlineModuleOrEmpty(MPARegistryNames.AUTO_FEEDER_MODULE_REG);
                     if (!autoFeeder.isEmpty()) {
                         int foodLevel = (int) ((AutoFeederModule) autoFeeder.getItem()).getFoodLevel(autoFeeder);
                         String num = StringUtils.formatNumberShort(foodLevel);
@@ -116,7 +111,7 @@ public class ClientTickHandler {
 
 
                     // Clock
-                    ItemStack clock = ((IModularItem) h).getOnlineModuleOrEmpty(clockReg);
+                    ItemStack clock = ((IModularItem) h).getOnlineModuleOrEmpty(Items.CLOCK.getRegistryName());
                     if (!clock.isEmpty()) {
                         String ampm;
                         long time = player.world.getDayTime();
@@ -154,7 +149,7 @@ public class ClientTickHandler {
                     }
 
                     // Compass
-                    ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(compassReg);
+                    ItemStack compass = ((IModularItem) h).getOnlineModuleOrEmpty(Items.COMPASS.getRegistryName());
                     if (!compass.isEmpty()) {
                         MPALibRenderer.drawItemAt(-1.0, yBaseIcon + (yOffsetIcon * index.get()), compass);
                         index.addAndGet(1);
@@ -212,7 +207,7 @@ public class ClientTickHandler {
                         int maxDuration = ((IModeChangingItem) modechanging).getModularItemStack().getUseDuration();
                         if (!module.isEmpty()) {
                             // Plasma Cannon
-                            if (module.getItem().getRegistryName().equals(plasmaCannon)) {
+                            if (module.getItem().getRegistryName().equals(MPARegistryNames.PLASMA_CANNON_MODULE_REGNAME)) {
                                 actualCount = (maxDuration - player.getItemInUseCount());
                                 currentPlasma.set(
                                         currentPlasma.get() + (actualCount > 50 ? 50 : actualCount) * 2);

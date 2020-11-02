@@ -227,7 +227,7 @@ public class PartSpecManipSubFrame {
         if (selcomp > 0) {
             icon.selectedArmorOverlay.draw(matrixStack, x + 28 + selcolour * 8, y, Colour.WHITE);
         }
-        MPALibRenderer.drawCenteredText(matrixStack, partSpec.getDisaplayName(), (float) textstartx + 4, (float) y, Colour.WHITE);
+        MPALibRenderer.drawText(matrixStack, partSpec.getDisaplayName(), (float) textstartx + 4, (float) y, Colour.WHITE);
     }
 
     // FIXME

@@ -150,7 +150,7 @@ public enum ModelSpecXMLReader {
     }
 
     /**
-     * Biggest difference between the ModelSpec for Armor vs PowerFist is that the armor models don't need item camera transforms
+     * Biggest difference between the ModelSpec for Armor vs PowerFistModel2 is that the armor models don't need item camera transforms
      */
     public static void parseModelSpec(Node specNode, TextureStitchEvent.Pre event, ModelLoader bakery, EnumSpecType specType, String specName, boolean isDefault) {
         NodeList models = specNode.getOwnerDocument().getElementsByTagName(MPALibConstants.TAG_MODEL);
