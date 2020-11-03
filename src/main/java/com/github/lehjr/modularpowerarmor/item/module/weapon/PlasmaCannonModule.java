@@ -78,8 +78,17 @@ public class PlasmaCannonModule extends AbstractPowerModule {
             @Override
             public void onPlayerStoppedUsing(ItemStack itemStack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 int chargeTicks = (int) MathUtils.clampDouble(itemStack.getUseDuration() - timeLeft, 10, 50);
+
+
+
+
+
                 if (!worldIn.isRemote) {
-                    float energyConsumption = getEnergyUsage()* chargeTicks;
+                    System.out.println("charge ticks");
+                    System.out.println("timeleft: " + timeLeft);
+
+
+                    float energyConsumption = getEnergyUsage() * chargeTicks;
                     if (entityLiving instanceof PlayerEntity) {
                         PlayerEntity player = (PlayerEntity) entityLiving;
                         HeatUtils.heatPlayer(player, energyConsumption / 5000F);
@@ -91,6 +100,8 @@ public class PlasmaCannonModule extends AbstractPowerModule {
                             worldIn.addEntity(plasmaBolt);
                         }
                     }
+                } else {
+                    System.out.println("client world");
                 }
             }
 

@@ -3,7 +3,6 @@ package com.github.lehjr.modularpowerarmor.item.tool;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.client.render.item.PowerFistRenderer;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.module.blockbreaking.IBlockBreakingModule;
 import com.github.lehjr.mpalib.util.capabilities.module.miningenhancement.IMiningEnhancementModule;
@@ -35,7 +34,6 @@ import java.util.Set;
 public class PowerFist extends AbstractElectricTool {
     public PowerFist() {
         super(new Item.Properties().group(MPAObjects.creativeTab).maxStackSize(1).defaultMaxDamage(0));
-//        .setISTER(() -> PowerFistRenderer::new));
     }
 
     @Override

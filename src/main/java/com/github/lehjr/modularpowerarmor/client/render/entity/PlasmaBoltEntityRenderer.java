@@ -31,7 +31,7 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     static final ResourceLocation modelLocation = new ResourceLocation(MPALibConstants.MOD_ID, "models/item/test/sphere.obj");
     // NonNullLazy doesn't init until called
     public static final NonNullLazy<OBJBakedCompositeModel> modelSphere = NonNullLazy.of(() -> ModelHelper.loadBakedModel(ModelRotation.X0_Y0, null, modelLocation));
-    protected final Random rand = new Random();
+    protected static final Random rand = new Random();
 
     public PlasmaBoltEntityRenderer(EntityRendererManager renderManager) {
         super(renderManager);
@@ -52,11 +52,10 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
         return MPALibConstants.TEXTURE_WHITE;
     }
 
-    public void renderPlasma(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, double size) {
+    public static void renderPlasma(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, double size) {
         matrixStackIn.push();
         float scalFactor = 3;
 
-//        MPALibRenderer.unRotate();
         float scale = (float) (size / 16.0F);
         matrixStackIn.scale(scale, scale, scale);
 
@@ -83,7 +82,7 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
         matrixStackIn.pop();
     }
 
-    void renderPlasmaBall(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, float scale, Colour colour) {
+    static void renderPlasmaBall(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, float scale, Colour colour) {
         matrixStackIn.push();
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.scale(scale, scale, scale);
@@ -92,15 +91,15 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
         matrixStackIn.pop();
     }
 
-    private RenderType getSphereRenderType() {
+    private static RenderType getSphereRenderType() {
         return RenderType.getEntityTranslucentCull(MPALibConstants.TEXTURE_WHITE);
     }
 
-    public void renderSphere(IRenderTypeBuffer bufferIn, RenderType rt, MatrixStack matrixStackIn, int packedLightIn, Colour colour) {
+    public static void renderSphere(IRenderTypeBuffer bufferIn, RenderType rt, MatrixStack matrixStackIn, int packedLightIn, Colour colour) {
         renderSphere(bufferIn, rt, matrixStackIn, packedLightIn, OverlayTexture.NO_OVERLAY, colour);
     }
 
-    public void renderSphere(IRenderTypeBuffer bufferIn, RenderType rt, MatrixStack matrixStackIn, int packedLightIn, int overlay, Colour colour) {
+    public static void renderSphere(IRenderTypeBuffer bufferIn, RenderType rt, MatrixStack matrixStackIn, int packedLightIn, int overlay, Colour colour) {
         IVertexBuilder bb = bufferIn.getBuffer(rt);
         for (BakedQuad quad : modelSphere.get().getQuads(null, null, rand, EmptyModelData.INSTANCE)) {
             bb.addVertexData(matrixStackIn.getLast(), quad, colour.r, colour.g, colour.b, colour.a, packedLightIn, overlay, true);
