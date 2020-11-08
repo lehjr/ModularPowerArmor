@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.network.packets;
 
 import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainer;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;

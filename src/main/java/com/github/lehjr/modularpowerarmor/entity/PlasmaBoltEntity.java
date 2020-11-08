@@ -1,11 +1,8 @@
 package com.github.lehjr.modularpowerarmor.entity;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
@@ -17,15 +14,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
 
 public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
     private static final DataParameter<Float> ACTUAL_SIZE = EntityDataManager.createKey(PlasmaBoltEntity.class, DataSerializers.FLOAT);

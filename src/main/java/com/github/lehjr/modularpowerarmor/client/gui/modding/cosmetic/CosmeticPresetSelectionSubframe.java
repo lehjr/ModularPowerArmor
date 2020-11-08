@@ -76,7 +76,7 @@ public class CosmeticPresetSelectionSubframe extends ScrollableLabel {
     }
 
     public CompoundNBT getItemTag() {
-        return NBTUtils.getMuseItemTag(this.getSelectedItem().getStack());
+        return NBTUtils.getMPAItemTag(this.getSelectedItem().getStack());
     }
 
 

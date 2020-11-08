@@ -2,7 +2,6 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
 import com.github.lehjr.mpalib.config.ConfigHelper;
-import com.github.lehjr.mpalib.config.MPALibSettings;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.item.Item;

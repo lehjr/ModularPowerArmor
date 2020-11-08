@@ -1,8 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.model.item;
 
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
@@ -109,7 +110,7 @@ public class PowerFistModel extends BakedModelWrapper {
 
                         if (slot != -1) {
                             specNBTCap.setRenderTag(renderSpec, MPALibConstants.TAG_RENDER);
-                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(slot, MPALibConstants.TAG_RENDER, renderSpec));
+                            MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(slot, MPALibConstants.TAG_RENDER, renderSpec));
                         }
                     }
                 }
@@ -179,15 +180,6 @@ public class PowerFistModel extends BakedModelWrapper {
 
     @Override
     public boolean isBuiltInRenderer() {
-//        switch (this.modelcameraTransformType) {
-//            case FIRST_PERSON_LEFT_HAND:
-//            case THIRD_PERSON_LEFT_HAND:
-//            case FIRST_PERSON_RIGHT_HAND:
-//            case THIRD_PERSON_RIGHT_HAND:
-//                return true;
-//            default:
-//                return false;
-//        }
         return false;
     }
 

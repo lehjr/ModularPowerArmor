@@ -1,10 +1,8 @@
 package com.github.lehjr.modularpowerarmor.item.tool;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
-import com.github.lehjr.modularpowerarmor.capabilities.ModularPowerCap;
+import com.github.lehjr.modularpowerarmor.capabilities.PowerFistCap;
 import com.github.lehjr.mpalib.util.string.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
@@ -40,7 +38,7 @@ public class AbstractElectricTool extends ToolItem {
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new ModularPowerCap(stack, EquipmentSlotType.MAINHAND);
+        return new PowerFistCap(stack);
     }
 
     /** Durability bar for showing energy level ------------------------------------------------------------------ */

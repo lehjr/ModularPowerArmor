@@ -1,9 +1,9 @@
 package com.github.lehjr.modularpowerarmor.client.gui.modechanging;
 
-import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.ModeChangeRequestPacket;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableModule;
 import com.github.lehjr.mpalib.util.client.gui.frame.IGuiFrame;
 import com.github.lehjr.mpalib.util.client.gui.geometry.IRect;

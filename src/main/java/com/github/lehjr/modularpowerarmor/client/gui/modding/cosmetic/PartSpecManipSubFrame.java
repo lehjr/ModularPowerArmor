@@ -2,9 +2,10 @@ package com.github.lehjr.modularpowerarmor.client.gui.modding.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.modularpowerarmor.network.MPAPackets;
-import com.github.lehjr.modularpowerarmor.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.basemod.MPALibLogger;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.util.capabilities.render.IArmorModelSpecNBT;
 import com.github.lehjr.mpalib.util.capabilities.render.IHandHeldModelSpecNBT;
 import com.github.lehjr.mpalib.util.capabilities.render.ModelSpecNBTCapability;
@@ -14,7 +15,6 @@ import com.github.lehjr.mpalib.util.client.gui.IconUtils;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
-import com.github.lehjr.mpalib.client.render.RenderState;
 import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.math.MathUtils;
@@ -72,31 +72,57 @@ public class PartSpecManipSubFrame {
      * get all valid parts of model for the equipment itemSlot
      * Don't bother converting to Java stream with filter, the results are several times slower
      */
+    /**
+     * FIXME!!! for some reason, armor model spec stuff is empty
+     * @return
+     */
     private List<PartSpecBase> getPartSpecs() {
         List<PartSpecBase> specsArray = new ArrayList<>();
         Iterator<PartSpecBase> specIt = model.getPartSpecs().iterator();
 
         if (getSelectedItem() != null) {
+            System.out.println("stack: " + getSelectedItem().getStack().serializeNBT());
+
+
             getSelectedItem().getStack().getCapability(ModelSpecNBTCapability.RENDER).ifPresent(specNBT ->{
                 PartSpecBase spec;
 
                 while (specIt.hasNext()) {
                     spec = specIt.next();
+                    System.out.println("specky here: " + spec.getDisaplayName().getString());
+                    System.out.println("specNBT class: " + specNBT.getClass());
 
                     // this COULD fail here if the wrong capability is applied, otherwise should be fine.
+
+                    //// this part is failing, WRONG SPEC is being applied
                     if (specNBT instanceof IArmorModelSpecNBT) {
                         EquipmentSlotType slot = MobEntity.getSlotForItemStack(getSelectedItem().getStack());
+                        System.out.println("slot here: " + slot);
+
                         if (spec.getBinding().getSlot() == slot) {
                             specsArray.add(spec);
+                            System.out.println("spec added: " + spec.getDisaplayName());
                         }
+
+                    // This part actually works
                     } else if (specNBT instanceof IHandHeldModelSpecNBT) {
                         if (spec.getBinding().getSlot().getSlotType().equals(EquipmentSlotType.Group.HAND)) {
                             specsArray.add(spec);
+                            System.out.println("spec added: " + spec.getDisaplayName());
                         }
                     }
+                    else {
+                        System.out.println("spec not added: " + spec.getDisaplayName());
+                    }
                 }
+                System.out.println("model: " + model.getDisaplayName());
+
+
+                System.out.println("specArraySize: " + specsArray.size());
             });
         }
+
+
         return specsArray;
     }
 
@@ -120,6 +146,8 @@ public class PartSpecManipSubFrame {
                 if (partSpec instanceof ModelPartSpec) {
                     String name = ModelRegistry.getInstance().makeName(partSpec);
                     specTag.set(renderTag.contains(name) ? renderTag.getCompound(name) : null);
+
+//                    System.out.println("spec tag here: " + specTag);
                 }
                 // Only one TexturePartSpec is allowed at a time, so figure out if this one is enabled
                 if (partSpec instanceof TexturePartSpec && renderTag.contains(MPALibConstants.NBT_TEXTURESPEC_TAG)) {
@@ -127,8 +155,14 @@ public class PartSpecManipSubFrame {
                     if (partSpec.spec.getOwnName().equals(texSpecTag.getString(MPALibConstants.TAG_MODEL))) {
                         specTag.set(renderTag.getCompound(MPALibConstants.NBT_TEXTURESPEC_TAG));
                     }
+//                    System.out.println("spec tag here: " + specTag);
                 }
             }
+//            else {
+//                System.out.println("default spec tag here: " + specNBT.getDefaultRenderTag());
+//                specTag.set(specNBT.getDefaultRenderTag());
+//                System.out.println("renderTag is empty");
+//            }
         });
         return specTag.get();
     }
@@ -170,7 +204,7 @@ public class PartSpecManipSubFrame {
     }
 
     public void drawPartial(MatrixStack matrixStack, double min, double max) {
-        if (partSpecs.size() > 0) {
+        if (!partSpecs.isEmpty()) {
             MPALibRenderer.drawString(matrixStack, model.getDisaplayName(), border.left() + 8, border.top());
             drawOpenArrow(matrixStack, min, max);
             if (open) {
@@ -180,6 +214,8 @@ public class PartSpecManipSubFrame {
                     y += 8;
                 }
             }
+        } else {
+            System.out.println("specs empty");
         }
     }
 
@@ -193,8 +229,9 @@ public class PartSpecManipSubFrame {
                 int oldindex = spec.getColourIndex(tagdata);
                 if (oldindex >= index && oldindex > 0) {
                     spec.setColourIndex(tagdata, oldindex - 1);
+                    // how would world not be remote here?
                     if (player.world.isRemote) {
-                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(getSelectedItem().inventorySlot, tagname, tagdata));
                     }
                 }
             }
@@ -311,7 +348,7 @@ public class PartSpecManipSubFrame {
                 // removes the associated tag from the render tag making the part not isEnabled
                 case 0: {
                     tagname = spec instanceof TexturePartSpec ? MPALibConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
+                    MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, new CompoundNBT()));
 
                     this.updateItems();
                     return true;
@@ -324,7 +361,7 @@ public class PartSpecManipSubFrame {
                     if (spec instanceof ModelPartSpec) {
                         ((ModelPartSpec) spec).setGlow(tagdata, false);
                     }
-                    MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                    MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
 
                     this.updateItems();
                     return true;
@@ -336,7 +373,7 @@ public class PartSpecManipSubFrame {
                         tagname = ModelRegistry.getInstance().makeName(spec);
                         tagdata = this.getOrMakeSpecTag(spec);
                         ((ModelPartSpec) spec).setGlow(tagdata, true);
-                        MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+                        MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
                         this.updateItems();
                         return true;
                     }
@@ -354,7 +391,7 @@ public class PartSpecManipSubFrame {
             tagname = spec instanceof TexturePartSpec ? MPALibConstants.NBT_TEXTURESPEC_TAG : ModelRegistry.getInstance().makeName(spec);
             tagdata = this.getOrMakeSpecTag(spec);
             spec.setColourIndex(tagdata, columnNumber);
-            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
+            MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(this.getSelectedItem().inventorySlot, tagname, tagdata));
             return true;
         }
         return false;

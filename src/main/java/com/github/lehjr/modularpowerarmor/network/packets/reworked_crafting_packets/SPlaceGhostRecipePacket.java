@@ -1,8 +1,5 @@
 package com.github.lehjr.modularpowerarmor.network.packets.reworked_crafting_packets;
 
-import com.github.lehjr.modularpowerarmor.client.gui.modding.module.MPAWorkbenchGui;
-import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

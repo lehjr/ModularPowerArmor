@@ -3,11 +3,12 @@ package com.github.lehjr.modularpowerarmor.item.armor;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.modularpowerarmor.basemod.MPARegistryNames;
-import com.github.lehjr.modularpowerarmor.capabilities.ModularPowerCap;
+import com.github.lehjr.modularpowerarmor.capabilities.PowerArmorCap;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
-import com.github.lehjr.mpalib.basemod.ModObjects;
 import com.github.lehjr.mpalib.client.model.item.armor.ArmorModelInstance;
 import com.github.lehjr.mpalib.client.model.item.armor.HighPolyArmor;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.CosmeticInfoPacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
@@ -19,6 +20,7 @@ import com.github.lehjr.mpalib.util.energy.ElectricItemUtils;
 import com.github.lehjr.mpalib.util.string.AdditionalInfo;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.AtomicDouble;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,14 +28,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,6 +43,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -188,20 +189,22 @@ public abstract class AbstractElectricItemArmor extends ArmorItem {
 
         return itemStack.getCapability(ModelSpecNBTCapability.RENDER).map(spec-> {
             CompoundNBT renderTag = spec.getRenderTag();
-//            PlayerEntity player = (PlayerEntity) entityLiving;
-////            // only triggered by this client's player looking at their own equipped armor
-//            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
-//                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-//                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
-//                        renderTag = spec.getDefaultRenderTag();
-//                        if (renderTag != null && !renderTag.isEmpty()) {
-//                            spec.setRenderTag(renderTag, MPALIbConstants.TAG_RENDER);
-//                            MPAPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALIbConstants.TAG_RENDER, renderTag));
-//                        }
-//                        break;
-//                    }
-//                }
-//            }
+
+            // This sets up a default spec... not sure yet if this is will be enabled
+            PlayerEntity player = (PlayerEntity) entityLiving;
+//            // only triggered by this client's player looking at their own equipped armor
+            if (renderTag == null || renderTag.isEmpty() && player == Minecraft.getInstance().player) {
+                for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+                    if (player.inventory.getStackInSlot(i).equals(itemStack)) {
+                        renderTag = spec.getDefaultRenderTag();
+                        if (renderTag != null && !renderTag.isEmpty()) {
+                            spec.setRenderTag(renderTag, MPALibConstants.TAG_RENDER);
+                            MPALibPackets.CHANNEL_INSTANCE.sendToServer(new CosmeticInfoPacket(i, MPALibConstants.TAG_RENDER, renderTag));
+                        }
+                        break;
+                    }
+                }
+            }
 
             if (spec.getRenderTag() != null &&
                     (spec.getSpecType() == EnumSpecType.ARMOR_SKIN || spec.getSpecType() == EnumSpecType.NONE)) {
@@ -234,8 +237,8 @@ public abstract class AbstractElectricItemArmor extends ArmorItem {
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return new ModularPowerCap(stack, this.slot);
+    public ICapabilityProvider initCapabilities(@Nonnull ItemStack stack, @Nullable CompoundNBT nbt) {
+        return new PowerArmorCap(stack, this.slot);
     }
 
     @Override

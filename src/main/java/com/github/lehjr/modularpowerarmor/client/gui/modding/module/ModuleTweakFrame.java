@@ -2,6 +2,8 @@ package com.github.lehjr.modularpowerarmor.client.gui.modding.module;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
+import com.github.lehjr.mpalib.network.MPALibPackets;
+import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
@@ -13,8 +15,6 @@ import com.github.lehjr.mpalib.util.math.Colour;
 import com.github.lehjr.mpalib.util.nbt.NBTUtils;
 import com.github.lehjr.mpalib.util.nbt.propertymodifier.IPropertyModifier;
 import com.github.lehjr.mpalib.util.nbt.propertymodifier.PropertyModifierLinearAdditive;
-import com.github.lehjr.mpalib.network.MPALibPackets;
-import com.github.lehjr.mpalib.network.packets.TweakRequestDoublePacket;
 import com.github.lehjr.mpalib.util.string.StringUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.resources.I18n;

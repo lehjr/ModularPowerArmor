@@ -1,5 +1,3 @@
-Power fist renderer needs ability to render the plasma ball from the cannon ... move to item tesr?
 Module installation GUI no longer really fits... needs redesign
-Cosmetic tweak frame needs fixing... part names need alignment adjusted
 cosmetic gui needs preset design system restored but set up for single player only or maybe use something like tabula
 merge recipe creator into MPA-Lib?... maybe use something like tabula

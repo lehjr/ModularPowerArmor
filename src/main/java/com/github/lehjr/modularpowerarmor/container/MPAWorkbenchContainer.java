@@ -6,29 +6,22 @@ import com.github.lehjr.modularpowerarmor.network.packets.MoveModuleFromSlotToSl
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.CreativeInstallModuleRequestPacket;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
-import com.github.lehjr.mpalib.util.client.gui.slot.*;
+import com.github.lehjr.mpalib.util.client.gui.slot.HideableSlot;
+import com.github.lehjr.mpalib.util.client.gui.slot.HideableSlotItemHandler;
+import com.github.lehjr.mpalib.util.client.gui.slot.IHideableSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.util.IntReferenceHolder;
-import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Looks like slots have to be populated in the container's constructor.

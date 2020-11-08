@@ -1,6 +1,7 @@
 package com.github.lehjr.modularpowerarmor.client.gui.modding.cosmetic;
 
 import com.github.lehjr.modularpowerarmor.client.gui.common.ItemSelectionFrame;
+import com.github.lehjr.mpalib.util.capabilities.render.modelspec.EnumSpecType;
 import com.github.lehjr.mpalib.util.capabilities.render.modelspec.ModelRegistry;
 import com.github.lehjr.mpalib.util.capabilities.render.modelspec.SpecBase;
 import com.github.lehjr.mpalib.util.client.gui.clickable.ClickableItem;
@@ -10,12 +11,17 @@ import com.github.lehjr.mpalib.util.client.gui.geometry.RelativeRect;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -56,7 +62,7 @@ public class PartManipContainer extends ScrollableFrame {
         } else {
             this.enable();
             this.show();
-            this.modelframes = getModelframes();
+            this.getModelframes();
         }
     }
 
@@ -78,17 +84,51 @@ public class PartManipContainer extends ScrollableFrame {
         return this.colourSelect.selectedColour;
     }
 
-    public List<PartSpecManipSubFrame> getModelframes() {
-        List<PartSpecManipSubFrame> modelframesList = new ArrayList<>();
-        Iterable<SpecBase> specCollection = ModelRegistry.getInstance().getSpecs();
-        PartSpecManipSubFrame prev = null;
-        PartSpecManipSubFrame newframe;
-        for (SpecBase modelspec : specCollection) {
-            newframe = createNewFrame(modelspec, prev);
-            prev = newframe;
-            modelframesList.add(newframe);
+    public void getModelframes() {
+        this.modelframes = new ArrayList<>();
+        if (!getItem().isEmpty()) {
+            Iterable<SpecBase> specCollection = ModelRegistry.getInstance().getSpecs();
+            PartSpecManipSubFrame prev = null;
+            PartSpecManipSubFrame newframe;
+            for (SpecBase modelspec : specCollection) {
+                if (isSpecValid(modelspec)) {
+                    newframe = createNewFrame(modelspec, prev);
+                    prev = newframe;
+                    modelframes.add(newframe);
+                }
+            }
         }
-        return modelframesList;
+    }
+
+    boolean isSpecValid(SpecBase specBase) {
+        if (!getItem().isEmpty()) {
+            Item item = getItem().getItem();
+
+            EquipmentSlotType slotType;
+            if (item instanceof ArmorItem) {
+                slotType = ((ArmorItem) item).getEquipmentSlot();
+                return specBase.getSpecType().equals(EnumSpecType.ARMOR_MODEL) ||
+                        specBase.getSpecType().equals(EnumSpecType.ARMOR_SKIN) &&
+                                doesSpecHaveSlotType(specBase, slotType);
+            } else if (item instanceof ToolItem) {
+                return specBase.getSpecType().equals(EnumSpecType.HANDHELD) &&
+                        doesSpecHaveSlotType(specBase, EquipmentSlotType.MAINHAND);
+            } else {
+                return specBase.getSpecType().equals(EnumSpecType.HANDHELD) &&
+                        doesSpecHaveSlotType(specBase, EquipmentSlotType.OFFHAND);
+            }
+        }
+        return false;
+    }
+
+    boolean doesSpecHaveSlotType(SpecBase specBase, EquipmentSlotType slot) {
+        AtomicBoolean hasType = new AtomicBoolean(false);
+        specBase.getPartSpecs().forEach(spec->{
+            if (spec.getBinding().getSlot().equals(slot)) {
+                hasType.set(true);
+            }
+        });
+        return hasType.get();
     }
 
     public PartSpecManipSubFrame createNewFrame(SpecBase modelspec, PartSpecManipSubFrame prev) {
@@ -149,7 +189,7 @@ public class PartManipContainer extends ScrollableFrame {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if (this.isVisible()) {
+        if (this.isVisible() && !modelframes.isEmpty()) {
             super.preRender(matrixStack, mouseX, mouseY, partialTicks);
             RenderSystem.pushMatrix();
             RenderSystem.translated(0.0, -this.currentscrollpixels, 0.0);
@@ -157,6 +197,9 @@ public class PartManipContainer extends ScrollableFrame {
                 f.drawPartial(matrixStack, currentscrollpixels + 4 + border.finalTop(), this.currentscrollpixels + border.finalBottom() - 4);
             }
             RenderSystem.popMatrix();
+            super.postRender(mouseX, mouseY, partialTicks);
+        } else {
+            super.preRender(matrixStack, mouseX, mouseY, partialTicks);
             super.postRender(mouseX, mouseY, partialTicks);
         }
     }

@@ -1,7 +1,6 @@
 package com.github.lehjr.modularpowerarmor.config;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
-import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.config.ModuleConfig;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
 import net.minecraft.util.ResourceLocation;

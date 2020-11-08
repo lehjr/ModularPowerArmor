@@ -4,6 +4,7 @@ import com.github.lehjr.modularpowerarmor.client.control.KeybindKeyHandler;
 import com.github.lehjr.modularpowerarmor.client.control.KeybindManager;
 import com.github.lehjr.modularpowerarmor.client.gui.clickable.ClickableKeybinding;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
+import com.github.lehjr.mpalib.control.KeyBindingHelper;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
 import com.github.lehjr.mpalib.util.capabilities.inventory.modularitem.IModularItem;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
@@ -16,7 +17,6 @@ import com.github.lehjr.mpalib.util.client.gui.geometry.GradientAndArcCalculator
 import com.github.lehjr.mpalib.util.client.gui.geometry.IRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Rect;
-import com.github.lehjr.mpalib.control.KeyBindingHelper;
 import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -34,8 +34,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-
-import static com.github.lehjr.mpalib.util.math.MathUtils.clampFloat;
 
 public class KeybindConfigFrame implements IGuiFrame {
     private static KeyBindingHelper keyBindingHelper = new KeyBindingHelper();

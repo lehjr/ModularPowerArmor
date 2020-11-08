@@ -25,8 +25,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
 
     @Override
     public EnumSpecType getSpecType() {
-        CompoundNBT itemTag = NBTUtils.getMuseItemTag(getItemStack());
-        CompoundNBT renderTag = itemTag.getCompound(MPALibConstants.TAG_RENDER);
+        CompoundNBT renderTag = getRenderTag();
         if (renderTag == null || renderTag.isEmpty()) {
               renderTag = getDefaultRenderTag();
         }
@@ -127,7 +126,7 @@ public class ArmorModelSpecNBT extends ModelSpecNBT implements IArmorModelSpecNB
 
     @Override
     public String getArmorTexture() {
-        CompoundNBT itemTag = NBTUtils.getMuseItemTag(getItemStack());
+        CompoundNBT itemTag = NBTUtils.getMPAItemTag(getItemStack());
         CompoundNBT renderTag = itemTag.getCompound(MPALibConstants.TAG_RENDER);
         try {
             TexturePartSpec partSpec = (TexturePartSpec) ModelRegistry.getInstance().getPart(renderTag.getCompound(MPALibConstants.NBT_TEXTURESPEC_TAG));

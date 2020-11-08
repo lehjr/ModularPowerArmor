@@ -1,10 +1,10 @@
 package com.github.lehjr.modularpowerarmor.client.control;
 
 import com.github.lehjr.modularpowerarmor.client.gui.modechanging.GuiModeSelector;
-import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
-import com.github.lehjr.mpalib.util.capabilities.player.CapabilityPlayerKeyStates;
 import com.github.lehjr.mpalib.network.MPALibPackets;
 import com.github.lehjr.mpalib.network.packets.PlayerUpdatePacket;
+import com.github.lehjr.mpalib.util.capabilities.inventory.modechanging.IModeChangingItem;
+import com.github.lehjr.mpalib.util.capabilities.player.CapabilityPlayerKeyStates;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;

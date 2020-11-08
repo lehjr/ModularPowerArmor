@@ -6,7 +6,6 @@ import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.mpalib.util.client.gui.ContainerlessGui;
 import com.github.lehjr.mpalib.util.client.gui.geometry.DrawableRect;
 import com.github.lehjr.mpalib.util.client.gui.geometry.Point2D;
-import com.github.lehjr.mpalib.util.client.render.MPALibRenderer;
 import com.github.lehjr.mpalib.util.math.Colour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.management.OpEntry;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Author: MachineMuse (Claire Semple)
@@ -106,6 +104,8 @@ public class CosmeticGui extends ContainerlessGui {
 
         tabSelectFrame = new TabSelectFrame(player, 2, this.getBlitOffset());
         addFrame(tabSelectFrame);
+
+        itemSelectFrame.setDoOnNewSelect(doThis -> partframe.getModelframes());
     }
 
     public void rescale() {

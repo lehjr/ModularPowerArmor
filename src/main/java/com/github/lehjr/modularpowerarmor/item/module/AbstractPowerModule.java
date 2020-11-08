@@ -1,6 +1,5 @@
 package com.github.lehjr.modularpowerarmor.item.module;
 
-import com.github.lehjr.modularpowerarmor.basemod.MPAModules;
 import com.github.lehjr.modularpowerarmor.basemod.MPAObjects;
 import com.github.lehjr.mpalib.util.string.AdditionalInfo;
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,7 +14,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;

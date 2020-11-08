@@ -21,8 +21,6 @@ import com.github.lehjr.modularpowerarmor.item.module.energy_generation.ThermalG
 import com.github.lehjr.modularpowerarmor.item.module.environmental.*;
 import com.github.lehjr.modularpowerarmor.item.module.miningenhancement.*;
 import com.github.lehjr.modularpowerarmor.item.module.movement.*;
-import com.github.lehjr.modularpowerarmor.item.module.special.ClockModule;
-import com.github.lehjr.modularpowerarmor.item.module.special.CompassModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.InvisibilityModule;
 import com.github.lehjr.modularpowerarmor.item.module.special.MagnetModule;
 import com.github.lehjr.modularpowerarmor.item.module.tool.*;

@@ -3,6 +3,7 @@ package com.github.lehjr.modularpowerarmor.item.module.movement;
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
+import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
@@ -10,7 +11,6 @@ import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleC
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.IPlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.tickable.PlayerTickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
-import com.github.lehjr.mpalib.control.PlayerMovementInputWrapper;
 import com.github.lehjr.mpalib.util.player.PlayerUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

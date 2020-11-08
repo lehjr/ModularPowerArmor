@@ -27,13 +27,6 @@ public class MPAPackets {
                 ColourInfoPacket::decode,
                 ColourInfoPacket::handle);
 
-        CHANNEL_INSTANCE.registerMessage(
-                i++,
-                CosmeticInfoPacket.class,
-                CosmeticInfoPacket::encode,
-                CosmeticInfoPacket::decode,
-                CosmeticInfoPacket::handle);
-
 //        CHANNEL_INSTANCE.registerMessage(
 //                i++,
 //                MusePacketCosmeticPreset.class,
