@@ -44,7 +44,6 @@ public class ColourInfoPacket {
                     render -> {
                         render.setColorArray(tagData);
                     });
-
         });
         ctx.get().setPacketHandled(true);
     }

@@ -7,7 +7,8 @@ public class MPARegistryNames {
      * Entities -----------------------------------------------------------------------------------
      */
     public static final String SPINNING_BLADE = "spinning_blade";
-    public static final String PLASMA_BOLT = "plasma_bolt";
+    public static final String PLASMA_BALL = "plasma_ball";
+    public static final String RAILGUN_BOLT = "railgun_bolt";
 
     /**
      * Blocks -------------------------------------------------------------------------------------

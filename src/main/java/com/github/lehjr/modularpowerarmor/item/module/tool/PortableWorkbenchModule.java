@@ -32,8 +32,8 @@ import java.util.concurrent.Callable;
  * <p>
  * Ported to Java by lehjr on 10/11/16.
  */
-public class FieldTinkerModule extends AbstractPowerModule {
-    public FieldTinkerModule() {
+public class PortableWorkbenchModule extends AbstractPowerModule {
+    public PortableWorkbenchModule() {
         super();
     }
 

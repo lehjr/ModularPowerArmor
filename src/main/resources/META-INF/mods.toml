@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[34,)"
+loaderVersion="[35,)"
 issueTrackerURL="https://github.com/lehjr/ModularPowerArmor/issues"
 logoFile="assets/modularpowerarmor/textures/logo.png"
 license="All rights reserved"
@@ -16,14 +16,14 @@ A mod which adds modular power armor, power tool, and a tinker table to configur
 [[dependencies.modularpowerarmor]]
     modId="forge"
     mandatory=true
-    versionRange="[34,)"
+    versionRange="[35,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.modularpowerarmor]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3]"
+    versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"
 

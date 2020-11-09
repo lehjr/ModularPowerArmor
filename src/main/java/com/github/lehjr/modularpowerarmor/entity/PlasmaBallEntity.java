@@ -21,17 +21,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class PlasmaBoltEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
-    private static final DataParameter<Float> ACTUAL_SIZE = EntityDataManager.createKey(PlasmaBoltEntity.class, DataSerializers.FLOAT);
+public class PlasmaBallEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
+    private static final DataParameter<Float> ACTUAL_SIZE = EntityDataManager.createKey(PlasmaBallEntity.class, DataSerializers.FLOAT);
     public double damagingness;
     public double explosiveness;
 
-    public PlasmaBoltEntity(EntityType<? extends PlasmaBoltEntity> entityType, World world) {
+    public PlasmaBallEntity(EntityType<? extends PlasmaBallEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public PlasmaBoltEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
-        super(MPAObjects.PLASMA_BOLT_ENTITY_TYPE.get(), world);
+    public PlasmaBallEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
+        super(MPAObjects.PLASMA_BALL_ENTITY_TYPE.get(), world);
         this.setShooter(shootingEntity);
 
         float size = ((chargeTicks) > 50F ? 50F : chargeTicks);

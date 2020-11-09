@@ -3,9 +3,12 @@ package com.github.lehjr.modularpowerarmor.basemod;
 
 import com.github.lehjr.modularpowerarmor.block.LuxCapacitorBlock;
 import com.github.lehjr.modularpowerarmor.block.WorkBenchBlock;
+import com.github.lehjr.modularpowerarmor.config.MPASettings;
 import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainer;
+import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainerProvider;
 import com.github.lehjr.modularpowerarmor.entity.LuxCapacitorEntity;
-import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
+import com.github.lehjr.modularpowerarmor.entity.PlasmaBallEntity;
+import com.github.lehjr.modularpowerarmor.entity.RailgunBoltEntity;
 import com.github.lehjr.modularpowerarmor.entity.SpinningBladeEntity;
 import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorBoots;
 import com.github.lehjr.modularpowerarmor.item.armor.PowerArmorChestplate;
@@ -30,18 +33,40 @@ import com.github.lehjr.modularpowerarmor.item.module.weapon.*;
 import com.github.lehjr.modularpowerarmor.item.tool.PowerFist;
 import com.github.lehjr.modularpowerarmor.tile_entity.LuxCapacitorTileEntity;
 import com.github.lehjr.modularpowerarmor.tile_entity.WorkBenchTileEntity;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.IConfig;
+import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickModule;
+import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.concurrent.Callable;
 
 public class MPAObjects {
     public static final MPACreativeTab creativeTab = new MPACreativeTab();
@@ -93,15 +118,15 @@ public class MPAObjects {
                     .size(0.25F, 0.25F) // FIXME! check size
                     .build(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.SPINNING_BLADE).toString()));
 
-    public static final RegistryObject<EntityType<PlasmaBoltEntity>> PLASMA_BOLT_ENTITY_TYPE = ENTITY_TYPES.register(MPARegistryNames.PLASMA_BOLT,
-            ()-> EntityType.Builder.<PlasmaBoltEntity>create(PlasmaBoltEntity::new, EntityClassification.MISC)
+    public static final RegistryObject<EntityType<PlasmaBallEntity>> PLASMA_BALL_ENTITY_TYPE = ENTITY_TYPES.register(MPARegistryNames.PLASMA_BALL,
+            ()-> EntityType.Builder.<PlasmaBallEntity>create(PlasmaBallEntity::new, EntityClassification.MISC)
 //                    .size(0.25F, 0.25F)
-                    .build(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PLASMA_BOLT).toString()));
+                    .build(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.PLASMA_BALL).toString()));
 
-
-    // FIXME: bolt protectile
-
-
+    public static final RegistryObject<EntityType<RailgunBoltEntity>> RAILGUN_BOLT_ENTITY_TYPE = ENTITY_TYPES.register(MPARegistryNames.RAILGUN_BOLT,
+            ()-> EntityType.Builder.<RailgunBoltEntity>create(RailgunBoltEntity::new, EntityClassification.MISC)
+                    .size(0.25F, 0.25F)
+                    .build(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.RAILGUN_BOLT).toString()));
 
     /**
      * Items -------------------------------------------------------------------------------------
@@ -109,8 +134,46 @@ public class MPAObjects {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MPAConstants.MOD_ID);
 
     /* BlockItems --------------------------------------------------------------------------------- */
+    // use directly as a module
     public static final RegistryObject<Item> WORKBENCH_ITEM = ITEMS.register(MPARegistryNames.WORKBENCH,
-            () -> new BlockItem(WORKBENCH_BLOCK.get(), fullStack));
+            () -> new BlockItem(WORKBENCH_BLOCK.get(), fullStack) {
+
+                @Nullable
+                @Override
+                public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+                    return new CapProvider(stack);
+                }
+
+                class CapProvider implements ICapabilityProvider {
+                    ItemStack module;
+                    IRightClickModule rightClick;
+
+                    public CapProvider(@Nonnull ItemStack module) {
+                        this.module = module;
+                        this.rightClick = new RightClickie(module, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig);
+                    }
+
+                    @Nonnull
+                    @Override
+                    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+                        return PowerModuleCapability.POWER_MODULE.orEmpty(cap, LazyOptional.of(() -> rightClick));
+                    }
+
+                    class RightClickie extends RightClickModule {
+                        public RightClickie(@Nonnull ItemStack module, EnumModuleCategory category, EnumModuleTarget target, Callable<IConfig> config) {
+                            super(module, category, target, config);
+                        }
+
+                        @Override
+                        public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
+                            if (!worldIn.isRemote()) {
+                                NetworkHooks.openGui((ServerPlayerEntity) playerIn, new MPAWorkbenchContainerProvider(0), (buffer) -> buffer.writeInt(0));
+                            }
+                            return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+                        }
+                    }
+                }
+            } );
 
     public static final RegistryObject<Item> LUX_CAPACITOR_ITEM = ITEMS.register(MPARegistryNames.LUX_CAPACITOR,
             () -> new BlockItem(LUX_CAPACITOR_BLOCK.get(), fullStack));
@@ -177,8 +240,6 @@ public class MPAObjects {
     public static final RegistryObject<Item> SWIM_BOOST_MODULE = registerModule(MPARegistryNames.SWIM_BOOST_MODULE, new SwimAssistModule());
 
     // Special ------------------------------------------------------------------------------------
-//    public static final RegistryObject<Item> CLOCK_MODULE = registerModule(MPARegistryNames.CLOCK_MODULE, new ClockModule());
-//    public static final RegistryObject<Item> COMPASS_MODULE = registerModule(MPARegistryNames.COMPASS_MODULE, new CompassModule());
     public static final RegistryObject<Item> ACTIVE_CAMOUFLAGE_MODULE = registerModule(MPARegistryNames.ACTIVE_CAMOUFLAGE_MODULE, new InvisibilityModule());
     public static final RegistryObject<Item> MAGNET_MODULE = registerModule(MPARegistryNames.MAGNET_MODULE, new MagnetModule());
 
@@ -189,9 +250,6 @@ public class MPAObjects {
     // Tools --------------------------------------------------------------------------
     public static final RegistryObject<Item> AXE_MODULE = registerModule(MPARegistryNames.AXE_MODULE, new AxeModule());
     public static final RegistryObject<Item> DIAMOND_PICK_UPGRADE_MODULE = registerModule(MPARegistryNames.DIAMOND_PICK_UPGRADE_MODULE, new DiamondPickUpgradeModule());
-
-    // Fixme !!! rename?
-    public static final RegistryObject<Item> FIELD_TINKER_MODULE = registerModule(MPARegistryNames.PORTABLE_WORKBENCH_MODULE, new FieldTinkerModule());
     public static final RegistryObject<Item> FLINT_AND_STEEL_MODULE = registerModule(MPARegistryNames.FLINT_AND_STEEL_MODULE, new FlintAndSteelModule());
     public static final RegistryObject<Item> HOE_MODULE = registerModule(MPARegistryNames.HOE_MODULE, new HoeModule());
     public static final RegistryObject<Item> LEAF_BLOWER_MODULE = registerModule(MPARegistryNames.LEAF_BLOWER_MODULE, new LeafBlowerModule());

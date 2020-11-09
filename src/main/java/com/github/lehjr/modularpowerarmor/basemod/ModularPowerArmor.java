@@ -107,7 +107,7 @@ public class ModularPowerArmor {
 
         //        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.LUX_CAPACITOR_ENTITY_TYPE.get(), LuxCapacitorEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.PLASMA_BOLT_ENTITY_TYPE.get(), PlasmaBoltEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.PLASMA_BALL_ENTITY_TYPE.get(), PlasmaBoltEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.SPINNING_BLADE_ENTITY_TYPE.get(), SpinningBladeEntityRenderer::new);
 
 //        ScreenManager.registerFactory(MPSObjects.MODULE_CONFIG_CONTAINER_TYPE, TinkerModuleGui::new);

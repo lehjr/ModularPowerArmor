@@ -75,9 +75,7 @@ public enum RegisterStuff {
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event ){
         event.getRegistry().registerAll(
 
-//                EntityType.Builder.<BoltEntity>create(BoltEntity::new, EntityClassification.MISC)
-//                        .setCustomClientFactory((spawnEntity, world) -> MPAObjects.BOLT_ENTITY_TYPE.create(world))
-//                        .build(MOD_ID +":bolt").setRegistryName(MOD_ID +":bolt")
+
         );
     }
 

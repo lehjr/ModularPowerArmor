@@ -14,6 +14,8 @@ public enum MPAModules {
         add(new ResourceLocation(MPALibConstants.MOD_ID, MPALibConstants.MODULE_BATTERY_ADVANCED__REGNAME));
         add(new ResourceLocation(MPALibConstants.MOD_ID, MPALibConstants.MODULE_BATTERY_ELITE__REGNAME));
         add(new ResourceLocation(MPALibConstants.MOD_ID, MPALibConstants.MODULE_BATTERY_ULTIMATE__REGNAME));
+        add(new ResourceLocation(MPAConstants.MOD_ID, MPARegistryNames.WORKBENCH));
+
         add(new ResourceLocation("clock"));
         add(new ResourceLocation("compass"));
     }};

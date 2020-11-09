@@ -2,7 +2,7 @@ package com.github.lehjr.modularpowerarmor.item.module.weapon;
 
 import com.github.lehjr.modularpowerarmor.basemod.MPAConstants;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
-import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
+import com.github.lehjr.modularpowerarmor.entity.PlasmaBallEntity;
 import com.github.lehjr.modularpowerarmor.item.module.AbstractPowerModule;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
@@ -96,7 +96,7 @@ public class PlasmaCannonModule extends AbstractPowerModule {
                             ElectricItemUtils.drainPlayerEnergy(player, (int) energyConsumption);
                             double explosiveness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_EXPLOSIVENESS);
                             double damagingness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
-                            PlasmaBoltEntity plasmaBolt = new PlasmaBoltEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
+                            PlasmaBallEntity plasmaBolt = new PlasmaBallEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
                             worldIn.addEntity(plasmaBolt);
                         }
                     }

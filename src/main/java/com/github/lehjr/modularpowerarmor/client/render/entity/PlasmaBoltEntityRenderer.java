@@ -1,6 +1,6 @@
 package com.github.lehjr.modularpowerarmor.client.render.entity;
 
-import com.github.lehjr.modularpowerarmor.entity.PlasmaBoltEntity;
+import com.github.lehjr.modularpowerarmor.entity.PlasmaBallEntity;
 import com.github.lehjr.mpalib.basemod.MPALibConstants;
 import com.github.lehjr.mpalib.client.render.entity.MPALibEntityRenderer;
 import com.github.lehjr.mpalib.util.client.gui.IconUtils;
@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.NonNullLazy;
 
 import java.util.Random;
 
-public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEntity> {
+public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBallEntity> {
     static final Colour colour1 = new Colour(0.3F, 0.3F, 1F, 0.3F);
     static final Colour colour2 = new Colour(0.4F, 0.4F, 1F, 0.5F);
     static final Colour colour3 = new Colour(0.8F, 0.8F, 1F, 0.7F);
@@ -37,7 +37,7 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     }
 
     @Override
-    public void render(PlasmaBoltEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(PlasmaBallEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         float size = entityIn.getActualSize();
 
@@ -47,7 +47,7 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBoltEnt
     }
 
     @Override
-    public ResourceLocation getEntityTexture(PlasmaBoltEntity entity) {
+    public ResourceLocation getEntityTexture(PlasmaBallEntity entity) {
         return MPALibConstants.TEXTURE_WHITE;
     }
 

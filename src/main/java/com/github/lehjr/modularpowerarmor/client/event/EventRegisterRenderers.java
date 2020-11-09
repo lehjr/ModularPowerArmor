@@ -33,7 +33,7 @@ public class EventRegisterRenderers {
 //        }
 //
 //        RenderingRegistry.registerEntityRenderingHandler(SpinningBladeEntity.class, EntityRendererSpinningBlade::new);
-//        RenderingRegistry.registerEntityRenderingHandler(PlasmaBoltEntity.class, EntityRendererPlasmaBolt::new);
+//        RenderingRegistry.registerEntityRenderingHandler(PlasmaBallEntity.class, EntityRendererPlasmaBolt::new);
 //        RenderingRegistry.registerEntityRenderingHandler(LuxCapacitorEntity.class, EntityRendererLuxCapacitorEntity::new);
 //
 //
