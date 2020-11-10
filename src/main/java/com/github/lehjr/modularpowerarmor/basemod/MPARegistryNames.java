@@ -138,10 +138,7 @@ public class MPARegistryNames {
     public static final ResourceLocation AUTO_FEEDER_MODULE_REG = getRegName(AUTO_FEEDER_MODULE);
     public static final ResourceLocation CLOCK_MODULE_REG = getRegName(CLOCK_MODULE);
     public static final ResourceLocation COMPASS_MODULE_REG = getRegName(COMPASS_MODULE);
-
-
-
-
+    public static final ResourceLocation PORTABLE_WORKBENCH_MODULE_REG = getRegName(PORTABLE_WORKBENCH_MODULE);
 
     static ResourceLocation getRegName(String regNameString) {
         return new ResourceLocation(MPAConstants.MOD_ID, regNameString);

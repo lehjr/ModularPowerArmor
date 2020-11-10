@@ -9,6 +9,7 @@ import com.github.lehjr.modularpowerarmor.client.render.entity.LuxCapacitorEntit
 import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.render.entity.SpinningBladeEntityRenderer;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
+import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainerProvider;
 import com.github.lehjr.modularpowerarmor.event.HarvestEventHandler;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.event.PlayerUpdateHandler;
@@ -18,12 +19,19 @@ import com.github.lehjr.mpalib.config.ConfigHelper;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleCategory;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.EnumModuleTarget;
 import com.github.lehjr.mpalib.util.capabilities.module.powermodule.PowerModuleCapability;
+import com.github.lehjr.mpalib.util.capabilities.module.rightclick.IRightClickModule;
+import com.github.lehjr.mpalib.util.capabilities.module.rightclick.RightClickModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.IToggleableModule;
 import com.github.lehjr.mpalib.util.capabilities.module.toggleable.ToggleableModule;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -39,6 +47,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -149,6 +158,29 @@ public class ModularPowerArmor {
                 public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
                     if (cap == PowerModuleCapability.POWER_MODULE) {
                         return LazyOptional.of(()->(T)compass);
+                    }
+                    return LazyOptional.empty();
+                }
+            });
+        } else if (!event.getCapabilities().containsKey(MPARegistryNames.PORTABLE_WORKBENCH_MODULE_REG) &&
+                event.getObject().getItem().equals(Items.CRAFTING_TABLE)) {
+            final ItemStack stack = event.getObject();
+            IRightClickModule rightClick = new RightClickModule(stack, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig) {
+                @Override
+                public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
+                    if (!worldIn.isRemote()) {
+                        NetworkHooks.openGui((ServerPlayerEntity) playerIn, new MPAWorkbenchContainerProvider(3), (buffer) -> buffer.writeInt(3));
+                    }
+                    return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+                }
+            };
+
+            event.addCapability(MPARegistryNames.PORTABLE_WORKBENCH_MODULE_REG, new ICapabilityProvider() {
+                @Nonnull
+                @Override
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+                    if (cap == PowerModuleCapability.POWER_MODULE) {
+                        return LazyOptional.of(()->(T)rightClick);
                     }
                     return LazyOptional.empty();
                 }

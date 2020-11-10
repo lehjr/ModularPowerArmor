@@ -18,6 +18,7 @@ public enum MPAModules {
 
         add(new ResourceLocation("clock"));
         add(new ResourceLocation("compass"));
+        add(new ResourceLocation("crafting_table"));
     }};
 
     public void addModule(ResourceLocation regName) {

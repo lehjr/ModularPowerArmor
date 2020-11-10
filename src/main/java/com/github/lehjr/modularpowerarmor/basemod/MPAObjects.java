@@ -254,7 +254,7 @@ public class MPAObjects {
     public static final RegistryObject<Item> HOE_MODULE = registerModule(MPARegistryNames.HOE_MODULE, new HoeModule());
     public static final RegistryObject<Item> LEAF_BLOWER_MODULE = registerModule(MPARegistryNames.LEAF_BLOWER_MODULE, new LeafBlowerModule());
     public static final RegistryObject<Item> LUX_CAPACITOR_MODULE = registerModule(MPARegistryNames.LUX_CAPACITOR_MODULE, new LuxCapacitorModule());
-    public static final RegistryObject<Item> PORTABLE_CRAFTING_MODULE = registerModule(MPARegistryNames.PORTABLE_CRAFTING_MODULE, new PortableCraftingModule());
+//    public static final RegistryObject<Item> PORTABLE_CRAFTING_MODULE = registerModule(MPARegistryNames.PORTABLE_CRAFTING_MODULE, new PortableCraftingModule());
     public static final RegistryObject<Item> PICKAXE_MODULE = registerModule(MPARegistryNames.PICKAXE_MODULE, new PickaxeModule());
     public static final RegistryObject<Item> SHEARS_MODULE = registerModule(MPARegistryNames.SHEARS_MODULE, new ShearsModule());
     public static final RegistryObject<Item> SHOVEL_MODULE = registerModule(MPARegistryNames.SHOVEL_MODULE, new ShockAbsorberModule());
