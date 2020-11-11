@@ -55,11 +55,11 @@ import javax.annotation.Nullable;
 @Mod(MPAConstants.MOD_ID)
 public class ModularPowerArmor {
     public ModularPowerArmor() {
+        // Config
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, MPASettings.CLIENT_SPEC, ConfigHelper.setupConfigFile("mpa-client-only.toml", MPAConstants.MOD_ID).getAbsolutePath());
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, MPASettings.SERVER_SPEC); // note config file location for dedicated server is stored in the world config
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-//        modEventBus.register(this);
 
         // Register the setup method for modloading
         modEventBus.addListener(this::setup);
@@ -97,12 +97,17 @@ public class ModularPowerArmor {
         });
     }
 
-    // preInit
+    /**
+     * Setup common (clien/server) stuff
+     */
     private void setup(final FMLCommonSetupEvent event) {
         MPAPackets.registerMPAPackets();
         CraftingHelper.register(MPARecipeConditionFactory.Serializer.INSTANCE);
     }
 
+    /**
+     * Setup client related stuff
+     */
     private void setupClient(final FMLClientSetupEvent event) {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -130,10 +135,13 @@ public class ModularPowerArmor {
  */
     }
 
+    /**
+     * Attach capabilities to a few existing items in order to use them as modules
+     */
     @SubscribeEvent
     public void attachCapability(AttachCapabilitiesEvent<ItemStack> event) {
-        if (!event.getCapabilities().containsKey(MPARegistryNames.CLOCK_MODULE_REG) &&
-                event.getObject().getItem().equals(Items.CLOCK)) {
+        // Clock
+        if (!event.getCapabilities().containsKey(MPARegistryNames.CLOCK_MODULE_REG) && event.getObject().getItem().equals(Items.CLOCK)) {
             final ItemStack stack = event.getObject();
 
             IToggleableModule clock = new ToggleableModule(stack, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
@@ -147,8 +155,9 @@ public class ModularPowerArmor {
                     return LazyOptional.empty();
                 }
             });
-        } else if (!event.getCapabilities().containsKey(MPARegistryNames.COMPASS_MODULE_REG) &&
-                event.getObject().getItem().equals(Items.COMPASS)) {
+
+        // Compass
+        } else if (!event.getCapabilities().containsKey(MPARegistryNames.COMPASS_MODULE_REG) && event.getObject().getItem().equals(Items.COMPASS)) {
             final ItemStack stack = event.getObject();
             IToggleableModule compass = new ToggleableModule(stack, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
 
@@ -162,10 +171,13 @@ public class ModularPowerArmor {
                     return LazyOptional.empty();
                 }
             });
-        } else if (!event.getCapabilities().containsKey(MPARegistryNames.PORTABLE_WORKBENCH_MODULE_REG) &&
-                event.getObject().getItem().equals(Items.CRAFTING_TABLE)) {
+
+        // Workbench
+        } else if (!event.getCapabilities().containsKey(MPARegistryNames.PORTABLE_WORKBENCH_MODULE_REG) && event.getObject().getItem().equals(Items.CRAFTING_TABLE)) {
             final ItemStack stack = event.getObject();
             IRightClickModule rightClick = new RightClickModule(stack, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig) {
+
+                // FIXME: switch to vanilla crafting table
                 @Override
                 public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                     if (!worldIn.isRemote()) {

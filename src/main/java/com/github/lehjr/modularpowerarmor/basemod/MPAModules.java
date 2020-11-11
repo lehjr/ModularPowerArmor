@@ -6,6 +6,10 @@ import net.minecraft.util.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Holds a list of module registry names of modules that can be installed in the armor and power fist.
+ * Used in the installation/removal Gui.
+ */
 public enum MPAModules {
     INSTANCE;
 

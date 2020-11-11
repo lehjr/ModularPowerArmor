@@ -26,8 +26,11 @@ public class TinkerKeybindGui extends ContainerlessGui {
         this.minecraft = Minecraft.getInstance();
         rescale();
         backgroundRect = new DrawableRect(absX(-1), absY(-1), absX(1), absY(1), true,
-                new Colour(0.0F, 0.2F, 0.0F, 0.8F),
-                new Colour(0.1F, 0.9F, 0.1F, 0.8F));
+                Colour.DARK_GREY,
+                //new Colour(0.776F, 0.776F, 0.776F, 1F),
+                Colour.BLACK);
+//        new Colour(0.0F, 0.2F, 0.0F, 0.8F),
+//                new Colour(0.1F, 0.9F, 0.1F, 0.8F));
 
         kbFrame = new KeybindConfigFrame(backgroundRect, player);
         addFrame(kbFrame);
