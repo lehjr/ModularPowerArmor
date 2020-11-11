@@ -26,11 +26,14 @@ import com.github.lehjr.mpalib.util.capabilities.module.toggleable.ToggleableMod
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -156,7 +159,7 @@ public class ModularPowerArmor {
                 }
             });
 
-        // Compass
+            // Compass
         } else if (!event.getCapabilities().containsKey(MPARegistryNames.COMPASS_MODULE_REG) && event.getObject().getItem().equals(Items.COMPASS)) {
             final ItemStack stack = event.getObject();
             IToggleableModule compass = new ToggleableModule(stack, EnumModuleCategory.SPECIAL, EnumModuleTarget.HEADONLY, MPASettings::getModuleConfig, true);
@@ -172,18 +175,20 @@ public class ModularPowerArmor {
                 }
             });
 
-        // Workbench
+            // Crafting workbench
         } else if (!event.getCapabilities().containsKey(MPARegistryNames.PORTABLE_WORKBENCH_MODULE_REG) && event.getObject().getItem().equals(Items.CRAFTING_TABLE)) {
             final ItemStack stack = event.getObject();
+            final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.crafting");
             IRightClickModule rightClick = new RightClickModule(stack, EnumModuleCategory.TOOL, EnumModuleTarget.TOOLONLY, MPASettings::getModuleConfig) {
-
-                // FIXME: switch to vanilla crafting table
                 @Override
                 public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                     if (!worldIn.isRemote()) {
-                        NetworkHooks.openGui((ServerPlayerEntity) playerIn, new MPAWorkbenchContainerProvider(3), (buffer) -> buffer.writeInt(3));
+                        NetworkHooks.openGui((ServerPlayerEntity) playerIn,
+                                new SimpleNamedContainerProvider((id, inventory, player) ->
+                                        new WorkbenchContainer(id, inventory)/*, IWorldPosCallable.of(worldIn, playerIn.getPosition()))*/, CONTAINER_NAME));
+                        return ActionResult.resultSuccess(itemStackIn);
                     }
-                    return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+                    return ActionResult.resultConsume(itemStackIn);
                 }
             };
 
