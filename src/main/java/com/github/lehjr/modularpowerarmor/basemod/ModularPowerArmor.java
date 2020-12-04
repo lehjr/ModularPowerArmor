@@ -7,9 +7,10 @@ import com.github.lehjr.modularpowerarmor.client.event.RenderEventHandler;
 import com.github.lehjr.modularpowerarmor.client.gui.modding.module.MPAWorkbenchGui;
 import com.github.lehjr.modularpowerarmor.client.render.entity.LuxCapacitorEntityRenderer;
 import com.github.lehjr.modularpowerarmor.client.render.entity.PlasmaBoltEntityRenderer;
+import com.github.lehjr.modularpowerarmor.client.render.entity.RailGunBoltRenderer;
 import com.github.lehjr.modularpowerarmor.client.render.entity.SpinningBladeEntityRenderer;
 import com.github.lehjr.modularpowerarmor.config.MPASettings;
-import com.github.lehjr.modularpowerarmor.container.MPAWorkbenchContainerProvider;
+import com.github.lehjr.modularpowerarmor.entity.RailgunBoltEntity;
 import com.github.lehjr.modularpowerarmor.event.HarvestEventHandler;
 import com.github.lehjr.modularpowerarmor.event.MovementManager;
 import com.github.lehjr.modularpowerarmor.event.PlayerUpdateHandler;
@@ -26,12 +27,13 @@ import com.github.lehjr.mpalib.util.capabilities.module.toggleable.ToggleableMod
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -122,7 +124,7 @@ public class ModularPowerArmor {
         MinecraftForge.EVENT_BUS.register(new KeybindKeyHandler());
 
 
-        //        RenderingRegistry.registerEntityRenderingHandler(BoltEntity.class, BoltEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MPAObjects.RAILGUN_BOLT_ENTITY_TYPE.get(), RailGunBoltRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.LUX_CAPACITOR_ENTITY_TYPE.get(), LuxCapacitorEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.PLASMA_BALL_ENTITY_TYPE.get(), PlasmaBoltEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MPAObjects.SPINNING_BLADE_ENTITY_TYPE.get(), SpinningBladeEntityRenderer::new);

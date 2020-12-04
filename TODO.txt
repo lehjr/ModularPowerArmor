@@ -1,3 +1,7 @@
+** railgun bolt launches from different points in the player's view, still... very annoying
+
+
 Module installation GUI no longer really fits... needs redesign
 cosmetic gui needs preset design system restored but set up for single player only or maybe use something like tabula
 merge recipe creator into MPA-Lib?... maybe use something like tabula
+still no Elytra-based flight rendering (it's almost 2021, time to get this done!)

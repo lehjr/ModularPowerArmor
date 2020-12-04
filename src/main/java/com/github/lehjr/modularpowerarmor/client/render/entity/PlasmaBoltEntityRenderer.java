@@ -39,10 +39,12 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBallEnt
     @Override
     public void render(PlasmaBallEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        float size = entityIn.getActualSize();
+        float size = entityIn.getChargePercent();//.getActualSize();
+        System.out.println("size: " + size);
+
 
         if(size > 0) {
-            renderPlasma(matrixStackIn, bufferIn, size/12.5F);
+            renderPlasma(matrixStackIn, bufferIn, size);//12.5F);
         }
     }
 
@@ -55,7 +57,31 @@ public class PlasmaBoltEntityRenderer extends MPALibEntityRenderer<PlasmaBallEnt
         matrixStackIn.push();
         float scalFactor = 3;
 
-        float scale = (float) (size / 16.0F);
+        float scale = (float) (size * 0.0625);
+
+        System.out.println("scale: " + scale);
+
+
+
+
+
+        /*
+            max size: 50
+            ----------------
+            max scale: 2.5
+            --------------
+
+
+
+            min size: 10
+            ---------------
+            min scale: 0.5
+            ---------------
+
+         */
+
+
+
         matrixStackIn.scale(scale, scale, scale);
 
         // Lightning renderer // seems to be working?

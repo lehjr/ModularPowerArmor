@@ -22,32 +22,32 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class PlasmaBallEntity extends ThrowableEntity implements IEntityAdditionalSpawnData {
-    private static final DataParameter<Float> ACTUAL_SIZE = EntityDataManager.createKey(PlasmaBallEntity.class, DataSerializers.FLOAT);
-    public double damagingness;
-    public double explosiveness;
+    private static final DataParameter<Float> CHARGE_PERCENT = EntityDataManager.createKey(PlasmaBallEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> EXPLOSIVENESS = EntityDataManager.createKey(PlasmaBallEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> DAMAGINESS = EntityDataManager.createKey(PlasmaBallEntity.class, DataSerializers.FLOAT);
 
     public PlasmaBallEntity(EntityType<? extends PlasmaBallEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public PlasmaBallEntity(World world, LivingEntity shootingEntity, double explosivenessIn, double damagingnessIn, int chargeTicks) {
+    /**
+     * @param world  the world this spawns in
+     * @param shootingEntity the shooter
+     * @param finalExplosiveness explosiveness * chargePercent
+     * @param finalDamaginess damaginess * chargePercent
+     * @param chargePercent percent of charge in decimal form (0 - 1)
+     */
+    public PlasmaBallEntity(World world, LivingEntity shootingEntity, float finalExplosiveness, float finalDamaginess, float chargePercent) {
         super(MPAObjects.PLASMA_BALL_ENTITY_TYPE.get(), world);
         this.setShooter(shootingEntity);
 
-        float size = ((chargeTicks) > 50F ? 50F : chargeTicks);
-        this.dataManager.set(ACTUAL_SIZE, size);
-        this.explosiveness = explosivenessIn;
-        this.damagingness = damagingnessIn;
-        Vector3d direction = shootingEntity.getLookVec().normalize();
-        double scale = 1.0;
-        this.setMotion(
-                direction.x * scale,
-                direction.y * scale,
-                direction.z * scale
-        );
+        this.dataManager.set(CHARGE_PERCENT, chargePercent);
+        this.dataManager.set(EXPLOSIVENESS, finalExplosiveness);
+        this.dataManager.set(DAMAGINESS, finalDamaginess);
 
-        double r = size / 50.0;
-        double xoffset = 1.3f + r - direction.y * shootingEntity.getEyeHeight();
+        Vector3d direction = shootingEntity.getLookVec().normalize();
+        double radius = chargePercent;
+        double xoffset = 1.3f + radius - direction.y * shootingEntity.getEyeHeight();
         double yoffset = -.2;
         double zoffset = 0.3f;
         double horzScale = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
@@ -62,12 +62,15 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
                 (shootingEntity.getPosZ() + direction.z * xoffset - direction.y * horzz * yoffset + horzx * zoffset)
         );
 
-        this.setBoundingBox(new AxisAlignedBB(getPosX() - r, getPosY() - r, getPosZ()- r, getPosX() + r, getPosY() + r, getPosZ() + r));
+        this.setMotion(direction);
+        this.setBoundingBox(new AxisAlignedBB(getPosX() - radius, getPosY() - radius, getPosZ()- radius, getPosX() + radius, getPosY() + radius, getPosZ() + radius));
     }
 
     @Override
     protected void registerData() {
-        dataManager.register(ACTUAL_SIZE, 0F);
+        dataManager.register(CHARGE_PERCENT, 0F);
+        dataManager.register(EXPLOSIVENESS, 0F);
+        dataManager.register(DAMAGINESS, 0F);
     }
 
     @Override
@@ -79,10 +82,11 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
 
         if (this.isInWater()) {
             this.remove();
-            for (int i = 0; i <  this.dataManager.get(ACTUAL_SIZE); ++i) {
+            for (int i = 0; i <  getChargePercent() * 50F; ++i) {
                 this.world.addParticle(ParticleTypes.FLAME,
-                        this.getPosX() + Math.random() * 1, this.getPosY() + Math.random() * 1, this.getPosZ() + Math.random()
-                                * 0.1,
+                        this.getPosX() + Math.random() * 1,
+                        this.getPosY() + Math.random() * 1,
+                        this.getPosZ() + Math.random() * 0.1,
                         0.0D, 0.0D, 0.0D);
             }
         }
@@ -112,14 +116,12 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        float size = this.dataManager.get(ACTUAL_SIZE);
-
-        double damage =  size/ 50.0 * this.damagingness;
+        double damage =  this.dataManager.get(DAMAGINESS);
         switch (result.getType()) {
             case ENTITY:
                 EntityRayTraceResult rayTraceResult = (EntityRayTraceResult) result;
                 if (rayTraceResult.getEntity() != null && rayTraceResult.getEntity() != func_234616_v_()) {
-                    rayTraceResult.getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, func_234616_v_()), (int) damage);
+                    rayTraceResult.getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, func_234616_v_()), this.dataManager.get(DAMAGINESS));
                 }
                 break;
             case BLOCK:
@@ -129,13 +131,14 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
         }
         if (!this.world.isRemote) { // Dist.SERVER
             boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
-
-            // FIXME: this is probably all wrone
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), (float) (size / 50.0f * 3 * this.explosiveness), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
+            // FIXME: this is probably all wrong
+            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 3 * this.dataManager.get(EXPLOSIVENESS), flag ? Explosion.Mode.DESTROY : Explosion.Mode.BREAK);
         }
         for (int var3 = 0; var3 < 8; ++var3) {
             this.world.addParticle(ParticleTypes.FLAME,
-                    this.getPosX() + Math.random() * 0.1, this.getPosY() + Math.random() * 0.1, this.getPosZ() + Math.random() * 0.1,
+                    this.getPosX() + Math.random() * 0.1,
+                    this.getPosY() + Math.random() * 0.1,
+                    this.getPosZ() + Math.random() * 0.1,
                     0.0D, 0.0D, 0.0D);
         }
         if (!this.world.isRemote) {
@@ -144,7 +147,11 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
     }
 
     public float getActualSize() {
-        return this.dataManager.get(ACTUAL_SIZE);
+        return this.dataManager.get(CHARGE_PERCENT) * 50F;
+    }
+
+    public float getChargePercent() {
+        return this.dataManager.get(CHARGE_PERCENT);
     }
 
     /**
@@ -155,7 +162,9 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
      */
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeFloat(this.dataManager.get(ACTUAL_SIZE));
+        buffer.writeFloat(this.dataManager.get(CHARGE_PERCENT));
+        buffer.writeFloat(this.dataManager.get(EXPLOSIVENESS));
+        buffer.writeFloat(this.dataManager.get(DAMAGINESS));
     }
 
     /**
@@ -166,7 +175,9 @@ public class PlasmaBallEntity extends ThrowableEntity implements IEntityAddition
      */
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        this.dataManager.set(ACTUAL_SIZE, additionalData.readFloat());
+        this.dataManager.set(CHARGE_PERCENT, additionalData.readFloat());
+        this.dataManager.set(EXPLOSIVENESS, additionalData.readFloat());
+        this.dataManager.set(DAMAGINESS, additionalData.readFloat());
     }
 
     @Override

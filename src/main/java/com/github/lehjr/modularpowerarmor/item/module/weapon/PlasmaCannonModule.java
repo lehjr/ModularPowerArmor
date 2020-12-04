@@ -70,44 +70,33 @@ public class PlasmaCannonModule extends AbstractPowerModule {
             public ActionResult onItemRightClick(ItemStack itemStackIn, World worldIn, PlayerEntity playerIn, Hand hand) {
                 if (hand == Hand.MAIN_HAND && ElectricItemUtils.getPlayerEnergy(playerIn) > getEnergyUsage()) {
                     playerIn.setActiveHand(hand);
-                    return new ActionResult(ActionResultType.SUCCESS, itemStackIn);
+                    return ActionResult.resultSuccess(itemStackIn);
                 }
-                return new ActionResult<>(ActionResultType.PASS, playerIn.getHeldItem(hand));
+                return ActionResult.resultPass(itemStackIn);
             }
 
             @Override
             public void onPlayerStoppedUsing(ItemStack itemStack, World worldIn, LivingEntity entityLiving, int timeLeft) {
                 int chargeTicks = (int) MathUtils.clampDouble(itemStack.getUseDuration() - timeLeft, 10, 50);
 
-
-
-
-
-                if (!worldIn.isRemote) {
-                    System.out.println("charge ticks");
-                    System.out.println("timeleft: " + timeLeft);
-
-
-                    float energyConsumption = getEnergyUsage() * chargeTicks;
-                    if (entityLiving instanceof PlayerEntity) {
-                        PlayerEntity player = (PlayerEntity) entityLiving;
-                        HeatUtils.heatPlayer(player, energyConsumption / 5000F);
-                        if (ElectricItemUtils.getPlayerEnergy(player) > energyConsumption) {
-                            ElectricItemUtils.drainPlayerEnergy(player, (int) energyConsumption);
-                            double explosiveness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_EXPLOSIVENESS);
-                            double damagingness = rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE);
-                            PlasmaBallEntity plasmaBolt = new PlasmaBallEntity(worldIn, player, explosiveness, damagingness, chargeTicks);
-                            worldIn.addEntity(plasmaBolt);
-                        }
+                if (!worldIn.isRemote && entityLiving instanceof PlayerEntity) {
+                    double chargePercent = chargeTicks * 0.02; // chargeticks/50
+                    double energyConsumption = getEnergyUsage() * chargePercent;
+                    PlayerEntity player = (PlayerEntity) entityLiving;
+                    if (ElectricItemUtils.getPlayerEnergy(player) > energyConsumption) {
+                        HeatUtils.heatPlayer(player, energyConsumption / 5000F * chargePercent);
+                        ElectricItemUtils.drainPlayerEnergy(player, (int) energyConsumption);
+                        float explosiveness = (float) (applyPropertyModifiers(MPAConstants.PLASMA_CANNON_EXPLOSIVENESS) * chargePercent);
+                        float damagingness = (float) (applyPropertyModifiers(MPAConstants.PLASMA_CANNON_DAMAGE_AT_FULL_CHARGE) * chargePercent);
+                        PlasmaBallEntity plasmaBolt = new PlasmaBallEntity(worldIn, player, explosiveness, damagingness, (float) chargePercent);
+                        worldIn.addEntity(plasmaBolt);
                     }
-                } else {
-                    System.out.println("client world");
                 }
             }
 
             @Override
             public int getEnergyUsage() {
-                return (int) Math.round(rightClickie.applyPropertyModifiers(MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK));
+                return (int) Math.round(applyPropertyModifiers(MPAConstants.PLASMA_CANNON_ENERGY_PER_TICK));
             }
         }
     }
